@@ -92,6 +92,12 @@ public class JIPEngine implements Serializable
         return "JIProlog v" + VERSION + " Copyright (c) 1999-2014 By Ugo Chirico. All Right Reserved";
     }
 
+    /** Returns JIProlog license info
+     */
+    public static final String getLicenseInfo()
+    {
+        return "JIProlog is released under AGPL v3 or under Commercial License. Visit www.jiprolog.com for more info";
+    }
 
     /** Constructs a new instance of JIPEngine with default values search path, input and output stream.
      * Search path is the path where this instance of JIPEngine searches for files.
