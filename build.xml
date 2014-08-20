@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- simple project ant build file -->
+
+<project name="JIProlog" default="JIPConsole" basedir=".">
+
+<description>
+Simple script to jar, obfuscate and run a project 3.0.
+</description>
+	<!-- change these properties to match yours -->
+	<target name="init">
+		<echo message="Ant version is ${ant.version}" />
+
+		<!-- Main project -->
+		<property name="project.name" value="JIProlog 3.1" />
+		<property name="project.root" value="c:/progetti/Applicazioni/JIProlog/" />
+		<property name="project.version" value="3.1.0.x" />
+		<property name="project.deploy.dir" value="${project.root}/Deploy" />
+		<property name="project.src" value="src" />
+		<property name="project.bin" value="bin" />
+
+		<property name="project.proguardconf" value="jiprolog.pro" />
+		<property name="project.keystore" value="ugochirico.ks" />
+		<property name="project.storepass" value="seagull.7" />
+	
+		
+		<!-- JIProlog  -->
+		<property name="project.jiprolog.root" value="${project.root}/JIProlog" />
+		<property name="project.jiprolog.lib" value="${project.jiprolog.root}/lib" />
+		<property name="project.jiprolog.src" value="${project.jiprolog.root}/src" />
+		<property name="project.jiprolog.ijar" value="jiprolog1.jar" />
+		<property name="project.jiprolog.jar" value="jiprolog.jar" />
+
+		<!-- jipgui -->
+		<property name="project.jiprolog.jipgui.lib" value="${project.root}/JIPgui/lib" />
+		<property name="project.jiprolog.jipgui.jar" value="jipgui.jar" />
+		<property name="project.jiprolog.jipgui.root" value="${project.root}/JIPgui" />
+		<property name="project.jiprolog.jipgui.mainclass" value="com.ugos.JIProlog.gui.JIPConsole" />
+
+		<!-- jipjextplugin-->
+		<property name="project.jiprolog.jipjextplugin.lib" value="${project.root}/JIPJextPlugin/lib" />
+		<property name="project.jiprolog.jipjextplugin.jar" value="jipjextplugin.jar" />
+		<property name="project.jiprolog.jipjextplugin.root" value="${project.root}/JIPJextPlugin" />
+		<property name="project.jext" value="${project.root}/Deploy/JIPrologIDE/" />
+
+		<property name="project.main.class" value="com.ugos.JIProlog.JIProlog" />
+		<property name="project.keystore" value="ugochirico.ks" />
+		<property name="project.storepass" value="seagull.7" />
+		
+		<echo message="JIProlog root folder is ${project.root}" />
+
+		
+		<!-- ProGuard -->
+		<property name="proguard.jar" value="c:\programmi\proguard4.8\lib\proguard.jar" />
+		<property name="proguard.gui.jar" value="c:\programmi\proguard4.8\lib\proguardgui.jar" />
+				
+	</target>
+
+	<target name="jar-it" depends="init" description="Jar the project.">
+		<jar jarfile="${project.jiprolog.root}/${project.jiprolog.ijar}" basedir="${project.jiprolog.lib}" />
+		<jar jarfile="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" basedir="${project.jiprolog.jipgui.lib}" />
+		<jar jarfile="${project.jiprolog.jipjextplugin.root}/${project.jiprolog.jipjextplugin.jar}" basedir="${project.jiprolog.jipjextplugin.lib}" />
+	</target>
+
+	<target name="jar-it-debug" depends="init" description="Jar the project.">
+			<jar jarfile="${project.jiprolog.root}/${project.jiprolog.jar}" basedir="${project.jiprolog.lib}" />
+	</target>
+
+	<target name="deploy" depends="Proguard" description="Deploy">
+		
+		<signjar alias="ugochirico" jar="${project.jiprolog.jar}" keystore="${project.keystore}" storepass="${project.storepass}" signedjar="${project.jiprolog.jar}" /> 
+		<signjar alias="ugochirico" jar="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" keystore="${project.keystore}" storepass="${project.storepass}" signedjar="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" />
+		
+		<!-- jiprolog package -->
+		<copy todir="${project.deploy.dir}/JIPConsole/bin/" file="${project.jiprolog.jar}"/>
+		<copy todir="${project.deploy.dir}/JIPrologSDK/bin/" file="${project.jiprolog.jar}"/>
+		<copy todir="${project.jext}/bin/plugins/" file="${project.jiprolog.jar}"/>
+
+		<!-- jipgui package -->
+		<copy todir="${project.deploy.dir}/JIPConsole/bin/" file="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}"/>
+		<copy todir="${project.deploy.dir}/JIPrologSDK/bin/" file="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}"/>
+		<copy todir="${project.jext}/bin/plugins/" file="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}"/>
+
+		<!-- jipjextplugin package -->
+		<copy todir="${project.jext}/bin/plugins/" file="${project.jiprolog.jipjextplugin.root}/${project.jiprolog.jipjextplugin.jar}"/>
+
+		<!-- rel notes-->
+		<copy todir="${project.deploy.dir}/JIPConsole/" file="${project.root}/JIProlog/ReleaseNotes.txt"/>
+		<copy todir="${project.deploy.dir}/JIPrologSDK/" file="${project.root}/JIProlog/ReleaseNotes.txt"/>
+		<copy todir="${project.jext}" file="${project.root}/JIProlog/ReleaseNotes.txt"/>
+
+	</target>
+
+	<target name="JIPConsole" depends="init" description="Executes Full JIPConsole.">
+		<java classname="${project.jiprolog.jipgui.mainclass}" fork="true" dir="${project.deploy.dir}/JIPConsole/bin/">
+			<classpath>
+				<pathelement location="${project.deploy.dir}/JIPConsole/bin/${project.jiprolog.jipgui.jar}" />
+				<pathelement location="${project.deploy.dir}/JIPConsole/bin/${project.jiprolog.jar}" />
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="JIP IDE" depends="deploy" description="Executes Full JIP IDE.">
+		<exec command="${project.jext}/bin/jext.exe" dir="${project.jext}"/>
+	</target>
+
+    <target name="javadoc">
+        <javadoc destdir="..\Deploy\JIPrologSDK\doc/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.JIProlog.engine,com.ugos.JIProlog.client" sourcefiles="src/com/ugos/JIProlog/JIProlog.java" sourcepath="src;../JIPClient/src" classpath="../JIPClient/lib;lib" doctitle="JIProlog API"/>
+    </target>
+
+	<target name="Proguard" depends="jar-it" description="Proguard">
+		<java jar="${proguard.jar}" fork="yes" dir=".">
+			<arg line="@${project.proguardconf}"/>
+			<arg line="-injars ${project.jiprolog.ijar}"/>
+			<arg line="-outjars ${project.jiprolog.jar}"/>
+		</java>
+	</target>
+	
+</project>

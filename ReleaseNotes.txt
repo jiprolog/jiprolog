@@ -1,0 +1,64 @@
+JIProlog Release Notes
+------------------------------
+v3.1.1.2
+Fix in JIProlog IDE
+
+v3.1.1.1
+Important optimizations on JDBCClausesDatabase for external clauses stored in a JDBC database
+
+v3.1.0.4
+Bug fixes:
+predicate load/1 for nested compiled prolog programs.
+jdbc connector in several points
+
+
+v3.1.0.2
+Bug fixes:
+character encoding for unicode languages and special characters.
+
+
+v3.1.0.1
+--------------
+
+Bug fixes:
+bug in unification algorithm
+external database management
+several minor fixes
+
+Changes:
+all external packages are included in the main package
+support for sqlite
+
+
+v3.0.2-8
+--------------
+
+bug fixes:
+consult/1, load/1, load_library/1
+JIPEngine.consultFile, JIPEngine.loadFile JIPEngine.loadLibrary
+when the file name is an http url.
+
+v3.0.2-6
+--------------
+bug fixes:
+compile/1 bug fixed when compiling a prolog file
+free_variables/2 bug fixed when the second parameter is a singleton variable
+open/3 fixed bug when opening a file
+
+added:
+vars/2 to know the real name of a variable.
+
+v3.0.2-5
+------------
+=</2 bug fixed when an arithemtic expression is involved
+
+v3.0.2-4
+------------
+see/1, tell/1 bug fixes when an exception is thrown
+
+v3.0.2-3
+------------
+Updates for ISO compatibility
+
+
+
