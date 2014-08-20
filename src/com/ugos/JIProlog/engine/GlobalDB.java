@@ -30,7 +30,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     // Database
     private Hashtable<String, JIPClausesDatabase> m_clauseTable;
     // associazione tra predicati e file
-    private Hashtable m_pred2FileMap;
+    private Hashtable<String, String> m_pred2FileMap;
     
     private Hashtable m_moduleTransparentTbl;
 
@@ -656,11 +656,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
       // unconsult non funziona sui predicati multifile
     final void unconsult(final String strFileName)
     {
-        Enumeration en = m_pred2FileMap.keys();
+        Enumeration<String> en = m_pred2FileMap.keys();
         while(en.hasMoreElements())
         {
-            String strPredName = (String)en.nextElement();
-            String strFile = (String)m_pred2FileMap.get(strPredName);
+            String strPredName = en.nextElement();
+            String strFile = m_pred2FileMap.get(strPredName);
             if(strFile.equals(strFileName))
             {
                 if(m_clauseTable.containsKey(strPredName))
@@ -672,5 +672,21 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             }
         }
     }
+    
+    final ArrayList<String> getFiles()
+    {
+    	ArrayList<String> files = new ArrayList<String>();
+    	
+        Enumeration<String> en = m_pred2FileMap.keys();
+        while(en.hasMoreElements())
+        {
+            String strPredName = en.nextElement();
+            String strFile = m_pred2FileMap.get(strPredName);
+            files.add(strFile);
+        }
+        
+        return files;
+    }
+    
 }
 

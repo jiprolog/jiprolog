@@ -61,6 +61,21 @@ public class JIPFunctor extends JIPTerm
         return ((Functor)getTerm()).getFriendlyName();
     }
     
+    /** Returns the Atom of this JIPfunctor object
+     * @return atom of this JIPFunctor object
+     */
+   public final JIPTerm getTerm(int index)
+   {
+	   if(index == 0)
+	   {
+		   return new JIPAtom(((Functor)getTerm()).getAtom());
+	   }
+	   else
+	   {
+		   final ConsCell params = ((Functor)getTerm()).getParams();
+		   return JIPTerm.getJIPTerm(params.getTerm(index));
+	   }
+   }
     /** Returns the definition name of this JIPfunctor object - <predname>/<arity>
       * @return definition name of this JIPFunctor object
       */
@@ -82,6 +97,8 @@ public class JIPFunctor extends JIPTerm
         else
             return null;//JIPCons.NIL;
     }
+    
+    
     
     /** Returns the arity of this JIPFunctor object
      * @return arity of this JIPFunctor object

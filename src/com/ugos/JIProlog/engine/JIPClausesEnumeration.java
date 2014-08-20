@@ -20,10 +20,7 @@
 
 package com.ugos.JIProlog.engine;
 
-//#ifndef _MIDP
 import java.awt.Frame;
-import com.ugos.awt.TextMessageDialog;
-//#endif
 
 import java.util.Enumeration;
 
