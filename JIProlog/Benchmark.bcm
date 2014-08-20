@@ -1,0 +1,15 @@
+------------------ JIProlog Benchmark  By Ugo Chirico ------------------
+Accuracy: 100
+- Naive Reverse with accumulator
+Average time (ms) = 3.01
+- Naive Reverse with naive append/3
+Average time (ms) = 340.3
+- Assert and Retract a list of facts
+Average time (ms) = 8.91
+- Sum a list of numbers
+Average time (ms) = 5.41
+- NIPS by Naive Reverse with accumulator
+Average nips = 13537.124346379955 ------------------
+
+
+

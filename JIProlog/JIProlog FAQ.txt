@@ -1,0 +1,14 @@
+Q.
+Do you actually have a COMPILER for JIP or is it just an interpreter?
+
+Also, do you compile / condenze / compact the ".PRO" files or are they 
+left as plain text even if you have a compilation?
+
+Also, can I produce a SINGLE executable JAR file which has the compiled ".PRO" file in there?
+
+A.
+JIProlog works similar to a bytecode interpreter, that is,  text .pl, .pro files are first compiled in a sort of proprietary bytecode and, then, such bytecode is interpreted by JIPEngine. Such a trick makes JIPEngine faster.
+JIProlog supplies also the predicate compile/1 and load/1 (and the methods JIPEngine.compile, JIPEngine.load) respectively to compile a .pl/.pro text file in bytecode and to load such bytecode for interpretation.
+Using one those functions you can produce compiled .pl/.pro files (said .jip) and put then in yor .jar.
+
+

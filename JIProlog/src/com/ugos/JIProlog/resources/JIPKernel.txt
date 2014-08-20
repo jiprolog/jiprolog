@@ -1,0 +1,252 @@
+/*
+ * JIPKernel
+ * JIProlog Kernel predicates
+ *
+ * 03/06/2004
+ *
+ * Copyright (C) 2002-2005 by Ugo Chirico. All Rights Reserved
+ *
+ * WARNING: DO NOT REMOVE THIS PREDICATES. IT IS NEEDED BY JIPROLOG
+ *
+ */
+        
+        
+'$system':op(X,Y,[]):-!.
+'$system':op(X,Y,[OP|Rest]):-
+    !, '$op'(X,Y,OP), op(X,Y,Rest).
+'$system':op(X,Y,OP):-
+    '$op'(X,Y,OP).
+
+'$system':call(X):-X.
+
+'$system': \+ G :- G, !, fail.
+'$system': \+ G.
+
+'$system': not G :- G, !, fail.
+'$system': not G.
+
+'$system':nonvar(X):- var(X), !, fail.
+'$system':nonvar(X).
+
+'$system':number(X):- (integer(X) ; float(X)), !.
+
+'$system':string(X):- chars(X).
+
+'$system':char(X):- chars([X]).
+
+'$system':atomic(X):- (atom(X) ; number(X)), !.
+
+'$system':callable(X):- (atom(X) ; compound(X)), !.
+    
+'$system':simple(X):- (atomic(X) ; var(X)), !.
+    
+'$system':compound(X):- (var(X);atomic(X)), !, fail.
+'$system':compound(X).
+
+'$system':list(X):-var(X), !, fail.    
+'$system':list([]).
+'$system':list([_|T]):- list(T).
+            
+'$system':is_list(X):-var(X), !, fail.
+'$system':is_list([]).
+'$system':is_list([_|T]):- is_list(T).
+
+'$system':nil([]).
+
+'$system':retractall(X):- retract(X), fail.
+'$system':retractall(_):-!.
+
+'$system':current_predicate(X/Y):- current_functor(X, Y).
+    
+'$system': @>(X, Y) :- compare(>, X, Y).
+
+'$system': @<(X, Y) :- compare(<, X, Y).
+
+'$system': @=(X, Y) :- compare(=, X, Y).
+
+'$system': @>=(X, Y) :- (compare(>, X, Y);compare(=, X, Y)), !.
+
+'$system': @=<(X, Y) :- (compare(<, X, Y);compare(=, X, Y)), !.
+ 
+'$system': >=(X, Y) :- (X > Y ; X =:= Y), !.
+    
+'$system': =<(X, Y) :- (X < Y ; X =:= Y), !.
+    
+'$system': =\=(X, Y) :- \+ X =:= Y.
+
+'$system': \==(X, Y) :- \+ X == Y.
+
+'$system': =(X, X).
+    
+'$system': \=(X, Y):- \+ X = Y.
+    
+'$system':append([], L, L).
+'$system':append([H|T], L, [H|R]) :- 
+	append(T, L, R).
+
+'$system':member(X, [X|_]).
+'$system':member(X, [_|T]) :-
+    member(X, T).
+    
+'$system':true.
+
+'$system':false:-fail.
+
+'$system':halt :- halt(0).
+
+'$system': ;(->(X,Y), _Z) :- call(X),'$!', Y.
+'$system': ;(->(_X,_Y), Z) :- '$!', Z.
+'$system': ->(X,Y) :- call(X),'$!', Y.
+
+'$system': ;(X, _) :- X.
+'$system': ;(_, Y) :- Y.
+
+'$system': ;(*->(X,Y), _Z) :- call(X),Y.
+'$system': ;(*->(_X,_Y), Z) :- Z.
+'$system': *->(X,Y) :- call(X),Y.
+
+'$system': ^(X,Y) :- Y.
+     
+'$system':assertz(X) :-assert(X).
+
+'$system': [!.
+
+'$system':'C'([Terminal|Rest], Terminal, Rest).
+
+'$system':phrase(T, S):-phrase(T, S, []).
+
+'$system':phrase(T, S0, S):-'$kernel':tag(T, S0, S, G), G.
+    
+'$system':expand_term(X, Y):-'$kernel':translate(X, Y).
+     
+'$system':unload(X):- unconsult(X).
+
+'$system':use_module(File):-
+    ensure_loaded(File).
+
+'$system':predicate_property(Head, Property):-
+    predicate_properties(Head, Properties),
+    !,
+    member(Property, Properties).
+    
+/* Kernel Internal predicates */
+
+'$kernel':translate(((LHS_in1, LHS_in2) --> RHS_in), (LHS_out:-RHS_out)):-
+    nonvar(LHS_in1),
+    list(LHS_in2),
+    !,
+    tag(LHS_in1, S0, Sn, LHS_out),
+    make_connects(LHS_in2, Sn, S1, Conn),
+    dcg_rhs(RHS_in, S0, S1, RHS_1),
+    dcg_and(Conn, RHS_1, RHS_2),
+    flatten2(RHS_2, RHS_out).
+
+'$kernel':translate((Module:LHS_in --> RHS_in), (Module:LHS_out:-RHS_out)):-
+    !,
+    translate((LHS_in --> RHS_in), (LHS_out:-RHS_out)).
+    
+'$kernel':translate((LHS_in --> RHS_in), (LHS_out:-RHS_out)):-
+    nonvar(LHS_in),
+    !,
+    tag(LHS_in, S0, Sn, LHS_out),
+    dcg_rhs(RHS_in, S0, Sn, RHS_1),
+    flatten2(RHS_1, RHS_out).
+    
+    
+'$kernel':translate(T, T).
+
+'$kernel':dcg_rhs(X, S0, S, phrase(X, S0, S)):-
+    var(X),
+    !.
+
+'$kernel':dcg_rhs((RHS_in1, RHS_in2), S0, Sn, RHS_out):-
+    !,
+    dcg_rhs(RHS_in1, S0, S1, RHS_out1),
+    dcg_rhs(RHS_in2, S1, Sn, RHS_out2),
+    dcg_and(RHS_out1, RHS_out2, RHS_out).
+        
+'$kernel':dcg_rhs((RHS_in1 ; RHS_in2), S0, Sn, (RHS_out1 ; RHS_out2)):-
+    !,
+    dcg_or(RHS_in1, S0, Sn, RHS_out1),
+    dcg_or(RHS_in2, S0, Sn, RHS_out2).
+    
+'$kernel':dcg_rhs({RHS_in}, S0, S0, RHS_in):-
+    !.
+
+'$kernel':dcg_rhs({}(RHS_in), S0, S0, RHS_in):-
+    !.
+
+'$kernel':dcg_rhs(!, S0, S0, !):-
+    !.
+    
+'$kernel':dcg_rhs(RHS_in, S0, Sn, C):-
+    list(RHS_in),
+    !,
+    make_connects(RHS_in, S0, Sn, C).
+    
+'$kernel':dcg_rhs(Module:RHS_in, S0, Sn, Module:RHS_out):-
+    tag(RHS_in, S0, Sn, RHS_out).
+    
+'$kernel':dcg_rhs(RHS_in, S0, Sn, RHS_out):-
+    tag(RHS_in, S0, Sn, RHS_out).
+
+
+'$kernel':dcg_or(In, S0, Sn, Out):-
+    dcg_rhs(In, S1, Sn, Out1),
+    ( var(S1),
+      \+ S1 == Sn,
+      !,
+      S0 = S1,
+      Out = Out1 ;
+      Out = (S0 = S1, Out1)).
+      
+     
+'$kernel':dcg_and(true, In, In):-
+    !.
+    
+'$kernel':dcg_and(In, true, In):-
+    !.
+
+'$kernel':dcg_and(In1, In2, (In1, In2)).
+
+
+'$kernel':tag(In, S0, Sn, Out):-
+    In =.. [Predicate|Arguments],
+    append(Arguments, [S0, Sn], NewArguments),
+    Out =.. [Predicate|NewArguments].
+    
+    
+'$kernel':flatten2(In, In):-
+    var(In),
+    !.
+    
+'$kernel':flatten2((In1, In2), Out1):-
+    !,
+    flatten1(In1, Out1, Out2),
+    flatten2(In2, Out2).
+    
+'$kernel':flatten2(In, In).
+
+'$kernel':flatten1(In1, (In1, In2), In2):-
+    var(In1),
+    !.
+
+'$kernel':flatten1((In1, In2), Out1, In3):-
+    !,
+    flatten1(In1, Out1, Out2),
+    flatten1(In2, Out2, In3).
+
+'$kernel':flatten1(In1, (In1, In2), In2).
+
+'$kernel':make_connects([First|Rest], S0, Sn, Conns):-
+    nonvar(Rest),
+    !,
+    make_connects(Rest, SI, Sn, Cs),
+    dcg_and('C'(S0, First, SI), Cs, Conns).
+    
+'$kernel':make_connects([], S, S, true).
+
+
+
+
+
