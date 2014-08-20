@@ -118,7 +118,7 @@ final class Variable extends PrologObject//Serializable
         return m_strName.charAt(0) == SHADOW;
     }
 
-    public final boolean _unify(final PrologObject obj, Hashtable varTbl)
+    public final boolean _unify(final PrologObject obj, Hashtable<Variable, Variable> varTbl)
     {
 //        System.out.println("*** Variable unify: " + this + " - " + obj);
         if(obj == this)

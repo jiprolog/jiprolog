@@ -43,7 +43,7 @@ public class JIPTermParser
      * @param ins the input stream to parse.
      * @param streamName tha name of the stream (i.e. the name of the associated file)
      */
-    public final Enumeration parseStream(final InputStream ins, final String streamName)
+    public final Enumeration<JIPTerm> parseStream(final InputStream ins, final String streamName)
     {
         return new TermEnumerator(new InputStreamReader(ins), m_opManager, streamName);
     }
@@ -52,7 +52,7 @@ public class JIPTermParser
      * @param ins the input stream to parse.
      * @param streamName tha name of the stream (i.e. the name of the associated file)
      */
-    public final Enumeration parseStream(final InputStream ins, final String streamName, final String encoding) throws UnsupportedEncodingException
+    public final Enumeration<JIPTerm> parseStream(final InputStream ins, final String streamName, final String encoding) throws UnsupportedEncodingException
     {
         return new TermEnumerator(new InputStreamReader(ins, encoding), m_opManager, streamName);
     }
@@ -81,7 +81,7 @@ public class JIPTermParser
         }
     }
     
-    private class TermEnumerator implements Enumeration
+    private class TermEnumerator implements Enumeration<JIPTerm>
     {
         private PrologParser m_parser;
 
@@ -109,11 +109,11 @@ public class JIPTermParser
             return m_nextTerm != null;
         }
         
-        public Object nextElement() throws JIPSyntaxErrorException
+        public JIPTerm nextElement() throws JIPSyntaxErrorException
         {
             if(hasMoreElements())
             {
-                Object aux = m_nextTerm;
+                JIPTerm aux = m_nextTerm;
                 m_nextTerm = null;
                 return aux;
             }

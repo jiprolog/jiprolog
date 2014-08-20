@@ -33,7 +33,7 @@ import com.ugos.JIProlog.engine.JIPQuery;
 import com.ugos.JIProlog.engine.JIPRuntimeException;
 import com.ugos.JIProlog.engine.JIPSyntaxErrorException;
 import com.ugos.JIProlog.engine.JIPTerm;
-import com.ugos.awt.TextMessageDialog;
+
 
 /**
  * JIProlog implements the stand alone prolog interpreter.<br>
@@ -175,7 +175,7 @@ public class JIProlog
 
     private static void showMessage(String strMsg)
     {
-        TextMessageDialog dialog = new TextMessageDialog(new Frame(), "JIProlog Standalone Interpreter", strMsg);
+        //TextMessageDialog dialog = new TextMessageDialog(new Frame(), "JIProlog Standalone Interpreter", strMsg);
 //        dialog.add(new Label(strMsg, Label.CENTER));
         //dialog.setSize(400, 80);
 
@@ -189,7 +189,7 @@ public class JIProlog
 //        int nLeft = (d.width  - 400)  / 2;
 //
 //        dialog.setBounds(nLeft, nTop, nWidth, 80);
-        dialog.show();
+       // dialog.show();
     }
 }
 
