@@ -20,8 +20,6 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<property name="project.bin" value="bin" />
 
 		<property name="project.proguardconf" value="jiprolog.pro" />
-		<property name="project.keystore" value="ugochirico.ks" />
-		<property name="project.storepass" value="seagull.7" />
 	
 		
 		<!-- JIProlog  -->
@@ -67,10 +65,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 	</target>
 
 	<target name="deploy" depends="Proguard" description="Deploy">
-		
-		<signjar alias="ugochirico" jar="${project.jiprolog.jar}" keystore="${project.keystore}" storepass="${project.storepass}" signedjar="${project.jiprolog.jar}" /> 
-		<signjar alias="ugochirico" jar="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" keystore="${project.keystore}" storepass="${project.storepass}" signedjar="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" />
-		
+			
 		<!-- jiprolog package -->
 		<copy todir="${project.deploy.dir}/JIPConsole/bin/" file="${project.jiprolog.jar}"/>
 		<copy todir="${project.deploy.dir}/JIPrologSDK/bin/" file="${project.jiprolog.jar}"/>
