@@ -77,7 +77,7 @@ public abstract class JIPXCall
      * @return true if the custom predicates unify with the parameter passed, false otherwise
      * @see com.ugos.JIProlog.engine.JIPCons
      */
-    public abstract boolean unify(JIPCons params, Hashtable varsTbl);
+    public abstract boolean unify(JIPCons params, Hashtable<JIPVariable, JIPVariable> varsTbl);
     
     /** Invoked by xcall/2 to bind the custom predicate to the passed parameters.
      * For more information see the section <i>"How to write a custom built-in predicate"</i> in the Reference Manual.<br>

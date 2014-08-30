@@ -251,6 +251,8 @@ public class JIPTerm extends Object implements Clearable
             return new JIPString((PString)obj);
         if(obj instanceof ConsCell)
             return new JIPCons((ConsCell)obj);
+        if(obj instanceof Clause)
+            return new JIPClause((Clause)obj);
         
         throw JIPRuntimeException.create(25, obj);
     }
