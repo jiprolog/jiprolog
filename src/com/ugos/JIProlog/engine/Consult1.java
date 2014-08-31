@@ -97,7 +97,7 @@ class Consult1 extends BuiltIn
             InputStream ins;
             try
             {
-                ins = StreamManager.getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
+                ins = StreamManager.getStreamManager().getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
             }
             catch(IOException ex)
             {

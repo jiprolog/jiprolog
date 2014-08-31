@@ -63,7 +63,7 @@ final class Compile1 extends Consult1
         {
             String strFileName[] = new String[1];
             String strCurDir[] = new String[1];
-            ins = StreamManager.getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
+            ins = StreamManager.getStreamManager().getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
             oldins = engine.getCurrentInputStream();
             strOldInputStreamName = engine.getCurrentInputStreamName();
             engine.setCurrentInputStream(ins, strPath);

@@ -201,7 +201,7 @@ public class JIPEngine implements Serializable
         String strFileName[] = new String[1];
         String strCurDir[] = new String[1];
 
-        InputStream ins1 = StreamManager.getInputStream(strPath, getSearchPath(), strFileName, strCurDir);
+        InputStream ins1 = StreamManager.getStreamManager().getInputStream(strPath, getSearchPath(), strFileName, strCurDir);
         ins1.close();
 
 //        System.out.println("strFileName " + strFileName[0]);  //DBG
@@ -570,7 +570,7 @@ public class JIPEngine implements Serializable
 
         try
         {
-            final InputStream ins = StreamManager.getInputStream(strFileName, m_strSearchPath, strFName, strCurDir);
+            final InputStream ins = StreamManager.getStreamManager().getInputStream(strFileName, m_strSearchPath, strFName, strCurDir);
             ins.close();
         }
         catch(IOException ex)

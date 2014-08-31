@@ -31,7 +31,7 @@ import java.util.*;
 
 final class SearchPath1 extends BuiltIn
 {
-    public final boolean unify(final Hashtable varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         PrologObject param = getParam(1);
         if (param instanceof Variable)
@@ -155,38 +155,38 @@ final class SearchPath1 extends BuiltIn
                 throw new JIPJVMException(ex );
             }
         }
+//        else if(strSearchDir.toUpperCase().startsWith("FILE:///ANDROID_ASSET/"))
+//        {
+//        	return strSearchDir;
+//        }
         else if(strSearchDir.toUpperCase().startsWith("FILE:/"))
         {
             // prova con url
             //strSearchDir = strSearchDir.substring(6);
         
             // prova con url
-            try
-            {
-                URL url = new URL(strSearchDir);
-                InputStream ins = url.openStream();
-                ins.close();
-                //URLConnection urlconn = url.openConnection();
-//              System.out.println(urlconn.getContentType());
-//              System.out.println(urlconn.getContent());
-                //InputStream ins = url.openConnection()
-            }
-            catch(MalformedURLException ex)
-            {
-                throw new JIPJVMException(ex);
-            }
-            catch(SecurityException ex)
-            {
-                throw JIPRuntimeException.create(9, "Cannot access the directory " + strSearchDir);
-            }
-            catch(FileNotFoundException ex)
-            {
-                throw ex;
-            }
-            catch(IOException ex)
-            {
-                throw new JIPJVMException(ex);
-            }
+//            try
+//            {
+//                URL url = new URL(strSearchDir);
+//                InputStream ins = url.openStream();
+//                ins.close();
+//            }
+//            catch(MalformedURLException ex)
+//            {
+//                throw new JIPJVMException(ex);
+//            }
+//            catch(SecurityException ex)
+//            {
+//                throw JIPRuntimeException.create(9, "Cannot access the directory " + strSearchDir);
+//            }
+//            catch(FileNotFoundException ex)
+//            {
+//                throw ex;
+//            }
+//            catch(IOException ex)
+//            {
+//                throw new JIPJVMException(ex);
+//            }
 
             // sostituisce il separatorChar per uniformare windows a unix
                         

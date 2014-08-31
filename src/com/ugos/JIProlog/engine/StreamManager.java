@@ -32,15 +32,50 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 //import com.ugos.debug.*;
 
-class StreamManager extends Object
+public class StreamManager
 {
-    public static final InputStream getInputStream(String strFilePath, String strBasePath, String[] strFileName, String[] strCurDir) throws IOException
+	private static StreamManager defaultStreamManager;
+	private static StreamManager streamManager;
+
+	static
+	{
+		defaultStreamManager = new StreamManager();
+	}
+	
+	protected StreamManager()
+	{
+		
+	}
+	
+	public static StreamManager getDefaultStreamManager()
+	{		
+		return defaultStreamManager;
+	}
+	
+	public static StreamManager getStreamManager()
+	{
+		if(streamManager == null)
+		{
+			return defaultStreamManager;
+		}
+		
+		return streamManager;
+	}
+	
+	public static void setStreamManager(StreamManager streamManager)
+	{
+		StreamManager.streamManager = streamManager;
+	}
+	
+    public InputStream getInputStream(String strFilePath, String strBasePath, String[] strFileName, String[] strCurDir) throws IOException
     {
         InputStream ins = null;
                 
@@ -64,7 +99,7 @@ class StreamManager extends Object
         return ins;
     }
     
-    public static final OutputStream getOutputStream(String strFilePath, String strBasePath, boolean bAppend, String[] strFileName, String[] strCurDir) throws IOException
+    public OutputStream getOutputStream(String strFilePath, String strBasePath, boolean bAppend, String[] strFileName, String[] strCurDir) throws IOException
     {
         OutputStream outs = null;
               
@@ -107,7 +142,7 @@ class StreamManager extends Object
     //curDir contiene la dir corrente con separatore finale
     // strFileName contiene il nome del file
     //public static InputStream getInputStream(String strFilePath, String strBasePath, String[] strFileName, String[] strCurDir) throws IOException
-    private static final InputStream getInputStream(String strPath, String[] strFileName, String[] strCurDir) throws IOException, SecurityException
+    private InputStream getInputStream(String strPath, String[] strFileName, String[] strCurDir) throws IOException, SecurityException
     {
         // elimina eventuali apici
         if(strPath.charAt(0) == 39 || strPath.charAt(0) == 34)
@@ -128,8 +163,16 @@ class StreamManager extends Object
         else if(strPath.toUpperCase().startsWith("FILE:/"))
         {
             // prova con url
-            URL url = new URL(strPath);
-            // sostituisce il separatorChar per uniformare windows a unix
+        	URI uri;
+        	URL url;
+			try {
+				uri = new URI(strPath);
+				url = uri.toURL();
+			} catch (URISyntaxException e) {
+				url = new URL(strPath);
+			}
+
+			// sostituisce il separatorChar per uniformare windows a unix
             strPath = strPath.substring(6).replace('\\', File.separatorChar);
             strPath = strPath.replace('/', File.separatorChar);
             strFileName[0] = strPath;//.substring(6);
@@ -228,7 +271,7 @@ class StreamManager extends Object
     }
     
     //curDir contiene la dir corrente con separatore finale
-    private static OutputStream getOutputStream(String strPath, boolean bAppend, String[] strFileName, String[] strCurDir) throws IOException
+    private OutputStream getOutputStream(String strPath, boolean bAppend, String[] strFileName, String[] strCurDir) throws IOException
     {
         // elimina eventuali apici
         if(strPath.charAt(0) == 39 || strPath.charAt(0) == 34)
