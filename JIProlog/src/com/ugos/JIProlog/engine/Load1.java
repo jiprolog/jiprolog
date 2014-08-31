@@ -68,7 +68,7 @@ class Load1 extends Consult1
         String strFileName[] = new String[1];
         String strCurDir[] = new String[1];
 
-        InputStream ins = StreamManager.getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
+        InputStream ins = StreamManager.getStreamManager().getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
         
         String strOldSearchPath = engine.getSearchPath();
         engine.setSearchPath(strCurDir[0]);

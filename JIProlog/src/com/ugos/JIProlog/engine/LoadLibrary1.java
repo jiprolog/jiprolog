@@ -27,7 +27,7 @@ import java.util.*;
 
 final class LoadLibrary1 extends BuiltIn
 {
-    public final boolean unify(final Hashtable varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         String strPath;
         final PrologObject param = getRealTerm(getParam(1));
@@ -61,7 +61,7 @@ final class LoadLibrary1 extends BuiltIn
                 
         try
         {
-            final InputStream ins = StreamManager.getInputStream(strPath, getJIPEngine().getSearchPath(), strFileName, strCurDir);
+            final InputStream ins = StreamManager.getStreamManager().getInputStream(strPath, getJIPEngine().getSearchPath(), strFileName, strCurDir);
             ins.close();
             getJIPEngine().loadLibrary(strFileName[0]);
         }
