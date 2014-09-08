@@ -219,36 +219,37 @@ final class SearchPath1 extends BuiltIn
 //    System.out.println(strSearchDir);  // DBG
         
         
-        try
-        {
-            File file = new File(new File(strSearchDir).getCanonicalPath());
-            String strAbsPath = file.getCanonicalPath();
-            if(file.exists() && file.isDirectory())
-            {
-//                if(strAbsPath.charAt(strAbsPath.length() - 1) == File.separatorChar)
-                    strSearchDir = strAbsPath;
-//                else
-//                    strSearchDir = strAbsPath + File.separator;
-                                
-                return strSearchDir;
-            }
-            else
-            {
-                throw new FileNotFoundException(strSearchDir);
-            }
-        }
-        catch(SecurityException ex)
-        {
-            throw JIPRuntimeException.create(9, "Cannot access the directory " + strSearchDir);
-        }
-        catch(FileNotFoundException ex)
-        {
-            throw ex;
-        }
-        catch(IOException ex)
-        {
-            throw new JIPJVMException(ex);
-        }
+        return strSearchDir;
+//        try
+//        {
+//            File file = new File(new File(strSearchDir).getCanonicalPath());
+//            String strAbsPath = file.getCanonicalPath();
+//            if(file.exists() && file.isDirectory())
+//            {
+////                if(strAbsPath.charAt(strAbsPath.length() - 1) == File.separatorChar)
+//                    strSearchDir = strAbsPath;
+////                else
+////                    strSearchDir = strAbsPath + File.separator;
+//                                
+//                return strSearchDir;
+//            }
+//            else
+//            {
+//                throw new FileNotFoundException(strSearchDir);
+//            }
+//        }
+//        catch(SecurityException ex)
+//        {
+//            throw JIPRuntimeException.create(9, "Cannot access the directory " + strSearchDir);
+//        }
+//        catch(FileNotFoundException ex)
+//        {
+//            throw ex;
+//        }
+//        catch(IOException ex)
+//        {
+//            throw new JIPJVMException(ex);
+//        }
     }
 }
 
