@@ -29,7 +29,7 @@ final class XCall2 extends BuiltIn
     
     // Called by prolog engine when it tries to unify the goal
     // (in this case the goal is a call to a built in predicate)
-    public final boolean unify(final Hashtable varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         if (m_exObj == null)  // Called for the first time
         {
@@ -66,9 +66,23 @@ final class XCall2 extends BuiltIn
             
         JIPCons exParams = new JIPCons(((List)params).getConsCell());
             
+        Hashtable<JIPVariable, JIPVariable> jipVarsTable = new Hashtable<JIPVariable, JIPVariable>();
         // Invoke JIPXCall class
-        return m_exObj.unify(exParams, varsTbl);
+        boolean unify = m_exObj.unify(exParams, jipVarsTable);
+        
+        if(unify)
+        {
+        	Variable var;
+        	for(JIPVariable jvar : jipVarsTable.values())
+        	{
+        		var = (Variable)jvar.getTerm();
+        		varsTbl.put(var, var);
+        	}
+        }
+        
+        return unify;
     }
+    
     
     // return true if the JIPXCall class is deterministic
     public final boolean hasMoreChoicePoints()
