@@ -175,6 +175,8 @@ public class JIProlog
 
     private static void showMessage(String strMsg)
     {
+    	System.out.println(strMsg);
+    	
         //TextMessageDialog dialog = new TextMessageDialog(new Frame(), "JIProlog Standalone Interpreter", strMsg);
 //        dialog.add(new Label(strMsg, Label.CENTER));
         //dialog.setSize(400, 80);

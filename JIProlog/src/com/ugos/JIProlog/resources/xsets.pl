@@ -51,7 +51,7 @@
 
 :-assert(ver(jipxsets, '3.0.1')).
 
-:-use_module('list.pl').
+%:-use_module('list.jip').
 
 %   is_set(+Set)
 is_set(0) :- !, fail.       % catch variables
