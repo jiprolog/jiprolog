@@ -49,8 +49,8 @@ free_variables(Term, VarList):-
 copy_term(Term, Copy):-
     xcall('com.ugos.JIProlog.extensions.terms.CopyTerm2', [Term, Copy]).
     
-name(Atom, Chars):-
-    xcall('com.ugos.JIProlog.extensions.terms.Name2', [Atom, Chars]).
+name(Atom, CharList):-
+    xcall('com.ugos.JIProlog.extensions.terms.Name2', [Atom, CharList]).
 
 char_code(Atom, Code):-
     name(Atom, [Code]).

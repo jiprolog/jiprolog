@@ -27,7 +27,7 @@ import java.util.*;
 
 public class Name2 extends JIPXCall
 {
-    public final boolean unify(final JIPCons input, Hashtable varsTbl)
+    public final boolean unify(final JIPCons input, Hashtable<JIPVariable, JIPVariable> varsTbl)
     {
         JIPTerm atom   = input.getNth(1);
         JIPTerm string = input.getNth(2);
@@ -60,11 +60,11 @@ public class Name2 extends JIPXCall
             {
                 atom = JIPList.NIL;
             }
-            else if(strAtom.charAt(0) == 39)
-            {
-                strAtom = strAtom.substring(1, strAtom.length() - 1);
-                atom = JIPString.create(strAtom);
-            }
+//            else if(strAtom.charAt(0) == 39)
+//            {
+//                strAtom = strAtom.substring(1, strAtom.length() - 1);
+//                atom = JIPString.create(strAtom);
+//            }
             else
             {
                 atom = JIPString.create(strAtom);
@@ -72,6 +72,7 @@ public class Name2 extends JIPXCall
         }
         else if (atom instanceof JIPVariable)
         {
+        	// means atom unbounded
             if (string instanceof JIPVariable)
             {
                 if (((JIPVariable)string).isBounded())
