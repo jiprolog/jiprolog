@@ -429,7 +429,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 String strFileName = (String)m_pred2FileMap.get(strFunctName);
                 if(!strFileName.equals(strFile) && !isMultifile(((Functor)head).getName()))
                 {
-                    throw JIPRuntimeException.create(5, strFunctName);
+                    throw JIPRuntimeException.create(5, strFunctName + "(" + strFileName + ", " + strFile + ")");
                 }
             }
         }
