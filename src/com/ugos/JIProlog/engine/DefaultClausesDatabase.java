@@ -57,7 +57,7 @@ final class DefaultClausesDatabase extends JIPClausesDatabase
         return true;
     }
     
-    public final synchronized Enumeration<Clause> clauses()
+    public final synchronized Enumeration clauses()
     {
         return m_clausesVector.elements();
     }

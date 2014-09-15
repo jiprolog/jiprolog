@@ -112,7 +112,7 @@ public abstract class JIPClausesDatabase extends Object
      * @see com.ugos.JIProlog.engine.JIPClausesEnumeration
      * @return an enumeration of the clauses contained in this database
      */
-    public abstract Enumeration<Clause> clauses();
+    public abstract Enumeration<JIPClause> clauses();
     
     
     final void setFunctor(final String strFuncName, final int nArity)

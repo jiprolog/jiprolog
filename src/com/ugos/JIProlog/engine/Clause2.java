@@ -24,7 +24,7 @@ import java.util.*;
 
 final class Clause2 extends BuiltIn
 {
-    private Enumeration<Clause>  m_enum;
+    private Enumeration  m_enum;
     private boolean m_bFail = false;
     
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
