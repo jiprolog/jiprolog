@@ -31,7 +31,7 @@ public class Time8 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm millis = input.getNth(1);
-        
+
         // check if input is a variable
         if (millis instanceof JIPVariable)
         {
@@ -50,11 +50,11 @@ public class Time8 extends JIPXCall
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
         }
-                
+
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(new Date((long)((JIPNumber)millis).getValue()));
-        
-        final JIPNumber hour   = JIPNumber.create(calendar.get(GregorianCalendar.HOUR));
+
+        final JIPNumber hour   = JIPNumber.create(calendar.get(GregorianCalendar.HOUR_OF_DAY));
         final JIPNumber min    = JIPNumber.create(calendar.get(GregorianCalendar.MINUTE));
         final JIPNumber sec    = JIPNumber.create(calendar.get(GregorianCalendar.SECOND));
         final JIPNumber milsec = JIPNumber.create(calendar.get(GregorianCalendar.MILLISECOND));
@@ -64,7 +64,7 @@ public class Time8 extends JIPXCall
 
         //JIPCons date  = JIPCons.create(year, JIPCons.create(month, JIPCons.create(day, JIPCons.create(hour, JIPCons.create(min, JIPCons.create(sec, JIPCons.create(milsec, null)))))));
         //JIPCons pdate = JIPCons.create(getParam(1), JIPCons.create(getParam(2), JIPCons.create(getParam(3), JIPCons.create(getParam(4), JIPCons.create(getParam(5), JIPCons.create(getParam(6), JIPCons.create(getParam(7), null)))))));
-        
+
         return
             input.getNth(2).unify(year, varsTbl) &&
             input.getNth(3).unify(month, varsTbl) &&
@@ -74,7 +74,7 @@ public class Time8 extends JIPXCall
             input.getNth(7).unify(sec, varsTbl) &&
             input.getNth(8).unify(milsec, varsTbl);
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;
