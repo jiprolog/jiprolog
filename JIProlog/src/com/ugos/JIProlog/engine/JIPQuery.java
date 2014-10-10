@@ -37,25 +37,22 @@ import java.io.Serializable;
  * Home Page: http://www.ugochirico.com
  * @see com.ugos.JIProlog.engine.JIPEngine
  */
-public class JIPQuery extends Object
-//#ifndef _MIDP
-implements Serializable
-//#endif
-
+public class JIPQuery extends Object implements Serializable
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     private WAM          m_wam;
     private PrologObject m_query;
     private boolean      m_bOpen;
     private boolean      m_bNoMore;
-    
+    private boolean      m_bRaiseAbort = true;
+
     JIPQuery(final PrologObject query, final WAM wam)
     {
         m_wam   = wam;
         m_query = query.copy();
     }
-    
+
     /** Searches for another solution.
      * When a solution is found it returns the corresponding JIPTerm object.
      * If there are no more solutions it returns null.<br>
@@ -64,24 +61,33 @@ implements Serializable
      * @exception com.ugos.JIProlog.engine.JIPQueryClosedException
      * @see com.ugos.JIProlog.engine.JIPTerm
      */
-    public final JIPTerm nextSolution() throws JIPQueryClosedException 
+    public final JIPTerm nextSolution() throws JIPQueryClosedException
     {
         boolean bSolution;
-        if(m_bNoMore)
+        try
         {
-            throw JIPRuntimeException.create(49, m_query);
+	        if(m_bNoMore)
+	        {
+	            throw JIPRuntimeException.create(49, m_query);
+	        }
+	        else if (!m_bOpen)
+	        {
+	            m_bOpen = true;
+	            bSolution = m_wam.query(m_query);
+	        }
+	        else
+	        {
+	            bSolution = m_wam.nextSolution();
+	        }
         }
-        
-        else if (!m_bOpen)
+        catch(JIPRuntimeException ex)
         {
-            m_bOpen = true;
-            bSolution = m_wam.query(m_query);
+        	if(ex.getErrorNumber() == 0 && !m_bRaiseAbort)
+        		return null;
+
+        	throw ex;
         }
-        else
-        {
-            bSolution = m_wam.nextSolution();
-        }
-        
+
         // try/catch occorre per intercettare StackOverflow sulla copy
         try
         {
@@ -99,9 +105,9 @@ implements Serializable
         {
             throw new JIPJVMException(er);
         }
-                
+
     }
-    
+
     /** Returns true if the query has more choice points on backtracking.<br>
      * @return true if the query has more choice points or if nextSolution has not been colled yet, false otherwise.
      */
@@ -113,10 +119,10 @@ implements Serializable
             return true;  // qui è tutto pronto per partire
         else if (m_wam.isClosed())
             return false;
-        
+
         return m_wam.hasMoreChoicePoints();
     }
-    
+
     /** Returns true if the query is closed.<br>
      * @return true if the query is closed, false otherwise.
      */
@@ -124,7 +130,7 @@ implements Serializable
     {
         return m_wam.isClosed();
     }
-    
+
     /** Closes the query<br>
      */
     public final void close()
@@ -134,7 +140,7 @@ implements Serializable
             m_wam.closeQuery();
         }
     }
-    
+
     //#ifndef _MIDP
     /** Called by the interpreter to finalize this object<br>.
      * It closes the query if it isn't closed yet.
@@ -145,6 +151,16 @@ implements Serializable
         close();
     }
     //#endif
-    
+
+	public boolean isRaiseAbort()
+	{
+		return m_bRaiseAbort;
+	}
+
+	public void setRaiseAbort(boolean bRaiseAbort)
+	{
+		this.m_bRaiseAbort = bRaiseAbort;
+	}
+
 }
 
