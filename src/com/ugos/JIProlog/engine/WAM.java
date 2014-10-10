@@ -118,19 +118,6 @@ class WAM
         return m_engine;
     }
 
-//  final void setContextModule(final String strContextModule)
-//  {
-//      m_strBaseModule = strContextModule;
-//  }
-//
-//  final String getCurrentContextModule()
-//  {
-//      if(m_curNode != null)
-//          return m_curNode.m_strModule;
-//      else
-//          return m_strBaseModule;
-//  }
-
     // run a query
     boolean query(PrologObject query) throws JIPIsRunningException
     {
