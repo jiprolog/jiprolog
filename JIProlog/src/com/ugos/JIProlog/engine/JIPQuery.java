@@ -45,7 +45,7 @@ public class JIPQuery extends Object implements Serializable
     private PrologObject m_query;
     private boolean      m_bOpen;
     private boolean      m_bNoMore;
-    private boolean      m_bRaiseAbort = true;
+    private boolean      m_bSoftAbort = false;
 
     JIPQuery(final PrologObject query, final WAM wam)
     {
@@ -82,7 +82,7 @@ public class JIPQuery extends Object implements Serializable
         }
         catch(JIPRuntimeException ex)
         {
-        	if(ex.getErrorNumber() == 0 && !m_bRaiseAbort)
+        	if(ex.getErrorNumber() == 0 && m_bSoftAbort)
         		return null;
 
         	throw ex;
@@ -141,7 +141,6 @@ public class JIPQuery extends Object implements Serializable
         }
     }
 
-    //#ifndef _MIDP
     /** Called by the interpreter to finalize this object<br>.
      * It closes the query if it isn't closed yet.
      * Developer would not call it directly.
@@ -150,16 +149,15 @@ public class JIPQuery extends Object implements Serializable
     {
         close();
     }
-    //#endif
 
-	public boolean isRaiseAbort()
+	public boolean isSoftAbort()
 	{
-		return m_bRaiseAbort;
+		return m_bSoftAbort;
 	}
 
-	public void setRaiseAbort(boolean bRaiseAbort)
+	public void setSoftAbort(boolean bSoftAbort)
 	{
-		this.m_bRaiseAbort = bRaiseAbort;
+		this.m_bSoftAbort = bSoftAbort;
 	}
 
 }
