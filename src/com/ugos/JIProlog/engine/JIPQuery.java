@@ -80,11 +80,15 @@ public class JIPQuery extends Object implements Serializable
 	            bSolution = m_wam.nextSolution();
 	        }
         }
-        catch(JIPRuntimeException ex)
+        catch(JIPAbortException ex)
         {
-        	if(ex.getErrorNumber() == 0 && m_bSoftAbort)
+        	if(m_bSoftAbort)
         		return null;
 
+        	throw ex;
+        }
+        catch(JIPRuntimeException ex)
+        {
         	throw ex;
         }
 
