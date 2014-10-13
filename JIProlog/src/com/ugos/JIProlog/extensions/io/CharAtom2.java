@@ -31,7 +31,7 @@ public class CharAtom2 extends JIPXCall
     {
         JIPTerm cha = params.getNth(1);
         JIPTerm atom = params.getNth(2);
-        
+
         // check if input is a variable
         if (cha instanceof JIPVariable)
         {
@@ -42,16 +42,16 @@ public class CharAtom2 extends JIPXCall
                 cha = ((JIPVariable)cha).getValue();
             }
         }
-        
+
         if((cha instanceof JIPNumber))
         {
             if(!((JIPNumber)cha).isInteger())
                 throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
-            
-            int c = (int)((JIPNumber)cha).getValue();
+
+            int c = (int)((JIPNumber)cha).getDoubleValue();
             if(c < 0 || c > 255)
                 throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
-            
+
             //PrologObject term1 = atom;
             JIPTerm term = JIPAtom.create("" + (char)c);
             return atom.unify(term, varsTbl);
@@ -67,18 +67,18 @@ public class CharAtom2 extends JIPXCall
                     atom = ((JIPVariable)atom).getValue();
                 }
             }
-            
+
             if(!(atom instanceof JIPAtom))
                 throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
-            
+
             String strAtom = ((JIPAtom)atom).getName();
             if(strAtom.length() > 1)
                 throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
-            
+
             return cha.unify(JIPNumber.create(strAtom.charAt(0)), varsTbl);
         }
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

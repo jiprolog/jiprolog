@@ -30,7 +30,7 @@ public class Numbervars3 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
-        
+
         // check if input is a variable
         if (term instanceof JIPVariable)
         {
@@ -45,7 +45,7 @@ public class Numbervars3 extends JIPXCall
                 term = ((JIPVariable)term).getValue();
             }
         }
-        
+
         JIPTerm start = input.getNth(2);
         // check if input is a variable
         if (start instanceof JIPVariable)
@@ -61,19 +61,19 @@ public class Numbervars3 extends JIPXCall
                 start = ((JIPVariable)start).getValue();
             }
         }
-        
+
         JIPTerm end = input.getNth(3);
-        
+
         if(!(start instanceof JIPNumber))
             throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
-        
+
         if(!((JIPNumber)start).isInteger())
             throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
-        
-        int nStart = (int)((JIPNumber)start).getValue();
+
+        int nStart = (int)((JIPNumber)start).getDoubleValue();
         int nCount = 0;
         JIPVariable vars[] = term.getVariables();
-        
+
         for(int i = 0; i < vars.length; i++)
         {
             if(!vars[i].isBounded())
@@ -82,10 +82,10 @@ public class Numbervars3 extends JIPXCall
                 nCount++;
             }
         }
-        
+
         if(nCount == 0)
             nCount++;
-        
+
         return end.unify(JIPNumber.create(nCount), varsTbl);
     }
 

@@ -52,7 +52,7 @@ public class Time8 extends JIPXCall
         }
 
         final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date((long)((JIPNumber)millis).getValue()));
+        calendar.setTime(new Date((long)((JIPNumber)millis).getDoubleValue()));
 
         final JIPNumber hour   = JIPNumber.create(calendar.get(GregorianCalendar.HOUR_OF_DAY));
         final JIPNumber min    = JIPNumber.create(calendar.get(GregorianCalendar.MINUTE));
