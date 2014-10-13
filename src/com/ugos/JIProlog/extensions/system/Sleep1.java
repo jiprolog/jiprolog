@@ -30,7 +30,7 @@ public class Sleep1 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
-        
+
         // check if input is a variable
         if (term instanceof JIPVariable)
         {
@@ -49,7 +49,7 @@ public class Sleep1 extends JIPXCall
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
         }
-        
+
         if (!((JIPNumber)term).isInteger())
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
@@ -57,16 +57,16 @@ public class Sleep1 extends JIPXCall
 
         try
         {
-            Thread.currentThread().sleep((int)((JIPNumber)term).getValue());
+            Thread.currentThread().sleep((int)((JIPNumber)term).getDoubleValue());
         }
         catch(InterruptedException ex)
         {
             throw new JIPJVMException(ex);
         }
-        
+
         return true;
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;

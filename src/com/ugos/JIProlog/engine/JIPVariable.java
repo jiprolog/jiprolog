@@ -54,15 +54,15 @@ public class JIPVariable extends JIPTerm
         super(var);
     }
 
-    /** If the variable is bounded it returns the JIPTerm object bounded, otherwise it raises a JIPRuntimeException.
+    /** If the variable is bounded it returns the JIPTerm object bounded, otherwise it return null.
      * @see com.ugos.JIProlog.engine.JIPTerm
      */
-    public final JIPTerm getValue()
+    public JIPTerm getValue()
     {
         if(isBounded())
             return JIPTerm.getJIPTerm((((Variable)getTerm()).getObject()));
         else
-            throw JIPRuntimeException.create(50, getName());
+            return null;
     }
 
     /** Returns the name of the variable

@@ -31,7 +31,7 @@ package com.ugos.JIProlog.engine;
 public class JIPString extends JIPTerm
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     /** Creates a new JIPString object from a string
       * @param strString JIPString object from a string
       */
@@ -39,7 +39,7 @@ public class JIPString extends JIPTerm
     {
         return new JIPString(new PString(strString));
     }
-    
+
     /** Creates a new JIPString object from a list of characters
       * @param string JIPList object
       */
@@ -52,10 +52,10 @@ public class JIPString extends JIPTerm
     {
         super(str);
     }
-    
+
     /** Returns the string
       */
-    public final String getValue()
+    public final String getStringValue()
     {
         return ((PString)getTerm()).getString();
     }

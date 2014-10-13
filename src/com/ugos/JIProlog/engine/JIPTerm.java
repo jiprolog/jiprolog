@@ -44,10 +44,10 @@ public class JIPTerm extends Object implements Clearable
 
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     private PrologObject m_obj;
     private Vector       m_varsVect;
-            
+
     /** Checks if this JIPTerm object unifies with the specified term.
      * Remarks: this method doesn't bind any variable. To actually unifies
      * the terms use the other method unify.
@@ -58,7 +58,7 @@ public class JIPTerm extends Object implements Clearable
     {
         return m_obj.unifiable(term.m_obj);
     }
-    
+
     /** Clones this JIPTerm object.
      * @return Copy of this JIPTerm object .
      */
@@ -66,14 +66,14 @@ public class JIPTerm extends Object implements Clearable
     {
         return getJIPTerm(m_obj.copy());
     }
-    
+
     /** Clears all variables in this JIPTerm object.
      */
     public final void clear()
     {
         m_obj.clear();
     }
-    
+
     /** Unifies this JIPTerm object with the specified term.
      * If this JIPTerm object unifies with the specified term
      * this method unifies the terms and varTable will contains
@@ -102,7 +102,12 @@ public class JIPTerm extends Object implements Clearable
             return false;
         }
     }
-        
+
+    public JIPTerm getValue()
+    {
+    	return this;
+    }
+
     /**
      * Returns a canonical representation of this JIPTerm object i.e. it ignores
      * operator declarations. It has the same behaviour as write_canonical/1
@@ -112,7 +117,7 @@ public class JIPTerm extends Object implements Clearable
     {
         return m_obj.toString();
     }
-    
+
     /**
      * Returns a string representation of this JIPTerm object using
      * the operator declarations contained in JIPEngine object.
@@ -124,7 +129,7 @@ public class JIPTerm extends Object implements Clearable
     {
         return m_obj.toString(engine);
     }
-    
+
     /**
      * Returns a quoted string representation of this JIPTerm object using
      * the operator declarations contained in JIPEngine object.
@@ -136,7 +141,7 @@ public class JIPTerm extends Object implements Clearable
     {
         return m_obj.toStringq(engine);
     }
-    
+
     /**
      * Gets an array of JIPVariable objects containing the variables in this JIPTerm object
      * @return an array of JIPVariable objects containing the variables in this JIPTerm object
@@ -145,7 +150,7 @@ public class JIPTerm extends Object implements Clearable
     public final JIPVariable[] getVariables()
     {
         JIPVariable[] vars;
-        
+
         if(m_obj instanceof Atom)
         {
             vars = new JIPVariable[0] ;
@@ -160,11 +165,11 @@ public class JIPTerm extends Object implements Clearable
             m_varsVect = new Vector(5,2);
             final ConsCell cell = (ConsCell)m_obj;
             extractVariable(cell);
-            
+
             vars = new JIPVariable[m_varsVect.size()];
-            
+
             final Enumeration en = m_varsVect.elements();
-            
+
             //int i = m_varsVect.size();
             int i = 0;
             while (en.hasMoreElements())
@@ -174,10 +179,10 @@ public class JIPTerm extends Object implements Clearable
                 i++;
             }
         }
-        
+
         return vars;
     }
-    
+
     /**
      * Gets an hashtable of JIPVariable objects containing the variables in this JIPTerm object.<br>
      * Variable names are the keys to access to the hashtable.
@@ -192,15 +197,15 @@ public class JIPTerm extends Object implements Clearable
         {
             varsTbl.put(vars[i].getName(), vars[i]);
         }
-        
+
         return varsTbl;
     }
-    
+
     JIPTerm(final PrologObject obj)
     {
         m_obj = obj;
     }
-        
+
     private final void extractVariable(final PrologObject term)
     {
         if(term instanceof ConsCell)
@@ -226,15 +231,15 @@ public class JIPTerm extends Object implements Clearable
             if(((Variable)m_obj).isBounded())
                 return ((Variable)m_obj).getObject();
         }
-        
+
         return m_obj;
     }
-    
+
     final PrologObject getTerm()
     {
         return m_obj;
     }
-    
+
     static final JIPTerm getJIPTerm(final PrologObject obj)
     {
         if(obj instanceof List)
@@ -253,7 +258,7 @@ public class JIPTerm extends Object implements Clearable
             return new JIPCons((ConsCell)obj);
         if(obj instanceof Clause)
             return new JIPClause((Clause)obj);
-        
+
         throw JIPRuntimeException.create(25, obj);
     }
 }

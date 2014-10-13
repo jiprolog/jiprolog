@@ -31,7 +31,7 @@ public class Name2 extends JIPXCall
     {
         JIPTerm atom   = input.getNth(1);
         JIPTerm string = input.getNth(2);
-        
+
         // check if input is a variable
         if (atom instanceof JIPVariable)
         {
@@ -42,14 +42,14 @@ public class Name2 extends JIPXCall
                 atom = ((JIPVariable)atom).getValue();
             }
         }
-        
+
         if (atom instanceof JIPNumber)
         {
             String strAtom;
             if(((JIPNumber)atom).isInteger())
-                strAtom = Integer.toString((int)((JIPNumber)atom).getValue());
+                strAtom = Integer.toString((int)((JIPNumber)atom).getDoubleValue());
             else
-                strAtom = Double.toString(((JIPNumber)atom).getValue());
+                strAtom = Double.toString(((JIPNumber)atom).getDoubleValue());
 
             atom = JIPString.create(strAtom);
         }
@@ -84,17 +84,17 @@ public class Name2 extends JIPXCall
                     throw new JIPParameterUnboundedException(2);
                 }
             }
-            
+
             if(string == JIPList.NIL)
             {
                 string = JIPAtom.create("");
             }
             else if (string instanceof JIPList)
             {
-            	
+
                 // check if number of atom
-                String strVal = (JIPString.create((JIPList)string)).getValue();
-                
+                String strVal = (JIPString.create((JIPList)string)).getStringValue();
+
                 try
                 {
                     double dbVal = Double.valueOf(strVal).doubleValue();
@@ -114,7 +114,7 @@ public class Name2 extends JIPXCall
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.UNDEFINED);
         }
-        
+
         return atom.unify(string, varsTbl);
     }
 

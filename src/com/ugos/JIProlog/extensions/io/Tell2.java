@@ -56,7 +56,7 @@ public final class Tell2 extends JIPXCall
         }
         else if(input instanceof JIPString)
         {
-            strFilePath = ((JIPString)input).getValue();
+            strFilePath = ((JIPString)input).getStringValue();
         }
         else
         {

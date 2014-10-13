@@ -30,7 +30,7 @@ package com.ugos.JIProlog.engine;
 public class JIPNumber extends JIPTerm
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     /** Creates a new JIPNumber object
      * @param d the number
      * @return a new JIPNumber object
@@ -48,7 +48,7 @@ public class JIPNumber extends JIPTerm
     {
         return new JIPNumber(Expression.createNumber(n));
     }
-    
+
     JIPNumber(Expression exp)
     {
         super(exp);
@@ -57,11 +57,11 @@ public class JIPNumber extends JIPTerm
     /** Returns the numeric value of this JIPNumber object
      * @return numeric value of this JIPNumber object
      */
-    public final double getValue()
+    public final double getDoubleValue()
     {
         return ((Expression)getTerm()).getValue();
     }
-    
+
     public final boolean isInteger()
     {
         return ((Expression)getTerm()).isInteger();

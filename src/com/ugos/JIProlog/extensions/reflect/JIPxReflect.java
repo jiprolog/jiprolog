@@ -29,42 +29,42 @@ public class JIPxReflect
 {
     public static final int    ERR_UNBOUNDED = 2101;
     public static final String STR_UNBOUNDED = "Unexpected unbounded variable found";
-    
+
     public static final int    ERR_UNEXPECTED_TERM = 2102;
     public static final String STR_UNEXPECTED_TERM = "Unexpected term found";
-    
+
     public static final int    ERR_INVALID_HANDLE = 2103;
     public static final String STR_INVALID_HANDLE = "Invalid stream handle";
-    
+
     public static final int    ERR_CLASS_NOT_FOUND = 2104;
     public static final String STR_CLASS_NOT_FOUND = "Class not found";
-    
+
     public static final int    ERR_CLASS_CAST = 2105;
     public static final String STR_CLASS_CAST = "Unexptected class found";
-    
+
     public static final int    ERR_INSTANTIATION = 2106;
     public static final String STR_INSTANTIATION = "Instantiation error";
-    
+
     public static final int    ERR_METHOD_NOT_FOUND = 2107;
     public static final String STR_METHOD_NOT_FOUND = "Method not found";
-    
+
     public static final int    ERR_OBJECT_NOT_FOUND = 2108;
     public static final String STR_OBJECT_NOT_FOUND = "Object not found";
-    
+
     private static Hashtable s_classHandleTbl;
-    
+
     static
     {
         s_classHandleTbl  = new Hashtable(10);
     }
-    
+
     public static final JIPAtom putObject(Object object)
     {
         String strHandle = "#" + object.hashCode();
         s_classHandleTbl.put(strHandle, object);
         return JIPAtom.create(strHandle);
     }
-    
+
     public static final Object getObject(String strHandle)
     {
         if(s_classHandleTbl.containsKey(strHandle))
@@ -76,7 +76,7 @@ public class JIPxReflect
             return null;
         }
     }
-    
+
     public static final void releaseObject(String strHandle)
     {
         if(s_classHandleTbl.containsKey(strHandle))
@@ -84,7 +84,7 @@ public class JIPxReflect
             s_classHandleTbl.remove(strHandle);
         }
     }
-    
+
     static final JIPTerm marshallOut(Object term)
     {
         if(term instanceof Number)
@@ -125,8 +125,8 @@ public class JIPxReflect
             JIPNumber num = (JIPNumber) term;
             if(num.isInteger())
             {
-                int nVal = (int)num.getValue();
-                
+                int nVal = (int)num.getDoubleValue();
+
                 if(Math.abs(nVal) > Integer.MAX_VALUE)
                     return new Long(nVal);
                 else
@@ -134,13 +134,13 @@ public class JIPxReflect
             }
             else
             {
-                return new Double(num.getValue());
+                return new Double(num.getDoubleValue());
             }
         }
         else if(term instanceof JIPAtom)
         {
             String strAtom = term.toString();
-            
+
             if(strAtom.startsWith("#"))
             {
                 Object obj = JIPxReflect.getObject(strAtom);
@@ -157,7 +157,7 @@ public class JIPxReflect
             {
                 return strAtom;
             }
-                    
+
         }
         else if(term instanceof JIPString)
         {
@@ -168,14 +168,14 @@ public class JIPxReflect
             return term;
         }
     }
-    
+
     static Class[] getParamsClass(JIPTerm className) throws NoSuchMethodException, ClassNotFoundException
     {
         if(className instanceof JIPAtom)
         {
             // get the class
             Class paramClass[] = new Class[0];
-        
+
             // get the rigth method
             return paramClass;
         }
@@ -228,15 +228,15 @@ public class JIPxReflect
                 classVect.addElement(paramClass);
                 params = (JIPCons)getTerm(params.getTail());
             }
-                    
+
             Class paramClass[] = new Class[classVect.size()];
             classVect.copyInto(paramClass);
-            
+
             // get the rigth constructor
             return paramClass;
         }
     }
-    
+
     private static JIPTerm getTerm(JIPTerm term)
     {
         if(term instanceof JIPVariable)
@@ -244,7 +244,7 @@ public class JIPxReflect
             if(((JIPVariable)term).isBounded())
                 return ((JIPVariable)term).getValue();
         }
-        
+
         return term;
     }
 }
