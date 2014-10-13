@@ -20,13 +20,25 @@
 
 package com.ugos.JIProlog.engine;
 
-import java.util.Hashtable;
-
-final class Abort0 extends BuiltIn
+/**
+ * JIPJVMException is the exception raised by the interpreter when a Java generic exception
+ * is raised during execution.
+ * @version 3.0
+ * @author Ugo Chirico 2005<br>
+ * Home Page: http://www.ugochirico.com
+ */
+public class JIPAbortException extends JIPRuntimeException
 {
-    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
+    /**
+	 *
+	 */
+	private static final long	serialVersionUID	= -6669335200974896775L;
+
+	/** Constructs a new JIPJVMException
+     * @param ex the JVM exception thrown
+     */
+    public JIPAbortException()
     {
-        // do nothing
-        throw new JIPAbortException();
+        super(create(0, "Aborted by User"));
     }
 }

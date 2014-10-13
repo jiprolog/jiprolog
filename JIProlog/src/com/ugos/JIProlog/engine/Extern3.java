@@ -33,7 +33,7 @@ final class Extern3 extends BuiltIn
         int          nArity;
         ConsCell     params;
         PrologObject pred = getRealTerm(getParam(1));
-        
+
         // controlla se identificativo di modulo
         if(pred instanceof Functor && ((Functor)pred).getName().equals(":/2"))
         {
@@ -45,7 +45,7 @@ final class Extern3 extends BuiltIn
         {
             strModuleName = getWAM().m_curNode.m_strModule;
         }
-                    
+
         // head deve essere instanza di funtore /2 del tipo name/arity
         if(pred instanceof Functor && ((Functor)pred).getName().equals("//2"))
         {
@@ -57,16 +57,16 @@ final class Extern3 extends BuiltIn
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
         }
-            
+
         final PrologObject exClass = getRealTerm(getParam(2));
-        
+
         if(exClass instanceof PString)
             strXClassName = ((PString)exClass).getString();
         else if(exClass instanceof Atom)
             strXClassName = ((Atom)exClass).getName();
         else
             throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM_OR_STRING);
-        
+
         final PrologObject attribs = getRealTerm(getParam(3));
         if(attribs instanceof PString)
             strAttributes = ((PString)attribs).getString();
@@ -74,12 +74,12 @@ final class Extern3 extends BuiltIn
             strAttributes = ((Atom)attribs).getName();
         else
             throw new JIPParameterTypeException(3, JIPParameterTypeException.ATOM_OR_STRING);
-        
+
         apply(strFunctName, nArity, strModuleName, strXClassName, strAttributes);
-        
+
         return true;
     }
-    
+
     protected final void apply(String strFunctName, int nArity, String strModuleName, String strXClassName, String strAttributes)
     {
         try
@@ -89,18 +89,18 @@ final class Extern3 extends BuiltIn
                 jipDB = (JIPClausesDatabase)JIPEngine.getClassLoader().loadClass(strXClassName).newInstance();
             else
                 jipDB = (JIPClausesDatabase)Class.forName(strXClassName).newInstance();
-            
-            
+
+
             jipDB.setFunctor(strFunctName, nArity);
 
-            if(strAttributes.charAt(0) == 39 || strAttributes.charAt(0) == 34)
+            if(!strAttributes.isEmpty() && (strAttributes.charAt(0) == 39 || strAttributes.charAt(0) == 34))
             {
                 strAttributes = strAttributes.substring(1, strAttributes.length() - 1);
             }
-            
+
             jipDB.setJIPEngine(getJIPEngine());
             jipDB.setAttributes(strAttributes);
-            
+
             getJIPEngine().getGlobalDB().addClausesDatabase(jipDB, strModuleName, strFunctName + "/" + Integer.toString(nArity));
         }
         catch(ClassNotFoundException ex)
