@@ -83,18 +83,19 @@ final class PrettyPrinter extends Object
                 return "{}";
 
             if(Q_CHARS.indexOf(strAtom) > -1)
-            //if(strAtom.equals(",") || strAtom.equals(".") || strAtom.equals("["))
                 return "'" + strAtom + "'";
 
             boolean bQuoted = false;
-            boolean bSimpleFound = false;
-            boolean bSpecialFound = false;
-            boolean bSingletonFound = false;
 
             String strRet = "";
 
             // se comincia con una maiuscola occorre l'apice
             if(PrologTokenizer.UPPERCASE_CHARS.indexOf(strAtom.charAt(0)) > -1)
+                bQuoted = true;
+
+            // se comincia con un numero occorre l'apice
+            char c = strAtom.charAt(0);
+            if(c < 58 && c > 47)
                 bQuoted = true;
 
             // se contiene almeno uno spazio occorre l'apice
@@ -103,6 +104,10 @@ final class PrettyPrinter extends Object
 
             if(!bQuoted)
             {
+            	boolean bSimpleFound = false;
+                boolean bSpecialFound = false;
+                boolean bSingletonFound = false;
+
 	            // tratta i caratteri speciali
 	            for(int i = 0; i < strAtom.length(); i++)
 	            {
@@ -122,9 +127,10 @@ final class PrettyPrinter extends Object
 	                        break;
 
 	                    default:
-	                        char c = strAtom.charAt(i);
+	                        c = strAtom.charAt(i);
 	                        if(PrologTokenizer.LOWERCASE_CHARS.indexOf(c) > -1 ||
-	                           PrologTokenizer.UPPERCASE_CHARS.indexOf(c) > -1)
+	                           PrologTokenizer.UPPERCASE_CHARS.indexOf(c) > -1 ||
+	                           (c < 58 && c > 47))
 	                        {
 	                            bSimpleFound = true;
 	                            strRet+= c;
@@ -154,41 +160,28 @@ final class PrettyPrinter extends Object
 	                }
 	            }
 
+//	            System.out.println("" + bSimpleFound + " " + bSingletonFound + " " + bSpecialFound);
+
 	            bQuoted = bQuoted ||
 	                (bSimpleFound && bSingletonFound) ||
 	                (bSpecialFound && bSingletonFound) ||
 	                (bSimpleFound && bSpecialFound);
 
-	//            if(opManager != null && !bQuoted)
-	//            {
-	//            	Enumeration<?> en = opManager.getOperators();
-	//
-	//            	String op;
-	//            	while(en.hasMoreElements() && !bQuoted)
-	//            	{
-	//            		op = (String)en.nextElement();
-	//            		if(strRet.contains(op))
-	//            		{
-	//            			bQuoted = true;
-	//            		}
-	//            	}
-	//            }
+//	            System.out.println("Quoted " + bQuoted);
+            }
+            else
+            {
+            	strRet = strAtom;
             }
 
             if(bQuoted)
             {
-//                // raddoppia eventuali backslash
-//                int nPos = strRet.indexOf('\\');
-//                while(nPos > -1)
-//                {
-//                    strRet = strRet.substring(0, nPos + 1) + strRet.substring(nPos, strRet.length());
-//                    nPos = strRet.indexOf(nPos + 2, '\\');
-//                }
-
                 return "'" + strRet + "'";
             }
             else
+            {
                 return strRet;
+            }
         }
         else
         {
