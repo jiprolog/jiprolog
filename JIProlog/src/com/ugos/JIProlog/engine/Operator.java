@@ -20,8 +20,6 @@
 
 package com.ugos.JIProlog.engine;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 final class Operator
 {
@@ -29,19 +27,19 @@ final class Operator
     public String m_strAssoc;
     public String m_strName;
     public Operator m_suppOp;
-        
+
     public Operator(final int nPrec, final String strAssoc, final String strName)
     {
         m_nPrecedence = nPrec;
         m_strAssoc = strAssoc;
         m_strName = strName;
     }
-    
+
     final Operator getSupplementaryOp()
     {
         return m_suppOp;
     }
-    
+
     final Operator getInfix()
     {
         if(isInfix())
@@ -52,7 +50,7 @@ final class Operator
             else
                 return null;
     }
-    
+
     final Operator getPrefix()
     {
         if(isPrefix())
@@ -63,7 +61,7 @@ final class Operator
             else
                 return null;
     }
-    
+
     final Operator getPostfix()
     {
         if(isPostfix())
@@ -74,17 +72,17 @@ final class Operator
             else
                 return null;
     }
-    
+
     final boolean isBinary()
     {
         return isInfix();
     }
-    
+
     final boolean isUnary()
     {
         return !isInfix();
     }
-    
+
     final int getArity()
     {
         if(isInfix())
@@ -96,42 +94,42 @@ final class Operator
     {
         return m_nPrecedence;
     }
-    
+
     final String getAssoc()
     {
         return m_strAssoc;
     }
-    
+
     final String getName()
     {
         return m_strName;
     }
-    
+
     final boolean isInfix()
     {
         return m_strAssoc.equals("yfx") || m_strAssoc.equals("xfx") || m_strAssoc.equals("xfy") || m_strAssoc.equals("yfy");
     }
-    
+
     final boolean isPrefix()
     {
         return m_strAssoc.equals("fx") || m_strAssoc.equals("fy");
     }
-    
+
     final boolean isPostfix()
     {
         return m_strAssoc.equals("xf") || m_strAssoc.equals("yf");
     }
-    
+
     final boolean isRightAssoc()
     {
         return (m_strAssoc.charAt(m_strAssoc.length() - 1) == 'y');
     }
-    
+
     final boolean isLeftAssoc()
     {
         return (m_strAssoc.charAt(0) == 'y');
     }
-    
+
     public final String toString()
     {
         return getName();

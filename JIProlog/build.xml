@@ -12,16 +12,16 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<echo message="Ant version is ${ant.version}" />
 
 		<!-- Main project -->
-		<property name="project.name" value="JIProlog 3.1" />
+		<property name="project.name" value="JIProlog 3.2" />
 		<property name="project.root" value="c:/progetti/Applicazioni/JIProlog/" />
-		<property name="project.version" value="3.1.0.x" />
+		<property name="project.version" value="3.2.0.x" />
 		<property name="project.deploy.dir" value="${project.root}/Deploy" />
 		<property name="project.src" value="src" />
 		<property name="project.bin" value="bin" />
 
 		<property name="project.proguardconf" value="jiprolog.pro" />
-	
-		
+
+
 		<!-- JIProlog  -->
 		<property name="project.jiprolog.root" value="${project.root}/JIProlog" />
 		<property name="project.jiprolog.lib" value="${project.jiprolog.root}/lib" />
@@ -44,14 +44,14 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<property name="project.main.class" value="com.ugos.JIProlog.JIProlog" />
 		<property name="project.keystore" value="ugochirico.ks" />
 		<property name="project.storepass" value="seagull.7" />
-		
+
 		<echo message="JIProlog root folder is ${project.root}" />
 
-		
+
 		<!-- ProGuard -->
 		<property name="proguard.jar" value="c:\programmi\proguard4.8\lib\proguard.jar" />
 		<property name="proguard.gui.jar" value="c:\programmi\proguard4.8\lib\proguardgui.jar" />
-				
+
 	</target>
 
 	<target name="jar-it" depends="init" description="Jar the project.">
@@ -65,7 +65,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 	</target>
 
 	<target name="deploy" depends="Proguard" description="Deploy">
-			
+
 		<!-- jiprolog package -->
 		<copy todir="${project.deploy.dir}/JIPConsole/bin/" file="${project.jiprolog.jar}"/>
 		<copy todir="${project.deploy.dir}/JIPrologSDK/bin/" file="${project.jiprolog.jar}"/>
@@ -111,5 +111,5 @@ Simple script to jar, obfuscate and run a project 3.0.
 			<arg line="-outjars ${project.jiprolog.jar}"/>
 		</java>
 	</target>
-	
+
 </project>

@@ -27,10 +27,7 @@ import java.util.Hashtable;
 import java.io.Serializable;
 //#endif
 
-abstract class PrologObject implements Clearable
-//#ifndef _MIDP
-, Serializable
-//#endif
+abstract class PrologObject implements Clearable, Serializable
 {
     final static long serialVersionUID = 300000001L;
 

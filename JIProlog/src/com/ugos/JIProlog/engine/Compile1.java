@@ -35,7 +35,7 @@ final class Compile1 extends Consult1
     {
         String strPath = null;
         final PrologObject path = getRealTerm(getParam(1));
-                        
+
         if(path instanceof Atom)
         {
             strPath = ((Atom)path).getName();
@@ -48,12 +48,12 @@ final class Compile1 extends Consult1
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
         }
-        
+
         compile(strPath, getJIPEngine());
 
         return true;
     }
-    
+
     public static final void compile(String strPath, final JIPEngine engine)
     {
         InputStream ins = null;
@@ -67,26 +67,26 @@ final class Compile1 extends Consult1
             oldins = engine.getCurrentInputStream();
             strOldInputStreamName = engine.getCurrentInputStreamName();
             engine.setCurrentInputStream(ins, strPath);
-             
-            List predList = null;
+
+//            List predList = null;
             //ParserInputStream pins = new ParserInputStream(ins);
-            
+            ArrayList<PrologObject> program = new ArrayList<PrologObject>();
             PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins, engine.getEncoding())), engine.getOperatorManager(), strPath);
-            
+
             try
             {
                 PrologObject term;
-                //final Hashtable exportTbl = new Hashtable(10,1);
-                //final WAM wam = new WAM(engine);
+
                 while ((term = parser.parseNext()) != null)
                 {
+                	program.add(term);
                     //System.out.println(term);
-                    predList = new List(term, predList);
+//                    predList = new List(term, predList);
                 }
-                
+
                 ins.close();
-                
-                predList = (List)predList.reverse();
+
+//                predList = (List)predList.reverse();
             }
             catch(IOException ex)
             {
@@ -94,15 +94,15 @@ final class Compile1 extends Consult1
                 throw new JIPJVMException(ex);
                 //throw new JIPRuntimeException("Unable to consult " + strStreamName + ": " + ex.toString());
             }
-                             
+
             ins.close();
-            
+
             final int nPos = strFileName[0].lastIndexOf('.');
             strPath = strFileName[0].substring(0, nPos) + ".jip";
-            
+
             final File outf = new File(strPath);
             final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
-            out.writeObject(predList);
+            out.writeObject(program);
             out.close();
         }
         catch(FileNotFoundException ex)
@@ -113,55 +113,55 @@ final class Compile1 extends Consult1
                     ins.close();
             }
             catch(IOException ex1){};
-            
+
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
-            
+
             throw JIPRuntimeException.create(6, strPath);
         }
         catch(IOException ex)
         {
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
-            
+
             try
             {
                 if(ins != null)
                     ins.close();
             }
             catch(IOException ex1){}
-            
+
             throw new JIPJVMException(ex);
         }
         catch(SecurityException ex)
         {
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
-            
+
             try
             {
                 if(ins != null)
                     ins.close();
             }
             catch(IOException ex1){}
-            
+
             throw JIPRuntimeException.create(9, null);
         }
         catch(JIPRuntimeException ex)
         {
-            
+
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
-            
+
             ex.m_strFileName = strPath;
-            
+
             try
             {
                 if(ins != null)
                     ins.close();
             }
             catch(IOException ex1){}
-            
+
             throw ex;
         }
     }

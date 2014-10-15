@@ -59,7 +59,7 @@
 % Quintus / SWI compatibility    
 :-op(1150, fx, meta_predicate).
 
-meta_predicate X :- module_transparent X.
+meta_predicate(X) :- module_transparent X.
 
 
 load_files([]):-!.

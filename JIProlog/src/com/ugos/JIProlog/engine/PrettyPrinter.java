@@ -102,63 +102,60 @@ final class PrettyPrinter extends Object
             if(strAtom.indexOf(' ') > -1)
                 bQuoted = true;
 
-            if(!bQuoted)
+        	boolean bSimpleFound = false;
+            boolean bSpecialFound = false;
+            boolean bSingletonFound = false;
+
+            // tratta i caratteri speciali
+            for(int i = 0; i < strAtom.length(); i++)
             {
-            	boolean bSimpleFound = false;
-                boolean bSpecialFound = false;
-                boolean bSingletonFound = false;
+                switch(strAtom.charAt(i))
+                {
+                    case '\'':
+                        strRet+= "''";
+                        bQuoted = true;
+                        break;
 
-	            // tratta i caratteri speciali
-	            for(int i = 0; i < strAtom.length(); i++)
-	            {
-	                switch(strAtom.charAt(i))
-	                {
-	                    case '\'':
-	                        strRet+= "''";
-	                        bQuoted = true;
-	                        break;
+                    case '\\':
+                        bSpecialFound = true;
+                        strRet += "\\";
+                        //if(bSimpleFound)
+                        //strRet+= "\\\\";
+                        //bQuoted = true;
+                        break;
 
-	                    case '\\':
-	                        bSpecialFound = true;
-	                        strRet += "\\";
-	                        //if(bSimpleFound)
-	                        //strRet+= "\\\\";
-	                        //bQuoted = true;
-	                        break;
-
-	                    default:
-	                        c = strAtom.charAt(i);
-	                        if(PrologTokenizer.LOWERCASE_CHARS.indexOf(c) > -1 ||
-	                           PrologTokenizer.UPPERCASE_CHARS.indexOf(c) > -1 ||
-	                           (c < 58 && c > 47))
-	                        {
-	                            bSimpleFound = true;
-	                            strRet+= c;
-	                        }
-	                        else if(PrologTokenizer.SINGLETON_CHARS.indexOf(c) > -1)
-	                        {
-	                            bSingletonFound = true;
-	                            strRet+= c;
-	                        }
-	                        else if(c <= 13 && c >= 7)
-	                        {
-	                            bQuoted = true;
-	                            strRet+= "\\" + ESCAPE[c - 7];;
-	                        }
-	                        else if(c < ' ')
-	                        {
-	                            bQuoted = true;
-	                            strRet+= "\\x" + Encoder.byteToHexString((byte)c);
-	                            Integer.toString(c);
-	                            //strRet+= "~" + (char)(c + '@');
-	                        }
-	                        else
-	                        {
-	                            bSpecialFound = true;
-	                            strRet+= c;
-	                        }
-	                }
-	            }
+                    default:
+                        c = strAtom.charAt(i);
+                        if(PrologTokenizer.LOWERCASE_CHARS.indexOf(c) > -1 ||
+                           PrologTokenizer.UPPERCASE_CHARS.indexOf(c) > -1 ||
+                           (c < 58 && c > 47))
+                        {
+                            bSimpleFound = true;
+                            strRet+= c;
+                        }
+                        else if(PrologTokenizer.SINGLETON_CHARS.indexOf(c) > -1)
+                        {
+                            bSingletonFound = true;
+                            strRet+= c;
+                        }
+                        else if(c <= 13 && c >= 7)
+                        {
+                            bQuoted = true;
+                            strRet+= "\\" + ESCAPE[c - 7];;
+                        }
+                        else if(c < ' ')
+                        {
+                            bQuoted = true;
+                            strRet+= "\\x" + Encoder.byteToHexString((byte)c);
+                            Integer.toString(c);
+                            //strRet+= "~" + (char)(c + '@');
+                        }
+                        else
+                        {
+                            bSpecialFound = true;
+                            strRet+= c;
+                        }
+                }
 
 //	            System.out.println("" + bSimpleFound + " " + bSingletonFound + " " + bSpecialFound);
 
@@ -168,10 +165,6 @@ final class PrettyPrinter extends Object
 	                (bSimpleFound && bSpecialFound);
 
 //	            System.out.println("Quoted " + bQuoted);
-            }
-            else
-            {
-            	strRet = strAtom;
             }
 
             if(bQuoted)
