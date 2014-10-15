@@ -120,6 +120,8 @@ public class JIPxReflect
 
     static final Object marshallIn(JIPTerm term)
     {
+    	term = term.getValue();
+
         if(term instanceof JIPNumber)
         {
             JIPNumber num = (JIPNumber) term;
