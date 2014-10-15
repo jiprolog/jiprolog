@@ -25,23 +25,22 @@ import java.util.Hashtable;
 class Functor extends ConsCell
 {
     final static long serialVersionUID = 300000005L;
-    
+
     private String   m_strName;
     private int      m_nArity;
     private String   m_strFriendlyName;
-    
+
     public Functor(final String strName, final ConsCell params)
     {
         this(Atom.createAtom(strName), params);
     }
-    
+
     public Functor(final Atom name, final ConsCell params)
     {
         super(name, params);
-        
+
         m_strName    = name.getName();
-//        m_bIsBuiltIn = BuiltInFactory.isBuiltIn(m_strName);
-        
+
         final int nPos = m_strName.lastIndexOf('/');
         if(nPos == -1)
         {
@@ -55,18 +54,17 @@ class Functor extends ConsCell
             m_strFriendlyName = m_strName.substring(0, nPos);
         }
     }
-    
+
     public Functor(final Atom name)
     {
         super(name, null);
-        
+
         m_strName    = name.getName();
-//        m_bIsBuiltIn = BuiltInFactory.isBuiltIn(m_strName);
-        
+
         m_nArity = 0;
         m_strFriendlyName = m_strName;
     }
-    
+
     public PrologObject copy(final Hashtable<Variable, Variable> varTable)
     {
         if(getParams() != null)
@@ -74,53 +72,43 @@ class Functor extends ConsCell
         else
             return new Functor(m_strName, null);
     }
-    
+
     public final String getName()
     {
         return m_strName;
     }
-    
+
     public final Atom getAtom()
     {
         return (Atom)m_head;
     }
-    
+
     public final String getFriendlyName()
     {
         return m_strFriendlyName;
     }
-    
+
     public final int getArity()
     {
         return m_nArity;
     }
-    
+
     public final ConsCell getParams()
     {
         return (ConsCell)m_tail;
     }
-    
+
     public final void setParams(final ConsCell params)
     {
         m_tail = params;
     }
-    
-//    public final boolean isStatic()
-//    {
-//        return BuiltInFactory.isStatic(getName());
-//    }
-    
-//    public final boolean isOperator()
-//    {
-//        return Operator.contains(m_strFriendlyName);
-//    }
-    
+
     public boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
     {
 //      System.out.println("*** Functor unify: " + this + " - " + obj);
         //System.out.println(obj);
         //System.out.println(obj.getClass());
-    
+
         if (obj instanceof Functor)
         {
 //          System.out.println("*** obj is Functor: ");
@@ -136,7 +124,7 @@ class Functor extends ConsCell
             return false;
         }
     }
-    
+
     static final Functor getFunctor(PrologObject term)
     {
         // check if variable (used in metacall variable
@@ -144,7 +132,7 @@ class Functor extends ConsCell
         {
             term = ((Variable)term).getObject();
         }
-        
+
         // check type
         if (term instanceof Atom)
         {
@@ -162,6 +150,6 @@ class Functor extends ConsCell
             return (Functor)term;
         else
             throw JIPRuntimeException.create(45, term);
-            
+
     }
 }

@@ -538,7 +538,7 @@ write_dir([X|Xs]):-
 dir(X):-
     xcall('com.ugos.JIProlog.extensions.io.Dir1', [X]).
 
-cd Dir:-
+cd(Dir):-
     searchpath(Dir).
 
 make_directory(Dir):-

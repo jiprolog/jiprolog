@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-public class PrologProgram implements Serializable 
+public class PrologProgram implements Serializable
 {
 	private String program;
 	private String programName;
-	
+
 	/**
-     * Creates a theory getting its source text from an input stream
+     * Creates a program getting its source text from an input stream
      *
      * @param is the input stream acting as source
      */
@@ -26,10 +26,10 @@ public class PrologProgram implements Serializable
     }
 
     /**
-     * Creates a theory from its source text
+     * Creates a program from its source text
      *
-     * @param theory the source text
-     * @throws s InvalidTheoryException if theory is null
+     * @param the program
+     *
      */
     public PrologProgram(String program)
     {
@@ -37,13 +37,13 @@ public class PrologProgram implements Serializable
         programName = "" + program.hashCode();
 
     }
-    
+
     public PrologProgram(File programFile) throws FileNotFoundException, IOException
     {
         this(new FileInputStream(programFile));
         this.programName = programFile.getName();
     }
-    
+
 //    PrologProgram() {
 //        this.program = "";
 //    }

@@ -25,9 +25,9 @@ import java.util.Hashtable;
 class List extends ConsCell
 {
     final static long serialVersionUID = 300000006L;
-    
+
     public final static List NIL = new List(null, null);
-    
+
     public List(final PrologObject head, final PrologObject tail)
     {
         super(head, ((tail instanceof List || tail instanceof Functor) ? tail : ((tail instanceof ConsCell) ? new List((ConsCell)tail) : tail)));
@@ -38,7 +38,7 @@ class List extends ConsCell
         this((list == null) ? null : list.getHead(), (list == null) ? null : list.getTail());
         //super(list.getHead(), list.getTail());
     }
-    
+
     public boolean _unify(final PrologObject obj, final Hashtable table)
     {
 //        System.out.println("*List Match: " + toString() + " - " + obj.toString());
@@ -49,7 +49,7 @@ class List extends ConsCell
             {
                 if(((ConsCell)obj).m_head == null)
                     return false;
-                
+
                 if(m_head._unify(((ConsCell)obj).m_head, table))
                 {
 //                    System.out.println("*List Match: m_head match");
@@ -94,7 +94,7 @@ class List extends ConsCell
         else
             return false;
     }
-    
+
     public PrologObject copy(final Hashtable varTable)
     {
         if(m_head != null)
@@ -106,19 +106,18 @@ class List extends ConsCell
         {
             return List.NIL;
         }
-        //return new List((ConsCell)super.copy(varTable));
     }
-    
+
     public final ConsCell reverse()
     {
         return new List(super.reverse());
     }
-    
+
     public final ConsCell getConsCell()
     {
         if(this == List.NIL)
             return ConsCell.NIL;
-        
+
         if(m_tail == null)
             return new ConsCell(m_head, null);
         else

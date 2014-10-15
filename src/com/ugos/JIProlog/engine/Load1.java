@@ -20,7 +20,6 @@
 
 package com.ugos.JIProlog.engine;
 
-import java.io.FileNotFoundException;
 import java.io.*;
 import java.util.*;
 
@@ -30,7 +29,7 @@ class Load1 extends Consult1
     {
         String strPath = null;
         final PrologObject path = getRealTerm(getParam(1));
-                        
+
         if(path instanceof Atom)
         {
             strPath = ((Atom)path).getName();
@@ -62,43 +61,50 @@ class Load1 extends Consult1
         }
         return true;
     }
-    
+
     static final void load(String strPath, JIPEngine engine) throws IOException, ClassNotFoundException
     {
         String strFileName[] = new String[1];
         String strCurDir[] = new String[1];
 
         InputStream ins = StreamManager.getStreamManager().getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
-        
+
         String strOldSearchPath = engine.getSearchPath();
         engine.setSearchPath(strCurDir[0]);
         load(ins, strFileName[0], engine);
         engine.setSearchPath(strOldSearchPath);
     }
-    
+
     static final void load(InputStream ins, String strStramName, JIPEngine engine) throws IOException, ClassNotFoundException
     {
         try
         {
             final ObjectInputStream oins = new ObjectInputStream(ins);
-            List predList = (List)oins.readObject();
+            ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
+//            List predList = (List)oins.readObject();
             oins.close();
-            
+
             //System.out.println("load + " + predList.toString(engine));
-            
+
             engine.getGlobalDB().unconsult(strStramName);
-            
-            PrologObject pred;
+
             final Hashtable exportTbl = new Hashtable(10,1);
             exportTbl.put("#module", GlobalDB.USER_MODULE);
             final WAM wam = new WAM(engine);
-            while(predList != null)
+
+            for(PrologObject pred : program)
             {
-                pred = getRealTerm(predList.getHead());
-                predList = (List)getRealTerm(predList.getTail());
-                                
+                pred = getRealTerm(pred);
                 _assert(pred, engine, strStramName, null, exportTbl, wam);
             }
+
+//            while(predList != null)
+//            {
+//                pred = getRealTerm(predList.getHead());
+//                predList = (List)getRealTerm(predList.getTail());
+//
+//                _assert(pred, engine, strStramName, null, exportTbl, wam);
+//            }
         }
         catch(SecurityException ex)
         {
@@ -127,7 +133,7 @@ class Load1 extends Consult1
                 ins.close();
             }
             catch(IOException ex1){}
-            
+
             throw ex;
         }
     }

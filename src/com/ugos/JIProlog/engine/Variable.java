@@ -74,7 +74,6 @@ final class Variable extends PrologObject//Serializable
     public final String getName()
     {
         return m_strName;
-        //return getLastVariable().m_strName;
     }
 
     public final int getAddress()
