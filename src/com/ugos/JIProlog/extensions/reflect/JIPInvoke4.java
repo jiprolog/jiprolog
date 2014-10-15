@@ -33,7 +33,7 @@ public class JIPInvoke4 extends JIPXCall
         JIPTerm methodProto = params.getNth(2);
         JIPTerm paramList  = params.getNth(3);
         JIPTerm retVal     = params.getNth(4);
-        
+
         // check if className is a variable
         if (handle instanceof JIPVariable)
         {
@@ -48,10 +48,10 @@ public class JIPInvoke4 extends JIPXCall
                 handle = ((JIPVariable)handle).getValue();
             }
         }
-        
+
         if(!(handle instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         // check if className is a variable
         if (methodProto instanceof JIPVariable)
         {
@@ -66,10 +66,10 @@ public class JIPInvoke4 extends JIPXCall
                 methodProto = ((JIPVariable)methodProto).getValue();
             }
         }
-        
+
         if(!(methodProto instanceof JIPAtom) && !(methodProto instanceof JIPFunctor))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         // check if paramList  is a variable
         if (paramList instanceof JIPVariable)
         {
@@ -84,20 +84,21 @@ public class JIPInvoke4 extends JIPXCall
                 paramList  = ((JIPVariable)paramList ).getValue();
             }
         }
-        
+
+
         if(!(paramList instanceof JIPList))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-                
+
         try
         {
             Vector objVect = new Vector();
             JIPList listParam = (JIPList)paramList;
-            
+
             while(listParam != null && listParam.getHead() != null)
             {
                 JIPTerm term = listParam.getHead();
                 Object marshalledTerm = JIPxReflect.marshallIn(term);
-                
+
 //                if(marshalledTerm instanceof Integer)
 //                    classVect.addElement(((Integer)marshalledTerm).TYPE);
 //                else if(marshalledTerm instanceof Double)
@@ -106,9 +107,9 @@ public class JIPInvoke4 extends JIPXCall
 //                    classVect.addElement(((Boolean)marshalledTerm).TYPE);
 //                else
 //                    classVect.addElement(marshalledTerm.getClass());
-                
+
                 objVect.addElement(marshalledTerm);
-                
+
                 // next term
                 if(listParam.getTail() instanceof JIPVariable)
                 {
@@ -119,17 +120,17 @@ public class JIPInvoke4 extends JIPXCall
                     listParam = (JIPList)listParam.getTail();
                 }
             }
-            
+
             Object paramObj[]  = new Object[objVect.size()];
             objVect.copyInto(paramObj);
-            
+
             Method method;
             Object objRetVal;
             Class[] paramsClass;
             String strMethodName =
                 (methodProto instanceof JIPAtom)
                     ? methodProto.toString() : ((JIPFunctor)methodProto).getName();
-            
+
             //System.out.println("handle.toString() " + handle.toString());
             if(handle.toString().startsWith("#"))
             {
@@ -137,13 +138,13 @@ public class JIPInvoke4 extends JIPXCall
                 Object obj = JIPxReflect.getObject(handle.toString());
                 if(obj == null)
                     throw new JIPRuntimeException(JIPxReflect.ERR_OBJECT_NOT_FOUND, JIPxReflect.STR_OBJECT_NOT_FOUND);
-                
+
                 paramsClass = JIPxReflect.getParamsClass(methodProto);
-                                
+
                 //method = getMethod(obj.getClass(), methodProto);
                 // get the rigth method
                 method = obj.getClass().getMethod(strMethodName, paramsClass);
-                
+
                 // invoke method
                 objRetVal = method.invoke(obj, paramObj);
             }
@@ -155,26 +156,26 @@ public class JIPInvoke4 extends JIPXCall
                 {
                     strClassname = strClassname.substring(1, strClassname.length() - 1);
                 }
-                
+
                 //System.out.println(strClassname);
-                
+
                 // get the class
                 Class objClass = getClass().forName(strClassname);
-                
+
                 paramsClass = JIPxReflect.getParamsClass(methodProto);
-                
+
                 //method = getMethod(objClass, methodProto);
                 // get the rigth method
                 //method = objClass.getMethod(methodName.toString(), paramClass);
                 method = objClass.getMethod(strMethodName, paramsClass);
-                
+
                 // invoke method
                 objRetVal = method.invoke(null, paramObj);
             }
-                        
+
             //Store object
             JIPTerm retVal1 = JIPxReflect.marshallOut(objRetVal);
-            
+
             return retVal.unify(retVal1, varsTbl);
         }
         catch(ClassCastException ex)
@@ -198,7 +199,7 @@ public class JIPInvoke4 extends JIPXCall
             throw new JIPRuntimeException(JIPxReflect.ERR_INSTANTIATION, ex.getMessage());
         }
     }
-            
+
     public final boolean hasMoreChoicePoints()
     {
         return false;

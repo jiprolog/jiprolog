@@ -47,18 +47,18 @@ import com.ugos.util.JARClassProvider;
  * @see com.ugos.JIProlog.engine.JIPQuery
  */
 public class JIPEngine implements Serializable
-{	
+{
     private final static long serialVersionUID = 300000001L;
-   
+
     // resource path
     static final String RESOURCEPATH = "/com/ugos/JIProlog/resources/";
 
-    private static final String VERSION = "3.2.1";
-    private static final String BUILD   = "1";
+    private static final String VERSION = "3.2.0";
+    private static final String BUILD   = "4";
 
     private static JARClassProvider s_classProvider;
     private static ClassLoader      s_classLoader;
-	
+
     private static GlobalDB s_globalDB;
 
     private BuiltInFactory  m_builtInFactory;
@@ -77,7 +77,7 @@ public class JIPEngine implements Serializable
     {
         s_globalDB = new GlobalDB();
     }
-    
+
     /** Returns the JIProlog version
      */
     public static final String getVersion()
@@ -142,41 +142,41 @@ public class JIPEngine implements Serializable
         setUserInputStream(System.in);
 
         setEncoding(Charset.defaultCharset().name());
-        
-        try 
+
+        try
         {
 			consultFile("INTERNAL://com/ugos/JIProlog/resources/x.pl");
 		}
-        catch (JIPSyntaxErrorException e) 
+        catch (JIPSyntaxErrorException e)
         {
 			e.printStackTrace();
 		}
-        catch (IOException e) 
+        catch (IOException e)
         {
 			e.printStackTrace();
-		}		
+		}
     }
 
     public final boolean isSystem(final String strName)
     {
         return m_globalDB.isSystem(strName);
     }
-    
+
     public final boolean isSystem(JIPFunctor funct)
     {
         return  m_globalDB.isSystem((Functor)funct.getRealTerm());
     }
-    
+
     public final boolean isInternal(final String strName)
     {
         return m_globalDB.isInternal(strName);
     }
-    
+
     public final boolean isInternal(JIPFunctor funct)
     {
         return  m_globalDB.isInternal(funct.getName());
     }
-    
+
     /** Load an extensions library.<br>
      * The library should be a valid .jar file containing a set of extension classes.<br>
      * If in the .jar there is a file named init.pl it is consulted as any other prolog file.
@@ -492,8 +492,8 @@ public class JIPEngine implements Serializable
      * @param encoding the encoding
      */
     public final void setEncoding(String encoding)
-    {    	
-    	Charset.forName(encoding);    	    	
+    {
+    	Charset.forName(encoding);
     	m_termParser.setEncoding(encoding);
         setEnvVariable("___CurrentEncoding___", encoding);
     }
@@ -508,7 +508,7 @@ public class JIPEngine implements Serializable
         {
             m_globalDB = s_globalDB.newInstance();
             m_opManager.reset();
-            
+
             try {
     			consultFile("INTERNAL://com/ugos/JIProlog/resources/x.pl");
     		} catch (JIPSyntaxErrorException e) {
