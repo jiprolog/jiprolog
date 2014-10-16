@@ -85,7 +85,6 @@ final class Expression extends PrologObject //implements Serializable
         {
             final String strExp = ((Atom)exp).getName();
 
-            //#ifndef _MIDP
             if (strExp.equals("rand"))
             {
                 return Expression.createNumber(Math.random());
@@ -98,9 +97,7 @@ final class Expression extends PrologObject //implements Serializable
             {
                 return Expression.createNumber(Math.PI);
             }
-            else
-//          #endif
-                if (strExp.equals("cputime"))
+            else if (strExp.equals("cputime"))
             {
                 return Expression.createNumber(System.currentTimeMillis());
             }
@@ -131,15 +128,12 @@ final class Expression extends PrologObject //implements Serializable
                         double dVal1 = Expression.compute(exp1).m_dValue;
                         if (strFunName.equals("-"))
                         {
-                            //System.out.println("Qui");
                             dblVal = - dVal1;
                         }
                         else if (strFunName.equals("+"))
                         {
-                            //System.out.println("Qui");
                             dblVal = dVal1;
                         }
-                        //#ifndef _MIDP
                         else if (strFunName.equals("sin"))
                         {
                             dblVal =  Math.sin(dVal1);
@@ -176,18 +170,15 @@ final class Expression extends PrologObject //implements Serializable
                         {
                             dblVal =  Math.rint(dVal1);
                         }
-
                         else if (strFunName.equals("ceil") || strFunName.equals("ceiling"))
                         {
                             dblVal =  Math.ceil(dVal1);
                         }
-                        else if (strFunName.equals("floor") || strFunName.equals("truncate"))
+                        else if (strFunName.equals("floor") || strFunName.equals("truncate") || strFunName.equals("rnd"))
                         {
                             dblVal =  Math.floor(dVal1);
                         }
-                        else
-//                      #endif
-                            if (strFunName.equals("float"))
+                        else if (strFunName.equals("float"))
                         {
                             dblVal =  dVal1;
                         }
@@ -257,14 +248,11 @@ final class Expression extends PrologObject //implements Serializable
                         {
                             dblVal =  dVal1 * dVal2;
                         }
-                        //#ifndef _MIDP
                         else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
                         {
                             dblVal =  Math.pow(dVal1, dVal2);
                         }
-                        else
-                        //#endif
-                            if (strFunName.equals("min"))
+                        else if (strFunName.equals("min"))
                         {
                             dblVal =  Math.min(dVal1, dVal2);
                         }
@@ -296,6 +284,11 @@ final class Expression extends PrologObject //implements Serializable
                         {
                             dblVal =  (int)dVal1 >> (int)dVal2;
                         }
+                        else if(strFunName.equals("div")) // DIV
+                        {
+                            dblVal =  (int)(dVal1 - dVal1 % dVal2) / dVal2;
+                        }
+
                         else
                         {
                             throw JIPRuntimeException.create(2, strFunName + " is unknown");

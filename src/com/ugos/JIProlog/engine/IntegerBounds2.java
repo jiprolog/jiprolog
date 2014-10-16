@@ -23,7 +23,7 @@ import java.util.*;
 
 final class IntegerBounds2 extends BuiltIn
 {
-    public final boolean unify(final Hashtable varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         return getParam(1).unify(Expression.createNumber(Integer.MIN_VALUE), varsTbl) &&
         	   getParam(2).unify(Expression.createNumber(Integer.MAX_VALUE), varsTbl);
