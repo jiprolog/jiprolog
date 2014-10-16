@@ -25,6 +25,6 @@ final class Copyright1 extends BuiltIn
 {
     public final boolean unify(final Hashtable varsTbl)
     {
-        return getParam(1).unify(Atom.createAtom(JIPEngine.getInfo()), varsTbl);
+        return getParam(1).unify(Atom.createAtom(JIPEngine.getCopyrightInfo()), varsTbl);
     }
 }

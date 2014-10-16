@@ -509,32 +509,51 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     private static final synchronized void loadKernel(GlobalDB gdb)
     {
-        //BuiltInFactory.removeStatic();
-
     	try
         {
-            InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "JIPKernel.jip");
+    		gdb.m_bCheckDisabled = true;
 
-	    	 final ObjectInputStream oins = new ObjectInputStream(ins);
-	         ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
-	         oins.close();
-	         ins.close();
+        	if(JIPEngine.globalDebug)
+        	{
+        		System.out.println("GlobalDebug");
 
-	         gdb.m_bCheckDisabled = true;
+        		InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "JIPKernel.txt");
 
-	         for(PrologObject term : program)
-	         {
-	             //System.out.println(term);
-	             gdb.assertz(Clause.getClause(term), "__KERNEL__");
-	         }
+	            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins)), new OperatorManager(), "JIPKernel.txt");
 
-	         gdb.moduleTransparent("\\+/1");
-	         gdb.moduleTransparent("not/1");
-	         gdb.moduleTransparent(";/2");
-	         gdb.moduleTransparent("->/2");
-	         gdb.moduleTransparent("^/2");
+	            PrologObject term;
+	            while ((term = parser.parseNext()) != null)
+	            {
+	                //System.out.println(term);
+	                gdb.assertz(Clause.getClause(term), "__KERNEL__");
+	            }
 
-	         gdb.m_bCheckDisabled = false;
+	            ins.close();
+        	}
+        	else
+        	{
+	             InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "JIPKernel.jip");
+
+		    	 final ObjectInputStream oins = new ObjectInputStream(ins);
+		         ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
+		         oins.close();
+		         ins.close();
+
+
+		         for(PrologObject term : program)
+		         {
+		             //System.out.println(term);
+		             gdb.assertz(Clause.getClause(term), "__KERNEL__");
+		         }
+        	}
+
+	        gdb.moduleTransparent("\\+/1");
+	        gdb.moduleTransparent("not/1");
+	        gdb.moduleTransparent(";/2");
+	        gdb.moduleTransparent("->/2");
+	        gdb.moduleTransparent("^/2");
+
+	        gdb.m_bCheckDisabled = false;
 	     }
 	     catch(IOException ex)
 	     {
@@ -558,50 +577,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	         gdb.m_bCheckDisabled = false;
 	         throw new JIPRuntimeException("Unable to load Kernel: " + e.toString());
 		}
-
-//        try
-//        {
-//            InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "JIPKernel.txt");
-//
-//            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins)), new OperatorManager(), "JIPKernel.txt");
-//
-//            gdb.m_bCheckDisabled = true;
-//
-//            PrologObject term;
-//
-//            while ((term = parser.parseNext()) != null)
-//            {
-//                //System.out.println(term);
-//                gdb.assertz(Clause.getClause(term), "__KERNEL__");
-//            }
-//
-//
-//            ins.close();
-//
-//            gdb.moduleTransparent("\\+/1");
-//            gdb.moduleTransparent("not/1");
-//            gdb.moduleTransparent(";/2");
-//            gdb.moduleTransparent("->/2");
-//            gdb.moduleTransparent("^/2");
-//
-//            gdb.m_bCheckDisabled = false;
-//        }
-//        catch(IOException ex)
-//        {
-//            gdb.m_bCheckDisabled = false;
-//            throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
-//        }
-//        catch(JIPSyntaxErrorException ex)
-//        {
-//            gdb.m_bCheckDisabled = false;
-//            throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
-//        }
-//        catch(NullPointerException ex)
-//        {
-//            //ex.printStackTrace();
-//            gdb.m_bCheckDisabled = false;
-//            throw new JIPRuntimeException("JIProlog Kernel is not found. JIPKernel.txt should be in the classpath.");
-//        }
     }
 
 //    final Vector listing()
@@ -634,14 +609,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         if(term instanceof BuiltInPredicate)
         {
-            //final PrologObject newParam = fixTerm(((BuiltInPredicate)term).getParams());
-
             return new BuiltInPredicate(((Functor)term).getAtom(), (ConsCell)fixTerm(((BuiltInPredicate)term).getParams()));
         }
         else if(term instanceof Functor)
         {
-            //final PrologObject newParam = fixTerm(((Functor)term).getParams());
-
             return new Functor(((Functor)term).getAtom(), (ConsCell)fixTerm(((Functor)term).getParams()));
         }
         else if (term instanceof PString)
@@ -659,12 +630,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             else
                 return new List(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail()));
         }
-//        else if (term instanceof DCGClause)
-//        {
-//            //System.out.println("Clause");
-//
-//            return new DCGClause(fixTerm(((ConsCell)term).getHead()), (ConsCell)fixTerm(((ConsCell)term).getTail()));
-//        }
         else if (term instanceof Clause)
         {
             //System.out.println("Clause");

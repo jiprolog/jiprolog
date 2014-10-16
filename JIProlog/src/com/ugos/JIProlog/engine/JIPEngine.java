@@ -54,17 +54,19 @@ public class JIPEngine implements Serializable
     static final String RESOURCEPATH = "/com/ugos/JIProlog/resources/";
 
     private static final String VERSION = "3.2.0";
-    private static final String BUILD   = "4";
+    private static final String BUILD   = "6";
 
     private static JARClassProvider s_classProvider;
     private static ClassLoader      s_classLoader;
 
     private static GlobalDB s_globalDB;
 
+    public static boolean globalDebug = false;
+
     private BuiltInFactory  m_builtInFactory;
-    private Hashtable       m_envVarTbl;
+    private Hashtable<String, Object>       m_envVarTbl;
     private EventNotifier   m_eventNotifier;
-    private Hashtable       m_prologTable;
+    private Hashtable<Integer, AsyncWAMManager>       m_prologTable;
     private JIPTermParser   m_termParser;
     private OperatorManager m_opManager;
 
@@ -89,7 +91,14 @@ public class JIPEngine implements Serializable
      */
     public static final String getInfo()
     {
-        return "JIProlog v" + VERSION + " Copyright (c) 1999-2014 By Ugo Chirico. All Right Reserved";
+        return "JIProlog v" + VERSION + " Copyright (c) 1999-2014 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved";
+    }
+
+    /** Returns Copyright
+     */
+    public static final String getCopyrightInfo()
+    {
+        return "Copyright (c) 1999-2014 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved";
     }
 
     /** Returns JIProlog license info
@@ -109,11 +118,11 @@ public class JIPEngine implements Serializable
     {
         m_bTrace         = false;
 
-        m_prologTable    = new Hashtable(10);
+        m_prologTable    = new Hashtable<Integer, AsyncWAMManager>(10);
         m_builtInFactory = new BuiltInFactory(this);
         m_globalDB       = s_globalDB.newInstance();
         m_eventNotifier  = new EventNotifier(this);
-        m_envVarTbl      = new Hashtable(10);
+        m_envVarTbl      = new Hashtable<String, Object>(10);
         m_opManager      = new OperatorManager();
         m_termParser     = new JIPTermParser(m_opManager, Charset.defaultCharset().toString());
 
@@ -155,23 +164,56 @@ public class JIPEngine implements Serializable
         {
 			e.printStackTrace();
 		}
+
+        setEnvVariable("char_conversion", "off");
+        setEnvVariable("double_quotes", "atom");
+        setEnvVariable("char_conversion", "off");
+        setEnvVariable("back_quotes", "atom");
+        setEnvVariable("unknown", "warning");
+        setEnvVariable("back_quotes", "atom");
+        setEnvVariable("syntax_error", "error");
+        setEnvVariable("os_error", "error");
+        setEnvVariable("debug", "off");
     }
 
+
+    /** Sets debug flag.
+     */
+    public void setDebug(boolean debug)
+    {
+        setEnvVariable("debug", debug ? "on" : "off");
+    }
+
+    /** gets debug flag.
+     */
+    public boolean getDebug()
+    {
+        return "on".equals(getEnvVariable("debug"));
+    }
+
+    /** Returns true if the given functor is a system predicate.
+     */
     public final boolean isSystem(final String strName)
     {
         return m_globalDB.isSystem(strName);
     }
 
+    /** Returns true if the given functor is a system predicate.
+     */
     public final boolean isSystem(JIPFunctor funct)
     {
         return  m_globalDB.isSystem((Functor)funct.getRealTerm());
     }
 
+    /** Returns true if the given functor is an internal predicate.
+     */
     public final boolean isInternal(final String strName)
     {
         return m_globalDB.isInternal(strName);
     }
 
+    /** Returns true if the given functor is an internal predicate.
+     */
     public final boolean isInternal(JIPFunctor funct)
     {
         return  m_globalDB.isInternal(funct.getName());
@@ -938,6 +980,15 @@ public class JIPEngine implements Serializable
     public final synchronized Object removeEnvVariable(final String varName)
     {
         return m_envVarTbl.remove(varName);
+    }
+
+    /** Gets the enumeration of all custom environment variable name. <br>
+     * @see com.ugos.JIProlog.engine.JIPEngine#setEnvVariable
+     * @see com.ugos.JIProlog.engine.JIPEngine#removeEnvVariable
+     */
+    public synchronized Enumeration<String> getEnvVariableNames()
+    {
+        return m_envVarTbl.keys();
     }
 
     /** Notifies a JIPEvent. <br>
