@@ -256,7 +256,7 @@
 '$kernel':prolog_flag(min_integer, Min) :- integer_bounds(Min, _).
 '$kernel':prolog_flag(integer_rounding_function, toward_zero).
 '$kernel':prolog_flag(max_arity, 255).
-'$kernel':prolog_flag(version_data, V):-'$kernel':prolog_flag(dialect, X), '$kernel':prolog_flag(version, Y), V =.. [X, Y].
+'$kernel':prolog_flag(version_data, V):-'$kernel':prolog_flag(dialect, X), ver(Major, Minor, Build, Revision), V =.. [X, Major, Minor, Build, Revision].
 
 '$system':current_prolog_flag(Flag, X):-'$kernel':prolog_flag(Flag, X).
 '$system':current_prolog_flag(Flag, X):-env(Flag, X).
@@ -264,7 +264,7 @@
 '$system':set_prolog_flag(Flag, X):-ground(Flag), '$kernel':prolog_flag(Flag, _), !, fail.
 '$system':set_prolog_flag(Flag, X):-set_env(Flag, X).
 
-
+/*
 '$system':bounded(X):-'$kernel':prolog_flag(bounded, X).
 '$system':min_integer(X):-'$kernel':prolog_flag(min_integer, X).
 '$system':max_integer(X):-'$kernel':prolog_flag(max_integer, X).
@@ -272,8 +272,7 @@
 '$system':max_arity(X):-'$kernel':prolog_flag(max_arity, X).
 '$system':max_arity(X):-'$kernel':prolog_flag(max_arity, X).
 '$system':dialect(X):-'$kernel':prolog_flag(dialect, X).
-'$system':version_data(V):-'$kernel':prolog_flag(version_data, V).
-
+*/
 
 
 

@@ -53,10 +53,10 @@ public class JIPEngine implements Serializable
     // resource path
     static final String RESOURCEPATH = "/com/ugos/JIProlog/resources/";
 
-    private static final int major = 4;
-    private static final int minor = 0;
-    private static final int build = 0;
-    private static final int revision = 1;
+    public static final int major = 4;
+    public static final int minor = 0;
+    public static final int build = 0;
+    public static final int revision = 1;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -88,7 +88,7 @@ public class JIPEngine implements Serializable
      */
     public static final String getVersion()
     {
-        return VERSION + "-" + BUILD;
+        return VERSION;
     }
 
     /** Returns JIProlog info
