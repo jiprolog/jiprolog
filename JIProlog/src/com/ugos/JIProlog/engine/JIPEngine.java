@@ -53,8 +53,12 @@ public class JIPEngine implements Serializable
     // resource path
     static final String RESOURCEPATH = "/com/ugos/JIProlog/resources/";
 
-    private static final String VERSION = "3.2.0";
-    private static final String BUILD   = "6";
+    private static final int major = 4;
+    private static final int minor = 0;
+    private static final int build = 0;
+    private static final int revision = 1;
+
+    private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
     private static JARClassProvider s_classProvider;
     private static ClassLoader      s_classLoader;
