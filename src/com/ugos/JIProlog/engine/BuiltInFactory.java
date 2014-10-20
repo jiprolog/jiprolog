@@ -105,6 +105,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("integer_bounds/2",   new IntegerBounds2());
         m_BuiltInTable.put("env/2",   			 new Env2());
         m_BuiltInTable.put("set_env/2",   		 new SetEnv2());
+        m_BuiltInTable.put("ver/4",   		 	 new Ver4());
 
 
         //m_BuiltInTable.put("bagof_with_duplicates/3", new BagOf3());

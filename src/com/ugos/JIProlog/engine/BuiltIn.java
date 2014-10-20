@@ -25,13 +25,13 @@ import java.util.Hashtable;
 
 abstract class BuiltIn extends Object
 {
-    private ConsCell          m_params            = null;
+    private ConsCell           m_params            = null;
     private WAM                m_WAM;
     protected JIPEngine        m_jipEngine;
     protected BuiltInPredicate m_predicate;
-        
+
     public abstract boolean unify(final Hashtable<Variable, Variable> m_varsTbl);
-    
+
     final boolean unify(final ConsCell param, final Hashtable<Variable, Variable> varsTbl)
     {
         m_params = param;
@@ -42,12 +42,12 @@ abstract class BuiltIn extends Object
     {
         return false;
     }
-    
+
     final public WAM getWAM()
     {
         return m_WAM;
     }
-    
+
     // chiamato solo da BuiltInFactory
     final void init(final JIPEngine jipEngine, final BuiltInPredicate pred, final WAM wam)
     {
@@ -55,12 +55,12 @@ abstract class BuiltIn extends Object
         m_predicate = pred;
         m_WAM = wam;
     }
-        
+
     final public int getQueryHandle()
     {
         return m_WAM.hashCode();
     }
-    
+
     final ConsCell getParams()
     {
         return m_params;
@@ -70,22 +70,22 @@ abstract class BuiltIn extends Object
     {
         return m_params.getTerm(n);
     }
-    
+
     final JIPEngine getJIPEngine()
     {
         return m_jipEngine;
     }
-    
+
     final BuiltInPredicate getPredicate()
     {
         return m_predicate;
     }
-    
+
     static final PrologObject getRealTerm(final PrologObject term)
     {
         if(term instanceof Variable)
             return ((Variable)term).getObject();
-        
+
         return term;
-    }        
+    }
 }
