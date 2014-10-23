@@ -32,7 +32,7 @@ public class JIPGetFields2 extends JIPXCall
     {
         JIPTerm handle     = params.getNth(1);
         JIPTerm fieldsList = params.getNth(2);
-                
+
         // check if className is a variable
         if (handle instanceof JIPVariable)
         {
@@ -47,34 +47,36 @@ public class JIPGetFields2 extends JIPXCall
                 handle = ((JIPVariable)handle).getValue();
             }
         }
-        
+
         if(!(handle instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         try
         {
             Field[] fields;
-            
-            if(handle.toString().startsWith("#"))
+
+            String atomHandle = ((JIPAtom)handle).getName();
+
+            if(atomHandle.startsWith("#"))
             {
                 // get the object
-                Object obj = JIPxReflect.getObject(handle.toString());
+                Object obj = JIPxReflect.getObject(atomHandle);
                 if(obj == null)
                     throw new JIPRuntimeException(JIPxReflect.ERR_OBJECT_NOT_FOUND, JIPxReflect.STR_OBJECT_NOT_FOUND);
-                
+
                 fields = obj.getClass().getFields();
             }
             else
             {
-                fields = getClass().forName(handle.toString()).getFields();
+                fields = getClass().forName(atomHandle).getFields();
             }
-            
+
             JIPList fieldsList1 = JIPList.NIL;
             for(int i = fields.length - 1; i >= 0; i--)
             {
                 fieldsList1 = JIPList.create(JIPAtom.create(fields[i].getName()), fieldsList1);
             }
-            
+
             return fieldsList.unify(fieldsList1, varsTbl);
         }
         catch(ClassCastException ex)
@@ -86,7 +88,7 @@ public class JIPGetFields2 extends JIPXCall
             throw new JIPRuntimeException(JIPxReflect.ERR_CLASS_NOT_FOUND, JIPxReflect.STR_CLASS_NOT_FOUND);
         }
     }
-            
+
     public final boolean hasMoreChoicePoints()
     {
         return false;

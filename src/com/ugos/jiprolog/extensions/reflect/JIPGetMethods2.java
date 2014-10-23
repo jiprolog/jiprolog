@@ -32,7 +32,7 @@ public class JIPGetMethods2 extends JIPXCall
     {
         JIPTerm handle      = params.getNth(1);
         JIPTerm methodsList = params.getNth(2);
-                
+
         // check if className is a variable
         if (handle instanceof JIPVariable)
         {
@@ -47,28 +47,30 @@ public class JIPGetMethods2 extends JIPXCall
                 handle = ((JIPVariable)handle).getValue();
             }
         }
-        
+
         if(!(handle instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         try
         {
             Method[] methods;
-            
-            if(handle.toString().startsWith("#"))
+
+            String atomHandle = ((JIPAtom)handle).getName();
+
+            if(atomHandle.startsWith("#"))
             {
                 // get the object
-                Object obj = JIPxReflect.getObject(handle.toString());
+                Object obj = JIPxReflect.getObject(atomHandle);
                 if(obj == null)
                     throw new JIPRuntimeException(JIPxReflect.ERR_OBJECT_NOT_FOUND, JIPxReflect.STR_OBJECT_NOT_FOUND);
-                
+
                 methods = obj.getClass().getMethods();
             }
             else
             {
-                methods = getClass().forName(handle.toString()).getMethods();
+                methods = getClass().forName(atomHandle).getMethods();
             }
-            
+
             JIPList methodsList1 = JIPList.NIL;
             for(int i = methods.length - 1; i >= 0; i--)
             {
@@ -79,7 +81,7 @@ public class JIPGetMethods2 extends JIPXCall
                     //System.out.println(paramsClass[j].getName());
                     classList = JIPCons.create(JIPAtom.create(paramsClass[j].getName()), classList);
                 }
-                
+
                 JIPTerm method;
                 if(classList.isNIL())
                 {
@@ -89,10 +91,10 @@ public class JIPGetMethods2 extends JIPXCall
                 {
                     method = JIPFunctor.create(methods[i].getName(), classList);
                 }
-                                
+
                 methodsList1 = JIPList.create(method, methodsList1);
             }
-            
+
             return methodsList.unify(methodsList1, varsTbl);
         }
         catch(ClassCastException ex)
@@ -104,7 +106,7 @@ public class JIPGetMethods2 extends JIPXCall
             throw new JIPRuntimeException(JIPxReflect.ERR_CLASS_NOT_FOUND, JIPxReflect.STR_CLASS_NOT_FOUND);
         }
     }
-            
+
     public final boolean hasMoreChoicePoints()
     {
         return false;

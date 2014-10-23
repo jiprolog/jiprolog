@@ -12,9 +12,9 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<echo message="Ant version is ${ant.version}" />
 
 		<!-- Main project -->
-		<property name="project.name" value="JIProlog 3.2" />
+		<property name="project.name" value="JIProlog 4.0" />
 		<property name="project.root" value="c:/progetti/Applicazioni/JIProlog/" />
-		<property name="project.version" value="3.2.0.x" />
+		<property name="project.version" value="4.0.0.x" />
 		<property name="project.deploy.dir" value="${project.root}/Deploy" />
 		<property name="project.src" value="src" />
 		<property name="project.bin" value="bin" />
@@ -33,7 +33,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<property name="project.jiprolog.jipgui.lib" value="${project.root}/JIPgui/lib" />
 		<property name="project.jiprolog.jipgui.jar" value="jipgui.jar" />
 		<property name="project.jiprolog.jipgui.root" value="${project.root}/JIPgui" />
-		<property name="project.jiprolog.jipgui.mainclass" value="com.ugos.JIProlog.gui.JIPConsole" />
+		<property name="project.jiprolog.jipgui.mainclass" value="com.ugos.jiprolog.gui.JIPConsole" />
 
 		<!-- jipjextplugin-->
 		<property name="project.jiprolog.jipjextplugin.lib" value="${project.root}/JIPJextPlugin/lib" />
@@ -41,7 +41,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<property name="project.jiprolog.jipjextplugin.root" value="${project.root}/JIPJextPlugin" />
 		<property name="project.jext" value="${project.root}/Deploy/JIPrologIDE/" />
 
-		<property name="project.main.class" value="com.ugos.JIProlog.JIProlog" />
+		<property name="project.main.class" value="com.ugos.jiprolog.JIProlog" />
 		<property name="project.keystore" value="ugochirico.ks" />
 		<property name="project.storepass" value="seagull.7" />
 
@@ -49,8 +49,8 @@ Simple script to jar, obfuscate and run a project 3.0.
 
 
 		<!-- ProGuard -->
-		<property name="proguard.jar" value="c:\programmi\proguard4.8\lib\proguard.jar" />
-		<property name="proguard.gui.jar" value="c:\programmi\proguard4.8\lib\proguardgui.jar" />
+		<property name="proguard.jar" value="C:\Program Files\proguard5.0\lib\proguard.jar" />
+		<property name="proguard.gui.jar" value="C:\Program Files\proguard5.0\lib\proguardgui.jar" />
 
 	</target>
 
@@ -101,7 +101,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 	</target>
 
     <target name="javadoc">
-        <javadoc destdir="..\Deploy\JIPrologSDK\doc/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.JIProlog.engine,com.ugos.JIProlog.client" sourcefiles="src/com/ugos/JIProlog/JIProlog.java" sourcepath="src;../JIPClient/src" classpath="../JIPClient/lib;lib" doctitle="JIProlog API"/>
+        <javadoc destdir="..\Deploy\JIPrologSDK\doc/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.jiprolog.engine,com.ugos.jiprolog.client" sourcefiles="src/com/ugos/JIProlog/JIProlog.java" sourcepath="src;../JIPClient/src" classpath="../JIPClient/lib;lib" doctitle="JIProlog API"/>
     </target>
 
 	<target name="Proguard" depends="jar-it" description="Proguard">

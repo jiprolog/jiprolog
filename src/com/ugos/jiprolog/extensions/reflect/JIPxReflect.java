@@ -142,7 +142,7 @@ public class JIPxReflect
         }
         else if(term instanceof JIPAtom)
         {
-            String strAtom = term.toString();
+            String strAtom = ((JIPAtom)term).getName();
 
             if(strAtom.startsWith("#"))
             {
@@ -164,7 +164,7 @@ public class JIPxReflect
         }
         else if(term instanceof JIPString)
         {
-            return term.toString();
+            return ((JIPString)term).getStringValue();
         }
         else
         {

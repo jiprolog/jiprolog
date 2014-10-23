@@ -201,6 +201,6 @@ string_concat(String1, String2, Concat):-
 convert_chars([], []).
 
 convert_chars([C|CharList], [A|AtomList]):-
-    name(C, A),
+    name(A, [C]),
     convert_chars(CharList, AtomList).
 

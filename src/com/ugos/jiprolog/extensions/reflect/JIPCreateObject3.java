@@ -31,13 +31,13 @@ import java.lang.reflect.*;
 public class JIPCreateObject3 extends JIPXCall
 {
     //private JIPAtom m_handle;
-    
+
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm className = params.getNth(1);
         JIPTerm paramList = params.getNth(2);
         JIPTerm handle    = params.getNth(3);
-                
+
         // check if className is a variable
         if (className instanceof JIPVariable)
         {
@@ -52,10 +52,10 @@ public class JIPCreateObject3 extends JIPXCall
                 className = ((JIPVariable)className).getValue();
             }
         }
-                
+
         if(!(className instanceof JIPAtom) && !(className instanceof JIPFunctor))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         // check if paramList  is a variable
         if (paramList instanceof JIPVariable)
         {
@@ -70,42 +70,34 @@ public class JIPCreateObject3 extends JIPXCall
                 paramList  = ((JIPVariable)paramList ).getValue();
             }
         }
-        
+
         if(!(paramList instanceof JIPList))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         // check if handle is a variable
         if (!(handle instanceof JIPVariable) || ((JIPVariable)handle).isBounded())
         {
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
         }
-        
+
         try
         {
             if(className.toString().startsWith("["))
             {
                 throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, "Unable to create an array: " + className);
             }
-            
+
             // Prepare params
             Vector objVect = new Vector();
             JIPList listParam = (JIPList)paramList;
-            
+
             while(listParam != null && listParam.getHead() != null)
             {
                 JIPTerm term = listParam.getHead();
                 Object marshalledTerm = JIPxReflect.marshallIn(term);
-//                if(marshalledTerm instanceof Integer)
-//                    classVect.addElement(((Integer)marshalledTerm).TYPE);
-//                else if(marshalledTerm instanceof Double)
-//                    classVect.addElement(((Double)marshalledTerm).TYPE);
-//                else if(marshalledTerm instanceof Boolean)
-//                    classVect.addElement(((Boolean)marshalledTerm).TYPE);
-//                else
-//                    classVect.addElement(marshalledTerm.getClass());
-                                
+
                 objVect.addElement(marshalledTerm);
-                
+
                 // next term
                 if(listParam.getTail() instanceof JIPVariable)
                 {
@@ -116,35 +108,34 @@ public class JIPCreateObject3 extends JIPXCall
                     listParam = (JIPList)listParam.getTail();
                 }
             }
-            
+
             // get the class
             Class objClass;
             if(className instanceof JIPAtom)
             {
                 // get the class
-                objClass = getClass().forName(className.toString());
+                objClass = getClass().forName(((JIPAtom)className).getName());
             }
             else
             {
                 // get the class
                 objClass = getClass().forName(((JIPFunctor)className).getName().toString());
-        
+
             }
-               
+
             Object paramObj[]  = new Object[objVect.size()];
-            //classVect.copyInto(paramClass);
             objVect.copyInto(paramObj);
-            
+
             Class[] paramsClass = JIPxReflect.getParamsClass(className);
             // get the rigth constructor
             Constructor constr = objClass.getConstructor(paramsClass);
-            
+
             // create new instance
             Object obj = constr.newInstance(paramObj);
-            
+
             //Store object
             JIPTerm thandle = JIPxReflect.putObject(obj);
-            
+
             return handle.unify(thandle, varsTbl);
         }
         catch(ClassNotFoundException ex)
@@ -172,7 +163,7 @@ public class JIPCreateObject3 extends JIPXCall
             throw new JIPRuntimeException(JIPxReflect.ERR_INSTANTIATION, ex.getMessage());
         }
     }
-            
+
     public final boolean hasMoreChoicePoints()
     {
         return false;
