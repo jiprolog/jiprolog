@@ -33,7 +33,7 @@ public class JIPSet3 extends JIPXCall
         JIPTerm handle    = params.getNth(1);
         JIPTerm fieldName = params.getNth(2);
         JIPTerm val       = params.getNth(3);
-        
+
         // check if className is a variable
         if (handle instanceof JIPVariable)
         {
@@ -48,10 +48,10 @@ public class JIPSet3 extends JIPXCall
                 handle = ((JIPVariable)handle).getValue();
             }
         }
-        
+
         if(!(handle instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         // check if className is a variable
         if (fieldName instanceof JIPVariable)
         {
@@ -66,10 +66,10 @@ public class JIPSet3 extends JIPXCall
                 fieldName = ((JIPVariable)fieldName).getValue();
             }
         }
-        
+
         if(!(fieldName instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
         // check if className is a variable
         if (val instanceof JIPVariable)
         {
@@ -91,31 +91,34 @@ public class JIPSet3 extends JIPXCall
             Object objRetVal;
             // marshall value
             Object marshValue = JIPxReflect.marshallIn(val);
-            
-            if(handle.toString().startsWith("#"))
+
+            String atomHandle = ((JIPAtom)handle).getName();
+            String atomFieldName = ((JIPAtom)fieldName).getName();
+
+            if(atomHandle.startsWith("#"))
             {
                 // get the object
-                Object obj = JIPxReflect.getObject(handle.toString());
+                Object obj = JIPxReflect.getObject(atomHandle);
                 if(obj == null)
                     throw new JIPRuntimeException(JIPxReflect.ERR_OBJECT_NOT_FOUND, JIPxReflect.STR_OBJECT_NOT_FOUND);
-                
-                field = obj.getClass().getField(fieldName.toString());
-                
+
+                field = obj.getClass().getField(atomFieldName);
+
                 // invoke method
                 field.set(obj, marshValue);
             }
             else
             {
                 // get the class
-                Class objClass = getClass().forName(handle.toString());
-                                                                               
+                Class objClass = getClass().forName(atomHandle);
+
                 // get the rigth constructor
-                field = objClass.getField(fieldName.toString());
-                
+                field = objClass.getField(atomFieldName);
+
                 // invoke method
                 field.set(null, marshValue);
             }
-                                    
+
             return true;
         }
         catch(ClassCastException ex)
@@ -135,7 +138,7 @@ public class JIPSet3 extends JIPXCall
             throw new JIPRuntimeException(JIPxReflect.ERR_INSTANTIATION, ex.getMessage());
         }
     }
-    
+
     public final boolean hasMoreChoicePoints()
     {
         return false;

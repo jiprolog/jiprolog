@@ -159,13 +159,13 @@ final class PrettyPrinter extends Object
 
 //	            System.out.println("" + bSimpleFound + " " + bSingletonFound + " " + bSpecialFound);
 
-	            bQuoted = bQuoted ||
+//	            System.out.println("Quoted " + bQuoted);
+            }
+
+            bQuoted = bQuoted ||
 	                (bSimpleFound && bSingletonFound) ||
 	                (bSpecialFound && bSingletonFound) ||
 	                (bSimpleFound && bSpecialFound);
-
-//	            System.out.println("Quoted " + bQuoted);
-            }
 
             if(bQuoted)
             {

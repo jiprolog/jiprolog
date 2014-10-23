@@ -32,7 +32,7 @@ public class JIPGetClass2 extends JIPXCall
     {
         JIPTerm handle    = params.getNth(1);
         JIPTerm className = params.getNth(2);
-                
+
         // check if className is a variable
         if (handle instanceof JIPVariable)
         {
@@ -47,19 +47,21 @@ public class JIPGetClass2 extends JIPXCall
                 handle = ((JIPVariable)handle).getValue();
             }
         }
-        
+
         if(!(handle instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-        
+
+        String atomHandle = ((JIPAtom)handle).getName();
+
         try
         {
             // get the object
-            Object obj = JIPxReflect.getObject(handle.toString());
+            Object obj = JIPxReflect.getObject(atomHandle);
             if(obj == null)
                 throw new JIPRuntimeException(JIPxReflect.ERR_OBJECT_NOT_FOUND, JIPxReflect.STR_OBJECT_NOT_FOUND);
-            
+
             JIPAtom aClassName = JIPAtom.create(obj.getClass().getName());
-            
+
             return className.unify(aClassName, varsTbl);
         }
         catch(ClassCastException ex)
@@ -67,7 +69,7 @@ public class JIPGetClass2 extends JIPXCall
             throw new JIPRuntimeException(JIPxReflect.ERR_CLASS_CAST, JIPxReflect.STR_CLASS_CAST);
         }
     }
-            
+
     public final boolean hasMoreChoicePoints()
     {
         return false;

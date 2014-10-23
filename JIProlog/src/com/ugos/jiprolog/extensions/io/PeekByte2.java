@@ -28,8 +28,8 @@ import com.ugos.jiprolog.engine.*;
 public final class PeekByte2 extends JIPXCall
 {
 //    private JIPTerm m_term;
-    
-    protected final int peekChar(PushBackInputStream ins)
+
+   private final int peekChar(PushBackInputStream ins)
     {
         try
         {
@@ -42,19 +42,19 @@ public final class PeekByte2 extends JIPXCall
             throw new JIPJVMException(ex);
         }
     }
-    
+
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         // get first parameter
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
             // try to extract the term
             if(!((JIPVariable)input).isBounded())
             {
-                
+
                 throw new JIPParameterUnboundedException(1);
             }
             else
@@ -63,33 +63,33 @@ public final class PeekByte2 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is an Atom
         if(input instanceof JIPAtom)
         {
             // Gets the handle to the stream
             final String strStreamHandle = ((JIPAtom)input).getName();
-            
+
             // Get the stream
             PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
             if(ins == null)
             {
                 throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
             }
-            
+
             JIPTerm term;
             int c = peekChar(ins);
             if(c == -1)
                 term = JIPAtom.create("end_of_file");
             else
                 term = JIPNumber.create(c);
-                            
+
             return params.getNth(2).unify(term, varsTbl);
         }
         else
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;

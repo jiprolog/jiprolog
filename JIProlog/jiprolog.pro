@@ -1,5 +1,7 @@
 
--libraryjars 'C:\Programmi\Java\jre6\lib\rt.jar';'C:\Programmi\Java\jre6\lib\jsse.jar';'C:\Programmi\Java\jre6\lib\jce.jar'
+-libraryjars <java.home>/lib/rt.jar;<java.home>/lib/jsse.jar;<java.home>/lib/jce.jar
+
+#-libraryjars 'C:\Program Files\Java\jre7\lib\rt.jar';'C:\Program Files\Java\jre6\lib\jsse.jar';'C:\Program Files\Java\jre6\lib\jce.jar'
 
 -printmapping
 -overloadaggressively
@@ -24,52 +26,52 @@
 }
 
 # Keep - Library. Keep all public and protected classes, fields, and methods.
--keep public class com.ugos.JIProlog.* {
+-keep public class com.ugos.jiprolog.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.engine.* {
+-keep public class com.ugos.jiprolog.engine.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.database.* {
+-keep public class com.ugos.jiprolog.extensions.database.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.exception.* {
+-keep public class com.ugos.jiprolog.extensions.exception.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.io.* {
+-keep public class com.ugos.jiprolog.extensions.io.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.reflect.* {
+-keep public class com.ugos.jiprolog.extensions.reflect.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.sets.* {
+-keep public class com.ugos.jiprolog.extensions.sets.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.system.* {
+-keep public class com.ugos.jiprolog.extensions.system.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.terms.* {
+-keep public class com.ugos.jiprolog.extensions.terms.* {
     public protected <fields>;
     public protected <methods>;
 }
 
--keep public class com.ugos.JIProlog.extensions.xml.* {
+-keep public class com.ugos.jiprolog.extensions.xml.* {
     public protected <fields>;
     public protected <methods>;
 }

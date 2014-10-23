@@ -31,7 +31,7 @@ public class JIPReleaseObject1 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm handle     = params.getNth(1);
-        
+
         // check if className is a variable
         if (handle instanceof JIPVariable)
         {
@@ -46,15 +46,17 @@ public class JIPReleaseObject1 extends JIPXCall
                 handle = ((JIPVariable)handle).getValue();
             }
         }
-        
+
         if(!(handle instanceof JIPAtom))
             throw new JIPRuntimeException(JIPxReflect.ERR_UNEXPECTED_TERM, JIPxReflect.STR_UNEXPECTED_TERM);
-                
-        JIPxReflect.releaseObject(handle.toString());
-                                    
+
+        String atomHandle = ((JIPAtom)handle).getName();
+
+        JIPxReflect.releaseObject(atomHandle);
+
         return true;
     }
-            
+
     public final boolean hasMoreChoicePoints()
     {
         return false;

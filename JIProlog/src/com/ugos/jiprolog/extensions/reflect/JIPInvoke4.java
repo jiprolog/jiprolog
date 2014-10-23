@@ -130,13 +130,15 @@ public class JIPInvoke4 extends JIPXCall
             Class[] paramsClass;
             String strMethodName =
                 (methodProto instanceof JIPAtom)
-                    ? methodProto.toString() : ((JIPFunctor)methodProto).getName();
+                    ? ((JIPAtom)methodProto).getName() : ((JIPFunctor)methodProto).getName();
+
+            String atomHandle = ((JIPAtom)handle).getName();
 
             //System.out.println("handle.toString() " + handle.toString());
-            if(handle.toString().startsWith("#"))
+            if(atomHandle.startsWith("#"))
             {
                 // get the object
-                Object obj = JIPxReflect.getObject(handle.toString());
+                Object obj = JIPxReflect.getObject(atomHandle);
                 if(obj == null)
                     throw new JIPRuntimeException(JIPxReflect.ERR_OBJECT_NOT_FOUND, JIPxReflect.STR_OBJECT_NOT_FOUND);
 
@@ -151,7 +153,7 @@ public class JIPInvoke4 extends JIPXCall
             }
             else
             {
-                String strClassname = handle.toString();
+                String strClassname = atomHandle;
 //              elimina eventuali apici
                 if(strClassname.charAt(0) == 39 || strClassname.charAt(0) == 34)
                 {

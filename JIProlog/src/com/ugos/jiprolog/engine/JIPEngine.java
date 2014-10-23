@@ -100,7 +100,7 @@ public class JIPEngine implements Serializable
      */
     public static final String getCopyrightInfo()
     {
-        return "Copyright (c) 1999-2014 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved";
+        return "Copyright (c) 1999-2014 By Ugo Chirico - http://www.jiprolog.com. All Rights Reserved";
     }
 
     /** Returns JIProlog license info
