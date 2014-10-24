@@ -46,11 +46,8 @@
 
 :-dynamic stream_property/2.
 
-% user stream properties
-:-assert(stream_property(user, file_name(user))).
-:-assert(stream_property(user, mode(read))).
-:-assert(stream_property(user, mode(write))).
-:-assert(stream_property(user, end_of_stream(no))).
+
+
 
 open(File, Mode, Handle, Options):-
     open(File, Mode, Handle),
@@ -486,8 +483,8 @@ is_absolute_file_name(File):-
 file_attributes(File, Name, Ext, Dir, Abs, Size, Time):-
     xcall('com.ugos.jiprolog.extensions.io.FileAttributes7', [File, Name, Ext, Dir, Abs, Size, Time]).
 
-file_name_extension(File, Ext, Name):-
-    file_attributes(File, Name, Ext, _, _, _, _).
+file_name_extension(File, Ext):-
+    file_attributes(File, _, Ext, _, _, _, _).
 
 size_file(File, Size):-
     exists_file(File),
@@ -636,5 +633,19 @@ option(Handle, Term, syntax_errors('')).
 option(Handle, Term, double_quotes(false)).
 option(Handle, Term, term_position(0)).
 option(Handle, Term, subterm_positions(_)).
+
+
+% user stream properties
+:- assert(stream_property(user_input, file_name(user_input))),
+   assert(stream_property(user_input, mode(read))),
+   assert(stream_property(user_input, input)),
+   assert(stream_property(user_input, end_of_stream(no))),
+   assert(stream_property(user_input, alias(user_input))).
+
+:- assert(stream_property(user_output, file_name(user_output))),
+   assert(stream_property(user_output, mode(write))),
+   assert(stream_property(user_output, output)),
+   assert(stream_property(user_output, end_of_stream(no))),
+   assert(stream_property(user_output, alias(user_output))).
 
 
