@@ -28,9 +28,9 @@ class Consult1 extends BuiltIn
     public boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         final PrologObject path = getRealTerm(getParam(1));
-        
+
         String strPath;
-        
+
         try
         {
             if(path instanceof Atom)
@@ -61,9 +61,9 @@ class Consult1 extends BuiltIn
                     {
                         throw new JIPParameterTypeException(1,JIPParameterTypeException.ATOM_OR_STRING);
                     }
-         
+
                     consult(strPath, getJIPEngine(), getQueryHandle());
-                    
+
                     if(tail != null)
                     {
                         head = getRealTerm(((List)tail).getHead());
@@ -82,10 +82,10 @@ class Consult1 extends BuiltIn
         {
             throw new JIPJVMException(ex);
         }
-        
+
         return true;
     }
-    
+
     static final void consult(String strPath, JIPEngine engine, int nQueryHandle) throws IOException
     {
         String strOldSearchPath = null;
@@ -93,7 +93,7 @@ class Consult1 extends BuiltIn
         {
             String strFileName[] = new String[1];
             String strCurDir[] = new String[1];
-            
+
             InputStream ins;
             try
             {
@@ -110,20 +110,20 @@ class Consult1 extends BuiltIn
                 else
                     throw ex;
             }
-            
+
             //System.out.println(strFileName[0]);
             strOldSearchPath = engine.getSearchPath();
             engine.setSearchPath(strCurDir[0]);
             consult(ins, strFileName[0], engine, nQueryHandle);
             engine.setSearchPath(strOldSearchPath);
-        
+
             ins.close();
         }
         catch(SecurityException ex)
         {
             if(strOldSearchPath != null)
                 engine.setSearchPath(strOldSearchPath);
-            
+
             throw JIPRuntimeException.create(9, "consult " + strPath);
         }
         catch(JIPRuntimeException ex)
@@ -133,11 +133,11 @@ class Consult1 extends BuiltIn
             throw ex;
         }
     }
-    
+
     static final void consult(InputStream ins, String strStreamName, JIPEngine engine, int nQueryHandle)
     {
 //        System.out.println("consult");
-        
+
         String strOldInputStreamName = null;
         InputStream oldins = null;
         try
@@ -147,17 +147,17 @@ class Consult1 extends BuiltIn
             engine.setCurrentInputStream(ins, strStreamName);
             // unconsult the file
             engine.getGlobalDB().unconsult(strStreamName);
-            
+
             //ParserInputStream pins = new ParserInputStream(ins);
             //PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), strStreamName);
-            
+
             try
             {
 //                System.out.println(engine.getCurrentEncoding());
-                
+
                 ParserReader pins = new ParserReader(new InputStreamReader(ins, engine.getEncoding()));
                 PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), strStreamName);
-                
+
                 PrologObject term;
                 final Hashtable<String, String> exportTbl = new Hashtable<String, String>(20);
                 exportTbl.put("#module", GlobalDB.USER_MODULE);
@@ -166,16 +166,16 @@ class Consult1 extends BuiltIn
                 {
                     //System.out.println(term);
                     _assert(term, engine, strStreamName, pins, exportTbl, wam);
-                    
+
                     Hashtable<String, Variable> singletonVars = parser.getSingletonVariables();
                     //System.out.println(singletonVars);
                     if(!singletonVars.isEmpty())
                         notifySingletonVars(singletonVars, pins, engine, nQueryHandle);
                 }
-                
+
                 //pins.close();
                 ins.close();
-                                
+
             }
             catch(IOException ex)
             {
@@ -186,25 +186,25 @@ class Consult1 extends BuiltIn
                 }
                 catch(IOException ex1)
                 {}
-                
+
                 throw new JIPJVMException(ex);
                 //throw new JIPRuntimeException("Unable to consult " + strStreamName + ": " + ex.toString());
             }
-            
+
             engine.setCurrentInputStream(oldins, strOldInputStreamName);
         }
         catch(SecurityException ex)
-        { 
+        {
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
-         
+
             try
             {
                 ins.close();
             }
             catch(IOException ex1)
             {}
-            
+
             throw JIPRuntimeException.create(9, "consult " + strStreamName);
         }
         catch(JIPSyntaxErrorException ex)
@@ -212,14 +212,14 @@ class Consult1 extends BuiltIn
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
             ex.m_strFileName = strStreamName;
-            
+
             try
             {
                 ins.close();
             }
             catch(IOException ex1)
             {}
-            
+
             throw ex;
         }
         catch(JIPRuntimeException ex)
@@ -227,18 +227,18 @@ class Consult1 extends BuiltIn
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
             ex.m_strFileName = strStreamName;
-         
+
             try
             {
                 ins.close();
             }
             catch(IOException ex1)
             {}
-            
+
             throw ex;
         }
     }
-            
+
     protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable exportTbl, WAM wam)
     {
 //        System.out.println("ASSERT");  //DBG
@@ -247,7 +247,7 @@ class Consult1 extends BuiltIn
         try
         {
             String strModuleName = (String)exportTbl.get("#module");
-            
+
             // directive
             if(pred instanceof Functor &&
               (((Functor)pred).getName().equals(":-/1") || ((Functor)pred).getName().equals("?-/1")))
@@ -256,15 +256,15 @@ class Consult1 extends BuiltIn
                 // controlla se si tratta di :-module(moduleName,  [exportList]).
                 Functor funct = ((Functor)pred);
                 PrologObject first = getRealTerm(funct.getParams().getHead());
-                
+
                 // :-module
                 if(first instanceof Functor && ((Functor)first).getName().equals("module/2"))
                 {
                     if(exportTbl.size() > 1)
                         throw JIPRuntimeException.create(24, strPath);
-                        
+
                     ConsCell params = ((Functor)first).getParams();
-                        
+
                     strModuleName = ((Atom)params.getHead()).getName();
                     exportTbl.put("#module", strModuleName);
                     List exportList = (List)((ConsCell)params.getTail()).getHead();
@@ -279,13 +279,14 @@ class Consult1 extends BuiltIn
                             String strPredDef = ((Atom)parms.getHead()).getName() + "/" + ((ConsCell)parms.getTail()).getHead();
                             //System.out.println("strPredDef " + strPredDef);  //DBG
                             exportTbl.put(strPredDef, strModuleName);
+                            engine.getGlobalDB().setExported(strPredDef);
                         }
                         else
                         {
                             throw JIPRuntimeException.create(47, strPath + "-" + head.toString(engine));
                             //throw new JIPParameterTypeException(1, head);
                         }
-                        
+
                         exportList = (List)exportList.getTail();
                     }
                 }
@@ -315,8 +316,11 @@ class Consult1 extends BuiltIn
                 {
 //                        System.out.println("Exported");
                     clause.setExported();
+
+
+//                    clause.setModuleName(GlobalDB.USER_MODULE);
                 }
-                
+
 //                  System.out.println("ASSERT: " + clause);  //DBG
                 engine.getGlobalDB().assertz(clause, strPath);
             }
@@ -331,7 +335,7 @@ class Consult1 extends BuiltIn
             throw JIPRuntimeException.create(1, pred.toString(engine) + " at line " + pins.getLineNumber());
         }
     }
-    
+
     private static void notifySingletonVars(Hashtable singletonVars, ParserReader pins, JIPEngine engine, int nQueryHandle)
     {
         Enumeration en = singletonVars.keys();
@@ -340,10 +344,10 @@ class Consult1 extends BuiltIn
         {
             cons = new ConsCell(Atom.createAtom((String)en.nextElement()), cons);
         }
-        
+
         cons = cons.reverse();
         cons = new ConsCell(Expression.createNumber(pins.getLineNumber()), cons);
-        
+
         engine.notifyEvent(JIPEvent.ID_SINGLETONVARS, cons, nQueryHandle);
     }
 }

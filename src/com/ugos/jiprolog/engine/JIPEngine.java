@@ -409,12 +409,12 @@ public class JIPEngine implements Serializable
         if(outs == null)
         {
             removeEnvVariable("___userout___");
-            setCurrentOutputStream(null, "user");
+            setCurrentOutputStream(null, "user_output");
         }
         else
         {
             setEnvVariable("___userout___", outs);
-            setCurrentOutputStream(outs, "user");
+            setCurrentOutputStream(outs, "user_output");
         }
     }
 
@@ -436,12 +436,12 @@ public class JIPEngine implements Serializable
         if(ins == null)
         {
             removeEnvVariable("___userin___");
-            setCurrentInputStream(null, "user");
+            setCurrentInputStream(null, "user_input");
         }
         else
         {
             setEnvVariable("___userin___", ins);
-            setCurrentInputStream(ins, "user");
+            setCurrentInputStream(ins, "user_input");
         }
     }
 

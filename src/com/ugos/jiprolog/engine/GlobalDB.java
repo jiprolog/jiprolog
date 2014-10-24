@@ -29,10 +29,13 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     // Database
     private Hashtable<String, JIPClausesDatabase> m_clauseTable;
+
     // associazione tra predicati e file
     private Hashtable<String, String> m_pred2FileMap;
 
     private Hashtable m_moduleTransparentTbl;
+
+    private Hashtable<String, String> m_exportedTable;
 
     static final String SYSTEM_MODULE = "$system";
     static final String USER_MODULE   = "$user";
@@ -46,6 +49,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         m_clauseTable            = (Hashtable<String, JIPClausesDatabase>)gdb.m_clauseTable.clone();
         m_pred2FileMap           = (Hashtable)gdb.m_pred2FileMap.clone();
         m_moduleTransparentTbl   = (Hashtable)gdb.m_moduleTransparentTbl.clone();
+        m_exportedTable = (Hashtable)gdb.m_exportedTable.clone();
     }
 
     public final GlobalDB newInstance()
@@ -58,8 +62,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     public GlobalDB()
     {
         m_clauseTable            = new Hashtable<String, JIPClausesDatabase>(100);
-        m_pred2FileMap           = new Hashtable(100);
+        m_pred2FileMap           = new Hashtable<String, String>(100);
         m_moduleTransparentTbl   = new Hashtable(100);
+        m_exportedTable = new Hashtable<String, String>();
         loadKernel(this);
     }
 
@@ -602,7 +607,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         return m_clauseTable.elements();
     }
 
-    private static final PrologObject fixTerm(final PrologObject term)
+    private final PrologObject fixTerm(final PrologObject term)
     {
 //      System.out.println("fixterm");
 //      System.out.println(term);
@@ -634,7 +639,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             //System.out.println("Clause");
             Clause clause = new Clause(((Clause)term).getModuleName(), (Functor)fixTerm(((ConsCell)term).getHead()), (ConsCell)fixTerm(((ConsCell)term).getTail()));
-            if(((Clause)term).isExported())
+            if(((Clause)term).isExported() || isExported((Functor)clause.getHead()))
                 clause.setExported();
 
             clause.setFileName(((Clause)term).getFileName());
@@ -699,6 +704,18 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
 
         return files;
+    }
+
+    void setExported(String functor)
+    {
+//    	String func = functor.getName();
+    	m_exportedTable.put(functor, functor);
+    }
+
+    boolean isExported(Functor functor)
+    {
+    	String func = functor.getName();
+    	return m_exportedTable.containsKey(func);
     }
 
 }

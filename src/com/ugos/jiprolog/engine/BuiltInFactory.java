@@ -26,7 +26,6 @@ final class BuiltInFactory extends Object
 {
     static final Hashtable<String, BuiltIn> m_BuiltInTable = new Hashtable<String, BuiltIn>(100);
     private JIPEngine       m_jipEngine   = null;
-
     // Inizializzazione BuiltInTable
     static
     {

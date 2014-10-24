@@ -92,7 +92,7 @@ public final class JIPio
     {
         InputStream reader;
 
-        if(strPath.equals("user"))
+        if(strPath.equals("user_input"))
         {
             reader = engine.getUserInputStream();
         }
@@ -138,7 +138,7 @@ public final class JIPio
     {
         OutputStream writer;
 
-        if(strPath.equals("user"))
+        if(strPath.equals("user_output"))
         {
             writer = engine.getUserOutputStream();
         }
@@ -184,10 +184,10 @@ public final class JIPio
          // get term parser
         JIPTermParser termParser = engine.getTermParser();
 
-        if(strHandle.equals("user"))
+        if(strHandle.equals("user_input"))
         {
             // get the enumeration of terms in the file
-            return termParser.parseStream(engine.getUserInputStream(), "user");
+            return termParser.parseStream(engine.getUserInputStream(), "user_input");
         }
 
         StreamInfo sinfo = get(strHandle, engine);
@@ -205,7 +205,7 @@ public final class JIPio
 
     public final static PushBackInputStream getInputStream(final String strHandle, final JIPEngine engine)
     {
-        if(strHandle.equals("user"))
+        if(strHandle.equals("user_input"))
         {
             return new PushBackInputStream(engine.getUserInputStream());
         }
@@ -219,7 +219,7 @@ public final class JIPio
 
     public static OutputStream getOutputStream(final String strHandle, final JIPEngine engine)
     {
-        if(strHandle.equals("user"))
+        if(strHandle.equals("user_output"))
         {
             return engine.getUserOutputStream();
         }
@@ -233,9 +233,13 @@ public final class JIPio
 
     public static String getStreamName(final String strHandle, final JIPEngine engine)
     {
-        if(strHandle.equals("user"))
+        if(strHandle.equals("user_output"))
         {
-            return "user";
+            return "user_output";
+        }
+        else if(strHandle.equals("user_input"))
+        {
+            return "user_input";
         }
 
         StreamInfo sinfo = get(strHandle, engine);
@@ -247,7 +251,7 @@ public final class JIPio
 
     public static void closeInputStream(final String strHandle, final JIPEngine engine) throws IOException
     {
-        if(strHandle.equals("user"))
+        if(strHandle.equals("user_input") || strHandle.equals("user_output"))
         {
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
@@ -262,7 +266,7 @@ public final class JIPio
 
     public static void closeOutputStream(final String strHandle, final JIPEngine engine) throws IOException
     {
-        if(strHandle.equals("user"))
+    	if(strHandle.equals("user_input") || strHandle.equals("user_output"))
         {
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
