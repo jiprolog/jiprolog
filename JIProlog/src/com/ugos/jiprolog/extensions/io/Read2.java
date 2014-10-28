@@ -75,7 +75,7 @@ public final class Read2 extends JIPXCall
         }
 
         boolean bUserStream;
-        if(bUserStream = "user".equals(m_strStreamHandle))
+        if(bUserStream = "user_input".equals(m_strStreamHandle))
             getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
         JIPTerm term;
