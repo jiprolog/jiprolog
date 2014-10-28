@@ -27,7 +27,7 @@ import java.util.*;
 public final class Get02 extends JIPXCall
 {
     private String m_strStreamHandle;
-    
+
     protected final int readNextChar(InputStream ins)
     {
         try
@@ -39,12 +39,12 @@ public final class Get02 extends JIPXCall
             throw new JIPJVMException(ex);
         }
     }
-    
+
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         // get first parameter
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -59,39 +59,39 @@ public final class Get02 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is an Atom
         if(input instanceof JIPAtom)
         {
             // Gets the handle to the stream
             m_strStreamHandle = ((JIPAtom)input).getName();
-            
+
             // Get the stream
             final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
             if(ins == null)
             {
                 throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
             }
-            
-            if("user".equals(m_strStreamHandle))
+
+            if("user_input".equals(m_strStreamHandle))
                 getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
-        
+
             JIPTerm term;
             int c = readNextChar(ins);
             if(c == -1)
                 term = JIPAtom.create("end_of_file");
             else
                 term = JIPNumber.create(c);
-            
-            if("user".equals(m_strStreamHandle))
+
+            if("user_input".equals(m_strStreamHandle))
                 getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
-        
+
             return params.getNth(2).unify(term, varsTbl);
         }
         else
             throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;
