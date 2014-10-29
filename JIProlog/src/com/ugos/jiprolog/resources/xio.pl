@@ -48,7 +48,6 @@
 
 
 
-
 open(File, Mode, Handle, Options):-
     open(File, Mode, Handle),
     retractall(stream_(Handle, _)),
@@ -327,10 +326,18 @@ write_term(Handle, Term, Options):-
     !.
 
 put(Handle, C):-
+    number(C),
+    !,
+    name(Char, [C]),
     check_handle(Handle, Handle1),
-    char_atom(C, Char),
-    write(Handle, Char),
-    !.
+    write(Handle, Char).
+
+put(Handle, C):-
+    atom(C),
+    !,
+    check_handle(Handle, Handle1),
+    write(Handle, C).
+
 
 put(C):-
     current_output(Handle),
@@ -642,10 +649,16 @@ option(Handle, Term, subterm_positions(_)).
    assert(stream_property(user_input, end_of_stream(no))),
    assert(stream_property(user_input, alias(user_input))).
 
+stream_property(user_input, position(-1)):-!.
+
 :- assert(stream_property(user_output, file_name(user_output))),
    assert(stream_property(user_output, mode(write))),
    assert(stream_property(user_output, output)),
    assert(stream_property(user_output, end_of_stream(no))),
    assert(stream_property(user_output, alias(user_output))).
 
+stream_property(user_output, position(-1)):-!.
+
+stream_property(Handle, position(P)):-
+	xcall('com.ugos.jiprolog.extensions.io.CurrentStream4', [Handle, _, _, P]).
 

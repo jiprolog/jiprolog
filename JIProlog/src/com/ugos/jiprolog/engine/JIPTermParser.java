@@ -38,7 +38,7 @@ public class JIPTermParser
         m_opManager = opManager;
         m_encoding = encoding;
     }
-    
+
     /** Returns an enumeration of terms contained in the specified input stream.
      * @param ins the input stream to parse.
      * @param streamName tha name of the stream (i.e. the name of the associated file)
@@ -47,7 +47,7 @@ public class JIPTermParser
     {
         return new TermEnumerator(new InputStreamReader(ins), m_opManager, streamName);
     }
-    
+
     /** Returns an enumeration of terms contained in the specified input stream.
      * @param ins the input stream to parse.
      * @param streamName tha name of the stream (i.e. the name of the associated file)
@@ -56,7 +56,7 @@ public class JIPTermParser
     {
         return new TermEnumerator(new InputStreamReader(ins, encoding), m_opManager, streamName);
     }
-    
+
     /** Parses the term passed in the parameter and returns a JIPTerm object that wraps the corresponding prolog term.<br>
      * If the string passed in the parameter doesn't contains a valid prolog term it raises a JIPSyntaxErrorException.
      * @param strTerm Term to be parsed. If the term doesn't end with a "dot" one is appended to it.
@@ -64,15 +64,15 @@ public class JIPTermParser
      * @exception com.ugos.jiprolog.engine.JIPSyntaxErrorException
      */
     public final JIPTerm parseTerm(String strTerm) throws JIPSyntaxErrorException
-    {              
+    {
         try
         {
         	final byte[] btTerm = strTerm.getBytes(getEncoding());
             final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
             PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(is, m_encoding)), m_opManager, "user");
-            
+
             final PrologObject term = parser.parseNext();
-                        
+
             return JIPTerm.getJIPTerm(term);
         }
         catch(UnsupportedEncodingException ex)
@@ -80,18 +80,18 @@ public class JIPTermParser
             throw new JIPRuntimeException(ex.getMessage());
         }
     }
-    
-    private class TermEnumerator implements Enumeration<JIPTerm>
+
+    private class TermEnumerator implements Enumeration<JIPTerm>, StreamPosition
     {
         private PrologParser m_parser;
 
         private JIPTerm m_nextTerm = null;
-        
+
         TermEnumerator(final Reader ins, OperatorManager opManager, final String streamName)
         {
             m_parser = new PrologParser(new ParserReader(ins), opManager, streamName);
         }
-        
+
         private JIPTerm parseNextTerm() throws JIPSyntaxErrorException
         {
             final PrologObject term = m_parser.parseNext();
@@ -105,10 +105,10 @@ public class JIPTermParser
         {
             if(m_nextTerm == null)
                 m_nextTerm = parseNextTerm();
-            
+
             return m_nextTerm != null;
         }
-        
+
         public JIPTerm nextElement() throws JIPSyntaxErrorException
         {
             if(hasMoreElements())
@@ -119,6 +119,11 @@ public class JIPTermParser
             }
             else
                 throw new NoSuchElementException();
+        }
+
+        public int getLineNumber()
+        {
+        	return m_parser.getLineNumber();
         }
     }
 

@@ -160,12 +160,14 @@ class Consult1 extends BuiltIn
 
                 PrologObject term;
                 final Hashtable<String, String> exportTbl = new Hashtable<String, String>(20);
+            	Vector<PrologObject> initializationVector = new Vector<PrologObject>();
+
                 exportTbl.put("#module", GlobalDB.USER_MODULE);
                 final WAM wam = new WAM(engine);
                 while ((term = parser.parseNext()) != null)
                 {
                     //System.out.println(term);
-                    _assert(term, engine, strStreamName, pins, exportTbl, wam);
+                    _assert(term, engine, strStreamName, pins, exportTbl, initializationVector, wam);
 
                     Hashtable<String, Variable> singletonVars = parser.getSingletonVariables();
                     //System.out.println(singletonVars);
@@ -175,6 +177,18 @@ class Consult1 extends BuiltIn
 
                 //pins.close();
                 ins.close();
+
+                for(PrologObject goal : initializationVector)
+                {
+                	// chiama la wam
+                    if(!wam.query(goal))
+                    {
+                        wam.closeQuery();
+                        throw JIPRuntimeException.create(27, strStreamName + "-" + goal.toString(engine));
+                    }
+
+                    wam.closeQuery();
+                }
 
             }
             catch(IOException ex)
@@ -239,7 +253,7 @@ class Consult1 extends BuiltIn
         }
     }
 
-    protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable exportTbl, WAM wam)
+    protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable exportTbl, Vector<PrologObject> initializationVector, WAM wam)
     {
 //        System.out.println("ASSERT");  //DBG
 //        System.out.println(pred);  //DBG
@@ -289,6 +303,12 @@ class Consult1 extends BuiltIn
 
                         exportList = (List)exportList.getTail();
                     }
+                }
+                // :-initialization/1
+                else if(first instanceof Functor && ((Functor)first).getName().equals("initialization/1"))
+                {
+                    ConsCell goal = ((Functor)first).getParams();
+                    initializationVector.add(goal);
                 }
                 else  // :-goal
                 {

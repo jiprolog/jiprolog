@@ -84,6 +84,7 @@ public final class Read2 extends JIPXCall
             if(m_termEnum.hasMoreElements())
             {
                 term = (JIPTerm)m_termEnum.nextElement();
+
             }
             else
             {
