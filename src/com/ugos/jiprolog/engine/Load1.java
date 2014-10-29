@@ -88,6 +88,7 @@ class Load1 extends Consult1
 
             engine.getGlobalDB().unconsult(strStramName);
 
+            final Vector<PrologObject> initializationVector = new Vector<PrologObject>();
             final Hashtable exportTbl = new Hashtable(10,1);
             exportTbl.put("#module", GlobalDB.USER_MODULE);
             final WAM wam = new WAM(engine);
@@ -95,16 +96,20 @@ class Load1 extends Consult1
             for(PrologObject pred : program)
             {
                 pred = getRealTerm(pred);
-                _assert(pred, engine, strStramName, null, exportTbl, wam);
+                _assert(pred, engine, strStramName, null, exportTbl, initializationVector, wam);
             }
 
-//            while(predList != null)
-//            {
-//                pred = getRealTerm(predList.getHead());
-//                predList = (List)getRealTerm(predList.getTail());
-//
-//                _assert(pred, engine, strStramName, null, exportTbl, wam);
-//            }
+            for(PrologObject goal : initializationVector)
+            {
+            	// chiama la wam
+                if(!wam.query(goal))
+                {
+                    wam.closeQuery();
+                    throw JIPRuntimeException.create(27, strStramName + "-" + goal.toString(engine));
+                }
+
+                wam.closeQuery();
+            }
         }
         catch(SecurityException ex)
         {

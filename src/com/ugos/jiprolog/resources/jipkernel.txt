@@ -124,6 +124,9 @@
 '$system':use_module(File):-
     ensure_loaded(File).
 
+'$system':include(File):-
+    ensure_loaded(File).
+
 '$system':predicate_property(Head, Property):-
     predicate_properties(Head, Properties),
     !,

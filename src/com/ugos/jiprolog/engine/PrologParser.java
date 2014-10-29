@@ -31,22 +31,22 @@ final class PrologParser
     private static final int STATE_PIPE           = 3;
     private static final int STATE_ARG_LIST       = 4;
     private static final int STATE_SPECIAL_BRACKET = 5;
-    
+
     private static String CASE_CHARS = "()[]{}.|";
-    
+
     private Hashtable<String, Variable> m_varTable = new Hashtable<String, Variable>(10);
     private Hashtable<String, Variable> m_singVarTable = new Hashtable<String, Variable>(10);
-    
+
     private PrologTokenizer m_tokenizer;
-    
+
     // serve solo per le parentesi quadre nel caso [(a,b)]
 //    private int m_nTokCount;
-    
+
     //private ParserInputStream m_lnReader;
     private ParserReader m_lnReader;
     private OperatorManager m_opManager;
-    private String m_strFileName; 
-    
+    private String m_strFileName;
+
 //    public static void main(String[] args)
 //    {
 //////        //StringReader reader = new StringReader(args[0]);
@@ -143,24 +143,24 @@ final class PrologParser
 //            ex.printStackTrace();
 //        }
 //    }
-            
+
     PrologParser(final ParserReader reader, final OperatorManager opManager, final String strFileName)
     {
         m_lnReader = reader;//new LineNumberReader(reader);
         m_tokenizer = new PrologTokenizer(m_lnReader, strFileName);
         m_opManager = opManager;
-        m_strFileName = strFileName; 
+        m_strFileName = strFileName;
     }
-    
+
     PrologObject parseNext() throws JIPSyntaxErrorException
     {
 //      System.out.println("parseNext");
         m_varTable.clear();
         m_singVarTable.clear();
-        
+
         return translateTerm(STATE_NONE, m_lnReader);
     }
-    
+
     Hashtable<String, Variable> getSingletonVariables()
     {
         return m_singVarTable;
@@ -172,9 +172,9 @@ final class PrologParser
         boolean bEnd = false;
         boolean bWhiteSpace = false;
         PrologTokenizer.Token tok = null;
-        
+
 //        int nTokCount = 0;
-        
+
         try
         {
             while(!bEnd)
@@ -184,15 +184,15 @@ final class PrologParser
                 {
                     break;
                 }
-                
+
 //                nTokCount++;
-                
+
 //              System.out.println("nextoken " + tok.m_strToken);
                 Object lastObj = null;
-                
+
                 if(!termStack.isEmpty())
                     lastObj = termStack.peek();
-                                
+
                 switch(tok.m_nType)
                 {
                     case PrologTokenizer.TOKEN_NUMBER:
@@ -204,17 +204,17 @@ final class PrologParser
 
                                 //throw syntaxError(lastObj, tok.m_strToken);
                             }
-                                                        
+
                             exp = Expression.createNumber(tok.m_strToken);
-                            
+
                             termStack.push(exp);
                         }
                         break;
-                        
+
                     case PrologTokenizer.TOKEN_VARIABLE:
                         {
                             Variable var;
-                            
+
                             if(tok.m_strToken.equals("_"))
                             {
                                 var = new Variable(true);
@@ -234,20 +234,20 @@ final class PrologParser
                                         m_singVarTable.put(tok.m_strToken, var);
                                 }
                             }
-                            
+
                             termStack.push(var);
                         }
                         break;
-                        
+
                     case PrologTokenizer.TOKEN_DBLQUOTE:
                         {
                             if(lastObj instanceof PrologObject)
                                 throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "operator_expected(" + ((PrologObject)lastObj).toString(m_opManager) + ")");
 
                                 //throw syntaxError(lastObj, tok.m_strToken);
-                            
+
                             String strVal = tok.m_strToken.substring(1, tok.m_strToken.length() - 1);
-                            
+
                             if(strVal.length() == 0)
                             {
                                 termStack.push(List.NIL);
@@ -258,7 +258,7 @@ final class PrologParser
                             }
                         }
                         break;
-                        
+
                     case PrologTokenizer.TOKEN_QUOTE:
                         tok.m_strToken = tok.m_strToken.substring(1, tok.m_strToken.length() - 1);
                     	if(tok.m_strToken.length() == 1 && CASE_CHARS.indexOf(tok.m_strToken.charAt(0)) > -1)
@@ -285,28 +285,28 @@ final class PrologParser
                             else if(tok.m_strToken.equals("("))
                             {
                                 PrologObject term;
-                                
+
                                 if(lastObj instanceof Atom)// || lastObj instanceof Operator)
                                 {
                                     if(bWhiteSpace)
                                         throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_blank_before(" + ((PrologObject)lastObj).toString(m_opManager) + ")");
                                         //throw syntaxError("'blank'", tok.m_strToken);
-                                    
+
                                     term = translateTerm(STATE_ARG_LIST, lnReader);
-                                    
+
                                     termStack.pop();
                                     if(!(term instanceof ConsCell) || term  instanceof List || term  instanceof Functor)
                                     {
                                         term = new ConsCell(term, null);
                                     }
-                                    
+
                                     PrologObject funct = makeFunctor((Atom)lastObj, (ConsCell)term);
                                     termStack.push(funct);
                                 }
                                 //else if(lastObj instanceof Operator && ((((Operator)lastObj).getInfix() == null) || termStack.size() == 1) && !bWhiteSpace)
                                 // termStack.size() == 1  indica che lastObj è il primo termine letto e quindi anche se l'operatore è infix va trattato come atomo
                                 // bWhiteSpace indica il termine precedente è uno white-space
-//                                else if(lastObj instanceof Operator && 
+//                                else if(lastObj instanceof Operator &&
 //                                       (termStack.size() == 1 || (!bWhiteSpace && (((Operator)lastObj).getInfix() == null))))
                                 else if(lastObj instanceof Operator && !bWhiteSpace)
                                 {
@@ -314,52 +314,52 @@ final class PrologParser
                                     {
                                         //non ci sono altri termini davanti
 //                                    System.out.println("lastObj " + lastObj + " linenumber " + (m_lnReader.getLineNumber() + 1));
-                                    
+
                                         term = translateTerm(STATE_ARG_LIST, lnReader);
-                                    
+
 //                                    System.out.println("term " + term);
-                                    
+
 	                                    termStack.pop();
 	                                    if(!(term instanceof ConsCell) || term  instanceof List || term  instanceof Functor)
 	                                    {
 	                                        term = new ConsCell(term, null);
 	                                    }
-	                                    
+
 	                                    PrologObject funct = makeFunctor(Atom.createAtom(((Operator)lastObj).getName()), (ConsCell)term);
 	                                    termStack.push(funct);
                                     }
-                                    else 
+                                    else
                                     {
                                         // last obj è infisso e c'è un antecedente
                                         termStack.pop();
                                         Object lastLastObj = termStack.peek();
                                         termStack.push(lastObj);
-                                        
-                                        if(lastLastObj instanceof Operator && 
+
+                                        if(lastLastObj instanceof Operator &&
                                           ((((Operator)lastLastObj).getPrecedence() > ((Operator)lastObj).getPrecedence()) ||
-                                          (((Operator)lastLastObj).getPrecedence() == ((Operator)lastObj).getPrecedence() && 
+                                          (((Operator)lastLastObj).getPrecedence() == ((Operator)lastObj).getPrecedence() &&
                                           (!((Operator)lastLastObj).isLeftAssoc() || ((Operator)lastObj).isRightAssoc()))))
                                         {
                                             //tratto lastOP come funtore
                                             term = translateTerm(STATE_ARG_LIST, lnReader);
-                                            
+
 //                                            System.out.println("term " + term);
-                                        
+
     	                                    termStack.pop();
     	                                    if(!(term instanceof ConsCell) || term  instanceof List || term  instanceof Functor)
     	                                    {
     	                                        term = new ConsCell(term, null);
     	                                    }
-    	                                    
+
     	                                    PrologObject funct = makeFunctor(Atom.createAtom(((Operator)lastObj).getName()), (ConsCell)term);
     	                                    termStack.push(funct);
                                         }
-                                        else  
+                                        else
                                         {
 //                                          tratto lastop come operatore infisso
-                                            
+
                                             term = translateTerm(STATE_ROUND_BRACKET, lnReader);
-//                                            System.out.println("term " + term);                           
+//                                            System.out.println("term " + term);
                                             if (term == null)
                                             {
                                                 termStack.push(ConsCell.NIL);
@@ -381,7 +381,7 @@ final class PrologParser
                                 {
 //                                    System.out.println("lastObj2 " + lastObj);
                                     term = translateTerm(STATE_ROUND_BRACKET, lnReader);
-                                                                      
+
                                     if (term == null)
                                     {
                                         termStack.push(ConsCell.NIL);
@@ -395,7 +395,7 @@ final class PrologParser
                             else if(tok.m_strToken.equals(")"))
                             {
                                 if(nState == STATE_ROUND_BRACKET || nState == STATE_ARG_LIST)
-                                { 
+                                {
                                     if(lastObj instanceof Operator)
                                     {
                                         Operator lastOp = (Operator) termStack.pop();
@@ -406,14 +406,14 @@ final class PrologParser
                                         termStack.pop();
                                         termStack.push(new ConsCell((ConsCell)lastObj, null));
                                     }
-                
+
 //                                  PrologObject term1 = (PrologObject)lastObj;
 //                                  while((term1 instanceof ConsCell) && !(term1 instanceof Functor) && !(term1 instanceof List) && (((ConsCell)term1).getHeight() == 1))
 //                                      term1 = ((ConsCell)term1).getHead();
 //
 //                                  termStack.pop();
 //                                    termStack.push(new ConsCell(term1, null));
-                                    
+
                                     if(termStack.isEmpty())
                                     {
                                         throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "empty_bracket");
@@ -425,7 +425,7 @@ final class PrologParser
                                 else
                                 {
                                     throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_char(')')");
-                                    
+
                                     //throw syntaxError(null, tok.m_strToken);
                                 }
                             }
@@ -434,9 +434,9 @@ final class PrologParser
                                 if(lastObj instanceof PrologObject)
                                     throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "operator_expected(" + ((PrologObject)lastObj).toString(m_opManager) + ")");
 //                                    throw syntaxError(lastObj, tok.m_strToken);
-                                
+
                                 PrologObject term = translateTerm(STATE_SQUARE_BRACKET, lnReader);
-                                
+
                                 //System.out.println("m_nTokCount " + m_nTokCount);
                                 if(term instanceof List || term  instanceof Functor || term  instanceof Clause || !(term instanceof ConsCell))
 //                                      || ((term instanceof ConsCell) && m_nTokCount == 2))
@@ -491,7 +491,7 @@ final class PrologParser
                                     {
                                         termStack.push(Atom.createAtom(tok.m_strToken));
                                     }
-                                                                        
+
                                     //throw syntaxError(tok.m_strToken, null);
                                 }
                                 else
@@ -511,9 +511,9 @@ final class PrologParser
                                     PrologObject objRight = translateTerm(STATE_PIPE, lnReader);
                                     // risolve quello che c'è a sinistra
                                     PrologObject objleft = resolveStack(termStack);
-                                    
+
 //                                    nTokCount = 0;
-                                    
+
                                     if((objleft instanceof ConsCell) && !(objleft instanceof Functor) && !(objleft instanceof List))
                                     {
                                         ((ConsCell)objleft).setLast(objRight);
@@ -523,7 +523,7 @@ final class PrologParser
                                     {
                                         termStack.push(new ConsCell(objleft, objRight));
                                     }
-                                    
+
                                     nState = STATE_NONE;
                                     bEnd = true;
                                 }
@@ -533,7 +533,7 @@ final class PrologParser
                                 if(lastObj instanceof PrologObject)
                                     throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "operator_expected(" + ((PrologObject)lastObj).toString(m_opManager) + ")");
                                     //throw syntaxError(lastObj, tok.m_strToken);
-                                
+
                                 PrologObject term = translateTerm(STATE_SPECIAL_BRACKET, lnReader);
                                 if(term instanceof Functor)
                                     termStack.push(new Functor("{/1", new ConsCell(term, null)));
@@ -602,11 +602,11 @@ final class PrologParser
                                                 {
                                                     // estrae il postfix
                                                     curOp = curOp.getPostfix();
-                                                    
+
                                                     PrologObject lastTerm = (PrologObject)lastObj;
                                                     termStack.pop();
                                                     Operator lastOp = (Operator)termStack.peek();
-                                                    
+
                                                     if (curOp.getPrecedence() > lastOp.getPrecedence() ||
                                                             ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
                                                                  (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))
@@ -617,7 +617,7 @@ final class PrologParser
                                                         termStack.push(lastObj);
                                                         PrologObject obj = resolveOperator(termStack, lastOp);
                                                         termStack.push(obj);
-                                                        
+
                                                         lastObj = obj;
                                                     }
                                                     else if (curOp.getPrecedence() < lastOp.getPrecedence() ||
@@ -646,7 +646,7 @@ final class PrologParser
                                                     curOp = curOp.getInfix();
                                                     termStack.pop();
                                                     Operator lastOp = (Operator)termStack.peek();
-                                                    
+
                                                     if((nState == STATE_ARG_LIST || nState == STATE_SQUARE_BRACKET) &&
                                                         (curOp.getName().equals(",")))
                                                     {
@@ -656,7 +656,7 @@ final class PrologParser
                                                             // inserisco l'op nello stack e vado avanti
                                                             termStack.push(lastObj);
                                                             termStack.push(curOp);
-                                                        
+
                                                             lastObj = null;
                                                         }
                                                         else
@@ -665,7 +665,7 @@ final class PrologParser
                                                             // (a lastop b) , c
                                                             // tratta l'operator nello stack
                                                             termStack.pop();
-                                                            termStack.push(lastObj);                                                            
+                                                            termStack.push(lastObj);
                                                             PrologObject obj = resolveOperator(termStack, lastOp);
                                                             termStack.push(obj);
                                                             lastObj = obj;
@@ -746,7 +746,7 @@ final class PrologParser
                                                     {
                                                         curOp = curOp.getPostfix();
                                                         lastOp = lastOp.getPrefix();
-                                                        
+
                                                         if (curOp.getPrecedence() > lastOp.getPrecedence() ||
                                                             ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
                                                             (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))
@@ -785,13 +785,13 @@ final class PrologParser
                                                 else if(lastOp.getInfix() != null)
                                                 {
                                                     lastOp = lastOp.getInfix();
-                                                    
+
                                                     termStack.pop();
                                                     Object lastLastObj = termStack.peek();
                                                     if(curOp.getPrefix() != null)
                                                     {
                                                         curOp = curOp.getPrefix();
-                                                        
+
 //                                                        System.out.println("LasOP infix " + lastOp.m_strName + "CurOp Prefix " + curOp.m_strName);
                                                         // se curOp è prefisso va avanti
                                                         termStack.push(lastOp);
@@ -812,7 +812,7 @@ final class PrologParser
                                                         if(lastLastOp.getPrefix() != null)
                                                         {
                                                             lastLastOp = lastLastOp.getPrefix();
-                                                            
+
                                                             // lastOp è un infix valido
                                                             // lastLastObj è un atomo
                                                             // curOp è un atomo
@@ -828,7 +828,7 @@ final class PrologParser
                                                         else if(lastLastOp.getInfix() != null)
                                                         {
                                                             lastLastOp = lastLastOp.getInfix();
-                                                                                                                        
+
                                                             if ((curOp.getPrecedence() > lastOp.getPrecedence() ||
                                                                 ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
                                                                  (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))  ||
@@ -879,12 +879,12 @@ final class PrologParser
                             }
                         }
                         break;
-                        
+
 //                    case PrologTokenizer.TOKEN_DOT:
 //                        bEnd = true;
 //                        break;
                 }
-                
+
                 if(tok.m_nType == PrologTokenizer.TOKEN_WHITESPACE)
 //              {
 //                  System.out.println("spacebar true");
@@ -896,18 +896,18 @@ final class PrologParser
 //                  System.out.println("spacebar false");
 //              }
             }
-            
+
             if(nState != STATE_NONE)
                 throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_eof");
                 //throw new JIPSyntaxErrorException("Unexpected EOF or '.' found at line " + (m_lnReader.getLineNumber() + 1));
-            
+
 //          System.out.println("qui");
 //          System.out.println(termStack);
-            
+
             PrologObject obj = resolveStack(termStack);
 //            m_nTokCount = nTokCount;
             return obj;
-            
+
 //            if(obj == null && tok != null && tok.m_nType == PrologTokenizer.TOKEN_DOT)
 //                return Atom.createAtom(".");
 //            else
@@ -933,12 +933,12 @@ final class PrologParser
                 //throw syntaxError("unknown", null);
         }
     }
-    
+
     private final PrologObject resolveOperator(Stack termStack, Operator op) throws JIPSyntaxErrorException
     {
         //        System.out.println(termStack.peek());
         PrologObject obj1 = (PrologObject)termStack.pop();
-        
+
         if(op.isPrefix())//prefix
         {
             if((!(obj1 instanceof ConsCell)) || obj1 instanceof List || obj1 instanceof Functor || ((ConsCell)obj1).getHeight() != 1)
@@ -954,7 +954,7 @@ final class PrologParser
             {
                 obj1 = new ConsCell(obj1, null);
             }
-             
+
             return makeFunctor(Atom.createAtom(op.getName()), (ConsCell)obj1);
         }
         else if(op.isInfix() && (termStack.size() > 0))
@@ -979,17 +979,17 @@ final class PrologParser
                     {
                         obj1 = new ConsCell(obj1, null);
                     }
-                    
+
                     Functor funct1 = (Functor)makeFunctor(Atom.createAtom(op.getName()), (ConsCell)obj1);
-                    
+
                     return makeFunctor(Atom.createAtom(((Operator)obj2).getName()), new ConsCell(funct1, null));
-                    
+
                 }
-                
+
 //                System.out.println("obj2 " + obj2);
                 // controlla la precedenza e l'associatività
-                if ((termStack.size() == 0) || 
-                        op.getName().equals(",") || 
+                if ((termStack.size() == 0) ||
+                        op.getName().equals(",") ||
                         op.getPrecedence() > ((Operator)obj2).getPrecedence() ||
                         ((op.getPrecedence() == ((Operator)obj2).getPrecedence()) &&
                              (op.isLeftAssoc() || !((Operator)obj2).isRightAssoc())))
@@ -1005,21 +1005,21 @@ final class PrologParser
                     {
                         obj1 = new ConsCell(obj1, null);
                     }
-                    
+
                     if(((Operator)obj2).getInfix() != null)
                     	return makeFunctor(Atom.createAtom(((Operator)obj2).getName()), new ConsCell(Atom.createAtom(op.getName()), obj1));
                     else
                         throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + obj1 + ")");
                 }
             }
-            
+
             if(op.getName().equals(","))
             {
                 if((!(obj1 instanceof ConsCell)) || obj1 instanceof List || obj1 instanceof Functor)
                 {
                     obj1 = new ConsCell(obj1, null);
                 }
-                
+
                 return new ConsCell((PrologObject)obj2, obj1);
             }
             else
@@ -1028,7 +1028,7 @@ final class PrologParser
                 {
                     obj1 = new ConsCell(obj1, null);
                 }
-                
+
                 return makeFunctor(Atom.createAtom(op.getName()), new ConsCell((PrologObject)obj2, obj1));
             }
         }
@@ -1038,15 +1038,15 @@ final class PrologParser
             //throw syntaxError(op.getName(), null);
         }
     }
-    
+
     private final PrologObject resolveStack(Stack termStack) throws JIPSyntaxErrorException
     {
         if(termStack.isEmpty())
             return null;
-        
+
         Object obj;
         obj = termStack.pop();
-        
+
         while(!termStack.isEmpty())
         {
             if(obj instanceof Operator)
@@ -1065,18 +1065,18 @@ final class PrologParser
                     termStack.push(term);
                 }
             }
-            
+
             obj = termStack.pop();
         }
-        
+
         return (PrologObject)obj;
     }
-    
+
     private final static PrologObject makeFunctor(Atom funct, ConsCell params)
     {
         if(params != null)
         {
-            
+
             String strFunctor = funct.getName() + "/" + params.getHeight();
 //          System.out.println(strFunctor);
             if(BuiltInFactory.isBuiltIn(strFunctor))
@@ -1103,7 +1103,7 @@ final class PrologParser
         else
         {
             String strFunctor = funct.getName() + "/0";
-            
+
             if(BuiltInFactory.isBuiltIn(strFunctor))
             {
                 return new BuiltInPredicate(strFunctor, null);
@@ -1114,7 +1114,7 @@ final class PrologParser
             }
         }
     }
-    
+
     private final static List makeList(ConsCell params)
     {
         if(params.getTail() != null)
@@ -1126,7 +1126,7 @@ final class PrologParser
             return new List(params.getHead(), null);
         }
     }
-    
+
     private final static ConsCell makeCons(ConsCell params)
     {
         if(params.getTail() != null)
@@ -1142,6 +1142,12 @@ final class PrologParser
             return new ConsCell(params.getHead(), null);
         }
     }
+
+    public int getLineNumber()
+    {
+    	return m_lnReader.getLineNumber();
+    }
+
 /*
     private final JIPSyntaxErrorException syntaxError(Object term, String strTerm)
     {
@@ -1153,7 +1159,7 @@ final class PrologParser
                 strMsg = "unexpected_term_before(" + term.toString() + ")";
             else
                 strMsg = "unexptected_term (" + term.toString() + ")";
-        
+
         return new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), strMsg);
 
     }
