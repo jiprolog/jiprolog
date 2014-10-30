@@ -114,10 +114,25 @@ class Consult1 extends BuiltIn
             //System.out.println(strFileName[0]);
             strOldSearchPath = engine.getSearchPath();
             engine.setSearchPath(strCurDir[0]);
-            consult(ins, strFileName[0], engine, nQueryHandle);
+            Vector<PrologObject> initializationVector = consult(ins, strFileName[0], engine, nQueryHandle);
             engine.setSearchPath(strOldSearchPath);
 
             ins.close();
+
+            final WAM wam = new WAM(engine);
+
+            for(PrologObject goal : initializationVector)
+            {
+            	// chiama la wam
+                if(!wam.query(goal))
+                {
+                    wam.closeQuery();
+                    throw JIPRuntimeException.create(27, strFileName[0] + "-" + goal.toString(engine));
+                }
+
+                wam.closeQuery();
+            }
+
         }
         catch(SecurityException ex)
         {
@@ -134,7 +149,7 @@ class Consult1 extends BuiltIn
         }
     }
 
-    static final void consult(InputStream ins, String strStreamName, JIPEngine engine, int nQueryHandle)
+    static final Vector<PrologObject> consult(InputStream ins, String strStreamName, JIPEngine engine, int nQueryHandle)
     {
 //        System.out.println("consult");
 
@@ -142,6 +157,8 @@ class Consult1 extends BuiltIn
         InputStream oldins = null;
         try
         {
+        	Vector<PrologObject> initializationVector = new Vector<PrologObject>();
+
             oldins = engine.getCurrentInputStream();
             strOldInputStreamName = engine.getCurrentInputStreamName();
             engine.setCurrentInputStream(ins, strStreamName);
@@ -160,7 +177,6 @@ class Consult1 extends BuiltIn
 
                 PrologObject term;
                 final Hashtable<String, String> exportTbl = new Hashtable<String, String>(20);
-            	Vector<PrologObject> initializationVector = new Vector<PrologObject>();
 
                 exportTbl.put("#module", GlobalDB.USER_MODULE);
                 final WAM wam = new WAM(engine);
@@ -177,19 +193,6 @@ class Consult1 extends BuiltIn
 
                 //pins.close();
                 ins.close();
-
-                for(PrologObject goal : initializationVector)
-                {
-                	// chiama la wam
-                    if(!wam.query(goal))
-                    {
-                        wam.closeQuery();
-                        throw JIPRuntimeException.create(27, strStreamName + "-" + goal.toString(engine));
-                    }
-
-                    wam.closeQuery();
-                }
-
             }
             catch(IOException ex)
             {
@@ -206,6 +209,8 @@ class Consult1 extends BuiltIn
             }
 
             engine.setCurrentInputStream(oldins, strOldInputStreamName);
+
+            return initializationVector;
         }
         catch(SecurityException ex)
         {
