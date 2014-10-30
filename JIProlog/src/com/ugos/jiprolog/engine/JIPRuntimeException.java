@@ -33,24 +33,24 @@ public class JIPRuntimeException extends RuntimeException
 {
     public static final int ID_UNKNOWN_EXCEPTION = -1;
     public static final int ID_USER_EXCEPTION = 1000;
-        
+
     private int m_errorNumber;
-    
+
     JIPEngine m_engine;
     WAM.Node m_curNode;
     String m_strFileName;
     PrologObject m_term;
-    
+
     int m_nLineNumber;
     int m_nPosition;
     String m_strMessage;
-    
+
     static JIPRuntimeException create(final int nErrorNum, Object obj)
     {
         //nErrorNum number of the error
         //obj is the object to append to the message in the insertion point %1
         //term is the predicate where the error occur
-        
+
         String strMessage;
         if(s_errorTable.containsKey(new Integer(nErrorNum)))
         {
@@ -60,19 +60,19 @@ public class JIPRuntimeException extends RuntimeException
         {
             strMessage = (String)s_errorTable.get(new Integer(ID_UNKNOWN_EXCEPTION));
         }
-        
+
         if(obj == null)
             obj = "";
-        
+
         // search for insertion point %1 and insert the obj
         int nPos = strMessage.indexOf("%1");
-        
+
         if(nPos > -1)
             strMessage = strMessage.substring(0, nPos) + obj.toString() + strMessage.substring(nPos + 2, strMessage.length());
-                
+
         return new JIPRuntimeException(nErrorNum, strMessage);
     }
-    
+
     JIPRuntimeException(JIPRuntimeException ex)
     {
         super(ex.getMessage());
@@ -80,7 +80,7 @@ public class JIPRuntimeException extends RuntimeException
         m_curNode = ex.m_curNode;
         m_strMessage = ex.m_strMessage;
     }
-    
+
     /** Constructs a new JIPRuntimeException
      * @param nErrorNum number of the error
      * @param strMsg message associated to this exception
@@ -91,7 +91,7 @@ public class JIPRuntimeException extends RuntimeException
         m_errorNumber = nErrorNum;
         m_strMessage = strMsg;
     }
-    
+
     /** Constructs a new JIPRuntimeException with unknown error number
      * @param strMsg message associated to this exception
      */
@@ -99,7 +99,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         this(ID_UNKNOWN_EXCEPTION, strMsg);
     }
-    
+
     /** Gets the error number
      * @return error number
      */
@@ -107,7 +107,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         return m_errorNumber;
     }
-    
+
     /** Gets the eerror term associated to this exception
      * @return JIPTerm object associated to this exception
      */
@@ -115,15 +115,15 @@ public class JIPRuntimeException extends RuntimeException
     {
 //        if(m_engine != null)
 //        {
-            String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString()))); 
+            String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
         	String strMessage = Atom.createAtom(super.getMessage()).toString();
-        
+
         	return getTerm("runtime_error(" + strMessage + ")", strTerm);
-        	
-        	
+
+
 //        	if(m_strFileName == null)
 //        	    m_strFileName = "undefined";
-//        	
+//
 //            try
 //            {
 //                return m_engine.getTermParser().parseTerm("error(runtime_error('" + strMessage + "'), context('" + strTerm + "', file('" + m_strFileName + "', " + m_nLineNumber + ")))");
@@ -133,22 +133,22 @@ public class JIPRuntimeException extends RuntimeException
 //	             return m_engine.getTermParser().parseTerm("error(runtime_error('" + strMessage + "'), context(undefined, file(undefined, undefined)))");
 //	        }
 //        }
-       
+
     }
-    
+
     JIPTerm getTerm(final String strType, final String strTerm)
     {
         if(m_engine != null)
         {
         	if(m_strFileName == null)
         	    m_strFileName = "undefined";
-        	
+
         	String strFileName = Atom.createAtom(m_strFileName).toString();
-        	
+
             try
             {
-                return 
-                	m_engine.getTermParser().parseTerm("error(" + strType + ", context(" + strTerm + ", file(" + strFileName + ", " + m_nLineNumber + ")))");
+                return
+                	m_engine.getTermParser().parseTerm("error(" + strType.replace("\\", "\\\\") + ", context(" + strTerm + ", file(" + strFileName + ", " + m_nLineNumber + ")))");
 	        }
 	        catch (JIPSyntaxErrorException ex)
 	        {
@@ -160,7 +160,7 @@ public class JIPRuntimeException extends RuntimeException
             return ((m_term != null) ? (new JIPTerm(m_term.copy())) : ((m_curNode == null) ? (null) : (new JIPTerm(m_curNode.getGoal().copy()))));
         }
     }
-     
+
     /** Sets the error term associated to this exception
      * @param term the term of this exception
      */
@@ -168,7 +168,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         m_term = term;//(m_curNode == null) ? null : new JIPTerm(m_curNode.getGoal().copy());
     }
-    
+
     /** Gets the file name where the exception was raised
      * @return the file name where the exception was raised
      */
@@ -176,7 +176,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         return m_strFileName;
     }
-    
+
     /** Gets the line number where the exception was raised
      * @return the line number where the exception was raised
      */
@@ -184,7 +184,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         return m_nLineNumber;
     }
-    
+
     /** Gets the position where the exception was raised
      * @return the position where the exception was raised
      */
@@ -192,7 +192,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         return m_nPosition;
     }
-    
+
     /** Gets the error message
      * @return the error message
      */
@@ -200,7 +200,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         if(getTerm() != null)
             return getTerm().toString() + "\n" + super.getMessage();
-            
+
 //            if(m_engine != null)
 //                return getTerm().toString(m_engine) + "\n" + super.getMessage();
 //            else
@@ -208,7 +208,7 @@ public class JIPRuntimeException extends RuntimeException
         else
             return super.getMessage();
     }
-    
+
     /** Gets the inner message
      * @return the inner message
      */
@@ -216,7 +216,7 @@ public class JIPRuntimeException extends RuntimeException
     {
     	return m_strMessage;
     }
-    
+
 //  #ifndef _MIDP
     /** Write the stack trace of goals to the default print stream
      */
@@ -224,8 +224,8 @@ public class JIPRuntimeException extends RuntimeException
     {
         printPrologStackTrace(System.out);
     }
-    
-    
+
+
     /** Write the stack trace of goals to the given print stream
      * @param ps print stream that receive the stack trace
      */
@@ -233,7 +233,7 @@ public class JIPRuntimeException extends RuntimeException
     {
         printPrologStackTrace(new PrintWriter(ps));
     }
-    
+
     /** Write the stack trace of goals to the given print writer
      * @param pw printwriter that receive the stack trace
      */
@@ -245,11 +245,11 @@ public class JIPRuntimeException extends RuntimeException
             pw.flush();
             return;
         }
-        
+
         WAM.Node node = m_curNode;
         pw.println(node.getGoal().toString(m_engine));
         node = node.m_previous;
-        
+
         while(node != null)
         {
             //System.out.println("node.getGoal() " + node.getGoal());
@@ -260,9 +260,9 @@ public class JIPRuntimeException extends RuntimeException
         }
     }
     //#endif
-       
+
     static final Hashtable s_errorTable = new Hashtable(60);
-    
+
     static
     {
         s_errorTable.put(new Integer(-1), "Unknown Exception");
@@ -317,7 +317,7 @@ public class JIPRuntimeException extends RuntimeException
         s_errorTable.put(new Integer(47), "Bad definition in module declaration: %1");
         s_errorTable.put(new Integer(48), "Operator %1 cannot be redefined");
         s_errorTable.put(new Integer(49), "There are no other solutions for the query: %1");
-        
+
         s_errorTable.put(new Integer(100), "You cannot do this operation because the interpreter is still working");
         s_errorTable.put(new Integer(101), "You cannot do this operation because the query was closed");
         s_errorTable.put(new Integer(102), "The query specified in the handle was not found or it was closed");
@@ -335,7 +335,7 @@ public class JIPRuntimeException extends RuntimeException
      - 7, Java Exception, JVM returns ex
      - 8, Java IOException, JVM returns ex
      - 9, "JIPProlog is running as an applet so it is subject to security limitation");
-     
+
      Interpreter Exceptions
      10, "Functor " + m_strName + " has a wrong arity");
      11, "Can't retract clause " + m_currentRule.toString() + " from related database");
@@ -367,8 +367,8 @@ public class JIPRuntimeException extends RuntimeException
      51 - Meta-call variable unbounded
      52 - Unexpected terminal found in a grammar clause
      53 - free
-     
-     
+
+
      100   JIPIsRunningException
      101,  JIPQueryInExecutionException
      102,  BadQueryException

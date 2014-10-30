@@ -32,7 +32,7 @@ public class JIPCatch3 extends JIPXCall
     private JIPTerm    m_mask         = null;
     private JIPEngine  m_engine       = null;
     private JIPQuery   m_recoverQuery = null;
-    
+
     public final synchronized boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm solution;
@@ -44,20 +44,20 @@ public class JIPCatch3 extends JIPXCall
             {
             	if(params.getNth(1).unify(solution, varsTbl))
                     return true;
-                
+
                 m_recoverQuery.close();
                 m_recoverQuery = null;
                 return false;
             }
         }
-                
+
         // Open Query
         // Check if goal is running
         if(m_jipQuery == null)
         {
             //  Extract inputs
             JIPTerm goal = null;
-            
+
             goal = params.getNth(1);
             if (goal instanceof JIPVariable)
             {
@@ -72,14 +72,14 @@ public class JIPCatch3 extends JIPXCall
                     goal = ((JIPVariable)goal).getValue();
                 }
             }
-    
+
             m_mask = params.getNth(2);
-                                    
+
             m_engine = getJIPEngine();
-            
+
             m_jipQuery = m_engine.openSynchronousQuery(goal);
         }
-        
+
         // Run Query
         try
         {
@@ -94,19 +94,19 @@ public class JIPCatch3 extends JIPXCall
         catch(JIPRuntimeException ex)
         {
             //ex.printPrologStackTrace();
-            
+
             // Error found
             m_thrownTerm = ex.getTerm();
             if(m_thrownTerm == null)
                 return false;
-            
+
             //System.out.println("m_thrownTerm " + m_thrownTerm);
             //System.out.println("m_mask " + m_mask);
-            
+
             // close the query
             m_jipQuery.close();
             m_jipQuery = null;
-            
+
             // Check if unify with mask
             if(m_thrownTerm.unify(m_mask, varsTbl))
             {
@@ -130,13 +130,13 @@ public class JIPCatch3 extends JIPXCall
                 // Run recover goal
                 m_recoverQuery = m_engine.openSynchronousQuery(recoverGoal);
                 solution = m_recoverQuery.nextSolution();
-                
+
                 if(solution != null)
                 {
                     if(params.getNth(3).unify(solution, varsTbl))
                         return true;
-               
-                    m_recoverQuery.close();	
+
+                    m_recoverQuery.close();
                     m_recoverQuery = null;
                     return false;
                 }
@@ -147,32 +147,35 @@ public class JIPCatch3 extends JIPXCall
                 throw ex;
             }
         }
-        
+
         //System.out.println(params.getNth(1));
         //System.out.println("solution " + solution);
-        
+
+        if(solution == null)
+        	return false;
+
         if(params.getNth(1).unify(solution, varsTbl))
             return true;
-        
+
         // close the query
         m_jipQuery.close();
         m_jipQuery = null;
-        
+
         return false;
     }
-            
+
     public boolean hasMoreChoicePoints()
     {
         if(m_recoverQuery != null)
         {
             return m_recoverQuery.hasMoreChoicePoints();
         }
-                    
+
         if(m_jipQuery != null)
         {
             return m_jipQuery.hasMoreChoicePoints();
         }
-        
+
         return false;
     }
 }

@@ -25,17 +25,17 @@ final class AsyncWAMManager implements Runnable
     WAM             m_wam;
     PrologObject    m_query;
     Object          m_result;
-    
+
     private JIPEngine       m_engine;
     private boolean         m_bNext;
     private Thread          m_workerThread;
-    
+
     //private boolean               m_bDeterministc;
-            
+
     // il container può trovarsi in due stati:
     // running se m_workerThread != null
     // waiting se m_workerThread == null
-    
+
     public AsyncWAMManager(final WAM wam, final PrologObject query, JIPEngine engine)
     {
         m_wam    = wam;
@@ -43,7 +43,7 @@ final class AsyncWAMManager implements Runnable
         m_engine  = engine;
         m_workerThread    = null;
     }
-    
+
     public final int getHandle()
     {
         return m_wam.hashCode();
@@ -56,18 +56,18 @@ final class AsyncWAMManager implements Runnable
         m_workerThread.setName("JIProlog engine");
         m_workerThread.start();
     }
-    
+
     public final void next()
     {
         m_bNext = true;
         start();
     }
-    
+
     final boolean isRunning()
     {
         return m_workerThread != null;
     }
-    
+
     final void close()
     {
         m_wam.closeQuery();
@@ -96,16 +96,17 @@ final class AsyncWAMManager implements Runnable
         }
         catch(Throwable th)
         {
+        	th.printStackTrace();
             m_result = th;
         }
-        
+
         // set container state
         m_workerThread = null;
-        
+
         // update the caller
         m_engine.update(this);
     }
-    
+
     final boolean hasMoreChoicePoints()
     {
         if(m_wam.isNeverRun())
@@ -116,7 +117,7 @@ final class AsyncWAMManager implements Runnable
         {
             return false;
         }
-        
+
         return m_wam.hasMoreChoicePoints();
     }
 }

@@ -52,11 +52,9 @@ open(File, Mode, Handle, Options):-
 
 open(File, write, Handle):-
     tell(File, Handle),
-    set_stream_properties(Handle, [mode(write), output, alias(Handle), file_name(File), position(line(-1)), eof_action(eof_code), end_of_stream(not), type(text)]),
     !.
 
 open(File, read, Handle):-
-	set_stream_properties(Handle, [mode(read), input, alias(Handle), file_name(File), position(line(0)), eof_action(eof_code), end_of_stream(not), type(text)]),
     see(File, Handle),
     !.
 
@@ -275,7 +273,7 @@ append(Handle):-
     check_handle(Handle, Handle1),
 	set_output(Handle1),
 	!.
-	
+
 append(File):-
     append(File, Handle),
     set_output(Handle),
@@ -289,7 +287,7 @@ append(File, Handle):-
 telling(Handle):-
     check_handle(Handle, Handle1),
     current_output(Handle1).
-    
+
 telling(File):-
     current_output(Handle),
     telling(Handle, file),
