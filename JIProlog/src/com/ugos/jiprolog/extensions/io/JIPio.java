@@ -46,18 +46,22 @@ public final class JIPio
     public static final String STR_DIRECTORY_NOT_CREATED = "Unable to create the directory";
 
     public static final int    ERR_USER_STREAM = 2006;
-    public static final String STR_USER_STREAM = "Unable to close the user stream";
+    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
+    private static StreamInfo user_input = new StreamInfo("user_input", "user_input");
+    private static StreamInfo user_output = new StreamInfo("user_output", "user_output");
+    private static StreamInfo user_error = new StreamInfo("user_error", "user_error");
+
+    public static Hashtable<String, StreamInfo> iotable = new Hashtable<String, JIPio.StreamInfo>();
+
+    static
+    {
+    	iotable.put("user_input", user_input);
+    	iotable.put("user_output", user_output);
+    	iotable.put("user_error", user_error);
+    }
     private static final String put(final StreamInfo obj, final JIPEngine engine)
     {
-        // get iotable (opened file)
-        Hashtable iotable = (Hashtable)engine.getEnvVariable("_iotable_");
-        if(iotable == null)
-        {
-            iotable = new Hashtable();
-            engine.setEnvVariable("_iotable_", iotable);
-        }
-
         // put the new enumeration in the table
         iotable.put(obj.m_handle.toString(), obj);
 
@@ -66,26 +70,14 @@ public final class JIPio
 
     static final StreamInfo get(final String handle, final JIPEngine engine)
     {
-        // get iotable (opened file)
-        final Hashtable iotable = (Hashtable)engine.getEnvVariable("_iotable_");
-        if(iotable == null)
-        {
-            return null;
-        }
-        else
-        {
-            return (StreamInfo)iotable.get(handle);
-        }
+        return (StreamInfo)iotable.get(handle);
     }
+
 
     private static final void remove(final String handle, final JIPEngine engine)
     {
         // get iotable (opened file)
-        final Hashtable iotable = (Hashtable)engine.getEnvVariable("_iotable_");
-        if(iotable != null)
-        {
-            iotable.remove(handle);
-        }
+        iotable.remove(handle);
     }
 
     public static final String openInputStream(String strPath, final String strHandle, final JIPEngine engine) throws IOException
@@ -138,7 +130,7 @@ public final class JIPio
     {
         OutputStream writer;
 
-        if(strPath.equals("user_output"))
+        if(strPath.equals("user_output") || strPath.equals("user_error"))
         {
             writer = engine.getUserOutputStream();
         }
@@ -209,6 +201,10 @@ public final class JIPio
         {
             return new PushBackInputStream(engine.getUserInputStream());
         }
+        else if(strHandle.equals("user_output") || strHandle.equals("user_error"))
+        {
+            throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+        }
 
         StreamInfo sinfo = get(strHandle, engine);
         if(sinfo != null)
@@ -219,12 +215,17 @@ public final class JIPio
 
     public static OutputStream getOutputStream(final String strHandle, final JIPEngine engine)
     {
-        if(strHandle.equals("user_output"))
+        if(strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
             return engine.getUserOutputStream();
         }
+        else if(strHandle.equals("user_input"))
+        {
+            throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+        }
 
         StreamInfo sinfo = get(strHandle, engine);
+
         if(sinfo != null)
             return (OutputStream)sinfo.m_stream;
         else
@@ -233,15 +234,6 @@ public final class JIPio
 
     public static String getStreamName(final String strHandle, final JIPEngine engine)
     {
-        if(strHandle.equals("user_output"))
-        {
-            return "user_output";
-        }
-        else if(strHandle.equals("user_input"))
-        {
-            return "user_input";
-        }
-
         StreamInfo sinfo = get(strHandle, engine);
         if(sinfo != null)
             return sinfo.m_strName;
@@ -251,7 +243,7 @@ public final class JIPio
 
     public static void closeInputStream(final String strHandle, final JIPEngine engine) throws IOException
     {
-        if(strHandle.equals("user_input") || strHandle.equals("user_output"))
+        if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
@@ -266,7 +258,7 @@ public final class JIPio
 
     public static void closeOutputStream(final String strHandle, final JIPEngine engine) throws IOException
     {
-    	if(strHandle.equals("user_input") || strHandle.equals("user_output"))
+    	if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
@@ -279,8 +271,19 @@ public final class JIPio
         }
     }
 
-    static class StreamInfo
+    public static class StreamInfo
     {
+    	StreamInfo()
+    	{
+
+    	}
+
+    	StreamInfo(String name, String handle)
+    	{
+    		m_strName = name;
+    		m_handle = handle;
+    	}
+
         String m_strName;
         Object m_stream;
         //Object m_pointer;

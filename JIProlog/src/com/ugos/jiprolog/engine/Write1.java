@@ -30,7 +30,7 @@ class Write1 extends BuiltIn
         print(getParam(1));
         return true;
     }
-                    
+
     protected final void print(final PrologObject obj)
     {
         try {
@@ -40,7 +40,7 @@ class Write1 extends BuiltIn
 			e.printStackTrace();
 		}
     }
-    
+
     protected final void println(final PrologObject obj)
     {
         try {
@@ -50,7 +50,7 @@ class Write1 extends BuiltIn
 			e.printStackTrace();
 		}
     }
-    
+
     protected final void print(final Object obj)
     {
         try {

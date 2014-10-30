@@ -465,27 +465,27 @@ class PrologTokenizer
                         {
                             throw syntaxError("carriage_return_in_quoted_atom('" + strTerm + "')");
                         }
-                        else if(curChar == '~')  // edimburgh prolog
-                        {
-                            c = m_lnReader.read();
-                            if(c == '~')
-                            {
-                                strTerm += (char)c;//String.valueOf((char)c);
-                            }
-                            else if(c == '\'')
-                            {
-//                              fine quoted atom
-                                m_lnReader.pushback();
-                                //strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
-                            }
-                            else if(c >= '@')
-                            {
-                                strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
-                            }
-
-                            else
-                                throw syntaxError("bad_escape_sequence('~" + (char)c + "')");
-                        }
+//                        else if(curChar == '~')  // edimburgh prolog
+//                        {
+//                            c = m_lnReader.read();
+//                            if(c == '~')
+//                            {
+//                                strTerm += (char)c;//String.valueOf((char)c);
+//                            }
+//                            else if(c == '\'')
+//                            {
+////                              fine quoted atom
+//                                m_lnReader.pushback();
+//                                //strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                            }
+//                            else if(c >= '@')
+//                            {
+//                                strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                            }
+//
+//                            else
+//                                throw syntaxError("bad_escape_sequence('~" + (char)c + "')");
+//                        }
                         else if(curChar == '\\') // ISO prolog
                         {
                             c = m_lnReader.read();

@@ -20,6 +20,7 @@ package com.ugos.jiprolog.extensions.io;
 
 import com.ugos.io.PushBackInputStream;
 import com.ugos.jiprolog.engine.*;
+import com.ugos.jiprolog.extensions.io.JIPio.StreamInfo;
 
 import java.io.*;
 import java.util.*;
@@ -31,7 +32,10 @@ public final class CurrentStream4 extends JIPXCall
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {
         if(m_enum == null)
-            m_enum = ((Hashtable)getJIPEngine().getEnvVariable("_iotable_")).elements();
+        {
+        	Hashtable<String, StreamInfo> iotable = JIPio.iotable;
+            m_enum = iotable.elements();
+        }
 
         while(m_enum.hasMoreElements())
         {
@@ -50,7 +54,7 @@ public final class CurrentStream4 extends JIPXCall
             }
             else
             {
-            	position = JIPNumber.create(-1);
+            	position = JIPNumber.create(0);
             }
 
             //open('C:\\Progetti\\Applicazioni\\JIProlog\\JIProlog\\src\\com\\ugos\\jiprolog\\resources\\xio.pl', read, H).
