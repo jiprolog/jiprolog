@@ -25,29 +25,94 @@ import java.util.*;
 final class Retract1 extends BuiltIn
 {
     private boolean m_bEnd = false;
-    
+
+    private Enumeration en;
+    private JIPClausesDatabase db;
+    private boolean immediateUpdateSemantics;
+
     public final boolean unify(final Hashtable varsTbl)
     {
 //      System.out.println("retract");
         Clause clause = Clause.getClause(getParam(1));
         if(clause.getModuleName().equals(GlobalDB.USER_MODULE))
            clause.setModuleName(getWAM().m_curNode.m_strModule);
-        
-//      System.out.println(m_clause);
-        Clause retractedClause = getJIPEngine().getGlobalDB().retract(clause);
-        
-//        System.out.println(retractedClause);
-        if(retractedClause == null)
+
+        Functor functor = (Functor)clause.getHead();
+
+        if(getJIPEngine().getImmediateUpdateSemantics())
         {
-            m_bEnd = true;
-            return false;
+        	immediateUpdateSemantics = true;
+            Clause retractedClause = getJIPEngine().getGlobalDB().retract(clause);
+
+            if(retractedClause == null)
+	        {
+	            m_bEnd = true;
+	            return false;
+	        }
+
+	        return clause.unify(retractedClause, varsTbl);
         }
-                
-        return clause.unify(retractedClause, varsTbl);
+        else
+        {
+	        if(en == null)
+	        {
+		        GlobalDB globalDB = getJIPEngine().getGlobalDB();
+
+		        if(globalDB.isSystem(functor.getName()))
+		            throw JIPRuntimeException.create(13, functor);
+
+		        db = globalDB.search(functor, clause.getModuleName());
+
+		        if(db == null)
+		            return false;
+
+		        en = db.clauses();
+	        }
+
+	        if(!en.hasMoreElements())
+	            return false;
+
+	        boolean bFound = false;
+	        Clause currentClause = null;
+	        while(en.hasMoreElements() && !bFound)
+	        {
+	            currentClause = ((Clause)en.nextElement());//.getHead();
+
+	            if(clause.getTail() == null)
+	            {
+	                // si tratta solo di funtore
+	                bFound = functor.unifiable(currentClause.getHead());
+	            }
+	            else
+	            {
+	                // si tratta di clausola
+	                bFound = clause.unifiable(currentClause);
+	            }
+	        }
+
+	        if (bFound)
+	        {
+	            db.removeClause(new JIPClause(currentClause));
+	            return clause.unify(currentClause, varsTbl);
+	        }
+	        else
+	        {
+	            return false;
+	        }
+        }
+
+
     }
-                
+
     public final boolean hasMoreChoicePoints()
     {
-        return !m_bEnd;
+    	if(immediateUpdateSemantics)
+    	{
+    		return !m_bEnd;
+    	}
+    	else
+    	{
+    		return en != null && en.hasMoreElements();
+    	}
     }
 }

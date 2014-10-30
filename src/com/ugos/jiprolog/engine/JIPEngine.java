@@ -56,7 +56,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 0;
     public static final int build = 0;
-    public static final int revision = 3;
+    public static final int revision = 4;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -163,6 +163,7 @@ public class JIPEngine implements Serializable
         setEnvVariable("syntax_error", "error");
         setEnvVariable("os_error", "error");
         setEnvVariable("debug", JIPDebugger.debug ? "on" : "off");
+        setEnvVariable("update_semantics", "logical");
 
         try
         {
@@ -178,6 +179,21 @@ public class JIPEngine implements Serializable
 		}
     }
 
+    /** Sets the update semantics
+     * @param immediate true - immediate update semantics, false - logical update semantics (default)
+     */
+    public void setImmediateUpdateSemantics(boolean immediate)
+    {
+    	setEnvVariable("update_semantics", immediate ? "immediate" : "logical");
+    }
+
+    /** Gets the update semantics
+     * @return true if immediate update semantics,  false if logical update semantics (default)
+     */
+    public boolean getImmediateUpdateSemantics()
+    {
+    	return getEnvVariable("update_semantics").equals("immediate");
+    }
 
     /** Sets debug flag.
      */
