@@ -56,7 +56,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 0;
     public static final int build = 0;
-    public static final int revision = 6;
+    public static final int revision = 7;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -180,6 +180,24 @@ public class JIPEngine implements Serializable
     }
 
     /** Sets the update semantics
+     * ISO Prolog specifies that a prolog system should implement 'logical update
+	 * semantics' on the internal database. The ISO standard imposes a static state
+	 * of the database at and during the time of a query/goal.
+	 * By 'static' it means that new clauses/entries to the database are not visible in
+	 * back-tracking.
+	 * The following example illustrates the difference between the two semantics:
+	 *
+	 * :- dynamic a/1.
+	 * JIP:- assert(a(1)).
+	 * JIP:- retract(a(X)), X1 is X + 1, assertz(a(X)).
+	 *
+	 * With 'immediate update semantics', the first calls to retract/1 and assertz/1
+	 * will succeed. On back-tracking, the system will retry retract/1 and the newly
+	 * asserted goal, which is visible to retract/1, can be retracted from the
+	 * database. (This example will continue generating integers forever.) On back-tracking with
+	 * 'logical update semantics' the call to retract/1 will not see the update performed by
+	 * the assertz/1 and the query will have a single solution.
+	 *
      * @param immediate true - immediate update semantics, false - logical update semantics (default)
      */
     public void setImmediateUpdateSemantics(boolean immediate)
