@@ -19,7 +19,7 @@
  *
  *******************************************************************/
 
-:-module(jipxterms, [numbervars/3, free_variables/2, copy_term/2, name/2,
+:-module(jipxterms, [numbervars/3, free_variables/2, term_variables/2, copy_term/2, name/2,
                       char_code/2, atom_codes/2, atom_chars/2, number_codes/2,
                       atom_length/2, number_chars/2, atom_number/2, atom_concat/3,
                       concat_atom/2, concat_atom/3, upcase/1, downcase/1,
@@ -27,7 +27,7 @@
                       upcase_atom/2, downcase_atom/2, string_to_atom/2, string_to_list/2,
                       string_length/2, string_concat/3, vars/2]).
 
-:-'$custom_built_in'([numbervars/3, free_variables/2, copy_term/2, name/2,
+:-'$custom_built_in'([numbervars/3, free_variables/2, term_variables/2, copy_term/2, name/2,
                       char_code/2, atom_codes/2, atom_chars/2, number_codes/2,
                       atom_length/2, number_chars/2, atom_number/2, atom_concat/3,
                       concat_atom/2, concat_atom/3, upcase/1, downcase/1,
@@ -35,7 +35,7 @@
                       upcase_atom/2, downcase_atom/2, string_to_atom/2, string_to_list/2,
                       string_length/2, string_concat/3, vars/2]).
 
-:-assert(ver(jipxterms, '3.1.0')).
+:-assert(ver(jipxterms, '4.0.1')).
 
 vars(Term, Vars):-
     xcall('com.ugos.jiprolog.extensions.terms.Vars2', [Term, Vars]).
@@ -44,6 +44,9 @@ numbervars(Term, Start, End):-
     xcall('com.ugos.jiprolog.extensions.terms.Numbervars3', [Term, Start, End]).
 
 free_variables(Term, VarList):-
+    xcall('com.ugos.jiprolog.extensions.terms.FreeVariables2', [Term, VarList]).
+
+term_variables(Term, VarList):-
     xcall('com.ugos.jiprolog.extensions.terms.FreeVariables2', [Term, VarList]).
 
 copy_term(Term, Copy):-

@@ -40,7 +40,7 @@
                   file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
                   current_output/1, current_input/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
 
-:-assert(ver(jipxio, '3.0.10')).
+:-assert(ver(jipxio, '4.0.1')).
 
 :-op(400, fx, cd).
 
@@ -60,7 +60,7 @@ open(File, read, Handle):-
 
 open(File, append, Handle):-
     append(File, Handle),
-    set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), position(line(-1)), eof_action(eof_code), end_of_stream(not), type(text)]),
+    set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
     !.
 
 current_stream(FileName, Mode, Handle):-
@@ -92,7 +92,7 @@ see(File):-
 
 see(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.See2', [File, Handle]),
-   set_stream_properties(Handle, [mode(read), input, alias(Handle), file_name(File), position(line(0)), eof_action(eof_code), end_of_stream(not), type(text)]),
+   set_stream_properties(Handle, [mode(read), input, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
    !.
 
 seeing(Handle):-
@@ -247,7 +247,7 @@ seen:-
 seen(Handle):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Seen1', [Handle1]),
-    remove_stream_properties(Handle1),
+    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [remove, Handle1, _]),
     !.
 
 /**********************************
@@ -266,7 +266,7 @@ tell(File):-
 
 tell(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.Tell2', [File, Handle]),
-   set_stream_properties(Handle, [mode(write), output, alias(Handle), file_name(File), position(line(-1)), eof_action(eof_code), end_of_stream(not), type(text)]),
+   set_stream_properties(Handle, [mode(write), output, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
    !.
 
 append(Handle):-
@@ -281,7 +281,7 @@ append(File):-
 
 append(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.Append2', [File, Handle]),
-   set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), position(line(-1)), eof_action(eof_code), end_of_stream(not), type(text)]),
+   set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
    !.
 
 telling(Handle):-
@@ -425,7 +425,7 @@ flush_output:-
 told(Handle):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Told1', [Handle1]),
-    remove_stream_property(Handle),
+    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [remove, Handle1, _]),
     !.
 
 told:-
@@ -585,9 +585,6 @@ stream_property(Handle, Prop):-
 
 set_stream_property(Handle, Props):-
     xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, Props]).
-
-remove_stream_property(Handle):-
-    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [remove, Handle, _]).
 
 set_stream_properties(Handle, []):-!.
 set_stream_properties(Handle, [Prop|Rest]):-
