@@ -60,7 +60,6 @@ open(File, read, Handle):-
 
 open(File, append, Handle):-
     append(File, Handle),
-    set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
     !.
 
 current_stream(FileName, Mode, Handle):-
@@ -92,7 +91,7 @@ see(File):-
 
 see(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.See2', [File, Handle]),
-   set_stream_properties(Handle, [mode(read), input, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
+   set_stream_properties(Handle, [mode(read), input, alias(Handle), file_name(File), eof_action(eof_code), type(text)]),
    !.
 
 seeing(Handle):-
@@ -266,7 +265,7 @@ tell(File):-
 
 tell(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.Tell2', [File, Handle]),
-   set_stream_properties(Handle, [mode(write), output, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
+   set_stream_properties(Handle, [mode(write), output, alias(Handle), file_name(File), eof_action(eof_code), type(text)]),
    !.
 
 append(Handle):-
@@ -281,7 +280,7 @@ append(File):-
 
 append(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.Append2', [File, Handle]),
-   set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), eof_action(eof_code), end_of_stream(not), type(text)]),
+   set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), eof_action(eof_code), type(text)]),
    !.
 
 telling(Handle):-
@@ -583,8 +582,8 @@ stream_property(Handle, position(line(P))):-
 stream_property(Handle, Prop):-
     xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]).
 
-set_stream_property(Handle, Props):-
-    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, Props]).
+set_stream_property(Handle, Prop):-
+    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, Prop]).
 
 set_stream_properties(Handle, []):-!.
 set_stream_properties(Handle, [Prop|Rest]):-
@@ -678,9 +677,9 @@ option(Handle, Term, subterm_positions(_)).
 
 
 % user stream properties
-:- jipxio:set_stream_properties(user_output, [mode(write), output, alias(user_output), file_name(user_output), eof_action(eof_code), end_of_stream(not), type(text), reposition(false)]).
-:- jipxio:set_stream_properties(user_error, [mode(write), output, alias(user_error), file_name(user_error), eof_action(eof_code), end_of_stream(not), type(text), reposition(false)]).
-:- jipxio:set_stream_properties(user_input, [mode(read), input, alias(user_input), file_name(user_input), eof_action(eof_code), end_of_stream(not), type(text), reposition(false)]).
+:- jipxio:set_stream_properties(user_output, [mode(write), output, alias(user_output), file_name(user_output), eof_action(eof_code), type(text), reposition(false)]).
+:- jipxio:set_stream_properties(user_error, [mode(write), output, alias(user_error), file_name(user_error), eof_action(eof_code), type(text), reposition(false)]).
+:- jipxio:set_stream_properties(user_input, [mode(read), input, alias(user_input), file_name(user_input), eof_action(eof_code), type(text), reposition(false)]).
 
 
 
