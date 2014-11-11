@@ -48,36 +48,66 @@ public final class JIPio
     public static final int    ERR_USER_STREAM = 2006;
     public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
-    private static StreamInfo user_input = new StreamInfo("user_input", "user_input");
-    private static StreamInfo user_output = new StreamInfo("user_output", "user_output");
-    private static StreamInfo user_error = new StreamInfo("user_error", "user_error");
+    private static InputStreamInfo user_input = new InputStreamInfo("user_input", "user_input");
+    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output");
+    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", "user_error");
 
-    public static Hashtable<String, StreamInfo> iotable = new Hashtable<String, JIPio.StreamInfo>();
+    public static Hashtable<String, InputStreamInfo> itable = new Hashtable<String, InputStreamInfo>();
+    public static Hashtable<String, OutputStreamInfo> otable = new Hashtable<String, OutputStreamInfo>();
 
     static
     {
-    	iotable.put("user_input", user_input);
-    	iotable.put("user_output", user_output);
-    	iotable.put("user_error", user_error);
+    	itable.put("user_input", user_input);
+    	otable.put("user_output", user_output);
+    	otable.put("user_error", user_error);
     }
-    private static final String put(final StreamInfo obj, final JIPEngine engine)
+
+    public static Enumeration<String> getInputHandles()
+    {
+    	return itable.keys();
+    }
+
+    public static Enumeration<String> getOutputHandles()
+    {
+    	return otable.keys();
+    }
+
+    private static final String put(final OutputStreamInfo obj)
     {
         // put the new enumeration in the table
-        iotable.put(obj.m_handle.toString(), obj);
+        otable.put(obj.getHandle(), obj);
 
-        return obj.m_handle.toString();
+        return obj.getHandle();
     }
 
-    static final StreamInfo get(final String handle, final JIPEngine engine)
+    private static final String put(final InputStreamInfo obj)
     {
-        return (StreamInfo)iotable.get(handle);
+        // put the new enumeration in the table
+        itable.put(obj.getHandle(), obj);
+
+        return obj.getHandle();
     }
 
 
-    private static final void remove(final String handle, final JIPEngine engine)
+    static final InputStreamInfo getInput(final String handle)
+    {
+        return itable.get(handle);
+    }
+
+    static final OutputStreamInfo getOutput(final String handle)
+    {
+        return otable.get(handle);
+    }
+
+    private static final void remove(final String handle)
     {
         // get iotable (opened file)
-        iotable.remove(handle);
+    	if(itable.containsKey(handle))
+    		itable.remove(handle);
+
+    	if(otable.containsKey(handle))
+    		otable.remove(handle);
+
     }
 
     public static final String openInputStream(String strPath, final String strHandle, final JIPEngine engine) throws IOException
@@ -114,16 +144,15 @@ public final class JIPio
 
         reader = new PushBackInputStream(reader);
 
-        StreamInfo sinfo = new StreamInfo();
-        sinfo.m_strName = strPath;
-        sinfo.m_stream = reader;
+        InputStreamInfo sinfo = new InputStreamInfo(strPath);
+        sinfo.m_stream = (PushBackInputStream)reader;
         //sinfo.m_pointer = termEnum;
         if(strHandle != null)
-            sinfo.m_handle  = strHandle;
+            sinfo.setHandle(strHandle);
         else
-            sinfo.m_handle = "#" + sinfo.hashCode();
+            sinfo.setHandle("#" + sinfo.hashCode());
 
-        return put(sinfo, engine);
+        return put(sinfo);
     }
 
     public static final String openOutputStream(String strPath, final String strHandle, boolean bAppend, final JIPEngine engine) throws IOException
@@ -157,21 +186,20 @@ public final class JIPio
             }
         }
 
-        StreamInfo sinfo = new StreamInfo();
-        sinfo.m_strName = strPath;
+        OutputStreamInfo sinfo = new OutputStreamInfo(strPath);
         sinfo.m_stream = writer;
         //sinfo.m_pointer = writer;
 
         if(strHandle != null)
-            sinfo.m_handle  = strHandle;
+            sinfo.setHandle(strHandle);
         else
-            sinfo.m_handle = sinfo.m_handle = "#" + sinfo.hashCode();
+            sinfo.setHandle("#" + sinfo.hashCode());
 
 
-        return put(sinfo, engine);
+        return put(sinfo);
     }
 
-    public final static Enumeration getTermEnumeration(final String strHandle , final JIPEngine engine)
+    public final static Enumeration getTermEnumeration(final String strHandle, final JIPEngine engine )
     {
          // get term parser
         JIPTermParser termParser = engine.getTermParser();
@@ -182,12 +210,12 @@ public final class JIPio
             return termParser.parseStream(engine.getUserInputStream(), "user_input");
         }
 
-        StreamInfo sinfo = get(strHandle, engine);
+        InputStreamInfo sinfo = getInput(strHandle);
         if(sinfo != null)
         {
             if(sinfo.m_enum == null)
                 // get the enumeration of terms in the file
-                sinfo.m_enum = termParser.parseStream((InputStream)sinfo.m_stream, sinfo.m_strName);
+                sinfo.m_enum = termParser.parseStream((InputStream)sinfo.m_stream, sinfo.getName());
 
             return sinfo.m_enum;
         }
@@ -206,7 +234,7 @@ public final class JIPio
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
-        StreamInfo sinfo = get(strHandle, engine);
+        InputStreamInfo sinfo = getInput(strHandle);
         if(sinfo != null)
             return (PushBackInputStream)sinfo.m_stream;
         else
@@ -224,7 +252,7 @@ public final class JIPio
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
-        StreamInfo sinfo = get(strHandle, engine);
+        OutputStreamInfo sinfo = getOutput(strHandle);
 
         if(sinfo != null)
             return (OutputStream)sinfo.m_stream;
@@ -232,63 +260,72 @@ public final class JIPio
             return null;
     }
 
-    public static String getStreamName(final String strHandle, final JIPEngine engine)
+    public static StreamInfo getStreamInfo(final String handle)
     {
-        StreamInfo sinfo = get(strHandle, engine);
+    	StreamInfo sinfo = null;
+
+    	if(itable.containsKey(handle))
+    	{
+    		sinfo = getInput(handle);
+    	}
+    	else if(itable.containsKey(handle))
+    	{
+    		sinfo = getOutput(handle);
+    	}
+
+    	return sinfo;
+    }
+
+    public static String getStreamName(final String handle)
+    {
+    	StreamInfo sinfo = null;
+
+    	if(itable.containsKey(handle))
+    	{
+    		sinfo = getInput(handle);
+    	}
+    	else if(itable.containsKey(handle))
+    	{
+    		sinfo = getOutput(handle);
+    	}
+
+
         if(sinfo != null)
-            return sinfo.m_strName;
+            return sinfo.getName();
         else
             return null;
     }
 
-    public static void closeInputStream(final String strHandle, final JIPEngine engine) throws IOException
+    public static void closeInputStream(final String strHandle) throws IOException
     {
         if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
-        StreamInfo sinfo = get(strHandle, engine);
+        InputStreamInfo sinfo = getInput(strHandle);
         if(sinfo != null)
         {
             ((InputStream)sinfo.m_stream).close();
-            remove(strHandle, engine);
+            remove(strHandle);
         }
     }
 
-    public static void closeOutputStream(final String strHandle, final JIPEngine engine) throws IOException
+    public static void closeOutputStream(final String strHandle) throws IOException
     {
     	if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
             throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
-        StreamInfo sinfo = get(strHandle, engine);
+        OutputStreamInfo sinfo = getOutput(strHandle);
         if(sinfo != null)
         {
             ((OutputStream)sinfo.m_stream).close();
-            remove(strHandle, engine);
+            remove(strHandle);
         }
     }
 
-    public static class StreamInfo
-    {
-    	StreamInfo()
-    	{
 
-    	}
-
-    	StreamInfo(String name, String handle)
-    	{
-    		m_strName = name;
-    		m_handle = handle;
-    	}
-
-        String m_strName;
-        Object m_stream;
-        //Object m_pointer;
-        String m_handle;
-        Enumeration m_enum;
-    }
 }
 

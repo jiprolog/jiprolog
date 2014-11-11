@@ -33,7 +33,7 @@ public final class CurrentStream4 extends JIPXCall
     {
         if(m_enum == null)
         {
-        	Hashtable<String, StreamInfo> iotable = JIPio.iotable;
+        	Hashtable<String, StreamInfo> iotable = JIPio.itable;
             m_enum = iotable.elements();
         }
 

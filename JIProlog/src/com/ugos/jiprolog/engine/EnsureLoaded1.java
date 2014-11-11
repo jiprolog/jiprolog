@@ -28,10 +28,10 @@ final class EnsureLoaded1 extends BuiltIn
     public final boolean unify(final Hashtable varsTbl)
     {
         // try if object file
-        
+
         String strPath = null;
         PrologObject path = getRealTerm(getParam(1));
-        
+
         if(path instanceof Atom)
         {
             strPath = ((Atom)path).getName();
@@ -44,7 +44,7 @@ final class EnsureLoaded1 extends BuiltIn
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
         }
-        
+
         //System.out.println("strPath " + strPath);
         //#ifndef _MIDP
         try
@@ -61,7 +61,7 @@ final class EnsureLoaded1 extends BuiltIn
         {
 //            ex.printStackTrace();
         //#endif
-            
+
             // compiled file not found
             try
             {
@@ -73,7 +73,7 @@ final class EnsureLoaded1 extends BuiltIn
 //                ex1.printStackTrace();
                 throw new JIPJVMException(ex1);
             }
-            
+
 //      #ifndef _MIDP
         }
 //      #endif

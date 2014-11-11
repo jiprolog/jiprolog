@@ -30,7 +30,7 @@ public final class Seen1 extends JIPXCall
     {
         // get first parameter
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -45,7 +45,7 @@ public final class Seen1 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is a Number
         if(input instanceof JIPAtom)
         {
@@ -53,7 +53,7 @@ public final class Seen1 extends JIPXCall
             String strStreamHandle = ((JIPAtom)input).getName();
             try
             {
-                JIPio.closeInputStream(strStreamHandle, getJIPEngine());
+                JIPio.closeInputStream(strStreamHandle);
             }
             catch(IOException ex)
             {
@@ -64,10 +64,10 @@ public final class Seen1 extends JIPXCall
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
         }
-        
+
          return true;
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;
