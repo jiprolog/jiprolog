@@ -26,10 +26,7 @@ import java.util.*;
 
 public final class StreamProperty3 extends JIPXCall
 {
-	private static Hashtable<String, Hashtable<String, JIPTerm>> streamPropertyTbl = new Hashtable<String, Hashtable<String, JIPTerm>>();
-
-	private Hashtable<String, JIPTerm> propsTbl;
-	private Enumeration<JIPTerm> termEnum;
+	private Enumeration<Object> termEnum;
 
 	private JIPAtom op;
 
@@ -45,6 +42,12 @@ public final class StreamProperty3 extends JIPXCall
         if(handle == null)
             throw new JIPParameterUnboundedException(2);
 
+    	String shandle = ((JIPAtom)handle).getName();
+
+    	StreamInfo streamInfo = JIPio.getStreamInfo(shandle);
+    	if(streamInfo == null)
+    		return false;
+
         if(!(handle instanceof JIPAtom))
             throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
 
@@ -57,57 +60,45 @@ public final class StreamProperty3 extends JIPXCall
         	if(prop1 == null)
                 throw new JIPParameterUnboundedException(3);
 
-        	propsTbl = streamPropertyTbl.get(((JIPAtom)handle).getName());
-        	if(propsTbl == null)
-        	{
-        		propsTbl = new Hashtable<String, JIPTerm>();
-        		streamPropertyTbl.put(((JIPAtom)handle).getName(), propsTbl);
-        	}
-
         	if(prop1 instanceof JIPAtom)
         	{
-        		propsTbl.put(((JIPAtom)prop1).getName(), prop1);
+        		streamInfo.getProperties().setProperty(((JIPAtom)prop1).getName(),"");
         	}
         	else if(prop1 instanceof JIPFunctor)
         	{
         		String key = ((JIPFunctor)prop1).getDefinition();
-        		propsTbl.put(key, prop1);
+        		streamInfo.getProperties().setProperty(key, prop1.toString());
         	}
         	else
                 throw new JIPParameterTypeException(3, JIPParameterTypeException.COMPOUND);
 
         	return true;
         }
-        else if(op.getName().equals("remove"))
-        {
-        	String streamName = ((JIPAtom)handle).getName();
-        	if(streamName.equals("user_input") || streamName.equals("user_output") || streamName.equals("user_error"))
-        	{
-        		throw new JIPRuntimeException("Standard stream " + streamName + " cannot be closed");
-        	}
-
-        	streamPropertyTbl.remove(streamName);
-
-        	return true;
-        }
+//        else if(op.getName().equals("remove"))
+//        {
+//        	String streamName = ((JIPAtom)handle).getName();
+//        	if(streamName.equals("user_input") || streamName.equals("user_output") || streamName.equals("user_error"))
+//        	{
+//        		throw new JIPRuntimeException("Standard stream " + streamName + " cannot be closed");
+//        	}
+//
+//        	streamPropertyTbl.remove(streamName);
+//
+//        	return true;
+//        }
         else if(op.getName().equals("get"))
         {
-        	if(propsTbl == null)
-	        {
-	        	propsTbl = streamPropertyTbl.get(((JIPAtom)handle).getName());
-	        	if(propsTbl == null)
-	        		return false;
-	        }
 
-            if(prop1 == null)
+        	if(prop1 == null)
             {
 		        if(termEnum == null)
-		        	termEnum = propsTbl.elements();
+		        	termEnum = streamInfo.getProperties().keys();
 
 		        while(termEnum.hasMoreElements())
 		        {
-		        	JIPTerm term = termEnum.nextElement();
+		        	String sterm = (String)termEnum.nextElement();
 
+		        	JIPTerm term = getJIPEngine().getTermParser().parseTerm(sterm);
 		        	if(prop.unifiable(term))
 		        		return prop.unify(term, varsTbl);
 		        }
@@ -116,19 +107,22 @@ public final class StreamProperty3 extends JIPXCall
             }
             else
             {
-            	JIPTerm term;
+            	String sterm;
+
             	if(prop1 instanceof JIPAtom)
             	{
-            		term = propsTbl.get(((JIPAtom)prop1).getName());
+            		sterm = streamInfo.getProperties().getProperty(((JIPAtom)prop1).getName());
             	}
             	else if(prop1 instanceof JIPFunctor)
             	{
             		String key = ((JIPFunctor)prop1).getDefinition();
-            		term = propsTbl.get(key);
+            		sterm = streamInfo.getProperties().getProperty(key);
+
             	}
             	else
                     throw new JIPParameterTypeException(3, JIPParameterTypeException.COMPOUND);
 
+	        	JIPTerm term = getJIPEngine().getTermParser().parseTerm(sterm);
         		return prop.unify(term, varsTbl);
             }
         }

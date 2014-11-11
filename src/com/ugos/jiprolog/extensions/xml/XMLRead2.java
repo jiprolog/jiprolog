@@ -33,7 +33,7 @@ public class XMLRead2 extends XMLRead1
     {
         // get first parameter
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -48,24 +48,24 @@ public class XMLRead2 extends XMLRead1
                 input = ((JIPVariable)input).getValue();
             }
         }
-            
+
         // check if input is a Number
         if(!(input instanceof JIPAtom))
             throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
-        
+
         // Gets the handle to the stream
         final String strStreamHandle = ((JIPAtom)input).getName();
-                    
+
         // Get the stream
-        String strStream = JIPio.getStreamName(strStreamHandle, getJIPEngine());
+        String strStream = JIPio.getStreamName(strStreamHandle);
 
         if(strStream == null)
         {
             throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
         }
-        
+
         JIPTerm xmlDoc = createXMLTerm(strStream);
-        
+
         return params.getNth(2).unify(xmlDoc, varsTbl);
     }
 }

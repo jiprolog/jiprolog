@@ -29,7 +29,7 @@ public class Told1 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -44,16 +44,16 @@ public class Told1 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is a Number
         if(input instanceof JIPAtom)
         {
             // Gets the handle to the stream
             String strStreamHandle = ((JIPAtom)input).getName();
-                        
+
             try
             {
-                JIPio.closeOutputStream(strStreamHandle, getJIPEngine());
+                JIPio.closeOutputStream(strStreamHandle);
             }
             catch(IOException ex)
             {
@@ -67,7 +67,7 @@ public class Told1 extends JIPXCall
 
         return true;
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

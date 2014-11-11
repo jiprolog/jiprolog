@@ -28,7 +28,7 @@ public final class SetInput1 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -43,25 +43,25 @@ public final class SetInput1 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         if(!(input instanceof JIPAtom))
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
-        
+
         // Gets the handle to the stream
         final String strStreamHandle = ((JIPAtom)input).getName();
-                
+
         // Get the stream
         InputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
         if(ins == null)
             throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
-        
-        String strName = JIPio.getStreamName(strStreamHandle, getJIPEngine());
-        
+
+        String strName = JIPio.getStreamName(strStreamHandle);
+
         getJIPEngine().setCurrentInputStream(ins, strName);
-        
+
         return true;
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;
