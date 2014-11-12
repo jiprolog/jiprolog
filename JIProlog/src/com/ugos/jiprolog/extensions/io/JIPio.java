@@ -55,11 +55,24 @@ public final class JIPio
     public static Hashtable<String, InputStreamInfo> itable = new Hashtable<String, InputStreamInfo>();
     public static Hashtable<String, OutputStreamInfo> otable = new Hashtable<String, OutputStreamInfo>();
 
+
     static
     {
     	itable.put("user_input", user_input);
     	otable.put("user_output", user_output);
     	otable.put("user_error", user_error);
+    }
+
+    public static void init(JIPEngine engine)
+    {
+    	try {
+    		openInputStream("user_input", "user_input", engine);
+			openOutputStream("user_output", "user_output", false, engine);
+			openOutputStream("user_error", "user_error", false, engine);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public static Enumeration<String> getInputHandles()
@@ -268,7 +281,7 @@ public final class JIPio
     	{
     		sinfo = getInput(handle);
     	}
-    	else if(itable.containsKey(handle))
+    	else if(otable.containsKey(handle))
     	{
     		sinfo = getOutput(handle);
     	}
@@ -284,7 +297,7 @@ public final class JIPio
     	{
     		sinfo = getInput(handle);
     	}
-    	else if(itable.containsKey(handle))
+    	else if(otable.containsKey(handle))
     	{
     		sinfo = getOutput(handle);
     	}

@@ -20,9 +20,9 @@ public class StreamInfo
 		this.name = name;
 		this.handle = handle;
 
-		properties.setProperty("file_name", name);
-		properties.setProperty("alias", handle);
-		properties.setProperty("type", "text");
+		properties.setProperty("file_name", "file_name('" + name.replace("\\", "/") + "')");
+		properties.setProperty("alias", "alias('" + handle + "')");
+		properties.setProperty("type", "type(text)");
 	}
 
 	public String getName()

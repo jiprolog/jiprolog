@@ -24,23 +24,34 @@ public class InputStreamInfo extends StreamInfo
 
     private void init()
     {
-    	properties.setProperty("mode", "read");
-		properties.setProperty("input", "");
-		properties.setProperty("eof_action", "eof_code");
+    	properties.setProperty("mode", "mode(read)");
+		properties.setProperty("input", "input");
+		properties.setProperty("eof_action", "eof_action(eof_code)");
+		properties.setProperty("reposition", "reposition(false)");
+
 	}
 
     public int getLineNumber()
     {
+    	if(m_stream == null)
+    		return 0;
+
     	return m_stream.getLineNumber();
     }
 
     public int getPosition()
     {
+    	if(m_stream == null)
+    		return 0;
+
     	return m_stream.getRead();
     }
 
     public boolean isEOF() throws IOException
     {
+    	if(m_stream == null)
+    		return false;
+
     	m_stream.mark(1);
 
     	int i = m_stream.read();
