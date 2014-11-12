@@ -27,7 +27,7 @@
                   access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, chdir/1, absolute_file_name/2,
                   is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
                   file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
-                  current_output/1, current_input/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
+                  current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
 
 :-'$custom_built_in'([see/1, see/2, seen/0, seen/1, seeing/1, seeing/2, read/1, read/2, read_term/2, read_term/3, read_clause/1, read_clause/2, get0/1,
                   get0/2, get/1, get/2, get_byte/1, get_byte/2, get_code/1, get_code/2, get_char/1, get_char/2, peek_byte/1, peek_byte/2, peek_code/1,
@@ -38,9 +38,9 @@
                   access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, chdir/1, absolute_file_name/2,
                   is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
                   file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
-                  current_output/1, current_input/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
+                  current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
 
-:-assert(ver(jipxio, '4.0.1')).
+:-assert(ver(jipxio, '4.0.2')).
 
 :-op(400, fx, cd).
 
@@ -91,7 +91,6 @@ see(File):-
 
 see(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.See2', [File, Handle]),
-   set_stream_properties(Handle, [mode(read), input, alias(Handle), file_name(File), eof_action(eof_code), type(text)]),
    !.
 
 seeing(Handle):-
@@ -116,7 +115,6 @@ read(Term):-
 read(Handle, Term):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Read2', [Handle1, Term]),
-    check_eof(Handle1, Term),
     !.
 
 read_term(Term, Options):-
@@ -149,7 +147,6 @@ get0(Char):-
 get0(Handle, Char):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Get02', [Handle1, Char]),
-    check_eof(Handle1, Char),
     !.
 
 get(C):-
@@ -200,7 +197,6 @@ peek_byte(B):-
 peek_byte(Handle, B):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle1, B]),
-    check_eof(Handle1, B),
     !.
 
 peek_code(C):-
@@ -246,7 +242,6 @@ seen:-
 seen(Handle):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Seen1', [Handle1]),
-    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [remove, Handle1, _]),
     !.
 
 /**********************************
@@ -265,7 +260,6 @@ tell(File):-
 
 tell(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.Tell2', [File, Handle]),
-   set_stream_properties(Handle, [mode(write), output, alias(Handle), file_name(File), eof_action(eof_code), type(text)]),
    !.
 
 append(Handle):-
@@ -280,7 +274,6 @@ append(File):-
 
 append(File, Handle):-
    xcall('com.ugos.jiprolog.extensions.io.Append2', [File, Handle]),
-   set_stream_properties(Handle, [mode(append), output, alias(Handle), file_name(File), eof_action(eof_code), type(text)]),
    !.
 
 telling(Handle):-
@@ -424,7 +417,6 @@ flush_output:-
 told(Handle):-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Told1', [Handle1]),
-    xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [remove, Handle1, _]),
     !.
 
 told:-
@@ -464,6 +456,9 @@ current_output(Handle):-
 
 current_input(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.CurrentInput1', [Handle]).
+
+current_stream(Handle):-
+	 xcall('com.ugos.jiprolog.extensions.io.CurrentStream1', [Handle]).
 
 set_output(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.SetOutput1', [Handle]).
@@ -570,16 +565,21 @@ make_directory(Dir):-
 
 % stream properties
 
-stream_property(Handle, Prop):-
-	var(Handle),
-	!,
-	xcall('com.ugos.jiprolog.extensions.io.CurrentStream4', [Handle, _,_,_]),
-	stream_property(Handle, Prop).
 
-stream_property(Handle, position(line(P))):-
-	xcall('com.ugos.jiprolog.extensions.io.CurrentStream4', [Handle, _, _, P]).
+stream_property(Handle, position(line(Line))):-
+	current_stream(Handle),
+	xcall('com.ugos.jiprolog.extensions.io.StreamPosition3', [Handle, _P, Line]).
+
+stream_property(Handle, end_of_stream(X)):-
+	current_stream(Handle),
+	(
+	xcall('com.ugos.jiprolog.extensions.io.EOF1', [Handle]),
+	X = at
+	;
+	X = no).
 
 stream_property(Handle, Prop):-
+	current_stream(Handle),
     xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]).
 
 set_stream_property(Handle, Prop):-
@@ -599,34 +599,6 @@ check_handle(Alias, Handle):-
 
 check_handle(Alias, Alias).
 
-% check for and of stream
-check_eof(user, _):-
-    !.
-
-check_eof(Handle, end_of_file):-
-    retractall(stream_property(Handle, end_of_stream(X))),
-    !,
-    set_eof(Handle, X).
-
-check_eof(Handle, -1):-
-    retractall(stream_property(Handle, end_of_stream(X))),
-    !,
-    set_eof(Handle, X).
-
-check_eof(Handle, _):-
-    retractall(stream_property(Handle, end_of_stream(X))),
-    !,
-    assert(stream_property(Handle, end_of_stream(no))).
-
-set_eof(Handle, no):-
-    !,
-    assert(stream_property(Handle, end_of_stream(at))).
-
-set_eof(Handle, at):-
-    !,
-    assert(stream_property(Handle, end_of_stream(past))).
-
-set_eof(Handle, past).
 
 % not supported
 

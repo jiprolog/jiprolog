@@ -96,7 +96,10 @@ public final class StreamProperty3 extends JIPXCall
 
 		        while(termEnum.hasMoreElements())
 		        {
-		        	String sterm = (String)termEnum.nextElement();
+		        	String key = (String)termEnum.nextElement();
+		        	String sterm = streamInfo.getProperties().getProperty(key);
+
+		        	System.out.println(sterm);
 
 		        	JIPTerm term = getJIPEngine().getTermParser().parseTerm(sterm);
 		        	if(prop.unifiable(term))
@@ -115,12 +118,20 @@ public final class StreamProperty3 extends JIPXCall
             	}
             	else if(prop1 instanceof JIPFunctor)
             	{
-            		String key = ((JIPFunctor)prop1).getDefinition();
+            		String key = ((JIPFunctor)prop1).getName();
+            		System.out.println("fun def " + key);
             		sterm = streamInfo.getProperties().getProperty(key);
-
             	}
             	else
                     throw new JIPParameterTypeException(3, JIPParameterTypeException.COMPOUND);
+
+            	if(sterm == null)
+            	{
+            		System.out.println("sterm null" + prop1.toString(getJIPEngine()));
+            		return false;
+            	}
+
+            	System.out.println(sterm);
 
 	        	JIPTerm term = getJIPEngine().getTermParser().parseTerm(sterm);
         		return prop.unify(term, varsTbl);
