@@ -53,8 +53,8 @@
 
 '$system':nil([]).
 
-'$system':retractall(X):- retract(X), fail.
-'$system':retractall(_):-!.
+%'$system':retractall(X):- retract(X), fail.
+%'$system':retractall(_):-!.
 
 '$system':current_predicate(X/Y):- current_functor(X, Y).
 

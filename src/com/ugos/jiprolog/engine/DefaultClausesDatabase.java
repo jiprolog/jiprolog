@@ -21,16 +21,17 @@
 package com.ugos.jiprolog.engine;
 
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 final class DefaultClausesDatabase extends JIPClausesDatabase
 {
     private final Vector<Clause> m_clausesVector;
-    
+
     public DefaultClausesDatabase(final String strFunctName, final int nArity)
     {
         setFunctor(strFunctName, nArity);
-        
+
         m_clausesVector = new Vector<Clause>();
     }
 
@@ -44,21 +45,44 @@ final class DefaultClausesDatabase extends JIPClausesDatabase
         m_clausesVector.insertElementAt((Clause)clause.getTerm(), nPos);
         return true;
     }
-    
+
     public final synchronized boolean addClause(final JIPClause clause)
     {
         m_clausesVector.addElement((Clause)clause.getTerm());
         return true;
     }
-    
+
     public final synchronized boolean removeClause(final JIPClause clause)
     {
         m_clausesVector.removeElement(clause.getTerm());
         return true;
     }
-    
+
     public final synchronized Enumeration clauses()
     {
         return m_clausesVector.elements();
+    }
+
+    public final synchronized Enumeration clausesLSU()
+    {
+    	final Vector<Clause> clausesVector = (Vector<Clause>)m_clausesVector.clone();
+
+    	return new Enumeration<Clause>()
+    	{
+            int count = 0;
+
+            public boolean hasMoreElements() {
+                return count < clausesVector.size();
+            }
+
+            public Clause nextElement() {
+                synchronized (clausesVector) {
+                    if (count < clausesVector.size()) {
+                        return clausesVector.elementAt(count++);
+                    }
+                }
+                throw new NoSuchElementException("Vector Enumeration");
+            }
+        };
     }
 }

@@ -12,7 +12,7 @@ package com.ugos.util;
 import java.math.BigInteger;
 
 
-public final class Encoder
+public final class ValueEncoder
 {
 //   public static String bytesToHexString(byte[] b)
 //   {
