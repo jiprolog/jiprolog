@@ -60,13 +60,19 @@ public final class StreamProperty3 extends JIPXCall
         	if(prop1 == null)
                 throw new JIPParameterUnboundedException(3);
 
+
         	if(prop1 instanceof JIPAtom)
         	{
         		streamInfo.getProperties().setProperty(((JIPAtom)prop1).getName(),"");
+            	System.out.println("set key " + ((JIPAtom)prop1).getName());
+
         	}
         	else if(prop1 instanceof JIPFunctor)
         	{
-        		String key = ((JIPFunctor)prop1).getDefinition();
+        		String key = ((JIPFunctor)prop1).getName();
+        		System.out.println("set key " + key);
+            	System.out.println("sterm " + prop1.toString());
+
         		streamInfo.getProperties().setProperty(key, prop1.toString());
         	}
         	else
@@ -99,7 +105,8 @@ public final class StreamProperty3 extends JIPXCall
 		        	String key = (String)termEnum.nextElement();
 		        	String sterm = streamInfo.getProperties().getProperty(key);
 
-		        	System.out.println(sterm);
+		        	System.out.println("key " + key);
+		        	System.out.println("sterm " + sterm);
 
 		        	JIPTerm term = getJIPEngine().getTermParser().parseTerm(sterm);
 		        	if(prop.unifiable(term))
@@ -114,24 +121,27 @@ public final class StreamProperty3 extends JIPXCall
 
             	if(prop1 instanceof JIPAtom)
             	{
+            		System.out.println("key " + ((JIPAtom)prop1).getName());
             		sterm = streamInfo.getProperties().getProperty(((JIPAtom)prop1).getName());
             	}
             	else if(prop1 instanceof JIPFunctor)
             	{
             		String key = ((JIPFunctor)prop1).getName();
-            		System.out.println("fun def " + key);
             		sterm = streamInfo.getProperties().getProperty(key);
+
+    	        	System.out.println("key " + key);
+
             	}
             	else
                     throw new JIPParameterTypeException(3, JIPParameterTypeException.COMPOUND);
 
+
             	if(sterm == null)
             	{
-            		System.out.println("sterm null" + prop1.toString(getJIPEngine()));
             		return false;
             	}
 
-            	System.out.println(sterm);
+	        	System.out.println("sterm " + sterm);
 
 	        	JIPTerm term = getJIPEngine().getTermParser().parseTerm(sterm);
         		return prop.unify(term, varsTbl);

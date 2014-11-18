@@ -41,21 +41,21 @@ public abstract class JIPClausesDatabase extends Object
     private String      m_strFuncName;
     private int         m_nArity;
     //private String        m_strModuleName;
-    
+
     //private boolean     m_bModuleTransparent = false;
     //private boolean     m_bMultifile = false;
-    
+
     private Hashtable<String, JIPClausesDatabase> m_propTbl;
-    
+
     private JIPEngine   m_jip;
-    
+
     /** Constucts a new JIPClausesDatabase
      */
     public JIPClausesDatabase()
     {
         m_propTbl = new Hashtable<String, JIPClausesDatabase>(4);
     }
-    
+
     /** Returns the name of the functor associated to this database
      */
     public final String getFunctorName()
@@ -69,7 +69,7 @@ public abstract class JIPClausesDatabase extends Object
     {
         return m_nArity;
     }
-    
+
     /** Returns the JIPEngine object attached to this database
       */
     public final JIPEngine getJIPEngine()
@@ -81,7 +81,7 @@ public abstract class JIPClausesDatabase extends Object
       * @param strAttribs the attributes to pass
       */
     public abstract void setAttributes(final String strAttribs);
-    
+
     /** Adds a clause to the database at the position specified<br>
       * Note that some databases may not allow to add a clause at a given position.<br>
       * @param nPos Position of the clause to add
@@ -90,7 +90,7 @@ public abstract class JIPClausesDatabase extends Object
       * @see com.ugos.jiprolog.engine.JIPClause
       */
     public abstract boolean addClauseAt(final int nPos, final JIPClause clause);
-    
+
     /** Appends a clause to the database<br>
      * Note that some databases may not allow to append a clause.<br>
      * @param clause Clause to add
@@ -113,60 +113,59 @@ public abstract class JIPClausesDatabase extends Object
      * @return an enumeration of the clauses contained in this database
      */
     public abstract Enumeration<JIPClause> clauses();
-    
-    
+
     final void setFunctor(final String strFuncName, final int nArity)
     {
         m_strFuncName   = strFuncName;
         m_nArity        = nArity;
 //      m_strModuleName = strModuleName;
     }
-    
+
     final void setJIPEngine(final JIPEngine jip)
     {
         m_jip = jip;
     }
-    
+
     final void setModuleTransparent()
     {
         m_propTbl.put("mt", this);
         //m_bModuleTransparent = true;
     }
-    
+
     final boolean isModuleTransparent()
     {
         return m_propTbl.containsKey("mt");//m_bModuleTransparent;
     }
-    
+
     final void setMultifile()
     {
         m_propTbl.put("mf", this);
         //m_bMultifile = true;
     }
-    
+
     final boolean isMultifile()
     {
         return m_propTbl.containsKey("mf");
         //return m_bMultifile;
     }
-    
+
     final void setDynamic()
     {
         m_propTbl.put("dy", this);
         //m_bMultifile = true;
     }
-    
+
     final boolean isDynamic()
     {
         return m_propTbl.containsKey("dy");
         //return m_bMultifile;
     }
-    
+
     final void setExternal()
     {
         m_propTbl.put("ext", this);
     }
-    
+
     final boolean isExternal()
     {
         return m_propTbl.containsKey("ext");

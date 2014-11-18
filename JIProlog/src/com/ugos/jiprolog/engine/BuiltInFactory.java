@@ -52,6 +52,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("assert/1",          new Assert1());
         m_BuiltInTable.put("asserta/1",         new Asserta1());
         m_BuiltInTable.put("retract/1",         new Retract1());
+        m_BuiltInTable.put("retractall/1",      new RetractAll1());
         m_BuiltInTable.put("abolish/1",         new Abolish1());
         m_BuiltInTable.put("consult/1",         new Consult1());
         m_BuiltInTable.put("reconsult/1",         new Consult1());

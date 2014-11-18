@@ -146,7 +146,7 @@ final class PrettyPrinter extends Object
                         else if(c < ' ')
                         {
                             bQuoted = true;
-                            strRet+= "\\x" + Encoder.byteToHexString((byte)c);
+                            strRet+= "\\x" + ValueEncoder.byteToHexString((byte)c);
                             Integer.toString(c);
                             //strRet+= "~" + (char)(c + '@');
                         }

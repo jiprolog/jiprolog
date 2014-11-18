@@ -383,7 +383,7 @@ class PrologTokenizer
 
                                     try
                                     {
-                                        byte[] val = Encoder.hexStringToBytes(strHexNum);
+                                        byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
                                         strTerm += Integer.toString(val[0]);
                                     }
                                     catch(NumberFormatException ex)
@@ -538,7 +538,7 @@ class PrologTokenizer
 
                                         try
                                         {
-                                            byte[] val = Encoder.hexStringToBytes(strHexNum);
+                                            byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
                                             strTerm += (char)(val[0]);
                                         }
                                         catch(NumberFormatException ex)
@@ -643,7 +643,7 @@ class PrologTokenizer
                                         {
                                             String strHexNum = (char)d1 + "" + (char)d2;
 
-                                            byte[] val = Encoder.hexStringToBytes(strHexNum);
+                                            byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
                                             strTerm += (char)(val[0]);
                                         }
                                         catch(NumberFormatException ex)
