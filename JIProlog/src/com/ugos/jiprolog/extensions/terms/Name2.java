@@ -95,14 +95,21 @@ public class Name2 extends JIPXCall
                 // check if number of atom
                 String strVal = (JIPString.create((JIPList)string)).getStringValue();
 
-                try
+                if(strVal.startsWith(" ") || strVal.endsWith(" "))
                 {
-                    double dbVal = Double.valueOf(strVal).doubleValue();
-                    string = JIPNumber.create(dbVal);
+                	string = JIPAtom.create(strVal);
                 }
-                catch(NumberFormatException ex)
+                else
                 {
-                    string = JIPAtom.create(strVal);
+	                try
+	                {
+	                    double dbVal = Double.valueOf(strVal).doubleValue();
+	                    string = JIPNumber.create(dbVal);
+	                }
+	                catch(NumberFormatException ex)
+	                {
+	                    string = JIPAtom.create(strVal);
+	                }
                 }
             }
             else
