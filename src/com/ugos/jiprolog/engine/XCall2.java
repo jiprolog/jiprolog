@@ -26,24 +26,17 @@ import java.util.*;
 final class XCall2 extends BuiltIn
 {
     private JIPXCall      m_exObj;
-    
+    private static Hashtable<String, Class> classTable = new Hashtable<String, Class>();
+
     // Called by prolog engine when it tries to unify the goal
     // (in this case the goal is a call to a built in predicate)
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         if (m_exObj == null)  // Called for the first time
         {
-            //#ifndef _MIDP
-            // se prima volta mostra finestra di shareware
-//            if("Personal".equals(JIPEngine.getLicenseType()))
-//            {
-//                qwerty();
-//            }
-            //#endif
-            
             // Get JIPXCall class Name (first parameter)
             final PrologObject exClass = getRealTerm(getParam(1));
-            
+
             // extract the Atom related to the class name
             String strXClassName;
             if(exClass instanceof PString)
@@ -52,24 +45,24 @@ final class XCall2 extends BuiltIn
                 strXClassName = ((Atom)exClass).getName();
             else
                 throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
-                      
+
             // Create an instance of JIPXCall class
             m_exObj = createXCall(strXClassName);
-            
+
             // Set current JIPEngine instance
             m_exObj.init(this);
         }
-        
+
         final PrologObject params = getRealTerm(getParam(2));
             if(!(params instanceof List))
                 throw new JIPParameterTypeException(2, JIPParameterTypeException.LIST);
-            
+
         JIPCons exParams = new JIPCons(((List)params).getConsCell());
-            
+
         Hashtable<JIPVariable, JIPVariable> jipVarsTable = new Hashtable<JIPVariable, JIPVariable>();
         // Invoke JIPXCall class
         boolean unify = m_exObj.unify(exParams, jipVarsTable);
-        
+
         if(unify)
         {
         	Variable var;
@@ -79,56 +72,49 @@ final class XCall2 extends BuiltIn
         		varsTbl.put(var, var);
         	}
         }
-        
+
         return unify;
     }
-    
-    
+
+
     // return true if the JIPXCall class is deterministic
     public final boolean hasMoreChoicePoints()
     {
         return m_exObj == null ? true : m_exObj.hasMoreChoicePoints();
     }
-    
+
     // Create an instance of JIPXCall class
-    protected static final JIPXCall createXCall(String strXClassName)
+    @SuppressWarnings("rawtypes")
+	protected static final JIPXCall createXCall(String strXClassName)
     {
         try
         {
-            //System.out.println(strXClassName);
+        	//System.out.println(strXClassName);
             // Get the correct class name
             if(strXClassName.charAt(0) == 39 || strXClassName.charAt(0) == 34)
             {
                 strXClassName = strXClassName.substring(1, strXClassName.length() - 1);
             }
-            
-           JIPXCall exObj;
-//            Debug.traceln(JIPEngine.getClassLoader(), 1);
-//            Debug.traceln(JIPEngine.getClassLoader().getClass(), 1);
-            //////////
-//            Object obj = (JIPEngine.getClassLoader().loadClass(strXClassName)).newInstance();
-//            Debug.traceln(obj, 1);
-//            Debug.traceln(obj.getClass(), 1);
-//            Debug.traceln(obj.getClass().getClassLoader(),1);
-//            Debug.traceln(Class.forName("com.ugos.JIProlog.engine.JIPXCall").getClassLoader(),1);
-//            Debug.traceln("Obj: " + obj.getClass(), 1);
-//            Debug.traceln("JIPXCall: " + Class.forName("com.ugos.JIProlog.engine.JIPXCall"),1);
-//            Debug.traceln("Obj: " + obj.getClass().getPackage(), 1);
-//            Debug.traceln("Obj: " + obj.getClass().getSuperclass(), 1);
-//            Debug.traceln("Obj: " + obj.getClass().getSuperclass().getPackage(), 1);
-//            Debug.traceln("JIPXCall: " + Class.forName("com.ugos.JIProlog.engine.JIPXCall").getPackage(),1);
-//            Debug.traceln("JIPXCall: " + Class.forName("com.ugos.JIProlog.engine.JIPXCall").getSuperclass(),1);
-//            Debug.traceln("JIPXCall: " + Class.forName("com.ugos.JIProlog.engine.JIPXCall").getSuperclass().getPackage(),1);
-//            Debug.traceln("Test: " + Class.forName("com.ugos.JIProlog.engine.JIPXCall").isAssignableFrom(obj.getClass()),1);
-//
-            ///////////////
-           //#ifndef _MIDP
-            if(JIPEngine.getClassLoader() != null)
-                exObj = (JIPXCall)(JIPEngine.getClassLoader().loadClass(strXClassName)).newInstance();  //obj;
+
+            JIPXCall exObj;
+            Class xclass;
+            if(classTable.contains(strXClassName))
+            {
+            	xclass = classTable.get(strXClassName);
+            }
+            else if(JIPEngine.getClassLoader() != null)
+            {
+            	xclass = JIPEngine.getClassLoader().loadClass(strXClassName);
+            	classTable.put(strXClassName, xclass);
+            }
             else
-            //#endif
-                exObj = (JIPXCall)Class.forName(strXClassName).newInstance();
-            
+            {
+            	xclass = Class.forName(strXClassName);
+            	classTable.put(strXClassName, xclass);
+            }
+
+            exObj = (JIPXCall)xclass.newInstance();
+
             return exObj;
         }
         catch(ClassNotFoundException ex)
