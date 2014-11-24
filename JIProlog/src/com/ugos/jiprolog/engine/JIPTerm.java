@@ -240,6 +240,15 @@ public class JIPTerm extends Object implements Clearable
         return m_obj;
     }
 
+    @Override
+    public boolean equals(Object obj)
+    {
+    	if(obj instanceof JIPTerm)
+    		return this.unifiable((JIPTerm)obj);
+
+    	return false;
+    }
+
     static final JIPTerm getJIPTerm(final PrologObject obj)
     {
         if(obj instanceof List)
