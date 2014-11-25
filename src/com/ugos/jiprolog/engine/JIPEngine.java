@@ -77,6 +77,8 @@ public class JIPEngine implements Serializable
     private String          m_strSearchPath;
     private GlobalDB        m_globalDB;
 
+    private static JIPEngine defaultEngine;
+
     static
     {
         s_globalDB = new GlobalDB();
@@ -110,6 +112,11 @@ public class JIPEngine implements Serializable
         return "JIProlog is released under AGPL v3 or under Commercial License. Visit www.jiprolog.com for more info";
     }
 
+    static JIPEngine getDefaultEngine()
+    {
+    	return defaultEngine;
+    }
+
     /** Constructs a new instance of JIPEngine with default values search path, input and output stream.
      * Search path is the path where this instance of JIPEngine searches for files.
      * The default value is the value of the environment variable user.dir<br>
@@ -118,6 +125,9 @@ public class JIPEngine implements Serializable
      */
     public JIPEngine()
     {
+    	if(defaultEngine == null)
+    		defaultEngine = this;
+
         m_bTrace         = false;
 
         m_prologTable    = new Hashtable<Integer, AsyncWAMManager>(10);
