@@ -49,7 +49,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         m_clauseTable            = (Hashtable<String, JIPClausesDatabase>)gdb.m_clauseTable.clone();
         m_pred2FileMap           = (Hashtable)gdb.m_pred2FileMap.clone();
         m_moduleTransparentTbl   = (Hashtable)gdb.m_moduleTransparentTbl.clone();
-        m_exportedTable = (Hashtable)gdb.m_exportedTable.clone();
+        m_exportedTable 		 = (Hashtable)gdb.m_exportedTable.clone();
     }
 
     public final GlobalDB newInstance()
@@ -64,7 +64,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         m_clauseTable            = new Hashtable<String, JIPClausesDatabase>(100);
         m_pred2FileMap           = new Hashtable<String, String>(100);
         m_moduleTransparentTbl   = new Hashtable(100);
-        m_exportedTable = new Hashtable<String, String>();
+        m_exportedTable 		 = new Hashtable<String, String>();
         loadKernel(this);
     }
 
