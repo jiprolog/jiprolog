@@ -25,7 +25,7 @@
                       concat_atom/2, concat_atom/3, upcase/1, downcase/1,
                       upcase_char/2, upcase_chars/2, downcase_char/1, downcase_chars/2,
                       upcase_atom/2, downcase_atom/2, string_to_atom/2, string_to_list/2,
-                      string_length/2, string_concat/3, vars/2]).
+                      string_length/2, string_concat/3, vars/2, sub_atom/5]).
 
 :-'$custom_built_in'([numbervars/3, free_variables/2, term_variables/2, copy_term/2, name/2,
                       char_code/2, atom_codes/2, atom_chars/2, number_codes/2,
@@ -33,7 +33,7 @@
                       concat_atom/2, concat_atom/3, upcase/1, downcase/1,
                       upcase_char/2, upcase_chars/2, downcase_char/1, downcase_chars/2,
                       upcase_atom/2, downcase_atom/2, string_to_atom/2, string_to_list/2,
-                      string_length/2, string_concat/3, vars/2]).
+                      string_length/2, string_concat/3, vars/2, sub_atom/5]).
 
 :-assert(ver(jipxterms, '4.0.1')).
 
@@ -120,6 +120,14 @@ atom_concat(Atom1, Atom2, Concat):-
     append(CAtom1, CAtom2, CConcat),
     name(Atom1, CAtom1),
     name(Atom2, CAtom2).
+
+sub_atom(Atom, Before, Length, After, SubAtom):-
+	atom_concat(Prefix, Suffix, Atom),
+	atom_concat(BeforeAtom, SubAtom, Prefix),
+	atom_length(SubAtom, Length),
+	atom_length(BeforeAtom, Before),
+	atom_length(Suffix, After).
+
 
 concat_atom([A1], A1).
 concat_atom([A1, A2|List], Atom):-
