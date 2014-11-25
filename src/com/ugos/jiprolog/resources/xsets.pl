@@ -34,18 +34,21 @@
       merge_set/2,
       remove_duplicates/2,
       findall/3,
+      findall/4,
       setof/3,
       bagof/3]).
 
 :-'$custom_built_in'([
       sort/2,
       findall/3,
+      findall/4,
       setof/3,
       bagof/3]).
 
 
 :-module_transparent
       findall/3,
+      findall/4,
       setof/3,
       bagof/3.
 
@@ -198,3 +201,7 @@ bagof(X, Goal, List1):-
 setof(X, Goal, List):-
     xcall('com.ugos.jiprolog.extensions.sets.Bagof3', [X, Goal, List1]),
     sort(List1, List).
+
+findall(Term, Goal, List, Tail) :-
+	findall(Term, Goal, List0),
+	append(List0, Tail, List).

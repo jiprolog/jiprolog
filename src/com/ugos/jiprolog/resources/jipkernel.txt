@@ -132,6 +132,30 @@
     !,
     member(Property, Properties).
 
+'$system':between(Lower, Upper, Integer) :-
+	integer(Lower),
+	integer(Upper),
+	(	var(Integer) ->
+		Lower =< Upper,
+		'$kernel':generate_num(Lower, Upper, Integer)
+	;	integer(Integer),
+		Lower =< Integer,
+		Integer =< Upper
+	).
+
+'$kernel':generate_num(Lower, _, Lower).
+'$kernel':generate_num(Lower, Upper, Integer) :-
+	Lower < Upper,
+	Next is Lower + 1,
+	'$kernel':generate_num(Next, Upper, Integer).
+
+
+
+% 5. predicate_property(Functor/Arity, Property) -> predicate_property(Callable, Property)
+% 7. acyclic_term/1 missing (easy if you don't support cyclic terms
+% 8. subsumes_term/2 missing (I can provide a Prolog implementation)
+
+
 /* Kernel Internal predicates */
 
 '$kernel':translate(((LHS_in1, LHS_in2) --> RHS_in), (LHS_out:-RHS_out)):-

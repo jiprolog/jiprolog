@@ -1,12 +1,33 @@
-:- module(jipsys,[ 
+/******************************************************************
+ * Sys extension package
+ *
+ * Copyright (C) 2002-2014 Ugo Chirico
+ *
+ * This is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ *******************************************************************/
+
+:- module(jipsys,[
 	meta_predicate/1,
     load_files/1,
     abolish_files/1,
 	listing/1,
-	listing/0,			
+	listing/0,
 	current_predicate/2,
 	repeat/0,
-	repeat/1, 
+	repeat/1,
 	one/1,
 	once/1,
 	checklist/2,
@@ -18,7 +39,9 @@
 	call/3,
 	call/4,
 	call/5,
-	ignore/1]).
+	ignore/1,
+  	setup_call_cleanup/3,
+  	call_cleanup/2]).
 
 :- module_transparent
     one/1,
@@ -32,17 +55,22 @@
     call/3,
     call/4,
     call/5,
-    ignore/1.
-    
+    call/6,
+  	call/7,
+  	call/8,
+    ignore/1,
+  	setup_call_cleanup/3,
+  	call_cleanup/2.
+
 :-'$custom_built_in'([
 	meta_predicate/1,
     load_files/1,
     abolish_files/1,
 	listing/1,
-	listing/0,			
+	listing/0,
 	current_predicate/2,
 	repeat/0,
-	repeat/1, 
+	repeat/1,
   	one/1,
   	once/1,
   	checklist/2,
@@ -54,9 +82,14 @@
   	call/3,
   	call/4,
   	call/5,
-  	ignore/1]).
+  	call/6,
+  	call/7,
+  	call/8,
+  	ignore/1,
+  	setup_call_cleanup/3,
+  	call_cleanup/2]).
 
-% Quintus / SWI compatibility    
+% Quintus / SWI compatibility
 :-op(1150, fx, meta_predicate).
 
 meta_predicate(X) :- module_transparent X.
@@ -65,7 +98,7 @@ meta_predicate(X) :- module_transparent X.
 load_files([]):-!.
 load_files([X|Rest]):-
     load(X),
-    load_files(Rest).    
+    load_files(Rest).
 load_files(X):-
     load(X).
 
@@ -73,38 +106,38 @@ load_files(X):-
 abolish_files([]):-!.
 abolish_files([FileSpec|Rest]):-
     unconsult(FileSpec),
-    abolish_files(Rest).    
+    abolish_files(Rest).
 abolish_files(FileSpec):-
     unconsult(FileSpec).
 
-    
+
 listing(Name/Arity):-
     current_functor(Name, Arity),
     write(Name), write('/'), write(Arity), nl,
-    fail.    
+    fail.
 listing(_).
 
 listing:-listing(_).
-    
- 
+
+
 current_predicate(Name, Head):-
 	current_functor(Name, Arity),
 	functor(Head, Name, Arity).
-		
+
 % repeat/1
 repeat(N):-
     N > 0.
-    
+
 repeat(N):-
    N > 0,
    N1 is N - 1,
    repeat(N1).
-    
+
 %repeat/0
 repeat.
 repeat:-
     repeat.
-     
+
 %one/1
 one(X):-X, !.
 
@@ -123,11 +156,23 @@ apply(Term,Args):-
         !,
     Goal.
 
-% call/2,3,4,5
+% call/2,3,4,5,6,7,8
 call(Closure,X1):-apply(Closure,[X1]).
 call(Closure,X1,X2):-apply(Closure,[X1,X2]).
 call(Closure,X1,X2,X3):-apply(Closure,[X1,X2,X3]).
 call(Closure,X1,X2,X3,X4):-apply(Closure,[X1,X2,X3,X4]).
+call(Closure,X1,X2,X3,X4,X5):-apply(Closure,[X1,X2,X3,X4,X5]).
+call(Closure,X1,X2,X3,X4,X5,X6):-apply(Closure,[X1,X2,X3,X4,X5,X6]).
+call(Closure,X1,X2,X3,X4,X5,X6, X7):-apply(Closure,[X1,X2,X3,X4,X5,X6,X7]).
+
+%setup_call_cleanup/3
+setup_call_cleanup(Setup, Goal, Cleanup):-
+	once((Setup, catch(Goal, _, true))),
+	once(Cleanup) ; !.
+
+call_cleanup(Goal, Cleanup):-
+	setup_call_cleanup(true, Goal, Cleanup).
+
 
 % checklist(+Goal, +List)
 checklist(_G, []).
@@ -147,14 +192,13 @@ sublist(G, [H|T], S) :-
     call(G, H), !,
     S = [H|R],
     sublist(G, T, R).
-        
+
 sublist(G, [_|T], R) :-
     sublist(G, T, R).
 
 %forall(+Condition, +Action)
 forall(C, A) :-
     \+ (C, \+ A).
-        
+
 %*************************************
 
-       
