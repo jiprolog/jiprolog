@@ -6,7 +6,7 @@
  * Copyright (C) 2002-2004 by Ugo Chirico. All Rights Reserved
  *
  ********************************************************************/
- 
+
 :- module(jipxlist,
     [ member/3,
       memberchk/2,
@@ -50,15 +50,15 @@ member(X, [X|Xs], 1).
 member(X, [Y|Ys], N):-
     member(X, Ys, N1),
     N is N1 + 1.
-    
+
 %%  nth0(?Index, ?List, ?Elem)
 nth0(Index, List, Elem) :-
-    member(Elem, List, Index).
+    member(Elem, List, Index1),
+    Index is Index1 - 1.
 
 %%  nth1(?Index, ?List, ?Elem)
 nth1(Index1, List, Elem) :-
-    member(Elem, List, Index),
-    Index1 is Index + 1.
+    member(Elem, List, Index).
 
 %   last(?List, ?Elem)
 last([X|Xs], Last) :-
@@ -89,7 +89,7 @@ permutation([X|Xs], Ys1, [_|Bound]) :-
 %   call internal flatten/2
 flatten(List, FlatList) :-
     '$kernel':flatten(List, FlatList).
-    
+
 %   sumlist(+List, -Sum)
 sumlist(Xs, Sum) :-
     sumlist(Xs, 0, Sum).
