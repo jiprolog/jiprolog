@@ -39,6 +39,9 @@
 	call/3,
 	call/4,
 	call/5,
+	call/6,
+  	call/7,
+  	call/8,
 	ignore/1,
   	setup_call_cleanup/3,
   	call_cleanup/2]).
@@ -163,7 +166,7 @@ call(Closure,X1,X2,X3):-apply(Closure,[X1,X2,X3]).
 call(Closure,X1,X2,X3,X4):-apply(Closure,[X1,X2,X3,X4]).
 call(Closure,X1,X2,X3,X4,X5):-apply(Closure,[X1,X2,X3,X4,X5]).
 call(Closure,X1,X2,X3,X4,X5,X6):-apply(Closure,[X1,X2,X3,X4,X5,X6]).
-call(Closure,X1,X2,X3,X4,X5,X6, X7):-apply(Closure,[X1,X2,X3,X4,X5,X6,X7]).
+call(Closure,X1,X2,X3,X4,X5,X6,X7):-apply(Closure,[X1,X2,X3,X4,X5,X6,X7]).
 
 %setup_call_cleanup/3
 setup_call_cleanup(Setup, Goal, Cleanup):-
