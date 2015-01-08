@@ -14,20 +14,19 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<!-- Main project -->
 		<property name="project.name" value="JIProlog 4.0" />
 		<property name="project.root" value="c:/progetti/Applicazioni/JIProlog/" />
-		<property name="project.version" value="4.0.0.x" />
+		<property name="project.version" value="4.0.1.3" />
 		<property name="project.deploy.dir" value="${project.root}/Deploy" />
 		<property name="project.src" value="src" />
 		<property name="project.bin" value="bin" />
 
 		<property name="project.proguardconf" value="jiprolog.pro" />
 
-
 		<!-- JIProlog  -->
 		<property name="project.jiprolog.root" value="${project.root}/JIProlog" />
 		<property name="project.jiprolog.lib" value="${project.jiprolog.root}/lib" />
 		<property name="project.jiprolog.src" value="${project.jiprolog.root}/src" />
 		<property name="project.jiprolog.ijar" value="jiprolog1.jar" />
-		<property name="project.jiprolog.jar" value="jiprolog.jar" />
+		<property name="project.jiprolog.jar" value="jiprolog-${project.version}.jar" />
 
 		<!-- jipgui -->
 		<property name="project.jiprolog.jipgui.lib" value="${project.root}/JIPgui/lib" />
@@ -42,11 +41,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<property name="project.jext" value="${project.root}/Deploy/JIPrologIDE/" />
 
 		<property name="project.main.class" value="com.ugos.jiprolog.JIProlog" />
-		<property name="project.keystore" value="ugochirico.ks" />
-		<property name="project.storepass" value="seagull.7" />
-
 		<echo message="JIProlog root folder is ${project.root}" />
-
 
 		<!-- ProGuard -->
 		<property name="proguard.jar" value="C:\Program Files\proguard5.0\lib\proguard.jar" />
@@ -101,7 +96,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 	</target>
 
     <target name="javadoc">
-        <javadoc destdir="..\Deploy\JIPrologSDK\doc/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.jiprolog.engine,com.ugos.jiprolog.client" sourcefiles="src/com/ugos/JIProlog/JIProlog.java" sourcepath="src;../JIPClient/src" classpath="../JIPClient/lib;lib" doctitle="JIProlog API"/>
+        <javadoc destdir="..\Deploy\JIPrologSDK\doc/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.jiprolog.engine" sourcefiles="src/com/ugos/jiprolog/JIProlog.java" sourcepath="src" classpath="lib" doctitle="JIProlog API"/>
     </target>
 
 	<target name="Proguard" depends="jar-it" description="Proguard">

@@ -56,7 +56,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 0;
     public static final int build = 1;
-    public static final int revision = 2;
+    public static final int revision = 3;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -95,14 +95,14 @@ public class JIPEngine implements Serializable
      */
     public static final String getInfo()
     {
-        return "JIProlog v" + VERSION + " Copyright (c) 1999-2014 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved";
+        return "JIProlog v" + VERSION + " Copyright (c) 1999-2015 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved";
     }
 
     /** Returns Copyright
      */
     public static final String getCopyrightInfo()
     {
-        return "Copyright (c) 1999-2014 By Ugo Chirico - http://www.jiprolog.com. All Rights Reserved";
+        return "Copyright (c) 1999-2015 By Ugo Chirico - http://www.jiprolog.com. All Rights Reserved";
     }
 
     /** Returns JIProlog license info
