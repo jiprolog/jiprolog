@@ -150,6 +150,8 @@
 	'$kernel':generate_num(Next, Upper, Integer).
 
 
+'$system':cyclic_term(T):-
+    not acyclic_term(T).
 
 % 5. predicate_property(Functor/Arity, Property) -> predicate_property(Callable, Property)
 % 7. acyclic_term/1 missing (easy if you don't support cyclic terms
