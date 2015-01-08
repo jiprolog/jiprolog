@@ -26,7 +26,7 @@ final class CurrentFunctor2 extends BuiltIn
 {
     private Enumeration m_enum = null;
     private boolean m_bSystem = true;
-    
+
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
 //      System.out.println("unify");
@@ -35,20 +35,20 @@ final class CurrentFunctor2 extends BuiltIn
             m_enum = getJIPEngine().getGlobalDB().databases();
             m_bSystem = true;
         }
-        
+
         Atom funcName;
         Expression arity;
-        
+
         if(m_bSystem)
         {
 //          System.out.println(m_enum);
             while(m_enum.hasMoreElements())
             {
                 JIPClausesDatabase db = (JIPClausesDatabase)m_enum.nextElement();
-                
+
                 funcName = Atom.createAtom(db.getFunctorName());
                 arity    = Expression.createNumber(db.getArity());
-               
+
                 if(getParam(1).unify(funcName, varsTbl) &&
                    getParam(2).unify(arity, varsTbl))
                 {
@@ -57,11 +57,11 @@ final class CurrentFunctor2 extends BuiltIn
                         m_enum = BuiltInFactory.m_BuiltInTable.keys();
                         m_bSystem = false;
                     }
-                    
+
                     return true;
                 }
             }
-            
+
 //          System.out.println("not unify");
             m_bSystem = false;
             m_enum = BuiltInFactory.m_BuiltInTable.keys();
@@ -74,23 +74,23 @@ final class CurrentFunctor2 extends BuiltIn
             while(m_enum.hasMoreElements())
             {
                 final String strPredDef = (String)m_enum.nextElement();
-//              System.out.println(strPredDef);
+              System.out.println(strPredDef);
                 int nPos = strPredDef.lastIndexOf('/');
-                
+
                 funcName = Atom.createAtom(strPredDef.substring(0, nPos));
                 arity    = Expression.createNumber(Integer.parseInt(strPredDef.substring(nPos + 1)));
-                
+
                 if(getParam(1).unify(funcName, varsTbl) &&
                    getParam(2).unify(arity, varsTbl))
                 {
                     return true;
                 }
             }
-            
+
             return false;
         }
     }
- 
+
     public final boolean hasMoreChoicePoints()
     {
         return m_enum == null ? true : m_enum.hasMoreElements();

@@ -106,7 +106,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("env/2",   			 new Env2());
         m_BuiltInTable.put("set_env/2",   		 new SetEnv2());
         m_BuiltInTable.put("ver/4",   		 	 new Ver4());
-        m_BuiltInTable.put("acyclic_term", 		 new AcyclicTerm1());
+        m_BuiltInTable.put("acyclic_term/1", 		 new AcyclicTerm1());
 
 
         //m_BuiltInTable.put("bagof_with_duplicates/3", new BagOf3());
