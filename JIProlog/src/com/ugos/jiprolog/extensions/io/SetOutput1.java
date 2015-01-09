@@ -53,7 +53,8 @@ public final class SetOutput1 extends JIPXCall
         // Get the stream
         OutputStream outs = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(outs == null)
-            throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
+        	return false;
+//            throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
 
         String strName = JIPio.getStreamName(strStreamHandle);
 
