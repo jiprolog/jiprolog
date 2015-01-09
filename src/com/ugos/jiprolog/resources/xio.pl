@@ -597,7 +597,8 @@ check_handle(Alias, Handle):-
    stream_property(Handle, alias(Alias)),
    !.
 
-check_handle(Alias, Alias).
+check_handle(Alias, Alias):-
+   nonvar(Alias).
 
 
 % not supported
