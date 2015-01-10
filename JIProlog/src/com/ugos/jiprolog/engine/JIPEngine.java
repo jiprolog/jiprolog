@@ -55,8 +55,8 @@ public class JIPEngine implements Serializable
 
     public static final int major = 4;
     public static final int minor = 0;
-    public static final int build = 1;
-    public static final int revision = 5;
+    public static final int build = 2;
+    public static final int revision = 1;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -218,7 +218,7 @@ public class JIPEngine implements Serializable
     /** Gets the update semantics
      * @return true if immediate update semantics,  false if logical update semantics (default)
      */
-    public boolean getImmediateUpdateSemantics()
+    public boolean isImmediateUpdateSemantics()
     {
     	return getEnvVariable("update_semantics").equals("immediate");
     }
@@ -752,7 +752,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.asserta(Clause.getClause(term.getTerm()), null);
+            m_globalDB.asserta(Clause.getClause(term.getTerm()), null, isImmediateUpdateSemantics());
         }
     }
 
@@ -785,7 +785,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.assertz(Clause.getClause(term.getTerm()), null);
+            m_globalDB.assertz(Clause.getClause(term.getTerm()), null, isImmediateUpdateSemantics());
         }
     }
 

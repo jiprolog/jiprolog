@@ -43,13 +43,15 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     boolean m_bCheckDisabled = false;
 
-    //#ifndef _MIDP
+    private Vector<AssertedClause> assertedClauses;
+
     private GlobalDB(GlobalDB gdb)
     {
         m_clauseTable            = (Hashtable<String, JIPClausesDatabase>)gdb.m_clauseTable.clone();
         m_pred2FileMap           = (Hashtable)gdb.m_pred2FileMap.clone();
         m_moduleTransparentTbl   = (Hashtable)gdb.m_moduleTransparentTbl.clone();
         m_exportedTable 		 = (Hashtable)gdb.m_exportedTable.clone();
+        assertedClauses 			 = new Vector<GlobalDB.AssertedClause>();
     }
 
     public final GlobalDB newInstance()
@@ -65,6 +67,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         m_pred2FileMap           = new Hashtable<String, String>(100);
         m_moduleTransparentTbl   = new Hashtable(100);
         m_exportedTable 		 = new Hashtable<String, String>();
+        assertedClauses 			 = new Vector<GlobalDB.AssertedClause>();
+
         loadKernel(this);
     }
 
@@ -266,14 +270,16 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             return null;
     }
 
-    final void assertz(final Clause clause, String strFile)
+    final void assertz(final Clause clause, String strFile, boolean immediateUpdateSemantics)
     {
-        addPredicate((Clause)fixTerm(clause.copy()), false, strFile);
+//   		addPredicate((Clause)fixTerm(clause.copy()), false, strFile, immediateUpdateSemantics);
+   		addPredicate((Clause)fixTerm(clause), false, strFile, immediateUpdateSemantics);
     }
 
-    final void asserta(final Clause clause, String strFile)
+    final void asserta(final Clause clause, String strFile, boolean immediateUpdateSemantics)
     {
-        addPredicate((Clause)fixTerm(clause.copy()), true, strFile);
+//    	addPredicate((Clause)fixTerm(clause.copy()), true, strFile, immediateUpdateSemantics);
+        addPredicate((Clause)fixTerm(clause), true, strFile, immediateUpdateSemantics);
     }
 
     final Clause retract(Clause clause)
@@ -388,14 +394,30 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
     }
 
-    // called by assert
-    private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile)
+    final void commitAssertedClauses()
     {
-//      System.out.println("addpredicate");
-//      System.out.println(clause.getHead());
-//      System.out.println(clause.getModuleName());
+    	for(AssertedClause clause : assertedClauses)
+    	{
+    		if(clause.first)
+            {
+                // Aggiunge il predicato
+                if(!clause.db.addClauseAt(0, new JIPClause(clause.clause)))
+                    throw JIPRuntimeException.create(10, clause.clause);
+            }
+            else
+            {
+                // Aggiunge il predicato
+                if(!clause.db.addClause(new JIPClause(clause.clause)))
+                    throw JIPRuntimeException.create(10, clause.clause);
+            }
+    	}
 
-      //System.out.println(clause);
+    	assertedClauses.removeAllElements();
+    }
+
+    // called by assert
+    private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile, boolean immediateUpdateSemantics)
+    {
         if(!m_bCheckDisabled && isSystem((Functor)clause.getHead()))
             throw JIPRuntimeException.create(15, ((Functor)clause.getHead()).getName());
 
@@ -417,14 +439,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             throw JIPRuntimeException.create(11, head);
         }
 
-        JIPClausesDatabase db;
-
-//        System.out.println("ASSERT:"); //DEBUG
-//        System.out.println(strFunctName); //DEBUG
-//        System.out.println(clause); //DEBUG
-//        System.out.println("File: " + strFile); //DEBUG
-
-
         // verifica se il predicato è stato già asserted in un altro file
         if(strFile != null)
         {
@@ -439,6 +453,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             }
         }
 
+        JIPClausesDatabase db;
+
         // Verifica l'esistenza del funtore
         if(m_clauseTable.containsKey(strFunctName))
         {
@@ -447,17 +463,29 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             // Estrae il database
             db = (JIPClausesDatabase)(m_clauseTable.get(strFunctName));
 
-            if(bFirst)
+            if(immediateUpdateSemantics)
             {
-                // Aggiunge il predicato
-                if(!db.addClauseAt(0, new JIPClause(clause)))
-                    throw JIPRuntimeException.create(10, clause);
+	            if(bFirst)
+	            {
+	                // Aggiunge il predicato
+	                if(!db.addClauseAt(0, new JIPClause(clause)))
+	                    throw JIPRuntimeException.create(10, clause);
+	            }
+	            else
+	            {
+	                // Aggiunge il predicato
+	                if(!db.addClause(new JIPClause(clause)))
+	                    throw JIPRuntimeException.create(10, clause);
+	            }
             }
             else
             {
-                // Aggiunge il predicato
-                if(!db.addClause(new JIPClause(clause)))
-                    throw JIPRuntimeException.create(10, clause);
+            	AssertedClause assertedClause = new AssertedClause();
+            	assertedClause.clause = clause;
+            	assertedClause.first = bFirst;
+            	assertedClause.db = db;
+
+            	assertedClauses.add(assertedClause);
             }
         }
         else
@@ -466,9 +494,21 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             // Crea un nuovo database
             db = new DefaultClausesDatabase(((Functor)head).getFriendlyName(), ((Functor)head).getArity());
 
-            // Aggiunge il predicato
-            if(!db.addClause(new JIPClause(clause)))
-                throw JIPRuntimeException.create(10, clause);
+            if(immediateUpdateSemantics)
+            {
+	            // Aggiunge il predicato
+	            if(!db.addClause(new JIPClause(clause)))
+	                throw JIPRuntimeException.create(10, clause);
+            }
+            else
+            {
+            	AssertedClause assertedClause = new AssertedClause();
+            	assertedClause.clause = clause;
+            	assertedClause.first = false;
+            	assertedClause.db = db;
+
+            	assertedClauses.add(assertedClause);
+            }
 
             // Aggiunge il vettore alla tabella
             m_clauseTable.put(strFunctName, db);
@@ -530,7 +570,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	            while ((term = parser.parseNext()) != null)
 	            {
 	                //System.out.println(term);
-	                gdb.assertz(Clause.getClause(term), "__KERNEL__");
+	                gdb.assertz(Clause.getClause(term), "__KERNEL__", true);
 	            }
 
 	            ins.close();
@@ -548,7 +588,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 		         for(PrologObject term : program)
 		         {
 		             //System.out.println(term);
-		             gdb.assertz(Clause.getClause(term), "__KERNEL__");
+		             gdb.assertz(Clause.getClause(term), "__KERNEL__", true);
 		         }
         	}
 
@@ -716,6 +756,13 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
     	String func = functor.getName();
     	return m_exportedTable.containsKey(func);
+    }
+
+    private static class AssertedClause
+    {
+    	Clause clause;
+    	JIPClausesDatabase db;
+    	boolean first = false;
     }
 
 }
