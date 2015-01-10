@@ -182,6 +182,9 @@ class WAM
         m_startNode = null;
 
         m_bClosed = true;
+
+    	if(!m_engine.isImmediateUpdateSemantics())
+    		m_globalDB.commitAssertedClauses();
     }
 
     // la WAM sta eseguendo il metodo run
@@ -420,6 +423,7 @@ class WAM
         Node        parentNode;
         int         nCallCount = m_nBaseCounter;
         //PrologRule 	parentRule;
+
         try
         {
             while(curNode != null)
@@ -608,7 +612,7 @@ class WAM
 //        }
         catch(ClassCastException ex)
         {
-            //ex.printStackTrace();
+            ex.printStackTrace();
 
             m_curNode = null;
             m_lastNode = null;

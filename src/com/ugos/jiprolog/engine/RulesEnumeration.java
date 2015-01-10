@@ -29,13 +29,13 @@ final class RulesEnumeration extends Object implements Enumeration
     private final Enumeration   m_selProgramEnum;
     private boolean             m_bModuleTranparent;
     private PrologRule          m_rule;
-        
+
     public RulesEnumeration(final Functor query, final String strModule, final GlobalDB gdb)
     {
         final JIPClausesDatabase db = gdb.search(query, strModule);
         if(db == null)
             throw new UndefinedPredicateException(query);
-        
+
         m_selProgramEnum  = db.clauses();
         m_bModuleTranparent = db.isModuleTransparent();
         m_rule = new PrologRule();
@@ -50,12 +50,12 @@ final class RulesEnumeration extends Object implements Enumeration
     public final Object nextElement()
     {
         final Clause dbCurrentClause = (Clause)m_selProgramEnum.nextElement();
-        
+
         // il riuso dello stesso oggetto Rule evita la creazione di nuovi
         // oggetti che pesano sul garbage collector
-        m_rule.m_cons = (ConsCell)dbCurrentClause.copy();;
+        m_rule.m_cons = (ConsCell)dbCurrentClause.copy();
         m_rule.m_dbCons = dbCurrentClause;
-        
+
         // controlla se module_transaprent
         if(!m_bModuleTranparent)
         {
@@ -65,8 +65,8 @@ final class RulesEnumeration extends Object implements Enumeration
         return m_rule;
     }
 
-	// per evitare choice-points che eseguendo un look-haed 
-	// non sarebbero presenti. 
+	// per evitare choice-points che eseguendo un look-haed
+	// non sarebbero presenti.
     // Manca però il metodo per riusare il nextElement della enumeration
 //    public boolean isNextUnifiable(PrologObject obj)
 //    {
@@ -77,7 +77,7 @@ final class RulesEnumeration extends Object implements Enumeration
 //        {
 //            rule   = (PrologRule)nextElement();
 //            clause = rule.m_cons;
-//            
+//
 ////            System.out.println("clause " + clause);  // dbg
 //            // UNIFY
 //            // unifica la testa della clausola con il predicato corrente

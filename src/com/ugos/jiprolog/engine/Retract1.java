@@ -39,7 +39,7 @@ final class Retract1 extends BuiltIn
 
         Functor functor = (Functor)clause.getHead();
 
-        if(getJIPEngine().getImmediateUpdateSemantics())
+        if(getJIPEngine().isImmediateUpdateSemantics())
         {
         	immediateUpdateSemantics = true;
             Clause retractedClause = getJIPEngine().getGlobalDB().retract(clause);
