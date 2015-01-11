@@ -53,7 +53,7 @@ class WAM
         protected int          m_nLevel;
         protected Node         m_backtrack;
         protected Enumeration  m_ruleEnum;
-
+        protected long		   m_timestamp;
         protected Hashtable    m_varTbl;
 
         Node(final ConsCell callList, final Node parent, final Node previous, final String strModule)
@@ -62,6 +62,7 @@ class WAM
             m_parent    = parent;
             m_strModule = strModule;
             m_previous  = previous;
+            m_timestamp = System.currentTimeMillis();
         }
 
         final PrologObject getGoal()
@@ -182,9 +183,6 @@ class WAM
         m_startNode = null;
 
         m_bClosed = true;
-
-    	if(!m_engine.isImmediateUpdateSemantics())
-    		m_globalDB.commitAssertedClauses();
     }
 
     // la WAM sta eseguendo il metodo run
@@ -337,8 +335,6 @@ class WAM
             if(curNode.m_backtrack != null)
             {
                 backtrack = curNode.m_backtrack;
-//              System.out.println("cerca1 : " + ((Node)backtrack));
-//              System.out.println("cerca2 : " + ((Node)backtrack).getGoal());
                 do
                 {
                     // Azzera le variabili eventualmente istanziate al livello corrente
@@ -348,23 +344,11 @@ class WAM
                     // call precedente
                     curNode = curNode.m_previous;
 
-//                  System.out.println("curNode.getGoal(): " + curNode.getGoal());
-//                  System.out.println("curNode.m_nLevel(): " + curNode.m_nLevel);
-////                  if(curNode.m_backtrack != null)
-//                      System.out.println("curNode.m_backtrack.getGoal() " + curNode.m_backtrack.getGoal());
-//                  else
-//                      System.out.println("curNode.m_backtrack.getGoal() null");
-
-//                      System.out.println("backtrack.getGoal() " + backtrack.getGoal());
-//                    System.out.println("backtrack.m_nLevel " + backtrack.m_nLevel);
-
 //                    //aggiorna il backtraking
                     if(curNode.m_backtrack != null)
                     {
                         if(curNode.m_backtrack.m_nLevel < backtrack.m_nLevel)
                         {
-//                          System.out.println("A: backtrack.getGoal() " + backtrack.getGoal());
-//                          System.out.println("A: backtrack.m_nLevel " + backtrack.m_nLevel);
                             backtrack = curNode.m_backtrack;                                                //
                         }
                     }
@@ -372,10 +356,6 @@ class WAM
                 while(backtrack != curNode);
             }
 
-          //System.out.println("backtrack : " + curNode.getGoal());
-            //boolean bMore;
-            // Azzera le variabili eventualmente istanziate al livello corrente
-            // poiché in hasMoreElements viene riprovato il match
             curNode.clearVariables();
 
             if(curNode == m_rootNode)
@@ -393,11 +373,6 @@ class WAM
             }
             else if(curNode.m_ruleEnum.hasMoreElements())
             {
-              //System.out.println("no built in");
-              //System.out.println("curNode.m_ruleEnum " + curNode.m_ruleEnum);
-//              System.out.println("curNode.m_ruleEnum " + curNode.m_ruleEnum.getClass());
-//
-
                 // se la prossima regola unificante fallisce nel corpo qui non
                 // è possibile accorgersene (il risultato cioè non è deterministico)
                 // quindi hasMoreElement ritorna true
@@ -416,13 +391,12 @@ class WAM
     boolean run(Node curNode)
     {
         PrologRule  rule = null;
-        ConsCell    clause = null;
+        Clause      clause = null;
         boolean     bUnify;
         Hashtable   varTbl;
         Node        newNode = null;
         Node        parentNode;
         int         nCallCount = m_nBaseCounter;
-        //PrologRule 	parentRule;
 
         try
         {
@@ -437,15 +411,6 @@ class WAM
                 }
 
                 m_curNode = curNode;
-
-//              System.out.println("goal " + curNode.getGoal());  // dbg
-//              System.out.println("goal " + curNode.m_callList);  // dbg
-//              if(curNode.m_parent != null)
-//                  System.out.println("parent" + curNode.m_parent.getGoal());  // dbg
-//              if(curNode.m_previous != null)
-//                  System.out.println("prev " + curNode.m_previous.getGoal());  // dbg
-
-//              System.out.println("currentModule " + curNode.m_strModule);  // dbg
 
                 // genera le clausole che unificano
                 // se le clausole sono state già generate siamo in backtracking
@@ -483,10 +448,19 @@ class WAM
                     rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
                     clause = rule.m_cons;
 
-//                    System.out.println("clause " + clause);  // dbg
-                    // UNIFY
-                    // unifica la testa della clausola con il predicato corrente
-                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
+//                	System.out.println("clause " + clause.getBirthday());  // dbg
+//                	System.out.println("curnod " + curNode.m_timestamp);  // dbg
+//
+//                    if(clause.getBirthday() <= curNode.m_timestamp)
+//                    {
+	                    // UNIFY
+	                    // unifica la testa della clausola con il predicato corrente
+	                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
+//                    }
+//                    else
+//                    {
+//                    	System.out.println("clause skipped " + clause.getBirthday() + " " + curNode.m_timestamp);  // dbg
+//                    }
                 }
 
                 // verifica la presenza di almeno una clausola
@@ -554,7 +528,7 @@ class WAM
                     // BACKTRACK
 //                    notifyFail(curCall);
 
-                    //System.out.println("Fail " + curNode.getGoal());  // dbg
+                    System.out.println("Fail " + curNode.getGoal());  // dbg
                     curNode.m_ruleEnum = null;
                     curNode.clearVariables();
                     curNode = backtrack(curNode.m_previous);
@@ -668,8 +642,6 @@ class WAM
     {
         PrologObject term = curNode.getGoal();
 
-//      System.out.println("getRules " + term);
-
         // check if variable (used in metacall variable
         if (term instanceof Variable)
         {
@@ -683,8 +655,6 @@ class WAM
                 throw JIPRuntimeException.create(23, term);
             }
         }
-
-//      System.out.println(term.getClass());
 
         // check type
         if (term instanceof Atom)
@@ -706,11 +676,8 @@ class WAM
                 strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
                 term = ((ConsCell)((Functor)term).getParams().getTail()).getHead();
                 term = Functor.getFunctor(term);
-                //PrologObject head = curNode.m_callList.getHead();
-//                System.out.println("1 " + head);
+
                 curNode.m_callList.setHead(term);
-//                System.out.println("2 " + head);
-//                System.out.println("3 " + curNode.m_callList.getHead());
             }
 
             if (term instanceof BuiltInPredicate)
@@ -731,35 +698,21 @@ class WAM
             PrologObject tail = ((ConsCell)term).getTail();
 
             ConsCell callList = new ConsCell(head, null);
-//          System.out.println("HEAD " + head);
-//          System.out.println("TAIL " + tail);
 
             while(tail != null)
             {
               head = ((ConsCell)tail).getHead();
-////                System.out.println("HEAD " + head);
+
               if(head != null)
                   callList = ConsCell.append(callList, new ConsCell(head, null));
-//
+
               tail = ((ConsCell)tail).getTail();
-////                System.out.println("TAIL " + tail);
             }
 
-//          System.out.println("curNode.m_callList 1 " + curNode.m_callList);
             curNode.m_callList = ConsCell.append(callList, (ConsCell)curNode.m_callList.getTail());
-//          System.out.println("curNode.m_callList 2 " + curNode.m_callList);
-
-//          System.out.println("curNode.m_callList 1 " + curNode.m_callList);
-//          System.out.println("curNode.getGoal 1 " + curNode.m_callList);
-//          System.out.println("curNode.m_callList.getTail() 1 " + curNode.m_callList.getTail());
-//            curNode.m_callList = ConsCell.append((ConsCell)term, (ConsCell)curNode.m_callList.getTail());
-//          System.out.println("curNode.m_callList 2 " + curNode.m_callList);
 
             return getRules(curNode);
         }
-
-      //System.out.println(term);
-      //System.out.println(term.getClass());
 
         throw new JIPParameterTypeException();
     }

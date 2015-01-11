@@ -24,22 +24,22 @@ package com.ugos.jiprolog.engine;
 
 final class PrologRule
 {
-    ConsCell m_cons;   // copia dell'originale
-    ConsCell m_dbCons; // originale estratta dal db
+    Clause m_cons;   // copia dell'originale
+    Clause m_dbCons; // originale estratta dal db
     String   m_strModule;
-    
+
 //  PrologRule()
 //    {
 //
 //    }
-            
+
 //    PrologRule(final ConsCell cons, String strModule, final ConsCell dbCons)
 //    {
 //      m_cons = cons;
 //      m_dbCons = dbCons;
 //        m_strModule = strModule;
 //    }
-    
+
 //    final ConsCell getCons()
 //    {
 //        return m_cons;
