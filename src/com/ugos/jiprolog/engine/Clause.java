@@ -27,7 +27,6 @@ class Clause extends ConsCell
 {
     final static long serialVersionUID = 300000002L;
 
-    //    private String m_strFileName;
     private String  m_strModuleName;
     private boolean m_bExported = false;
     private String  m_strFileName = null;//"none";
@@ -38,12 +37,7 @@ class Clause extends ConsCell
     private static Functor s_translateQuery = null;
     private static ConsCell s_translateParams = null;
 
-
-//  Clause(Clause master)
-//    {
-//      this(master.m_strModuleName, (Functor)master.getHead(), (ConsCell)master.getTail());
-//      m_bExported = master.m_bExported;
-//    }
+    private long birthday = System.currentTimeMillis();
 
     Clause(String strModuleName, final Functor lhs, final ConsCell rhs)
     {
@@ -106,6 +100,10 @@ class Clause extends ConsCell
         return m_bExported;
     }
 
+	final long getBirthday() {
+		return birthday;
+	}
+
     public final PrologObject copy(final Hashtable<Variable, Variable> varTable)
     {
         final Clause clause = new Clause((ConsCell)super.copy(varTable), m_strModuleName);
@@ -113,7 +111,7 @@ class Clause extends ConsCell
         clause.m_strFileName = m_strFileName;
         clause.m_nLineNumber = m_nLineNumber;
         clause.m_nPosition = m_nPosition;
-
+        clause.birthday = birthday;
         return clause;
     }
 

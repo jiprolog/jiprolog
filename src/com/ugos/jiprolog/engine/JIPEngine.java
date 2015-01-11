@@ -752,7 +752,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.asserta(Clause.getClause(term.getTerm()), null, isImmediateUpdateSemantics());
+            m_globalDB.asserta(Clause.getClause(term.getTerm()), null);
         }
     }
 
@@ -785,7 +785,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.assertz(Clause.getClause(term.getTerm()), null, isImmediateUpdateSemantics());
+            m_globalDB.assertz(Clause.getClause(term.getTerm()), null);
         }
     }
 

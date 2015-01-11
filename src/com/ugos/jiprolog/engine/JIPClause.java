@@ -30,17 +30,17 @@ package com.ugos.jiprolog.engine;
 public class JIPClause extends JIPTerm
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     private JIPClause(final Functor func, final ConsCell body)
     {
         this(Clause.getClause(new Functor(":-/2", new ConsCell(func, new ConsCell(body, null)))));
     }
-    
+
     private JIPClause(final Functor func)
     {
         this(Clause.getClause(func));
     }
-        
+
     JIPClause(final Clause clause)
     {
         super(clause);
@@ -60,7 +60,7 @@ public class JIPClause extends JIPTerm
         else
             return new JIPClause((Functor)head.getTerm(), (ConsCell)body.getTerm());
     }
-    
+
     /** Creates a new JIPClause object starting from e JIPTerm object
      * @param term the JIPTerm object to trasform in a clause
      * @return new JIPClause object
@@ -71,7 +71,7 @@ public class JIPClause extends JIPTerm
     {
         return new JIPClause(Clause.getClause(term.getRealTerm()));
     }
-    
+
     /** Returns the predicate in the head of this JIPClause object
       * @return head of this JIPClause object
       * @see com.ugos.jiprolog.engine.JIPFunctor
@@ -80,7 +80,7 @@ public class JIPClause extends JIPTerm
     {
         return new JIPFunctor((Functor)((ConsCell)getTerm()).getHead());
     }
-    
+
     /** Returns the body of this JIPClause object
       * @return head of this JIPClause object
       * @see com.ugos.jiprolog.engine.JIPCons
@@ -88,11 +88,14 @@ public class JIPClause extends JIPTerm
     public final JIPCons getBody()
     {
         ConsCell body = (ConsCell)((ConsCell)getTerm()).getTail();
-        
+
         if(body != null)
             //return JIPTerm.getJIPTerm(body);
             return new JIPCons(body);
         else
             return null;
     }
+
+
+
 }
