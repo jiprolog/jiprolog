@@ -213,20 +213,13 @@ class WAM
     {
         if(m_curNode.m_parent != null)
         {
-//            System.out.println("CUT at: " + m_curNode.getGoal());
-//            System.out.println("Parent: " + m_curNode.m_parent.getGoal());
-//            System.out.println("RootNode: " + m_rootNode);
             Atom atom = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal()).getHead())).getAtom();
-//            System.out.println("Atom : " + atom);
             // se il parent è ;/2 prendo il parent del parent
-            //if(strName.equals(";/2") || strName.equals("->/2") || strName.equals("*->/2"))
             if(atom == Atom.FSEMICOLON || atom == Atom.FIF || atom == Atom.FSTARIF)
             //  see §7.8.6.1			see §7.8.7.1
             {
-//              System.out.println("Cut: ;/2 - " + m_curNode.getGoal());
-              //System.out.println("Parent: " + m_curNode.m_parent.getGoal());
-                //m_curNode.m_parent = m_curNode.m_parent.m_parent;
-/* *****************************************************
+
+            	/* *****************************************************
  	            Questa parte era stata aggiunta per cercare di trattare il transparent cut su if-then-else
  	            ma è stato un misunderstanding
 
@@ -235,15 +228,10 @@ class WAM
                 {
                     if(m_curNode.m_parent.m_previous != null)
                     {
-        //              System.out.println("Cut: " + m_curNode.getGoal());
-        //              System.out.println("Parent: " + m_curNode.m_parent.getGoal());
-                      System.out.println("Previous: " + m_curNode.m_parent.m_previous.getGoal());
-        //              System.out.println("Previous : ");
                         m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
                     }
                     else
                     {
-        //              System.out.println("No previous: " + m_curNode.getGoal());
                         m_curNode.m_backtrack = m_rootNode;
                     }
                 }
@@ -265,32 +253,18 @@ class WAM
             }
             else if(m_curNode.m_parent.m_previous != null)  // cutparent
             {
-//              System.out.println("Cut: " + m_curNode.getGoal());
-//              System.out.println("Parent: " + m_curNode.m_parent.getGoal());
-//              System.out.println("Previous: " + m_curNode.m_parent.m_previous.getGoal());
-//              System.out.println("Previous : ");
                 m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
             }
             else
             {
-//              System.out.println("No previous: " + m_curNode.getGoal());
                 m_curNode.m_backtrack = m_rootNode;
             }
-
-//            System.out.println("CUT till: " + m_curNode.m_backtrack.getGoal());
         }
         else
         {
-//           System.out.println("No previous 2: " + m_curNode.getGoal());
             // qui si entra solo se il m_curnode è startNode ed è proprio il cut (?)
             m_curNode.m_backtrack = m_rootNode;
-//              System.out.println("CUT till: Start node");
         }
-
-//        if(m_curNode.m_backtrack == null)
-//            m_curNode.m_backtrack = m_rootNode;
-
-//        System.out.println("CUT till: " + m_curNode.m_backtrack.getGoal());
     }
 
     final void scut()
@@ -299,29 +273,18 @@ class WAM
         {
             if(m_curNode.m_parent.m_previous != null)  // cutparent
             {
-//              System.out.println("Cut: " + m_curNode.getGoal());
-//              System.out.println("Parent: " + m_curNode.m_parent.getGoal());
-//              System.out.println("Previous: " + m_curNode.m_parent.m_previous.getGoal());
-//              System.out.println("Previous : ");
                 m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
             }
             else
             {
-//              System.out.println("No previous: " + m_curNode.getGoal());
                 m_curNode.m_backtrack = m_rootNode;
             }
-
-//            System.out.println("SCUT till: " + m_curNode.m_backtrack.getGoal());
         }
         else
         {
-//           System.out.println("No previous 2: " + m_curNode.getGoal());
             // qui si entra solo se il m_curnode è startNode ed è proprio il cut (?)
             m_curNode.m_backtrack = m_rootNode;
-//              System.out.println("SCUT till: Start node");
         }
-
-//        System.out.println("SCUT till: " + m_curNode.m_backtrack.getGoal());
     }
 
     Node backtrack(Node curNode)
@@ -361,13 +324,11 @@ class WAM
             if(curNode == m_rootNode)
             {
                 // non ho altro backtracking
-//              System.out.println("root node reached");
                 return null;
             }
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             {
-//              System.out.println(curNode.getGoal());
                 if(((BuiltInPredicate)curNode.getGoal()).hasMoreChoicePoints())
                     return curNode;
             }
@@ -434,7 +395,6 @@ class WAM
                         }
 
                         curNode.m_ruleEnum = s_emptyEnum;
-//                        System.out.println("empty en " + curNode.m_ruleEnum);  // dbg
                     }
                 }
 
@@ -513,10 +473,6 @@ class WAM
                         }
 
 //                        newNode.m_nLevel = m_curNode.m_nLevel + 1;
-//                        System.out.println("m_curNode.getGoal()" + m_curNode.getGoal());
-//                        System.out.println("newNode.m_nLevel " +newNode.m_nLevel);
-//                        System.out.println("newNode.getGoal() "  + newNode.getGoal());
-//                        System.out.println("newNode.m_nLevel " +newNode.m_nLevel);
                     }
 
                     curNode = newNode;
@@ -528,7 +484,7 @@ class WAM
                     // BACKTRACK
 //                    notifyFail(curCall);
 
-                    System.out.println("Fail " + curNode.getGoal());  // dbg
+//                    System.out.println("Fail " + curNode.getGoal());  // dbg
                     curNode.m_ruleEnum = null;
                     curNode.clearVariables();
                     curNode = backtrack(curNode.m_previous);
@@ -633,8 +589,6 @@ class WAM
         m_lastNode = m_curNode;
         m_curNode = null;
 
-//        notifyStop();
-
         return false;
     }
 
@@ -645,14 +599,15 @@ class WAM
         // check if variable (used in metacall variable
         if (term instanceof Variable)
         {
-            if(((Variable)term).isBounded())
+            term = ((Variable)term).getObject();
+
+            if(term != null)
             {
-                term = ((Variable)term).getObject();
                 curNode.setGoal(term);
             }
             else
             {
-                throw JIPRuntimeException.create(23, term);
+                throw JIPRuntimeException.create(23, curNode.getGoal());
             }
         }
 

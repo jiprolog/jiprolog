@@ -101,7 +101,7 @@ number_chars(_,_):-
 
 atom_number(Atom, Number):-
     atom_codes(Atom, Codes),
-    number_codes(Number, Codes).
+    catch(number_codes(Number, Codes), _, fail).
 
 atom_concat(Atom1, Atom2, Concat):-
     (atom(Atom1) ; number(Atom1)),
