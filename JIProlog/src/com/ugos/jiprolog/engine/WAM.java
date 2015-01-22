@@ -53,7 +53,6 @@ class WAM
         protected int          m_nLevel;
         protected Node         m_backtrack;
         protected Enumeration  m_ruleEnum;
-        protected long		   m_timestamp;
         protected Hashtable    m_varTbl;
 
         Node(final ConsCell callList, final Node parent, final Node previous, final String strModule)
@@ -62,7 +61,6 @@ class WAM
             m_parent    = parent;
             m_strModule = strModule;
             m_previous  = previous;
-            m_timestamp = System.currentTimeMillis();
         }
 
         final PrologObject getGoal()
@@ -407,20 +405,9 @@ class WAM
                 {
                     rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
                     clause = rule.m_cons;
-
-//                	System.out.println("clause " + clause.getBirthday());  // dbg
-//                	System.out.println("curnod " + curNode.m_timestamp);  // dbg
-//
-//                    if(clause.getBirthday() <= curNode.m_timestamp)
-//                    {
-	                    // UNIFY
-	                    // unifica la testa della clausola con il predicato corrente
-	                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
-//                    }
-//                    else
-//                    {
-//                    	System.out.println("clause skipped " + clause.getBirthday() + " " + curNode.m_timestamp);  // dbg
-//                    }
+                    // UNIFY
+                    // unifica la testa della clausola con il predicato corrente
+                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
                 }
 
                 // verifica la presenza di almeno una clausola
