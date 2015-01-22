@@ -55,7 +55,7 @@ public class JIPEngine implements Serializable
 
     public static final int major = 4;
     public static final int minor = 0;
-    public static final int build = 2;
+    public static final int build = 3;
     public static final int revision = 1;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
@@ -78,11 +78,6 @@ public class JIPEngine implements Serializable
     private GlobalDB        m_globalDB;
 
     private static JIPEngine defaultEngine;
-
-    static
-    {
-        s_globalDB = new GlobalDB();
-    }
 
     /** Returns the JIProlog version
      */
@@ -126,13 +121,16 @@ public class JIPEngine implements Serializable
     public JIPEngine()
     {
     	if(defaultEngine == null)
+    	{
     		defaultEngine = this;
+            s_globalDB = new GlobalDB(this);
+    	}
 
         m_bTrace         = false;
 
         m_prologTable    = new Hashtable<Integer, AsyncWAMManager>(10);
         m_builtInFactory = new BuiltInFactory(this);
-        m_globalDB       = s_globalDB.newInstance();
+        m_globalDB       = s_globalDB.newInstance(this);
         m_eventNotifier  = new EventNotifier(this);
         m_envVarTbl      = new Hashtable<String, Object>(10);
         m_opManager      = new OperatorManager();
@@ -595,7 +593,7 @@ public class JIPEngine implements Serializable
         closeAllQueries();
         synchronized(m_globalDB)
         {
-            m_globalDB = s_globalDB.newInstance();
+            m_globalDB = s_globalDB.newInstance(this);
             m_opManager.reset();
 
             try {

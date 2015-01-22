@@ -74,7 +74,7 @@ final class CurrentFunctor2 extends BuiltIn
             while(m_enum.hasMoreElements())
             {
                 final String strPredDef = (String)m_enum.nextElement();
-              System.out.println(strPredDef);
+//              System.out.println(strPredDef);
                 int nPos = strPredDef.lastIndexOf('/');
 
                 funcName = Atom.createAtom(strPredDef.substring(0, nPos));

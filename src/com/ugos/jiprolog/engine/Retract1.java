@@ -66,10 +66,7 @@ final class Retract1 extends BuiltIn
 		        if(db == null)
 		            return false;
 
-		        if(db instanceof DefaultClausesDatabase)
-		        	en = ((DefaultClausesDatabase)db).clausesLSU();
-		        else
-		        	en = db.clauses();
+		        en = ((DefaultClausesDatabase)db).clauses();
 	        }
 
 	        if(!en.hasMoreElements())

@@ -30,30 +30,41 @@ public class FreeVariables2 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
-        
+
+        JIPVariable vars[];
         // check if input is a variable
         if (term instanceof JIPVariable)
         {
             // try to extract the term
             if(!((JIPVariable)term).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+            	vars = new JIPVariable[1];
+            	vars[0] = (JIPVariable)term;
             }
             else
             {
                 //extracts the term
                 term = ((JIPVariable)term).getValue();
+                vars = term.getVariables();
             }
         }
-        
-        JIPVariable vars[] = term.getVariables();
-        
+        else
+        {
+        	vars = term.getVariables();
+        }
+
+        Hashtable<String, JIPVariable> vartbl = new Hashtable<String, JIPVariable>();
         JIPList varList = null;
         for(int i = 0; i < vars.length; i++)
         {
-            varList = JIPList.create(vars[i], varList);
+        	JIPVariable var = vars[i];//.getLastVariable();
+        	if(!vartbl.containsKey(var.toString()))
+        	{
+        		varList = JIPList.create(var, varList);
+        		vartbl.put(var.toString(), var);
+        	}
         }
-        
+
         if(varList == null)
         {
             varList = JIPList.NIL;
@@ -62,7 +73,7 @@ public class FreeVariables2 extends JIPXCall
         {
             varList = varList.reverse();
         }
-        
+
         return input.getNth(2).unify(varList, varsTbl);
     }
 

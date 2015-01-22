@@ -210,6 +210,16 @@ string_concat(String1, String2, Concat):-
 
 
 subsumes_term(General, Specific) :-
+	\+ \+ '$subsumes'(General, Specific).
+
+'$subsumes'(General, Specific) :-
+	term_variables(Specific, Vars1),
+	General = Specific,
+	term_variables(Vars1, Vars2),
+	Vars1 == Vars2.
+
+/*
+subsumes_term(General, Specific) :-
 	term_variables(Specific, Vars),
 	subsumes_term(General, Specific, Vars).
 
@@ -236,6 +246,7 @@ subsumes_term(N, General, Specific, Vars) :-
 	subsumes_term(GenArg, SpeArg, Vars),
 	M is N-1, !,
 	subsumes_term(M, General, Specific, Vars).
+*/
 
 var_member_chk(Var, [Head| Tail]) :-
 	(	Var == Head ->

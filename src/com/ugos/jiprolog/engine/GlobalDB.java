@@ -32,9 +32,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     // associazione tra predicati e file
     private Hashtable<String, String> m_pred2FileMap;
-
     private Hashtable m_moduleTransparentTbl;
-
     private Hashtable<String, String> m_exportedTable;
 
     static final String SYSTEM_MODULE = "$system";
@@ -43,27 +41,32 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     boolean m_bCheckDisabled = false;
 
+    private JIPEngine jipEngine;
+
     private GlobalDB(GlobalDB gdb)
     {
         m_clauseTable            = (Hashtable<String, JIPClausesDatabase>)gdb.m_clauseTable.clone();
         m_pred2FileMap           = (Hashtable)gdb.m_pred2FileMap.clone();
         m_moduleTransparentTbl   = (Hashtable)gdb.m_moduleTransparentTbl.clone();
         m_exportedTable 		 = (Hashtable)gdb.m_exportedTable.clone();
+        jipEngine 				 = gdb.jipEngine;
+
     }
 
-    public final GlobalDB newInstance()
+    public final GlobalDB newInstance(JIPEngine engine)
     {
-        return new GlobalDB(this);
+    	GlobalDB gdb = new GlobalDB(this);
+        gdb.jipEngine = engine;
+        return gdb;
     }
 
-    //#endif
-
-    public GlobalDB()
+    public GlobalDB(JIPEngine engine)
     {
         m_clauseTable            = new Hashtable<String, JIPClausesDatabase>(100);
         m_pred2FileMap           = new Hashtable<String, String>(100);
         m_moduleTransparentTbl   = new Hashtable(100);
         m_exportedTable 		 = new Hashtable<String, String>();
+        jipEngine				 = engine;
 
         loadKernel(this);
     }
@@ -97,6 +100,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             final String strName = strPredName.substring(0, nPos);
             final int nArity = Integer.parseInt(strPredName.substring(nPos + 1));
             db = new DefaultClausesDatabase(strName, nArity);
+            db.setJIPEngine(jipEngine);
+
             //db = new DefaultClausesDatabase();
             // Aggiunge il vettore alla tabella
             m_clauseTable.put(strDef, db);
@@ -173,7 +178,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             final String strName = strPredName.substring(0, nPos);
             final int nArity = Integer.parseInt(strPredName.substring(nPos + 1));
             db = new DefaultClausesDatabase(strName, nArity);
-            //db = new DefaultClausesDatabase();
+            db.setJIPEngine(jipEngine);
             // Aggiunge il vettore alla tabella
             m_clauseTable.put(strDef, db);
         }
@@ -208,7 +213,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             final String strName = strPredName.substring(0, nPos);
             final int nArity = Integer.parseInt(strPredName.substring(nPos + 1));
             db = new DefaultClausesDatabase(strName, nArity);
-            //db = new DefaultClausesDatabase();
+            db.setJIPEngine(jipEngine);
             // Aggiunge il vettore alla tabella
             m_clauseTable.put(strDef, db);
         }
@@ -456,6 +461,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 //            System.out.println("new database: " + strFunctName);
             // Crea un nuovo database
             db = new DefaultClausesDatabase(((Functor)head).getFriendlyName(), ((Functor)head).getArity());
+            db.setJIPEngine(jipEngine);
 
             // Aggiunge il predicato
             if(!db.addClause(new JIPClause(clause)))

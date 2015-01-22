@@ -65,6 +65,14 @@ public class JIPVariable extends JIPTerm
             return null;
     }
 
+//    /** It returns the last JIPVariable in the bounding hierarchy.
+//     * @see com.ugos.jiprolog.engine.JIPVariable
+//     */
+//    public JIPVariable getLastVariable()
+//    {
+//    	return (JIPVariable)JIPTerm.getJIPTerm(((Variable)getTerm()).getLastVariable());
+//    }
+
     /** Returns the name of the variable
      */
     public final String getName()
