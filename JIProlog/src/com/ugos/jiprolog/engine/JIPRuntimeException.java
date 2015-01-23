@@ -296,6 +296,7 @@ public class JIPRuntimeException extends RuntimeException
         s_errorTable.put(new Integer(27), "Directive fails while compiling the file: %1");
         s_errorTable.put(new Integer(28), "The file to load may be corrupted: %1");
         s_errorTable.put(new Integer(29), "Unexpected call");
+        s_errorTable.put(new Integer(30), "Attempt to assert a static predicate: %1");
         /*        s_errorTable.put(new Integer(30), "The dialog specified as JIPDialog isn't modal: %1");
         s_errorTable.put(new Integer(31), "The JIPDialog class specified is not found:  %1");
         s_errorTable.put(new Integer(32), "The JIPDialog class does not implement JIPDialog interface correctly:  %1");

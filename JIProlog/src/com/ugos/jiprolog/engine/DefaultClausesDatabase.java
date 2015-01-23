@@ -60,32 +60,9 @@ final class DefaultClausesDatabase extends JIPClausesDatabase
 
     public final synchronized Enumeration clauses()
     {
-    	if(getJIPEngine().isImmediateUpdateSemantics())
+    	if(!isDynamic() || getJIPEngine().isImmediateUpdateSemantics())
     		return m_clausesVector.elements();
     	else
-    		return clausesLSU();
-    }
-
-    private final synchronized Enumeration clausesLSU()
-    {
-    	return ((Vector<Clause>)m_clausesVector.clone()).elements();
-
-//    	return new Enumeration<Clause>()
-//    	{
-//            int count = 0;
-//
-//            public boolean hasMoreElements() {
-//                return count < clausesVector.size();
-//            }
-//
-//            public Clause nextElement() {
-//                synchronized (clausesVector) {
-//                    if (count < clausesVector.size()) {
-//                        return clausesVector.elementAt(count++);
-//                    }
-//                }
-//                throw new NoSuchElementException("Vector Enumeration");
-//            }
-//        };
+        	return ((Vector<Clause>)m_clausesVector.clone()).elements();
     }
 }
