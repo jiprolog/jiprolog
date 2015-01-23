@@ -347,7 +347,7 @@ class Consult1 extends BuiltIn
                 }
 
 //                  System.out.println("ASSERT: " + clause);  //DBG
-                engine.getGlobalDB().assertz(clause, strPath);
+                engine.getGlobalDB().assertz(clause, strPath, false);
             }
         }
         catch(ClassCastException ex)

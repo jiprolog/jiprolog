@@ -271,15 +271,15 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             return null;
     }
 
-    final void assertz(final Clause clause, String strFile)
+    final void assertz(final Clause clause, String strFile, boolean dynamic)
     {
-   		addPredicate((Clause)fixTerm(clause.copy()), false, strFile);
+   		addPredicate((Clause)fixTerm(clause.copy()), false, strFile, dynamic);
 //   		addPredicate((Clause)fixTerm(clause), false, strFile);
     }
 
-    final void asserta(final Clause clause, String strFile)
+    final void asserta(final Clause clause, String strFile, boolean dynamic)
     {
-    	addPredicate((Clause)fixTerm(clause.copy()), true, strFile);
+    	addPredicate((Clause)fixTerm(clause.copy()), true, strFile, dynamic);
 //        addPredicate((Clause)fixTerm(clause), true, strFile);
     }
 
@@ -396,11 +396,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     }
 
     // called by assert
-    private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile)
+    private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile, boolean dynamic)
     {
         if(!m_bCheckDisabled && isSystem((Functor)clause.getHead()))
             throw JIPRuntimeException.create(15, ((Functor)clause.getHead()).getName());
-
 
         // Estrae il nome del funtore
         PrologObject head = clause.getHead();
@@ -443,6 +442,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             // Estrae il database
             db = (JIPClausesDatabase)(m_clauseTable.get(strFunctName));
 
+            if(dynamic && !db.isDynamic())
+            {
+            	throw JIPRuntimeException.create(30, ((Functor)clause.getHead()).getName());
+            }
+
             if(bFirst)
             {
                 // Aggiunge il predicato
@@ -463,6 +467,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             db = new DefaultClausesDatabase(((Functor)head).getFriendlyName(), ((Functor)head).getArity());
             db.setJIPEngine(jipEngine);
 
+            if(dynamic)
+            	db.setDynamic();
+
             // Aggiunge il predicato
             if(!db.addClause(new JIPClause(clause)))
                 throw JIPRuntimeException.create(10, clause);
@@ -480,6 +487,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final synchronized void addClausesDatabase(final JIPClausesDatabase db, final String strModuleName, final String strFuncName)
     {
+    	db.setDynamic();
+
         // qui va inserita con modulo user
         m_clauseTable.put(strModuleName + ":" + strFuncName, db);
     }
@@ -527,7 +536,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	            while ((term = parser.parseNext()) != null)
 	            {
 	                //System.out.println(term);
-	                gdb.assertz(Clause.getClause(term), "__KERNEL__");
+	                gdb.assertz(Clause.getClause(term), "__KERNEL__", false);
 	            }
 
 	            ins.close();
@@ -545,7 +554,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 		         for(PrologObject term : program)
 		         {
 		             //System.out.println(term);
-		             gdb.assertz(Clause.getClause(term), "__KERNEL__");
+		             gdb.assertz(Clause.getClause(term), "__KERNEL__", false);
 		         }
         	}
 

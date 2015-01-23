@@ -55,7 +55,7 @@ public class JIPEngine implements Serializable
 
     public static final int major = 4;
     public static final int minor = 0;
-    public static final int build = 3;
+    public static final int build = 4;
     public static final int revision = 1;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
@@ -750,7 +750,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.asserta(Clause.getClause(term.getTerm()), null);
+            m_globalDB.asserta(Clause.getClause(term.getTerm()), null, true);
         }
     }
 
@@ -783,7 +783,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.assertz(Clause.getClause(term.getTerm()), null);
+            m_globalDB.assertz(Clause.getClause(term.getTerm()), null, true);
         }
     }
 

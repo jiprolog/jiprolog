@@ -27,42 +27,21 @@ import java.util.*;
 
 public class FreeVariables2 extends JIPXCall
 {
+	 Hashtable<String, JIPVariable> vartbl = new Hashtable<String, JIPVariable>();
+
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
 
-        JIPVariable vars[];
-        // check if input is a variable
-        if (term instanceof JIPVariable)
-        {
-            // try to extract the term
-            if(!((JIPVariable)term).isBounded())
-            {
-            	vars = new JIPVariable[1];
-            	vars[0] = (JIPVariable)term;
-            }
-            else
-            {
-                //extracts the term
-                term = ((JIPVariable)term).getValue();
-                vars = term.getVariables();
-            }
-        }
-        else
-        {
-        	vars = term.getVariables();
-        }
+        Vector<JIPVariable> varsVect = new Vector<JIPVariable>();
 
-        Hashtable<String, JIPVariable> vartbl = new Hashtable<String, JIPVariable>();
+        addVariables(term, varsVect);
+
         JIPList varList = null;
-        for(int i = 0; i < vars.length; i++)
+        for(int i = 0; i < varsVect.size(); i++)
         {
-        	JIPVariable var = vars[i];//.getLastVariable();
-        	if(!vartbl.containsKey(var.toString()))
-        	{
-        		varList = JIPList.create(var, varList);
-        		vartbl.put(var.toString(), var);
-        	}
+        	JIPVariable var = varsVect.elementAt(i);//.getLastVariable();
+    		varList = JIPList.create(var, varList);
         }
 
         if(varList == null)
@@ -80,6 +59,28 @@ public class FreeVariables2 extends JIPXCall
     public boolean hasMoreChoicePoints()
     {
         return false;
+    }
+
+    private void addVariables(JIPTerm term, Vector<JIPVariable> varsVect)
+    {
+    	JIPVariable vars[] = term.getVariables();
+
+        for(int i = 0; i < vars.length; i++)
+        {
+        	JIPVariable var = vars[i];//.getLastVariable();
+        	if(var.isBounded())
+        	{
+        		addVariables(var.getValue(), varsVect);
+        	}
+        	else
+        	{
+        		if(!vartbl.containsKey(var.toString()))
+            	{
+        			varsVect.addElement(var);
+            		vartbl.put(var.toString(), var);
+            	}
+        	}
+        }
     }
 }
 

@@ -35,7 +35,7 @@ class Assert1 extends BuiltIn
         if(clause.getModuleName().equals(GlobalDB.SYSTEM_MODULE))
             clause.setModuleName(GlobalDB.USER_MODULE);
 
-    	getJIPEngine().getGlobalDB().assertz(clause, null);
+    	getJIPEngine().getGlobalDB().assertz(clause, null, true);
 
         return true;
     }
