@@ -1,5 +1,19 @@
 JIProlog Release Notes
 ------------------------------
+v4.0.1.5
+Fix to predicate_property/1 and predicate_properties/1
+
+v4.0.1.4
+Fix to current_predicate/1
+
+v4.0.1.3
+Package renamed in lowercase (jiprolog)
+Added several new ISO Prolog predicates
+Bug Fixes in:
+- xReflection packages
+- xIO
+- xTerm
+
 v3.1.1.2
 Fix in JIProlog IDE
 
