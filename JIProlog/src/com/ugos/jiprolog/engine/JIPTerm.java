@@ -151,7 +151,7 @@ public class JIPTerm extends Object implements Clearable
     {
         JIPVariable[] vars;
 
-        if(m_obj instanceof Atom)
+        if(m_obj instanceof Atom || m_obj instanceof Expression || m_obj instanceof PString)
         {
             vars = new JIPVariable[0] ;
         }

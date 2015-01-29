@@ -25,7 +25,7 @@
                       concat_atom/2, concat_atom/3, upcase/1, downcase/1,
                       upcase_char/2, upcase_chars/2, downcase_char/1, downcase_chars/2,
                       upcase_atom/2, downcase_atom/2, string_to_atom/2, string_to_list/2,
-                      string_length/2, string_concat/3, vars/2, sub_atom/5, subsumes_term/2]).
+                      string_length/2, string_concat/3, vars/2, sub_atom/5, subsumes_term/2, unify_with_occurs_check/2]).
 
 :-'$custom_built_in'([numbervars/3, free_variables/2, term_variables/2, copy_term/2, name/2,
                       char_code/2, atom_codes/2, atom_chars/2, number_codes/2,
@@ -33,7 +33,7 @@
                       concat_atom/2, concat_atom/3, upcase/1, downcase/1,
                       upcase_char/2, upcase_chars/2, downcase_char/1, downcase_chars/2,
                       upcase_atom/2, downcase_atom/2, string_to_atom/2, string_to_list/2,
-                      string_length/2, string_concat/3, vars/2, sub_atom/5, subsumes_term/2]).
+                      string_length/2, string_concat/3, vars/2, sub_atom/5, subsumes_term/2, unify_with_occurs_check/2]).
 
 :-assert(ver(jipxterms, '4.0.1')).
 
@@ -253,6 +253,9 @@ var_member_chk(Var, [Head| Tail]) :-
 		true
 	;	var_member_chk(Var, Tail)
 	).
+
+unify_with_occurs_check(Term, Term) :-
+	acyclic_term(Term).
 
 
 %*************************************

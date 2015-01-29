@@ -43,8 +43,8 @@ import com.ugos.jiprolog.engine.JIPTerm;
  */
 public class JIProlog
 {
-    private static final String VERSION = "2.2";
-    
+    private static final String VERSION = "3.1";
+
     /** Entry point of the stand alone prolog interpreter
      * @param args the first element of the array must be the file to consult.<br>
      * Note that such a file must define main/0 predicate.
@@ -54,29 +54,29 @@ public class JIProlog
         System.out.println("*************************************************");
         System.out.println("** JIProlog Standalone Interpreter v" + VERSION);
         System.out.println("** Based on JIProlog v" + JIPEngine.getVersion());
-        System.out.println("** Copyright (C) 1999-2007 By Ugo Chirico. All rights reserved");
-        System.out.println("** http://www.ugochirico.com");
+        System.out.println("** " + JIPEngine.getCopyrightInfo());
+        System.out.println("** http://www.jiprolog.com");
         System.out.println("*************************************************");
-            
+
         if(args.length < 1)
         {
             showMessage("JIProlog Standalone Interpreter requires a Prolog file to run");
             System.exit(0);
         }
-        
+
         // New instance of prolog engine
         final JIPEngine jip = new JIPEngine();
-        
-        System.out.println(jip.getSearchPath());
-        
+
+//        System.out.println(jip.getSearchPath());
+
         // load autoload file
         String strKey;
         String strValue = null;
         try
         {
-            InputStream ins;    
+            InputStream ins;
             ins = new FileInputStream("jipautoload.ini");
-            
+
             Properties props = new Properties();
             props.load(ins);
             Enumeration en = props.keys();
@@ -116,7 +116,7 @@ public class JIProlog
                     //ex.printStackTrace();
                 }
             }
-            
+
             ins.close();
         }
         catch(FileNotFoundException ex)
@@ -130,16 +130,18 @@ public class JIProlog
 
         try
         {
+        	System.out.println("Consulting file " + args[0]);
+
             jip.consultFile(args[0]);
-            
-            JIPQuery query = jip.openSynchronousQuery("?-main.");
-            JIPTerm term = query.nextSolution();
-            if(term == null)
-            {
-                showMessage("The predicate main/0 wasn't found in the Prolog file specified");
-                System.exit(0);
-            }
-            
+
+//            JIPQuery query = jip.openSynchronousQuery("?-main.");
+//            JIPTerm term = query.nextSolution();
+//            if(term == null)
+//            {
+//                showMessage("The predicate main/0 wasn't found in the Prolog file specified");
+//                System.exit(0);
+//            }
+
             System.out.println("***************************************************");
             System.out.println("** Thanks for using JIProlog                     **");
             System.out.println("***************************************************");
@@ -156,42 +158,13 @@ public class JIProlog
         {
             showMessage(ex.getMessage());
         }
-                        
+
         System.exit(0);
     }
-    
-//    private static void showMessage(String strMsg)
-//    {
-//        System.out.println("\n" + strMsg);
-//        System.out.println("Press any key");
-//        try
-//        {
-//            System.in.read();
-//        }
-//        catch(IOException ex)
-//        {
-//        }
-//    }
 
     private static void showMessage(String strMsg)
     {
     	System.out.println(strMsg);
-    	
-        //TextMessageDialog dialog = new TextMessageDialog(new Frame(), "JIProlog Standalone Interpreter", strMsg);
-//        dialog.add(new Label(strMsg, Label.CENTER));
-        //dialog.setSize(400, 80);
-
-//        // Centra la dialog
-//        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-//
-//        int nChar = strMsg.length();
-//        int nWidth = nChar * TextMessageDialog.CHAR_WEIGHT;
-//
-//        int nTop  = (d.height - 80) / 2;
-//        int nLeft = (d.width  - 400)  / 2;
-//
-//        dialog.setBounds(nLeft, nTop, nWidth, 80);
-       // dialog.show();
     }
 }
 

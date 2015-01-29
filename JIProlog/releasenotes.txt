@@ -1,5 +1,15 @@
 JIProlog Release Notes
 ------------------------------
+v4.0.4.4
+Fix to JIPTerm.getVariables() that raised an exception on Expression and PString
+
+v4.0.4.3
+Fix to curly-bracked terms like {a},
+Fix to ** operator
+Fix to standard ordering of term atom < compound
+Added missing unify_with_occurs_check/2
+
+
 v4.0.4.2
 Fix to current_input/1, current_output/1, compile/1
 
