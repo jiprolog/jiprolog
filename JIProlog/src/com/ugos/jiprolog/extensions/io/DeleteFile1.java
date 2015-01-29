@@ -29,7 +29,7 @@ public class DeleteFile1 extends JIPXCall
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -44,7 +44,7 @@ public class DeleteFile1 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is a Number
         if(input instanceof JIPAtom)
         {
@@ -58,18 +58,19 @@ public class DeleteFile1 extends JIPXCall
 
             if(!ffile.exists())
                 throw new JIPRuntimeException(6, strPath);
-            
-            if(!ffile.delete())
-                throw new JIPRuntimeException(JIPio.ERR_FILE_NOT_DELETED, JIPio.STR_FILE_NOT_DELETED);
+
+            ffile.delete();
+//            if(!ffile.delete())
+//                throw new JIPRuntimeException(JIPio.ERR_FILE_NOT_DELETED, JIPio.STR_FILE_NOT_DELETED);
         }
         else
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
         }
-        
+
         return true;
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

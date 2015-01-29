@@ -313,7 +313,7 @@ public final class JIPio
     {
         if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
-            throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+            return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
         InputStreamInfo sinfo = getInput(strHandle);
@@ -328,7 +328,7 @@ public final class JIPio
     {
     	if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
-            throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+            return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
         OutputStreamInfo sinfo = getOutput(strHandle);
