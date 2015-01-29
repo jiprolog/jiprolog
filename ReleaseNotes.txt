@@ -1,5 +1,21 @@
 JIProlog Release Notes
 ------------------------------
+v4.0.4.2
+Fix to current_input/1, current_output/1, compile/1
+
+v4.0.4.1
+Fix to term_variables/2
+Fix to static predicates treated as dynamic
+Optimization for Logical Semantic Update
+
+v4.0.3.2
+Fix to Logical Update Semantics
+Fix to term_variables/2
+
+v4.0.2.2
+Fix on assert/1, asserta/1, assertz/1 when Logical Update Semantics is set
+fix to set_input/1, set_output/1 seen/1 and tell/1
+
 v4.0.1.5
 Fix to predicate_property/1 and predicate_properties/1
 

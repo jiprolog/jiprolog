@@ -20,19 +20,19 @@
 
 package com.ugos.jiprolog.extensions.exception;
 
-import com.ugos.jiprolog.engine.*;
+import java.util.Hashtable;
 
-import java.io.*;
-import java.util.*;
+import com.ugos.jiprolog.engine.JIPCons;
+import com.ugos.jiprolog.engine.JIPVariable;
+import com.ugos.jiprolog.engine.JIPXCall;
 
 public class JIPThrow1 extends JIPXCall
 {
-    public final boolean unify(final JIPCons params, Hashtable varsTbl)
+    public final boolean unify(final JIPCons params, Hashtable<JIPVariable, JIPVariable> varsTbl)
     {
         throw new JIPUserException(params.getNth(1));
-            //JIPRuntimeException(3000, "User Exception", params.getNth(1));
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;

@@ -670,7 +670,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             }
             else
             {
-                return ((Variable)term).getLastVariable();
+                return ((Variable)term).lastVariable();
             }
         }
 

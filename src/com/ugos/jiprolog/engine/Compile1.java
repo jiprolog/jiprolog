@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
+//import com.ugos.util.MapperHolder;
+
 final class Compile1 extends Consult1
 {
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
@@ -97,10 +99,15 @@ final class Compile1 extends Consult1
 
             ins.close();
 
+            engine.setCurrentInputStream(ins, strOldInputStreamName);
+
             final int nPos = strFileName[0].lastIndexOf('.');
             strPath = strFileName[0].substring(0, nPos) + ".jip";
 
             final File outf = new File(strPath);
+
+//            MapperHolder.mapper().writeValue(outf, program);
+
             final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
             out.writeObject(program);
             out.close();

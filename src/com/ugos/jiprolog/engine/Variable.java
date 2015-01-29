@@ -58,7 +58,7 @@ final class Variable extends PrologObject//Serializable
         return object;
     }
 
-    public final Variable getLastVariable()
+    public final Variable lastVariable()
     {
         Variable var = this;
         PrologObject obj = m_object;
@@ -78,12 +78,12 @@ final class Variable extends PrologObject//Serializable
 
     public final int getAddress()
     {
-        return getLastVariable().hashCode();//m_nAddress;
+        return lastVariable().hashCode();//m_nAddress;
     }
 
     public final PrologObject copy(final Hashtable varTable)
     {
-        final Variable var = getLastVariable();
+        final Variable var = lastVariable();
         if(varTable.containsKey(var))
         {
             return (Variable)(varTable.get(var));
@@ -126,7 +126,7 @@ final class Variable extends PrologObject//Serializable
         }
 
         // per ottimizzazione
-        final Variable var = getLastVariable();
+        final Variable var = lastVariable();
 
         if(obj == var)
         {
@@ -149,7 +149,7 @@ final class Variable extends PrologObject//Serializable
                 // Bound to obj
                 if(obj instanceof Variable)
                 {
-                    Variable objVar = ((Variable)obj).getLastVariable();
+                    Variable objVar = ((Variable)obj).lastVariable();
 
 //                    System.out.println("*** lastVar: " + var + " - " + objVar);
 

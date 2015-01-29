@@ -23,6 +23,8 @@ package com.ugos.jiprolog.engine;
 import java.io.*;
 import java.util.*;
 
+//import com.ugos.util.MapperHolder;
+
 class Load1 extends Consult1
 {
     public final boolean unify(final Hashtable varsTbl)
@@ -79,9 +81,12 @@ class Load1 extends Consult1
     {
         try
         {
+//        	JSON Serialization
+//        	ArrayList<PrologObject> program = new ArrayList<PrologObject>();
+//        	MapperHolder.mapper().readerForUpdating(program).readValue(ins);
+
             final ObjectInputStream oins = new ObjectInputStream(ins);
             ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
-//            List predList = (List)oins.readObject();
             oins.close();
 
             //System.out.println("load + " + predList.toString(engine));
@@ -121,25 +126,14 @@ class Load1 extends Consult1
 
             throw JIPRuntimeException.create(9, strStramName);
         }
-        catch(ClassNotFoundException ex)
+        finally
         {
-            try
+        	try
             {
                 ins.close();
             }
             catch(IOException ex1){}
 
-            throw ex;
-        }
-        catch(IOException ex)
-        {
-            try
-            {
-                ins.close();
-            }
-            catch(IOException ex1){}
-
-            throw ex;
         }
     }
 }
