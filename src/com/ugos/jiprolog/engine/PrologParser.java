@@ -535,9 +535,9 @@ final class PrologParser
                                     //throw syntaxError(lastObj, tok.m_strToken);
 
                                 PrologObject term = translateTerm(STATE_SPECIAL_BRACKET, lnReader);
-                                if(term instanceof Functor)
-                                    termStack.push(new Functor("{/1", new ConsCell(term, null)));
-                                else
+//                                if(term instanceof Functor)
+//                                    termStack.push(new Functor("{/1", new ConsCell(term, null)));
+//                                else
                                     termStack.push(term);
                             }
                             else if(tok.m_strToken.equals("}"))
@@ -559,7 +559,7 @@ final class PrologParser
                                     }
                                     else
                                     {
-	                                    termStack.push(new Functor("}/1", new ConsCell(term, null)));
+	                                    termStack.push(new Functor("{}/1", new ConsCell(term, null)));
                                     }
                                     bEnd = true;
                                     nState = STATE_NONE;

@@ -26,20 +26,20 @@ import java.util.Hashtable;
 final class OperatorManager
 {
     private final Hashtable m_opTable = new Hashtable(120);
-    
+
     public OperatorManager()
     {
         reset();
     }
-    
+
     public final void reset()
     {
         m_opTable.clear();
-        
+
 //      gli opeatori definiti in jipkernel.txt
         // devono essere definiti qui.
         // il motivo mi sfugge!!!
-        
+
         put(1200, "fx", ":-");
         put(1200, "fx", "?-");
         put(1200, "xfx", ":-");
@@ -80,40 +80,40 @@ final class OperatorManager
         put(400, "yfx", "/");
         put(400, "yfx", "//");
         put(200, "xfy", "^");
-        put(200, "xfy", "**");
-        
+        put(200, "xfx", "**");
+
         put(500, "yfx", "/\\");
         put(500, "yfx", "\\/");
         put(500, "fx", "\\");
-        
+
         put(400, "yfx", "<<");
         put(400, "yfx", ">>");
         put(400, "yfx", "xor");
-        
+
         put(300, "xfx", "mod");
         put(300, "xfx", "rem");
-        
+
         put(1150, "fx",  "multifile");
         put(1150, "fx",  "module_transparent");
         put(1150, "fx", "dynamic");
-        
+
         //put(400, "fx", "cd");
-        
-        
+
+
 //      put(400, "xfx", "class");
 //      put(400, "fx",  "class");
 //      put(450, "xfx", "checks");
 //      put(450, "yfx", "body");
 //      put(150, "yfx", "-&-");
 //      put(100, "yfx", "=>");
-        
+
         /*   prova
          put(1000, "yfx", "$$");
          put(800, "yfx", "$>$");
          put(800, "xfy", "$#$");
          put(800, "xfy", "$<$");
          put(800, "xfx", "@@");
-         
+
          put(600, "fx", "$");
          put(600, "xf", "#");
          put(600, "yf", "@");
@@ -125,7 +125,7 @@ final class OperatorManager
         if(m_opTable.containsKey(strName))
         {
             Operator op = (Operator)m_opTable.get(strName);
-            
+
             if((op.isBinary() && newOp.isUnary()) || (op.isUnary() && newOp.isBinary()))
             {
                 // sta aggiungendo il supOP
@@ -148,19 +148,19 @@ final class OperatorManager
 	//        System.out.println(o);
         }
     }
-    
+
     public final Operator get(final String strName)
     {
         return (Operator)m_opTable.get(strName);
     }
-    
+
     public final void remove(final String strAssoc, final String strName)
     {
         //System.out.println("remove op:" + strName + " " + strAssoc);
         if(m_opTable.containsKey(strName))
         {
             Operator op = (Operator)m_opTable.get(strName);
-          
+
             if(op.getAssoc().equals(strAssoc))
             {
                 //System.out.println("coincide");
@@ -192,12 +192,12 @@ final class OperatorManager
             }
         }
     }
-    
+
     public final boolean contains(final String strName)
     {
         return m_opTable.containsKey(strName);
     }
-    
+
     public final Enumeration getOperators()
     {
         return m_opTable.elements();

@@ -14,7 +14,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<!-- Main project -->
 		<property name="project.name" value="JIProlog 4.0" />
 		<property name="project.root" value="c:/progetti/Applicazioni/JIProlog/" />
-		<property name="project.version" value="4.0.4.2" />
+		<property name="project.version" value="4.0.4.4" />
 		<property name="project.deploy.dir" value="${project.root}/Deploy" />
 		<property name="project.src" value="src" />
 		<property name="project.bin" value="bin" />
@@ -49,7 +49,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 
 	</target>
 
-	<target name="jar-it" depends="init" description="Jar the project.">
+	<target name="jar-it" depends="CompileLibraries" description="Jar the project.">
 		<jar jarfile="${project.jiprolog.root}/${project.jiprolog.ijar}" basedir="${project.jiprolog.lib}" />
 		<jar jarfile="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" basedir="${project.jiprolog.jipgui.lib}" />
 		<jar jarfile="${project.jiprolog.jipjextplugin.root}/${project.jiprolog.jipjextplugin.jar}" basedir="${project.jiprolog.jipjextplugin.lib}" />
@@ -59,9 +59,10 @@ Simple script to jar, obfuscate and run a project 3.0.
 			<jar jarfile="${project.jiprolog.root}/${project.jiprolog.jar}" basedir="${project.jiprolog.lib}" />
 	</target>
 
-	<target name="deploy" depends="Proguard" description="Deploy">
+	<target name="deploy" depends="create_run_jar" description="Deploy">
 
 		<!-- jiprolog package -->
+		<copy todir="${project.root}/JIProlog/deploy/JIProlog/sdk/lib/" file="${project.jiprolog.jar}"/>
 		<copy todir="${project.deploy.dir}/JIPConsole/bin/" file="${project.jiprolog.jar}"/>
 		<copy todir="${project.deploy.dir}/JIPrologSDK/bin/" file="${project.jiprolog.jar}"/>
 		<copy todir="${project.jext}/bin/plugins/" file="${project.jiprolog.jar}"/>
@@ -75,9 +76,10 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<copy todir="${project.jext}/bin/plugins/" file="${project.jiprolog.jipjextplugin.root}/${project.jiprolog.jipjextplugin.jar}"/>
 
 		<!-- rel notes-->
-		<copy todir="${project.deploy.dir}/JIPConsole/" file="${project.root}/JIProlog/ReleaseNotes.txt"/>
-		<copy todir="${project.deploy.dir}/JIPrologSDK/" file="${project.root}/JIProlog/ReleaseNotes.txt"/>
-		<copy todir="${project.jext}" file="${project.root}/JIProlog/ReleaseNotes.txt"/>
+		<copy todir="${project.root}/JIProlog/deploy/JIProlog/" file="${project.root}/JIProlog/releasenotes.txt"/>
+		<copy todir="${project.deploy.dir}/JIPConsole/" file="${project.root}/JIProlog/releasenotes.txt"/>
+		<copy todir="${project.deploy.dir}/JIPrologSDK/" file="${project.root}/JIProlog/releasenotes.txt"/>
+		<copy todir="${project.jext}" file="${project.root}/JIProlog/releasenotes.txt"/>
 
 	</target>
 
@@ -91,12 +93,34 @@ Simple script to jar, obfuscate and run a project 3.0.
 		</java>
 	</target>
 
+	<target name="CompileLibraries" depends="init" description="Compile Prolog Libraries." >
+		<java classname="com.ugos.jiprolog.JIProlog" fork="true" dir="${project.root}/JIProlog">
+			<classpath>
+				<pathelement path="${project.root}/JIProlog/lib" />
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+			<arg value="compile.pl"/>
+		</java>
+	</target>
+
+	<target name="create_run_jar" depends="Proguard">
+	        <jar destfile="${project.root}/JIProlog/deploy/JIProlog/jipconsole.jar" filesetmanifest="mergewithoutmain">
+	            <manifest>
+	                <attribute name="Main-Class" value="com.ugos.jiprolog.gui.JIPConsole"/>
+	                <attribute name="Class-Path" value="."/>
+	            </manifest>
+	            <fileset dir="${project.root}/JIPgui/lib"/>
+	            <zipfileset excludes="META-INF/*.SF" src="C:/Progetti/Applicazioni/JIProlog/JIPgui/sqlite-jdbc-3.7.2.jar"/>
+	            <fileset dir="${project.root}/JIProlog/lib"/>
+	        </jar>
+	    </target>
+
 	<target name="JIP IDE" depends="deploy" description="Executes Full JIP IDE.">
 		<exec command="${project.jext}/bin/jext.exe" dir="${project.jext}"/>
 	</target>
 
     <target name="javadoc">
-        <javadoc destdir="..\Deploy\JIPrologSDK\doc/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.jiprolog.engine" sourcefiles="src/com/ugos/jiprolog/JIProlog.java" sourcepath="src" classpath="lib" doctitle="JIProlog API"/>
+        <javadoc destdir="deploy/JIProlog/sdk/javadoc" access="public" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="true" version="true" nodeprecatedlist="false" nodeprecated="false" packagenames="com.ugos.jiprolog.engine" sourcefiles="src/com/ugos/jiprolog/JIProlog.java" sourcepath="src" classpath="lib" doctitle="JIProlog API"/>
     </target>
 
 	<target name="Proguard" depends="jar-it" description="Proguard">

@@ -26,17 +26,17 @@ import java.util.Hashtable;
 final class Atom extends PrologObject //implements Serializable
 {
     final static long serialVersionUID = 300000001L;
-    
+
     static final Hashtable<String, Atom> s_atomTable = new Hashtable<String, Atom>(100);
-    
+
     final static Atom FSEMICOLON = Atom.createAtom(";/2");
     final static Atom FIF        = Atom.createAtom("->/2");
     final static Atom FSTARIF    = Atom.createAtom("*->/2");
     final static Atom FCOLON     = Atom.createAtom(":/2");
-    
+
     private String m_strAtom;
     private int m_nHashValue;
-    
+
     public static final Atom createAtom(final String strAtom)
     {
         if (s_atomTable.containsKey(strAtom))
@@ -44,14 +44,14 @@ final class Atom extends PrologObject //implements Serializable
 //          System.out.println("***** found ******");
             return s_atomTable.get(strAtom);
         }
-            
+
 //      System.out.println("***** not found ******");
         Atom atom = new Atom(strAtom);
         s_atomTable.put(strAtom, atom);
-        
+
         return atom;
     }
-    
+
     public static final int atoms()
     {
         return s_atomTable.size();
@@ -76,7 +76,7 @@ final class Atom extends PrologObject //implements Serializable
     {
         return this;
     }
-    
+
     public final boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
     {
         if (obj instanceof Atom)
@@ -107,22 +107,22 @@ final class Atom extends PrologObject //implements Serializable
     {
         // Do nothing
     }
-    
+
     public final String getName()
     {
         return m_strAtom;
     }
 
+//    variable precedes floating point precedes integer precedes atom precedes compound.
     protected final boolean lessThen(final PrologObject obj)
     {
         if(obj instanceof Atom)
             return m_strAtom.compareTo( ((Atom)obj).m_strAtom) < 0;
-        else if(obj instanceof Expression)
-            return false;
-        else if(obj instanceof Variable)
-            if(((Variable)obj).isBounded())
-                return lessThen(((Variable)obj).getObject());
-            
+        else if(obj instanceof Variable && ((Variable)obj).isBounded())
+            return lessThen(((Variable)obj).getObject());
+        else if(obj instanceof ConsCell)
+        	return true;
+
         return false;
     }
 }
