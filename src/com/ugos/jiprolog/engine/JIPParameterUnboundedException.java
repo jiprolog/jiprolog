@@ -29,7 +29,7 @@ package com.ugos.jiprolog.engine;
 public class JIPParameterUnboundedException extends JIPRuntimeException
 {
     private int m_nParam = -1;
-    
+
     /** Constructor
      * Constructs a new JIPParameterUnboundedException
      * @param nParam the index of the bad parameter
@@ -45,42 +45,14 @@ public class JIPParameterUnboundedException extends JIPRuntimeException
     {
         super(create(4, null));
     }
-    
+
     /** Gets the error term associated to this exception
      * @return JIPTerm object associated to this exception
      */
     public JIPTerm getTerm()
     {
         String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
-        
-        return getTerm("instantation_error", strTerm);
-        
-        
-        
-//        if(m_engine == null)
-//            return super.getTerm();
-//        
-//        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString()))); 
-//        try
-//        {
-//            return m_engine.getTermParser().parseTerm("error(instantation_error, context('" + strTerm + "', file('" + m_strFileName + "', " + m_nLineNumber + ")))");
-//        }
-//        catch (JIPSyntaxErrorException ex)
-//        {
-//             return m_engine.getTermParser().parseTerm("error(instantation_error, context(undefined, file(undefined, undefined)))");
-//        }
-        
-/*   
-        
-        String strError = "error(instantation_error, context(" + super.getTerm() + ", ";
-        if(m_nParam != -1)
-            strError += m_nParam;
-        else
-            strError += "one_of_the_arguments";
-        
-        strError += "))";
-        
-        return m_engine.getTermParser().parseTerm(strError);
-*/
+
+        return getTerm("instantiation_error", strTerm);
     }
 }

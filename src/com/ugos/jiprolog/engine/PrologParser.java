@@ -47,6 +47,8 @@ final class PrologParser
     private OperatorManager m_opManager;
     private String m_strFileName;
 
+    private String sign = "";
+
 //    public static void main(String[] args)
 //    {
 //////        //StringReader reader = new StringReader(args[0]);
@@ -205,7 +207,10 @@ final class PrologParser
                                 //throw syntaxError(lastObj, tok.m_strToken);
                             }
 
-                            exp = Expression.createNumber(tok.m_strToken);
+
+                            exp = Expression.createNumber(sign + tok.m_strToken);
+
+                            sign = "";
 
                             termStack.push(exp);
                         }
@@ -267,6 +272,9 @@ final class PrologParser
                     	    termStack.push(Atom.createAtom(tok.m_strToken));
                     	    break;
                     	}
+
+//                    case PrologTokenizer.TOKEN_SIGN:
+//                    	sign = tok.m_strToken;
                     case PrologTokenizer.TOKEN_ATOM:
                     case PrologTokenizer.TOKEN_SPECIAL_ATOM:
                     case PrologTokenizer.TOKEN_SINGLETON:
@@ -290,7 +298,6 @@ final class PrologParser
                                 {
                                     if(bWhiteSpace)
                                         throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_blank_before(" + ((PrologObject)lastObj).toString(m_opManager) + ")");
-                                        //throw syntaxError("'blank'", tok.m_strToken);
 
                                     term = translateTerm(STATE_ARG_LIST, lnReader);
 
@@ -941,7 +948,11 @@ final class PrologParser
 
         if(op.isPrefix())//prefix
         {
-            if((!(obj1 instanceof ConsCell)) || obj1 instanceof List || obj1 instanceof Functor || ((ConsCell)obj1).getHeight() != 1)
+        	if((op.getName().equals("-") || op.getName().equals("+")) && obj1 instanceof Expression)
+        	{
+        		return Expression.createNumber(op.getName() + obj1.toString());
+        	}
+        	else if((!(obj1 instanceof ConsCell)) || obj1 instanceof List || obj1 instanceof Functor || ((ConsCell)obj1).getHeight() != 1)
             {
                 obj1 = new ConsCell(obj1, null);
             }

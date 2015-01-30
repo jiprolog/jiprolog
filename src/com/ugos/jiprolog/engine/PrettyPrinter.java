@@ -63,7 +63,7 @@ final class PrettyPrinter extends Object
         }
         else
         {
-            return "";
+            throw new JIPRuntimeException("Invalid type cannot be printed");//return "";
         }
     }
 
@@ -342,7 +342,7 @@ final class PrettyPrinter extends Object
         final double dVal = ((Expression)obj).getValue();
         final int nVal = (int)dVal;
 
-        if(nVal == dVal)
+        if(((Expression)obj).isInteger())
             return Integer.toString(nVal);
         else
             return Double.toString(dVal);
@@ -507,14 +507,28 @@ final class PrettyPrinter extends Object
 
             if(term instanceof ConsCell)
             {
-                if(((ConsCell)term).getTail() == null || ((ConsCell)term).getTail() == ConsCell.NIL)
+                head = ((ConsCell)term).getHead();
+
+                if(head instanceof Variable && ((Variable)head).isBounded())
+                    head = BuiltIn.getRealTerm(head);
+
+                if(head != null)
                 {
-                    return "','(" + strConsCell + ", " + print(((ConsCell)term).getHead(), opManager, bQ) + ")";
+                	return "','(" + strConsCell + ", " + print(head, opManager, bQ) + ")";
                 }
                 else
                 {
-                    return "','(" + strConsCell + ", " + printCons(term, opManager, bQ) + ")";
+                	return strConsCell;
                 }
+
+//                if(((ConsCell)term).getTail() == null || ((ConsCell)term).getTail() == ConsCell.NIL)
+//                {
+//                    return "','(" + strConsCell + ", " + print(((ConsCell)term).getHead(), opManager, bQ) + ")";
+//                }
+//                else
+//                {
+//                    return "','(" + strConsCell + ", " + printCons(term, opManager, bQ) + ")";
+//                }
             }
             else if(term != null)
             {

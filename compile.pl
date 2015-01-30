@@ -16,5 +16,5 @@ compile:-
 	write('compilation done'), nl.
 
 
-:- compile.
+%:- compile.
 

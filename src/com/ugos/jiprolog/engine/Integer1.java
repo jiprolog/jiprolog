@@ -27,7 +27,11 @@ final class Integer1 extends BuiltIn
     {
         try
         {
-            return Expression.compute(getRealTerm(getParam(1))).isInteger();
+        	PrologObject term = getRealTerm(getParam(1));
+        	if(!(term instanceof Expression))
+        		return false;
+
+        	return ((Expression)term).isInteger();
         }
         catch(JIPRuntimeException ex)
         {

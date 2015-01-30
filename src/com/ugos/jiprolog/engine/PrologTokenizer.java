@@ -33,6 +33,7 @@ class PrologTokenizer
     static final String NUMBER_CHARS    = "0123456789";
     static final String EXPONENT_CHARS    = "+-eE";
     //static final String WHITESPACE_CHARS = "\n\r\t\b\f";
+    static final String SIGN_CHARS   = "-+";
 
     static final char   LINECOMMENT_CHAR = '%';
     static final String OPENCOMMENT_CHAR = "/*";
@@ -47,7 +48,7 @@ class PrologTokenizer
     private static final int STATE_NUMBER       = 3;
     private static final int STATE_EXPONENT     = 4;
     private static final int STATE_INTEGER      = 5;
-    //private static final int STATE_DOT          = 6;
+    private static final int STATE_SIGN       	= 6;
     private static final int STATE_LINECOMMENT  = 7;
     private static final int STATE_COMMENT      = 8;
     private static final int STATE_QUOTE        = 9;
@@ -61,7 +62,7 @@ class PrologTokenizer
     static final int TOKEN_SPECIAL_ATOM = 2;
     static final int TOKEN_NUMBER       = 3;
     static final int TOKEN_SINGLETON    = 4;
-    //static final int TOKEN_DOT          = 5;
+    static final int TOKEN_SIGN         = 5;
     static final int TOKEN_VARIABLE     = 6;
     static final int TOKEN_PREDDEF      = 7;
     static final int TOKEN_DBLQUOTE     = 8;
@@ -142,6 +143,12 @@ class PrologTokenizer
                             strTerm += (char)curChar;//String.valueOf((char)curChar);
                             nTokenType = TOKEN_VARIABLE;
                         }
+//                        else if((SIGN_CHARS.indexOf(curChar) > -1))
+//                        {
+//                            nState = STATE_SIGN;
+//                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+//                            nTokenType = TOKEN_SIGN;
+//                        }
                         else if((SPECIAL_CHARS.indexOf(curChar) > -1))
                         {
                             nState = STATE_SPECIAL_ATOM;
@@ -250,6 +257,21 @@ class PrologTokenizer
                             m_lnReader.pushback();
                         }
                         break;
+
+//                    case STATE_SIGN:
+//                    	if((SPECIAL_CHARS.indexOf(curChar) > -1))
+//                        {
+//                    		nState = STATE_SPECIAL_ATOM;
+//                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+//                            nTokenType = TOKEN_SPECIAL_ATOM;
+//                        }
+//                        else
+//                        {
+//                            nTokenType = TOKEN_SIGN;
+//                            nState = STATE_END;
+//                            m_lnReader.pushback();
+//                        }
+//                        break;
 
                     case STATE_NUMBER:
                         if(NUMBER_CHARS.indexOf(curChar) > -1)

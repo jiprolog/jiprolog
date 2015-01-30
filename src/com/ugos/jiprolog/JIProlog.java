@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import com.ugos.jiprolog.engine.JIPDebugger;
 import com.ugos.jiprolog.engine.JIPEngine;
 import com.ugos.jiprolog.engine.JIPQuery;
 import com.ugos.jiprolog.engine.JIPRuntimeException;
@@ -45,6 +46,8 @@ public class JIProlog
 {
     private static final String VERSION = "3.1";
 
+    private static JIPEngine jip = new JIPEngine();
+
     /** Entry point of the stand alone prolog interpreter
      * @param args the first element of the array must be the file to consult.<br>
      * Note that such a file must define main/0 predicate.
@@ -56,93 +59,14 @@ public class JIProlog
         System.out.println("** Based on JIProlog v" + JIPEngine.getVersion());
         System.out.println("** " + JIPEngine.getCopyrightInfo());
         System.out.println("** http://www.jiprolog.com");
-        System.out.println("*************************************************");
+        System.out.println("*************************************************\n\n");
 
-        if(args.length < 1)
-        {
-            showMessage("JIProlog Standalone Interpreter requires a Prolog file to run");
-            System.exit(0);
-        }
-
-        // New instance of prolog engine
-        final JIPEngine jip = new JIPEngine();
-
-//        System.out.println(jip.getSearchPath());
-
-        // load autoload file
-        String strKey;
-        String strValue = null;
-        try
-        {
-            InputStream ins;
-            ins = new FileInputStream("jipautoload.ini");
-
-            Properties props = new Properties();
-            props.load(ins);
-            Enumeration en = props.keys();
-            while(en.hasMoreElements())
-            {
-                strKey = (String)en.nextElement();
-                strValue = (String)props.get(strKey);
-                try
-                {
-                    if(strKey.startsWith("plfile"))
-                    {
-                        jip.consultFile(strValue);
-                        System.out.println(strValue + " consulted");
-                    }
-                    else if(strKey.startsWith("cplfile"))
-                    {
-                        jip.loadFile(strValue);
-                        System.out.println(strValue + " loaded");
-                    }
-                    else if(strKey.startsWith("xlibrary"))
-                    {
-                        jip.loadLibrary(strValue);
-                        System.out.println(strValue + " xloaded");
-                    }
-                }
-                catch(IOException ex)
-                {
-                    System.out.println("WARNING, " + (strValue != null ? strValue : "") + " in autoload not completed: " + ex.toString() );
-                }
-                catch(JIPSyntaxErrorException ex)
-                {
-                    System.out.println("WARNING, autoload not completed: " + ex.toString() + " in " + ex.getFileName());
-                }
-                catch(JIPRuntimeException ex)
-                {
-                    System.out.println("WARNING, " + (strValue != null ? strValue : "") + " in autoload not completed: " + ex.toString() );
-                    //ex.printStackTrace();
-                }
-            }
-
-            ins.close();
-        }
-        catch(FileNotFoundException ex)
-        {
-            System.out.println("WARNING, jipautoload.ini not found");
-        }
-        catch(IOException ex)
-        {
-            System.out.println("WARNING, autoload not completed: " + ex.toString() );
-        }
 
         try
         {
-        	System.out.println("Consulting file " + args[0]);
+        	processArgs(args);
 
-            jip.consultFile(args[0]);
-
-//            JIPQuery query = jip.openSynchronousQuery("?-main.");
-//            JIPTerm term = query.nextSolution();
-//            if(term == null)
-//            {
-//                showMessage("The predicate main/0 wasn't found in the Prolog file specified");
-//                System.exit(0);
-//            }
-
-            System.out.println("***************************************************");
+            System.out.println("\n\n***************************************************");
             System.out.println("** Thanks for using JIProlog                     **");
             System.out.println("***************************************************");
         }
@@ -165,6 +89,88 @@ public class JIProlog
     private static void showMessage(String strMsg)
     {
     	System.out.println(strMsg);
+    }
+
+    public static void printHelp()
+    {
+    	System.out.println("*************************************************");
+        System.out.println("** JIProlog Standalone interpreter v" + VERSION);
+        System.out.println("** Based on JIProlog v" + JIPEngine.getVersion());
+        System.out.println("** " + JIPEngine.getCopyrightInfo());
+        System.out.println("*************************************************");
+        System.out.println("\nOptions:");
+        System.out.println("\n -debug to run JIProlog in debug mode");
+        System.out.println("\n -c <file> to compile a prolog file");
+        System.out.println("\n -g <goal> initialization goal");
+    }
+
+    private static void processArgs(String args[]) throws JIPSyntaxErrorException, IOException
+    {
+    	String initializationGoal = null;
+
+    	if(args.length == 1)
+    	{
+    		if(args[0].startsWith("-h"))
+    		{
+    			printHelp();
+    			return;
+    		}
+    		else if(args[0].startsWith("-version"))
+        	{
+    	        System.out.println("JIProlog Standalone Interpreter v" + VERSION);
+    	        System.out.println("Based on JIProlog v" + JIPEngine.getVersion());
+        	}
+    	}
+    	else
+    	{
+	        for(int i = 0; i < args.length; i++)
+	        {
+	        	if(args[i].startsWith("-debug"))
+	        	{
+	        		JIPDebugger.debug = true;
+	        	}
+	        	else if(args[i].startsWith("-c"))
+	        	{
+	        		if(i + 1 < args.length)
+	        		{
+	        			System.out.println("consulting file " + args[i+1]);
+	        			jip.consultFile(args[i + 1]);
+	        			i++;
+	        		}
+	        	}
+	        	else if(args[i].startsWith("-g"))
+	        	{
+	        		if(i + 1 < args.length)
+	        		{
+	        			initializationGoal = args[i + 1];
+	        			i++;
+	        		}
+	        	}
+	        	else if(args[i].startsWith("-d"))
+	        	{
+					try
+	        		{
+		        		if(i + 1 < args.length)
+		        		{
+		        			jip.setSearchPath(args[i + 1]);
+		        			i++;
+		        		}
+					}
+	        		catch (IOException e)
+	        		{
+						e.printStackTrace();
+					}
+	        	}
+	        }
+    	}
+
+    	if(initializationGoal != null)
+    	{
+    		System.out.println("running goal " + initializationGoal);
+
+    		JIPQuery query = jip.openSynchronousQuery(initializationGoal);
+    		JIPTerm term = query.nextSolution();
+    	}
     }
 }
 
