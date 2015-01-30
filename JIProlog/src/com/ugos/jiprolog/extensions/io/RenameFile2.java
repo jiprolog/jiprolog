@@ -30,7 +30,7 @@ public class RenameFile2 extends JIPXCall
     {
         JIPTerm input = params.getNth(1);
         JIPTerm newName = params.getNth(2);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -45,7 +45,7 @@ public class RenameFile2 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is a variable
         if (newName instanceof JIPVariable)
         {
@@ -60,22 +60,22 @@ public class RenameFile2 extends JIPXCall
                 newName = ((JIPVariable)newName).getValue();
             }
         }
-        
+
         // check if input is a Number
         if(input instanceof JIPAtom)
         {
             String strFileName = ((JIPAtom)input).getName();
-        
+
             File ffile = new File(strFileName);
             //System.out.println("strFileName " + strFileName);
             if(!ffile.isAbsolute())
             {
                 ffile = new File(getJIPEngine().getSearchPath() + File.separator + strFileName);
             }
-            
+
             if(!ffile.exists())
                 throw new JIPRuntimeException(6, strFileName);
-            
+
             String strNewName;
             if(newName instanceof JIPAtom)
                 strNewName = ((JIPAtom)newName).getName();
@@ -83,18 +83,18 @@ public class RenameFile2 extends JIPXCall
                 strNewName = "" + ((JIPNumber)newName).getValue();
             else
                 throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
-            
+
             if(!ffile.renameTo(new File(strNewName)))
-                throw new JIPRuntimeException(JIPio.ERR_FILE_NOT_RENAMED, JIPio.STR_FILE_NOT_RENAMED);
+                return false;//throw new JIPRuntimeException(JIPio.ERR_FILE_NOT_RENAMED, JIPio.STR_FILE_NOT_RENAMED);
         }
         else
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
         }
-        
+
         return true;
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

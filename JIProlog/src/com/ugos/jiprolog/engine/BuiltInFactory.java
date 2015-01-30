@@ -120,7 +120,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("$custom_built_in/1", new Custom1());
         m_BuiltInTable.put("$!/0", new SCut0());
 
-
+        m_BuiltInTable.put("pid/1",      new Pid1());
 
         //m_BuiltInTable.put("wait/1",            new Wait1());
     }

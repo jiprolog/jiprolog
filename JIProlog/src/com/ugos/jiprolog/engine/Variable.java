@@ -190,7 +190,7 @@ final class Variable extends PrologObject//Serializable
                     return true;
                 else
                     //return m_nAddress < ((Variable)obj).m_nAddress;
-                    return hashCode() < obj.hashCode();
+                    return getAddress() < ((Variable)obj).getAddress();
 
         return true;
     }

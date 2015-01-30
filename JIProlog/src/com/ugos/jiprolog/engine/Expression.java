@@ -28,6 +28,7 @@ final class Expression extends PrologObject //implements Serializable
     final static long serialVersionUID = 300000004L;
 
     private double m_dValue;
+    private boolean floating = false;
 
     public static Expression createNumber(final double dNum)
     {
@@ -36,12 +37,17 @@ final class Expression extends PrologObject //implements Serializable
 
     public static Expression createNumber(final String strNum)
     {
-        return new Expression(Double.valueOf(strNum).doubleValue());
+    	Expression expr = new Expression(Double.valueOf(strNum).doubleValue());
+    	if(strNum.contains("."))
+    		expr.floating = true;
+
+    	return expr;
     }
 
     private Expression(final double dNum)
     {
         m_dValue   = dNum;
+        floating = (int)dNum != dNum;
     }
 
     public final PrologObject copy(final Hashtable varTable)
@@ -336,7 +342,17 @@ final class Expression extends PrologObject //implements Serializable
     protected final boolean lessThen(final PrologObject obj)
     {
         if(obj instanceof Expression)
-            return m_dValue < ((Expression)obj).m_dValue;
+        {
+            if(m_dValue < ((Expression)obj).m_dValue)
+            {
+            	return true;
+            }
+            else if(m_dValue == ((Expression)obj).m_dValue)
+            {
+            	if(floating && !((Expression)obj).floating)
+            		return true;
+            }
+        }
         else if(obj instanceof Variable)
             if(((Variable)obj).isBounded())
                 return lessThen(((Variable)obj).getObject());
@@ -346,6 +362,6 @@ final class Expression extends PrologObject //implements Serializable
 
     public final boolean isInteger()
     {
-        return (int)m_dValue == m_dValue;
+        return !floating;//(int)m_dValue == m_dValue;
     }
 }
