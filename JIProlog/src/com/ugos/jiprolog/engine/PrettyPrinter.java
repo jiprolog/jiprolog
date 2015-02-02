@@ -29,7 +29,7 @@ final class PrettyPrinter extends Object
     //private static OperatorManager s_opManager = new OperatorManager();
 
     private static final char[] ESCAPE = {'a', 'b', 't', 'n', 'v', 'f', 'r'};
-    private static String Q_CHARS = "()[].,{}";
+    private static String Q_CHARS = "()[].,{}\"";
 
     public static final String print(final PrologObject obj, final OperatorManager opManager, final boolean bQ)
     {
@@ -85,10 +85,12 @@ final class PrettyPrinter extends Object
             if(strAtom.equals("[]"))
                 return "[] ";
 
-            if(Q_CHARS.indexOf(strAtom) > -1)
-                return "'" + strAtom + "'";
-
             boolean bQuoted = false;
+
+            if(Q_CHARS.indexOf(strAtom) > -1)
+            	bQuoted = true;
+//                return "'" + strAtom + "'";
+
 
             String strRet = "";
 
