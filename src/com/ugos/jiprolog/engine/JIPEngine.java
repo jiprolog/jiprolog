@@ -56,7 +56,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 0;
     public static final int build = 5;
-    public static final int revision = 6;
+    public static final int revision = 7;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -408,7 +408,7 @@ public class JIPEngine implements Serializable
      */
     public synchronized final void setSearchPath(final String strSearchPath) throws IOException
     {
-        m_strSearchPath = SearchPath1.getValidSearchPath(strSearchPath);
+        m_strSearchPath = SearchPath1.getValidSearchPath(strSearchPath, "");
     }
 
     /** returns the search path of this instance of JIPEngine.

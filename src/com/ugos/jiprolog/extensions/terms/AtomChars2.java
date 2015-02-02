@@ -25,12 +25,12 @@ import com.ugos.jiprolog.engine.*;
 
 import java.util.*;
 
-public class Name2 extends JIPXCall
+public class AtomChars2 extends JIPXCall
 {
     public final boolean unify(final JIPCons input, Hashtable<JIPVariable, JIPVariable> varsTbl)
     {
         JIPTerm atom   = input.getNth(1);
-        JIPTerm string = input.getNth(2);
+        JIPTerm chars = input.getNth(2);
 
         // check if input is a variable
         if (atom instanceof JIPVariable)
@@ -51,7 +51,7 @@ public class Name2 extends JIPXCall
             else
                 strAtom = Double.toString(((JIPNumber)atom).getDoubleValue());
 
-            atom = JIPString.create(strAtom, false);
+            atom = JIPString.create(strAtom, true);
         }
         else if (atom instanceof JIPAtom)
         {
@@ -60,24 +60,19 @@ public class Name2 extends JIPXCall
             {
                 atom = JIPList.NIL;
             }
-//            else if(strAtom.charAt(0) == 39)
-//            {
-//                strAtom = strAtom.substring(1, strAtom.length() - 1);
-//                atom = JIPString.create(strAtom);
-//            }
             else
             {
-                atom = JIPString.create(strAtom, false);
+                atom = JIPString.create(strAtom, true);
             }
         }
         else if (atom instanceof JIPVariable)
         {
         	// means atom unbounded
-            if (string instanceof JIPVariable)
+            if (chars instanceof JIPVariable)
             {
-                if (((JIPVariable)string).isBounded())
+                if (((JIPVariable)chars).isBounded())
                 {
-                    string = ((JIPVariable)string).getValue();
+                    chars = ((JIPVariable)chars).getValue();
                 }
                 else
                 {
@@ -85,31 +80,22 @@ public class Name2 extends JIPXCall
                 }
             }
 
-            if(string == JIPList.NIL)
+            if(chars == JIPList.NIL)
             {
-                string = JIPAtom.create("");
+                chars = JIPAtom.create("");
             }
-            else if (string instanceof JIPList)
+            else if (chars instanceof JIPList)
             {
-
                 // check if number of atom
-                String strVal = (JIPString.create((JIPList)string)).getStringValue();
+                String strVal = (JIPString.create((JIPList)chars)).getStringValue();
 
                 if(strVal.startsWith(" ") || strVal.endsWith(" "))
                 {
-                	string = JIPAtom.create(strVal);
+                	chars = JIPAtom.create(strVal);
                 }
                 else
                 {
-	                try
-	                {
-	                    double dbVal = Double.valueOf(strVal).doubleValue();
-	                    string = JIPNumber.create(dbVal);
-	                }
-	                catch(NumberFormatException ex)
-	                {
-	                    string = JIPAtom.create(strVal);
-	                }
+                	chars = JIPAtom.create(strVal);
                 }
             }
             else
@@ -119,14 +105,14 @@ public class Name2 extends JIPXCall
         }
         else if(atom.unifiable(JIPList.NIL))
         {
-        	atom =  JIPString.create("[]", false);
+        	atom =  JIPString.create("[]", true);
         }
         else
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.UNDEFINED);
         }
 
-        return atom.unify(string, varsTbl);
+        return atom.unify(chars, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()

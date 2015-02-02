@@ -85,6 +85,19 @@ final class PString extends List //implements Serializable
 
                 m_strString += String.valueOf((char)nAscii);
             }
+            else if (head instanceof Atom)
+            {
+            	String a = ((Atom)head).getName();
+
+            	if(a.length() > 1)
+            	{
+            		throw new JIPParameterTypeException();
+            	}
+
+            	char code = a.charAt(0);
+
+                m_strString += String.valueOf(code);
+            }
             else
             {
                 throw new JIPParameterTypeException();
@@ -115,15 +128,16 @@ final class PString extends List //implements Serializable
         }
     }
 
-    public PString(final String strString)
+    public PString(final String strString, boolean atom)
     {
-        super(getList(strString));
+        super(getList(strString, atom));
         m_strString   = strString;
     }
 
     public final PrologObject copy(final Hashtable varTable)
     {
-        return new PString(getString());
+    	return new PString(this);
+//        return new PString(getString());
     }
 
     public final boolean _unify(final PrologObject obj, final Hashtable table)
@@ -142,13 +156,13 @@ final class PString extends List //implements Serializable
         }
     }
 
-    private static final List getList(final String string)
+    private static final List getList(final String string, boolean atom)
     {
         List retList = null;
 
         for(int i = string.length() - 1; i >= 0; i--)
         {
-            retList = new List(Expression.createNumber(string.charAt(i)), retList);
+            retList = new List(atom ? Atom.createAtom(string.substring(i, i+1)) : Expression.createNumber(string.charAt(i)), retList);
         }
 
         return retList;

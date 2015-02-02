@@ -44,9 +44,9 @@ import com.ugos.jiprolog.engine.JIPTerm;
  */
 public class JIProlog
 {
-    private static final String VERSION = "3.1";
+    private static final String VERSION = "3.2";
 
-    private static JIPEngine jip = new JIPEngine();
+    private static JIPEngine jip;
 
     /** Entry point of the stand alone prolog interpreter
      * @param args the first element of the array must be the file to consult.<br>
@@ -120,6 +120,10 @@ public class JIProlog
     	        System.out.println("JIProlog Standalone Interpreter v" + VERSION);
     	        System.out.println("Based on JIProlog v" + JIPEngine.getVersion());
         	}
+    		else if(args[0].startsWith("-debug"))
+        	{
+        		JIPDebugger.debug = true;
+        	}
     	}
     	else
     	{
@@ -133,6 +137,9 @@ public class JIProlog
 	        	{
 	        		if(i + 1 < args.length)
 	        		{
+	        			if(jip == null)
+	        				jip = new JIPEngine();
+
 	        			System.out.println("consulting file " + args[i+1]);
 	        			jip.consultFile(args[i + 1]);
 	        			i++;
@@ -152,6 +159,9 @@ public class JIProlog
 	        		{
 		        		if(i + 1 < args.length)
 		        		{
+		        			if(jip == null)
+		        				jip = new JIPEngine();
+
 		        			jip.setSearchPath(args[i + 1]);
 		        			i++;
 		        		}
@@ -163,6 +173,9 @@ public class JIProlog
 	        	}
 	        }
     	}
+
+		if(jip == null)
+			jip = new JIPEngine();
 
     	if(initializationGoal != null)
     	{
