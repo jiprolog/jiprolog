@@ -44,10 +44,10 @@ final class Arg3 extends BuiltIn
 
         try
         {
+        	
             if(term instanceof List)
             {
                 param = new ConsCell(((List)term).getHead(), new ConsCell(((List)term).getTail(), null)).getTerm((int)((Expression)place).getValue());
-                
             }
             else if(term instanceof Functor)
             {

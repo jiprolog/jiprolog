@@ -247,7 +247,7 @@ class ConsCell extends PrologObject //implements Serializable
         	{
         		return true;
         	}
-        	else
+        	else if(h1 == h2)
         	{
 	            if(m_head == null)
 	                return false;

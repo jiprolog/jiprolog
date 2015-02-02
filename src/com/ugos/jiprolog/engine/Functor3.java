@@ -27,33 +27,44 @@ final class Functor3 extends BuiltIn
     public final boolean unify(final Hashtable varsTbl)
     {
         PrologObject func = getRealTerm(getParam(1));
-                
+
         if (func == null)
         {
             PrologObject name   = getRealTerm(getParam(2));
             PrologObject arity = getRealTerm(getParam(3));
-                 
+
             if(name == null)
                 throw new JIPParameterUnboundedException(2);
-           
-            if(!(name instanceof Atom))
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
-           
-            if(arity == null)
-                throw new JIPParameterUnboundedException(3);
-            
-            if(!(arity instanceof Expression))
-                throw new JIPParameterTypeException(3, JIPParameterTypeException.NUMERIC_EXPRESSION);
-            
-            if(!((Expression)arity).isInteger())
-                throw new JIPParameterTypeException(3, JIPParameterTypeException.INTEGER);
-            
-            if(name == arity)
-                return false;
-            
+
+//            if(name == arity)
+//                return false;
+
             ConsCell newFunc;
             try
             {
+                if(name.unifiable(List.NIL))
+                {
+                	return getParam(1).unify(name, varsTbl) && getParam(3).unify(Expression.createNumber(0), varsTbl);
+                }
+
+                if(arity == null)
+                	throw new JIPParameterUnboundedException(3);
+
+                if(!(arity instanceof Expression))
+                	throw new JIPParameterTypeException(3, JIPParameterTypeException.NUMERIC_EXPRESSION);
+
+                if(!((Expression)arity).isInteger())
+                	throw new JIPParameterTypeException(3, JIPParameterTypeException.INTEGER);
+
+                // if arity == 0 generate an atom
+                if(((Expression)arity).getValue() == 0)
+                {
+                    return getParam(1).unify(name, varsTbl);
+                }
+
+                if(!(name instanceof Atom))
+                    throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
+
                 if(((Atom)name).getName().equals(".") )
                 {
                     if((int)((Expression)arity).getValue() == 2)
@@ -62,21 +73,15 @@ final class Functor3 extends BuiltIn
                         return newFunc.unify(getParam(1), varsTbl);
                     }
                 }
-          
-                // if arity == 0 generate an atom
-                if(((Expression)arity).getValue() == 0)
-                {
-                    return getParam(1).unify(name, varsTbl);
-                }
-         
+
                 // generate new variables
                 ConsCell params = null;
-               
+
                 for (int i = 0; i < (int)((Expression)arity).getValue(); i++)
                 {
                     params = new ConsCell(new Variable(false), params);
                 }
-                
+
                 // generate new functor
                 String strFuncName = ((Atom)name).getName() + "/" + Integer.toString((int)((Expression)arity).getValue());
                 // Check if BuiltIn
@@ -88,7 +93,7 @@ final class Functor3 extends BuiltIn
                 {
                     newFunc = new Functor(strFuncName, params);
                 }
-                
+
                 return newFunc.unify(getParam(1), varsTbl);
             }
             catch(NullPointerException ex)
@@ -102,12 +107,20 @@ final class Functor3 extends BuiltIn
         }
         else
         {
-            Atom funcName;
+            PrologObject funcName;
             Expression funcArity;
             if(func instanceof List)
             {
-                funcName  = Atom.createAtom(".");
-                funcArity = Expression.createNumber(2);
+            	if(func.unifiable(List.NIL))
+            	{
+            		funcName = List.NIL;
+            		funcArity = Expression.createNumber(0);
+            	}
+            	else
+            	{
+	                funcName  = Atom.createAtom(".");
+	                funcArity = Expression.createNumber(2);
+            	}
             }
             else if(func instanceof Functor)
             {
@@ -122,7 +135,7 @@ final class Functor3 extends BuiltIn
                         throw new JIPParameterTypeException(1, JIPParameterTypeException.FUNCTOR);
                     }
                 }
-                
+
                 funcName  = Atom.createAtom(((Functor)func).getFriendlyName());
                 funcArity = Expression.createNumber(((Functor)func).getArity());
             }
@@ -133,7 +146,8 @@ final class Functor3 extends BuiltIn
             }
             else if(func instanceof Expression)
             {
-                funcName  = Atom.createAtom(Integer.toString((int)((Expression)func).getValue()));
+//                funcName  = Atom.createAtom(Integer.toString((int)((Expression)func).getValue()));
+                funcName  = func;
                 funcArity = Expression.createNumber(0);
             }
             else if(func instanceof ConsCell)
@@ -143,7 +157,7 @@ final class Functor3 extends BuiltIn
             }
             else
                 throw new JIPParameterTypeException(1, JIPParameterTypeException.UNDEFINED);
-                        
+
             return new ConsCell(funcName, new ConsCell(funcArity, null)).unify(
                     new ConsCell(getParam(2), new ConsCell(getParam(3), null)), varsTbl);
         }

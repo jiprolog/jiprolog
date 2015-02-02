@@ -40,7 +40,7 @@ final class SearchPath1 extends BuiltIn
             {
                 if(getJIPEngine().getSearchPath() == null)
                     throw JIPRuntimeException.create(26, null);
-                
+
                 return param.unify(Atom.createAtom(getJIPEngine().getSearchPath()), varsTbl);
             }
             else
@@ -48,7 +48,7 @@ final class SearchPath1 extends BuiltIn
                 param = ((Variable)param).getObject();
             }
         }
-        
+
         String strSearchDir;
         if (param instanceof Atom)
         {
@@ -62,12 +62,12 @@ final class SearchPath1 extends BuiltIn
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
         }
-        
+
         try
         {
             // prova con basepath
             String strBasePath = getJIPEngine().getSearchPath();
-            
+
             if(new File(strSearchDir).isAbsolute())
                 strSearchDir = getValidSearchPath(strSearchDir);
             else if(strBasePath.toUpperCase().startsWith("JAR://"))
@@ -87,7 +87,7 @@ final class SearchPath1 extends BuiltIn
                 throw JIPRuntimeException.create(6, strSearchDir);
             }
         }
-        
+
         try
         {
             getJIPEngine().setSearchPath(strSearchDir);
@@ -104,15 +104,15 @@ final class SearchPath1 extends BuiltIn
     {
         if(strSearchDir == null)
             return null;
-        
+
         //System.out.println("getValidSearchPath " + strSearchDir);
-        
+
         // elimina apici
         if(strSearchDir.charAt(0) == 39 || strSearchDir.charAt(0) == 34)
         {
             strSearchDir = strSearchDir.substring(1, strSearchDir.length() - 1);
         }
-    
+
         // controlla il protocollo jar, http, file o nulla
         if(strSearchDir.toUpperCase().startsWith("HTTP://"))
         {
@@ -128,7 +128,7 @@ final class SearchPath1 extends BuiltIn
             {
                 throw JIPRuntimeException.create(9, null);
             }
-                            
+
             return strSearchDir;
         }
         else if(strSearchDir.toUpperCase().startsWith("JAR://"))
@@ -163,7 +163,7 @@ final class SearchPath1 extends BuiltIn
         {
             // prova con url
             //strSearchDir = strSearchDir.substring(6);
-        
+
             // prova con url
 //            try
 //            {
@@ -189,36 +189,36 @@ final class SearchPath1 extends BuiltIn
 //            }
 
             // sostituisce il separatorChar per uniformare windows a unix
-                        
+
             return strSearchDir;
         }
         else if(strSearchDir.toUpperCase().startsWith("INTERNAL://"))
         {
             return strSearchDir;
         }
-        
+
 //        System.out.println(strSearchDir);  // DBG
-        
+
 //      System.out.println(strSearchDir);
         strSearchDir = strSearchDir.replace('\\', File.separatorChar);
         strSearchDir = strSearchDir.replace('/', File.separatorChar);
-        
+
 //        System.out.println(strSearchDir);  // DBG
-        
+
 //      System.out.println(strSearchDir.charAt(strSearchDir.length() - 1));
         // controlla se l'ultimo carattere è separator
 //        if(strSearchDir.charAt(strSearchDir.length() - 1) == File.separatorChar)
 //            strSearchDir.substring(0, strSearchDir.length() - 1);
-                        
+
 //    System.out.println(strSearchDir);  // DBG
-        
+
 //        // patch per Pocket PC
 //        if(strSearchDir.equals("\\\\"))
 //            strSearchDir = "\\";
-        
+
 //    System.out.println(strSearchDir);  // DBG
-        
-        
+
+
         return strSearchDir;
 //        try
 //        {
@@ -230,7 +230,7 @@ final class SearchPath1 extends BuiltIn
 //                    strSearchDir = strAbsPath;
 ////                else
 ////                    strSearchDir = strAbsPath + File.separator;
-//                                
+//
 //                return strSearchDir;
 //            }
 //            else

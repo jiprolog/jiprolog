@@ -515,6 +515,32 @@ class PrologTokenizer
                             {
                                 strTerm += (char)c;//String.valueOf((char)c);
                             }
+                            else if(NUMBER_CHARS.indexOf(c) > -1)
+                            {
+                            	String strNum = "" + (char)c;
+                            	// legge i prossimi numeri
+                                int d1 = m_lnReader.read();
+                                while(NUMBER_CHARS.indexOf(d1) > -1)
+                                {
+                                	strNum += "" + (char)d1;
+                                	d1 = m_lnReader.read();
+                                }
+
+                                // legge il prossimo byte
+                                if(d1 != '\\')  // ISO def
+                                    m_lnReader.pushback();
+
+                                try
+                                {
+                                    byte val = Byte.parseByte(strNum);
+                                    strTerm += (char)val;
+                                }
+                                catch(NumberFormatException ex)
+                                {
+                                    throw syntaxError("bad_escape_sequence('\\x" + strNum + "')");
+                                }
+
+                            }
                             else// if(c >= 'a')
                             {
                                 switch(c)

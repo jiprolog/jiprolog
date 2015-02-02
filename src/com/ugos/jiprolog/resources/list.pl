@@ -1,15 +1,14 @@
 /*********************************************************************
  * JIProlog predicates related to lists
  *
- * 03/06/2004
+ * 02/02/2015
  *
- * Copyright (C) 2002-2004 by Ugo Chirico. All Rights Reserved
+ * Copyright (C) 2002-2015 by Ugo Chirico. All Rights Reserved
  *
  ********************************************************************/
 
 :- module(jipxlist,
-    [ member/3,
-      memberchk/2,
+    [ memberchk/2,
       select/3,
       nextto/3,
       delete/3,
@@ -45,11 +44,7 @@ delete([Elem|Tail], Elem, Result) :- !,
 delete([Head|Tail], Elem, [Head|Rest]) :-
     delete(Tail, Elem, Rest).
 
-%  member((?X, ?List, ?Pos)
-member(X, [X|Xs], 1).
-member(X, [Y|Ys], N):-
-    member(X, Ys, N1),
-    N is N1 + 1.
+
 
 %%  nth0(?Index, ?List, ?Elem)
 nth0(Index, List, Elem) :-
