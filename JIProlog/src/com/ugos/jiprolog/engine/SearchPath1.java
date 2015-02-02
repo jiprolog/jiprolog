@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.zip.ZipFile;
 import java.util.*;
 
@@ -65,28 +66,52 @@ final class SearchPath1 extends BuiltIn
 
         try
         {
-            // prova con basepath
             String strBasePath = getJIPEngine().getSearchPath();
 
-            if(new File(strSearchDir).isAbsolute())
-                strSearchDir = getValidSearchPath(strSearchDir);
-            else if(strBasePath.toUpperCase().startsWith("JAR://"))
-                strSearchDir = getValidSearchPath(strBasePath + "#" + strSearchDir);
-            else
-                strSearchDir = getValidSearchPath(strBasePath + File.separator + strSearchDir);
-        }
-        catch(Throwable ex)
+			strSearchDir = getValidSearchPath(strSearchDir, strBasePath);
+		}
+        catch (FileNotFoundException e)
         {
-            try
-            {
-                //prova con path assoluto
-                strSearchDir = getValidSearchPath(strSearchDir);
-            }
-            catch (FileNotFoundException ex1)
-            {
-                throw JIPRuntimeException.create(6, strSearchDir);
-            }
-        }
+        	 throw JIPRuntimeException.create(18, strSearchDir);
+	    }
+	    catch(MalformedURLException ex)
+	    {
+	        throw new JIPJVMException(ex);
+	    }
+	    catch(SecurityException ex)
+	    {
+	        throw JIPRuntimeException.create(9, ex.getMessage());
+	    }
+        catch (IOException ex)
+        {
+        	throw new JIPJVMException(ex);
+		}
+
+
+//        try
+//        {
+//            // prova con basepath
+//            String strBasePath = getJIPEngine().getSearchPath();
+//
+//            if(new File(strSearchDir).isAbsolute())
+//                strSearchDir = getValidSearchPath(strSearchDir);
+//            else if(strBasePath.toUpperCase().startsWith("JAR://"))
+//                strSearchDir = getValidSearchPath(strBasePath + "#" + strSearchDir);
+//            else
+//                strSearchDir = getValidSearchPath(strBasePath + File.separator + strSearchDir);
+//        }
+//        catch(Throwable ex)
+//        {
+//            try
+//            {
+//                //prova con path assoluto
+//                strSearchDir = getValidSearchPath(strSearchDir);
+//            }
+//            catch (FileNotFoundException ex1)
+//            {
+//                throw JIPRuntimeException.create(6, strSearchDir);
+//            }
+//        }
 
         try
         {
@@ -100,12 +125,10 @@ final class SearchPath1 extends BuiltIn
         return true;
     }
 
-    static final String getValidSearchPath(String strSearchDir) throws FileNotFoundException
+    static final String getValidSearchPath(String strSearchDir, String basePath) throws IOException
     {
         if(strSearchDir == null)
             return null;
-
-        //System.out.println("getValidSearchPath " + strSearchDir);
 
         // elimina apici
         if(strSearchDir.charAt(0) == 39 || strSearchDir.charAt(0) == 34)
@@ -114,20 +137,9 @@ final class SearchPath1 extends BuiltIn
         }
 
         // controlla il protocollo jar, http, file o nulla
-        if(strSearchDir.toUpperCase().startsWith("HTTP://"))
+        if(strSearchDir.toUpperCase().startsWith("HTTP://") || strSearchDir.toUpperCase().startsWith("HTTPS://"))
         {
-            try
-            {
-                URL url = new URL(strSearchDir);
-            }
-            catch(MalformedURLException ex)
-            {
-                throw new JIPJVMException(ex);
-            }
-            catch(SecurityException ex)
-            {
-                throw JIPRuntimeException.create(9, null);
-            }
+            URL url = new URL(strSearchDir);
 
             return strSearchDir;
         }
@@ -135,121 +147,62 @@ final class SearchPath1 extends BuiltIn
         {
             // prova con zip
             String strPath = strSearchDir.substring(6);
-            //Debug.traceln("jar:" + strPath, 1);
-            try
-            {
-                ZipFile zipFile = new ZipFile(strPath);
-                zipFile.close();
-                return strSearchDir;
-            }
-            catch(SecurityException ex)
-            {
-                throw JIPRuntimeException.create(9, null);
-            }
-            catch(FileNotFoundException ex)
-            {
-                throw JIPRuntimeException.create(18, null);
-            }
-            catch(IOException ex)
-            {
-                throw new JIPJVMException(ex );
-            }
-        }
-//        else if(strSearchDir.toUpperCase().startsWith("FILE:///ANDROID_ASSET/"))
-//        {
-//        	return strSearchDir;
-//        }
-        else if(strSearchDir.toUpperCase().startsWith("FILE:/"))
-        {
-            // prova con url
-            //strSearchDir = strSearchDir.substring(6);
-
-            // prova con url
-//            try
-//            {
-//                URL url = new URL(strSearchDir);
-//                InputStream ins = url.openStream();
-//                ins.close();
-//            }
-//            catch(MalformedURLException ex)
-//            {
-//                throw new JIPJVMException(ex);
-//            }
-//            catch(SecurityException ex)
-//            {
-//                throw JIPRuntimeException.create(9, "Cannot access the directory " + strSearchDir);
-//            }
-//            catch(FileNotFoundException ex)
-//            {
-//                throw ex;
-//            }
-//            catch(IOException ex)
-//            {
-//                throw new JIPJVMException(ex);
-//            }
-
-            // sostituisce il separatorChar per uniformare windows a unix
-
+            ZipFile zipFile = new ZipFile(strPath);
+            zipFile.close();
             return strSearchDir;
         }
         else if(strSearchDir.toUpperCase().startsWith("INTERNAL://"))
         {
             return strSearchDir;
         }
+//      else if(strSearchDir.toUpperCase().startsWith("FILE:///ANDROID_ASSET/"))
+//      {
+//      	return strSearchDir;
+//      }
+        else if(strSearchDir.toUpperCase().startsWith("FILE:/"))
+        {
+        	strSearchDir = strSearchDir.replace('\\', File.separatorChar);
+	        strSearchDir = strSearchDir.replace('/', File.separatorChar);
 
-//        System.out.println(strSearchDir);  // DBG
+	        String path = strSearchDir.substring(6);
 
-//      System.out.println(strSearchDir);
-        strSearchDir = strSearchDir.replace('\\', File.separatorChar);
-        strSearchDir = strSearchDir.replace('/', File.separatorChar);
+	        File f = new File(path);
 
-//        System.out.println(strSearchDir);  // DBG
+			if(!f.exists())
+			{
+				throw new FileNotFoundException(path);
+			}
 
-//      System.out.println(strSearchDir.charAt(strSearchDir.length() - 1));
-        // controlla se l'ultimo carattere è separator
-//        if(strSearchDir.charAt(strSearchDir.length() - 1) == File.separatorChar)
-//            strSearchDir.substring(0, strSearchDir.length() - 1);
+			return f.getAbsolutePath();
+        }
+        else
+        {
+        	strSearchDir = strSearchDir.replace('\\', File.separatorChar);
+	        strSearchDir = strSearchDir.replace('/', File.separatorChar);
 
-//    System.out.println(strSearchDir);  // DBG
+	        File f = new File(strSearchDir);
+	        if(f.isAbsolute())
+	        {
+	        	if(!f.exists())
+	        		throw new FileNotFoundException(strSearchDir);
+	        	else
+	        		return f.getAbsolutePath();
+	        }
+	        else if(strSearchDir.equals(".."))
+	        {
+	        	return new File(basePath).getParentFile().getAbsolutePath();
+	        }
+	        else
+	        {
+	        	f = new File(basePath, strSearchDir);
+	        	if(!f.exists())
+				{
+					throw new FileNotFoundException(strSearchDir);
+				}
 
-//        // patch per Pocket PC
-//        if(strSearchDir.equals("\\\\"))
-//            strSearchDir = "\\";
-
-//    System.out.println(strSearchDir);  // DBG
-
-
-        return strSearchDir;
-//        try
-//        {
-//            File file = new File(new File(strSearchDir).getCanonicalPath());
-//            String strAbsPath = file.getCanonicalPath();
-//            if(file.exists() && file.isDirectory())
-//            {
-////                if(strAbsPath.charAt(strAbsPath.length() - 1) == File.separatorChar)
-//                    strSearchDir = strAbsPath;
-////                else
-////                    strSearchDir = strAbsPath + File.separator;
-//
-//                return strSearchDir;
-//            }
-//            else
-//            {
-//                throw new FileNotFoundException(strSearchDir);
-//            }
-//        }
-//        catch(SecurityException ex)
-//        {
-//            throw JIPRuntimeException.create(9, "Cannot access the directory " + strSearchDir);
-//        }
-//        catch(FileNotFoundException ex)
-//        {
-//            throw ex;
-//        }
-//        catch(IOException ex)
-//        {
-//            throw new JIPJVMException(ex);
-//        }
+	        	return f.getAbsolutePath();
+	        }
+        }
     }
 }
 

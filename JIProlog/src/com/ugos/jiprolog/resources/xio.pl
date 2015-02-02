@@ -24,7 +24,7 @@
                   writeq/2, writeln/1, writeln/2, write_canonical/2, write_term/2, write_term/3, put/1, put/2, put_byte/1, put_byte/2, put_code/1,
                   put_code/2, put_char/1, skip/1, skip/2, put_char/2, nl/1, flush_output/0, flush_output/1, open/3, open/4, close/1,
                   print/1, print/2, display/1, display/2, close/2, at_end_of_stream/0, at_end_of_stream/1, stream_property/2,
-                  access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, chdir/1, absolute_file_name/2,
+                  access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, searchpath/1, absolute_file_name/2,
                   is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
                   file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
                   current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
@@ -35,7 +35,7 @@
                   writeq/2, writeln/1, writeln/2, write_canonical/2, write_term/2, write_term/3, put/1, put/2, put_byte/1, put_byte/2, put_code/1,
                   put_code/2, put_char/1, skip/1, skip/2, put_char/2, nl/1, flush_output/0, flush_output/1, open/3, open/4, close/1,
                   print/1, print/2, display/1, display/2, close/2, at_end_of_stream/0, at_end_of_stream/1, stream_property/2,
-                  access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, chdir/1, absolute_file_name/2,
+                  access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, searchpath/1, absolute_file_name/2,
                   is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
                   file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
                   current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
@@ -485,11 +485,11 @@ same_file(File1, File2):-
     absolute_file_name(File2, File).
 
 working_directory(X, Y):-
-    searchpath(X),
-    searchpath(Y).
+    chdir(X),
+    chdir(Y).
 
-chdir(X):-
-    searchpath(X).
+searchpath(X):-
+    chdir(X).
 
 absolute_file_name(File, Abs):-
     xcall('com.ugos.jiprolog.extensions.io.AbsoluteFileName2', [File, Abs]).
@@ -538,7 +538,7 @@ rename_file(File):-
     xcall('com.ugos.jiprolog.extensions.io.RenameFile1', [File]).
 
 dir:-
-    searchpath(CurDir),
+    chdir(CurDir),
     write('File list in '),
     write(CurDir), nl,
     dir(X),
@@ -556,7 +556,7 @@ dir(X):-
     xcall('com.ugos.jiprolog.extensions.io.Dir1', [X]).
 
 cd(Dir):-
-    searchpath(Dir).
+    chdir(Dir).
 
 make_directory(Dir):-
     xcall('com.ugos.jiprolog.extensions.io.MakeDirectory1', [Dir]).

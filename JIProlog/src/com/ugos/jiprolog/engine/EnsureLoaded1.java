@@ -45,38 +45,19 @@ final class EnsureLoaded1 extends BuiltIn
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
         }
 
-        //System.out.println("strPath " + strPath);
-        //#ifndef _MIDP
         try
         {
-            Load1.load(strPath, getJIPEngine());
+        	if(strPath.toLowerCase().endsWith(".jip"))
+        		Load1.load(strPath, getJIPEngine());
+        	else
+        		Consult1.consult(strPath, getJIPEngine(), getQueryHandle());
         }
-//        catch(IOException ex)
-//        {
-//            System.out.println("Load exc");
-//            ex.printStackTrace();
-//            throw new JIPJVMException(ex);
-//        }
-        catch(Exception ex)
+        catch(Exception ex1)
         {
-//            ex.printStackTrace();
-        //#endif
-
-            // compiled file not found
-            try
-            {
-                Consult1.consult(strPath, getJIPEngine(), getQueryHandle());
-            }
-            catch(IOException ex1)
-            {
-//                System.out.println("consult exc");
 //                ex1.printStackTrace();
-                throw new JIPJVMException(ex1);
-            }
-
-//      #ifndef _MIDP
+            throw new JIPJVMException(ex1);
         }
-//      #endif
+
         return true;
     }
 }

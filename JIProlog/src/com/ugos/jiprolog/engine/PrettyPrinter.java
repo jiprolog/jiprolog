@@ -82,6 +82,9 @@ final class PrettyPrinter extends Object
             if(strAtom.equals("{}"))
                 return "{}";
 
+            if(strAtom.equals("[]"))
+                return "[] ";
+
             if(Q_CHARS.indexOf(strAtom) > -1)
                 return "'" + strAtom + "'";
 
@@ -562,7 +565,9 @@ final class PrettyPrinter extends Object
             else
                 //return var.getAddress() + "." + print(var.getObject());
                 //return var.getName() + "=" + print(object, opManager);
+
                 return print(object, opManager, bQ);
+//            	return print(object, opManager, true);
 //        }
     }
 }

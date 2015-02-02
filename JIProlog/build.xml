@@ -99,6 +99,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 				<pathelement path="${project.root}/JIProlog/lib" />
 				<pathelement path="${java.class.path}"/>
 			</classpath>
+			<arg value="-debug"/>
 			<arg value="-c"/>
 			<arg value="compile.pl"/>
 			<arg value="-g"/>

@@ -61,6 +61,10 @@ char_code(Atom, Code):-
 atom_codes(Atom, Codes):-
     name(Atom, Codes).
 
+atom_chars(Atom, Chars) :-
+	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
+
+/*
 atom_chars(Atom, AtomList):-
     nonvar(Atom),
     !,
@@ -70,6 +74,7 @@ atom_chars(Atom, AtomList):-
 atom_chars(Atom, AtomList):-
     convert_chars(CharList, AtomList),
     name(Atom,  CharList).
+*/
 
 number_codes(Num, List):-
     number(Num),
@@ -107,19 +112,19 @@ atom_concat(Atom1, Atom2, Concat):-
     (atom(Atom1) ; number(Atom1)),
     (atom(Atom2) ; number(Atom2)),
     !,
-    name(Atom1, CAtom1),
-    name(Atom2, CAtom2),
+    atom_chars(Atom1, CAtom1),
+    atom_chars(Atom2, CAtom2),
     append(CAtom1, CAtom2, CConcat),
-    name(Concat, CConcat),
+    atom_chars(Concat, CConcat),
     !.
 
 atom_concat(Atom1, Atom2, Concat):-
     (atom(Concat) ; number(Concat)),
     !,
-    name(Concat, CConcat),
+    atom_chars(Concat, CConcat),
     append(CAtom1, CAtom2, CConcat),
-    name(Atom1, CAtom1),
-    name(Atom2, CAtom2).
+    atom_chars(Atom1, CAtom1),
+    atom_chars(Atom2, CAtom2).
 
 sub_atom(Atom, Before, Length, After, SubAtom):-
 	atom_concat(Prefix, Suffix, Atom),

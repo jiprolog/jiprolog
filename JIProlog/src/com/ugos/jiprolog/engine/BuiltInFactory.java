@@ -90,7 +90,7 @@ final class BuiltInFactory extends Object
 //        m_BuiltInTable.put("arg/3",             new Arg3());
         m_BuiltInTable.put("=../2",             new Univ2());
         m_BuiltInTable.put("notify/2",          new Notify2());
-        m_BuiltInTable.put("searchpath/1",      new SearchPath1());
+        m_BuiltInTable.put("chdir/1",      	new SearchPath1());
         m_BuiltInTable.put("is/2",              new Is2());
         m_BuiltInTable.put(">/2",               new Great2());
         m_BuiltInTable.put("</2",               new Less2());

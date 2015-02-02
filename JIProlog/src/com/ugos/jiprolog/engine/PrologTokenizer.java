@@ -21,7 +21,9 @@
 package com.ugos.jiprolog.engine;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
+
 import com.ugos.util.*;
 
 class PrologTokenizer
@@ -532,7 +534,9 @@ class PrologTokenizer
 
                                 try
                                 {
-                                    byte val = Byte.parseByte(strNum);
+                                	BigInteger bival = new BigInteger(strNum, 8);
+
+                                    byte val = bival.byteValue();// Byte.parseByte(strNum);
                                     strTerm += (char)val;
                                 }
                                 catch(NumberFormatException ex)

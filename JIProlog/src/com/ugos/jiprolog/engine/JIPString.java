@@ -35,9 +35,9 @@ public class JIPString extends JIPTerm
     /** Creates a new JIPString object from a string
       * @param strString JIPString object from a string
       */
-    public static final JIPString create(final String strString)
+    public static final JIPString create(final String strString, boolean atom)
     {
-        return new JIPString(new PString(strString));
+        return new JIPString(new PString(strString, atom));
     }
 
     /** Creates a new JIPString object from a list of characters

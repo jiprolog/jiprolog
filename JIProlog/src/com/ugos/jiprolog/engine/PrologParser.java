@@ -259,7 +259,7 @@ final class PrologParser
                             }
                             else
                             {
-                                termStack.push(new PString(strVal));
+                                termStack.push(new PString(strVal, false));
                             }
                         }
                         break;
