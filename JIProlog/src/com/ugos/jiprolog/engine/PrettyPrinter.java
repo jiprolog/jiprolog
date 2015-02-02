@@ -112,15 +112,18 @@ final class PrettyPrinter extends Object
                 switch(strAtom.charAt(i))
                 {
                     case '\'':
-                        strRet+= "''";
+                        strRet+= "\\'";
                         bQuoted = true;
                         break;
 
                     case '\\':
                         bSpecialFound = true;
-                        strRet += "\\";
-                        //if(bSimpleFound)
-                        //strRet+= "\\\\";
+
+                        if(bSimpleFound)
+                        	strRet+= "\\\\";
+                        else
+                        	strRet += "\\";
+
                         //bQuoted = true;
                         break;
 
@@ -514,7 +517,7 @@ final class PrettyPrinter extends Object
 
                 if(head != null)
                 {
-                	return "','(" + strConsCell + ", " + print(head, opManager, bQ) + ")";
+                	return "','(" + strConsCell + ", " + print(term, opManager, bQ) + ")";
                 }
                 else
                 {

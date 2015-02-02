@@ -85,6 +85,8 @@ public class StreamManager
         }
         catch(IOException ex)
         {                      
+        	ex.printStackTrace();
+        	
             // prova con il basepath
             if(strBasePath.toUpperCase().startsWith("JAR://"))
                 ins = getInputStream(strBasePath + "#" + strFilePath, strFileName, strCurDir);            

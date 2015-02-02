@@ -27,7 +27,7 @@ final class Length2 extends BuiltIn
     public final boolean unify(final Hashtable varsTbl)
     {
         final PrologObject pred = getRealTerm(getParam(1));
-        
+
         if(pred instanceof ConsCell)
         {
             return Expression.createNumber(((ConsCell)pred).getHeight()).unify(getParam(2), varsTbl);
@@ -38,28 +38,30 @@ final class Length2 extends BuiltIn
         }
         else if(pred instanceof Expression)
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+        	String s = pred.toString();
+        	return Expression.createNumber(s.length()).unify(getParam(2), varsTbl);
+//            throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
         }
         else
         {
             final PrologObject length = getRealTerm(getParam(2));
-            
+
             if(length == null)
                 throw new JIPParameterUnboundedException(2);
-            
+
             if(!(length instanceof Expression))
                 throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
-            
+
             List list = null;
             for(int i = 0; i < (int)((Expression)length).getValue(); i++)
             {
                 list = new List(new Variable(false), list);
             }
-            
+
             return getParam(1).unify(list, varsTbl);
         }
     }
-    
-    
+
+
 }
 

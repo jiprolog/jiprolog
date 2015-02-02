@@ -88,6 +88,16 @@
 '$system':member(X, [_|T]) :-
     member(X, T).
 
+%  member((?X, ?List, ?Pos)
+'$system':member(X, [X|Xs], 1).
+'$system':member(X, [Y|Ys], N):-
+    '$system':member(X, Ys, N1),
+    N is N1 + 1.
+
+% arg/3
+'$system':arg(N, F, E):-
+	F =.. [_|X], member(E, X, N).
+
 '$system':true.
 
 '$system':false:-fail.
