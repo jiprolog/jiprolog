@@ -468,24 +468,55 @@ class PrologTokenizer
                         break;
 
                     case STATE_QUOTE:
+                    case STATE_DOUBLEQUOTE:
 //                        System.out.println(curChar);
-                        if(curChar == QUOTE_CHAR)
+                        if(curChar == DOUBLEQUOTE_CHAR)
                         {
-                            c = m_lnReader.read();
-                            if(c == QUOTE_CHAR)
-                            {
-                                strTerm += "'";
-                            }
+                        	if(nState == STATE_DOUBLEQUOTE)
+                        	{
+	                            c = m_lnReader.read();
+	                            if(c == DOUBLEQUOTE_CHAR)
+	                            {
+	                                strTerm += "\"";
+	                            }
+	                            else
+	                            {
+	                                // fine quoted atom
+	                                m_lnReader.pushback();
+	                                strTerm += (char)curChar;//String.valueOf((char)curChar);
+	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
+	                                nState = STATE_END;
+	                            }
+                        	}
                             else
                             {
-                                // fine quoted atom
-                                m_lnReader.pushback();
-                                strTerm += (char)curChar;//String.valueOf((char)curChar);
-                                nTokenType = TOKEN_QUOTE;
-                                nState = STATE_END;
+                            	strTerm += (char)curChar;
                             }
                         }
-                        else if(curChar == '\r' || curChar == '\n')
+                        else if(curChar == QUOTE_CHAR)
+                        {
+                        	if(nState == STATE_QUOTE)
+                        	{
+	                            c = m_lnReader.read();
+	                            if(c == QUOTE_CHAR)
+	                            {
+	                                strTerm += "'";
+	                            }
+	                            else
+	                            {
+	                                // fine quoted atom
+	                                m_lnReader.pushback();
+	                                strTerm += (char)curChar;//String.valueOf((char)curChar);
+	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
+	                                nState = STATE_END;
+	                            }
+                        	}
+                            else
+                            {
+                            	strTerm += (char)curChar;
+                            }
+                        }
+                        else if(nState == STATE_QUOTE && (curChar == '\r' || curChar == '\n'))
                         {
                             throw syntaxError("carriage_return_in_quoted_atom('" + strTerm + "')");
                         }
@@ -617,108 +648,108 @@ class PrologTokenizer
                         }
                         break;
 
-                    case STATE_DOUBLEQUOTE:
-                        if(curChar == DOUBLEQUOTE_CHAR)
-                        {
-                            strTerm += (char)curChar;
-                            nTokenType = TOKEN_DBLQUOTE;
-                            nState = STATE_END;
-                        }
-                        else if(curChar == '\r' || curChar == '\n')
-                        {
-                            throw syntaxError("carriage_return_in_string");
-                        }
-                        else if(curChar == '~')  // edimburgh prolog
-                        {
-                            c = m_lnReader.read();
-                            if(c == '~')
-                            {
-                                strTerm += (char)c;//String.valueOf((char)c);
-                            }
-                            else if(c == '"')
-                            {
-                                m_lnReader.pushback();
-                                //strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
-                            }
-                            else if(c > '@')
-                            {
-                                strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
-                            }
-                            else
-                                throw syntaxError("bad_escape_sequence('~" + (char)c + "')");
-                        }
-                        else if(curChar == '\\') // ISO prolog
-                        {
-                            c = m_lnReader.read();
-                            if(c == '\\')
-                            {
-                                strTerm += (char)c;//String.valueOf((char)c);
-                            }
-                            else if(c >= 'a')
-                            {
-                                switch(c)
-                                {
-                                    case 'a':  // \a bell
-                                        strTerm += (char)(7);
-                                        break;
-
-                                    case 'b':  // \b backspace
-                                        strTerm += (char)(8);
-                                        break;
-
-                                    case 'f':  // \f form feed
-                                        strTerm += (char)(12);
-                                        break;
-
-                                    case 'n':  // \n line feed
-                                        strTerm += (char)(10);
-                                        break;
-
-                                    case 'r':  // \r carriage return
-                                        strTerm += (char)(13);
-                                        break;
-
-                                    case 't':  // \t tab
-                                        strTerm += (char)(9);
-                                        break;
-
-                                    case 'v':  // \v vtab
-                                        strTerm += (char)(11);
-                                        break;
-
-                                    case 'x':  // \xHX
-                                        // legge il prossimo byte
-                                        int d1 = m_lnReader.read();
-                                        // legge il prossimo byte
-                                        int d2 = m_lnReader.read();
-                                        try
-                                        {
-                                            String strHexNum = (char)d1 + "" + (char)d2;
-
-                                            byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
-                                            strTerm += (char)(val[0]);
-                                        }
-                                        catch(NumberFormatException ex)
-                                        {
-                                            throw syntaxError("bad_escape_sequence('\\x')");
-                                        }
-
-                                        // legge il prossimo byte
-                                        d2 = m_lnReader.read();
-                                        if(d2 != '\\')  // ISO def
-                                            m_lnReader.pushback();
-                                        break;
-
-                                    default: // ignora \
-                                        strTerm += (char)(c);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
-                        }
-                        break;
+//                    case STATE_DOUBLEQUOTE:
+//                        if(curChar == DOUBLEQUOTE_CHAR)
+//                        {
+//                            strTerm += (char)curChar;
+//                            nTokenType = TOKEN_DBLQUOTE;
+//                            nState = STATE_END;
+//                        }
+//                        else if(curChar == '\r' || curChar == '\n')
+//                        {
+//                            throw syntaxError("carriage_return_in_string");
+//                        }
+//                        else if(curChar == '~')  // edimburgh prolog
+//                        {
+//                            c = m_lnReader.read();
+//                            if(c == '~')
+//                            {
+//                                strTerm += (char)c;//String.valueOf((char)c);
+//                            }
+//                            else if(c == '"')
+//                            {
+//                                m_lnReader.pushback();
+//                                //strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                            }
+//                            else if(c > '@')
+//                            {
+//                                strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                            }
+//                            else
+//                                throw syntaxError("bad_escape_sequence('~" + (char)c + "')");
+//                        }
+//                        else if(curChar == '\\') // ISO prolog
+//                        {
+//                            c = m_lnReader.read();
+//                            if(c == '\\')
+//                            {
+//                                strTerm += (char)c;//String.valueOf((char)c);
+//                            }
+//                            else if(c >= 'a')
+//                            {
+//                                switch(c)
+//                                {
+//                                    case 'a':  // \a bell
+//                                        strTerm += (char)(7);
+//                                        break;
+//
+//                                    case 'b':  // \b backspace
+//                                        strTerm += (char)(8);
+//                                        break;
+//
+//                                    case 'f':  // \f form feed
+//                                        strTerm += (char)(12);
+//                                        break;
+//
+//                                    case 'n':  // \n line feed
+//                                        strTerm += (char)(10);
+//                                        break;
+//
+//                                    case 'r':  // \r carriage return
+//                                        strTerm += (char)(13);
+//                                        break;
+//
+//                                    case 't':  // \t tab
+//                                        strTerm += (char)(9);
+//                                        break;
+//
+//                                    case 'v':  // \v vtab
+//                                        strTerm += (char)(11);
+//                                        break;
+//
+//                                    case 'x':  // \xHX
+//                                        // legge il prossimo byte
+//                                        int d1 = m_lnReader.read();
+//                                        // legge il prossimo byte
+//                                        int d2 = m_lnReader.read();
+//                                        try
+//                                        {
+//                                            String strHexNum = (char)d1 + "" + (char)d2;
+//
+//                                            byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
+//                                            strTerm += (char)(val[0]);
+//                                        }
+//                                        catch(NumberFormatException ex)
+//                                        {
+//                                            throw syntaxError("bad_escape_sequence('\\x')");
+//                                        }
+//
+//                                        // legge il prossimo byte
+//                                        d2 = m_lnReader.read();
+//                                        if(d2 != '\\')  // ISO def
+//                                            m_lnReader.pushback();
+//                                        break;
+//
+//                                    default: // ignora \
+//                                        strTerm += (char)(c);
+//                                }
+//                            }
+//                        }
+//                        else
+//                        {
+//                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+//                        }
+//                        break;
                 }
             }
         }

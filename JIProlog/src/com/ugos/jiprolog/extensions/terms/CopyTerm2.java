@@ -30,24 +30,24 @@ public class CopyTerm2 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
-        
-        // check if input is a variable
-        if (term instanceof JIPVariable)
-        {
-            // try to extract the term
-            if(!((JIPVariable)term).isBounded())
-            {
-                throw new JIPParameterUnboundedException(1);
-            }
-            else
-            {
-                //extracts the term
-                term = ((JIPVariable)term).getValue();
-            }
-        }
-        
+
+//        // check if input is a variable
+//        if (term instanceof JIPVariable)
+//        {
+//            // try to extract the term
+//            if(!((JIPVariable)term).isBounded())
+//            {
+//                throw new JIPParameterUnboundedException(1);
+//            }
+//            else
+//            {
+//                //extracts the term
+//                term = ((JIPVariable)term).getValue();
+//            }
+//        }
+
         JIPTerm copy = (JIPTerm)term.clone();
-        
+
         return input.getNth(2).unify(copy, varsTbl);
     }
 

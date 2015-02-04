@@ -40,12 +40,15 @@ final class PredicateProperties2 extends BuiltIn
         Functor funct = (Functor)parm;
 //      System.out.println("Name: " + funct.getName() + "|||");
 
-        if(!funct.getName().equals("//2"))
-        {
+//        if(!funct.getName().equals("//2"))
+//        {
         	funct = new Functor("/2", new ConsCell(Atom.createAtom(funct.getFriendlyName()), new ConsCell(Expression.createNumber(funct.getArity()), null)));
-        }
+//        }
 //
 //            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+
+        if(funct.getParams().getHead() == null)
+        	return false;
 
         Clause clause = Clause.getClause(funct.getParams().getHead());
         String strFunc = clause.getHead().toString(getJIPEngine()) + "/" + ((ConsCell)funct.getParams().getTail()).getHead().toString(getJIPEngine());
@@ -71,12 +74,15 @@ final class PredicateProperties2 extends BuiltIn
         if(getJIPEngine().getGlobalDB().isSystem(strFunc))
         {
             propsList = new List(Atom.createAtom("built_in"), propsList);
+            propsList = new List(Atom.createAtom("visible"), propsList);
         }
 
         if(getJIPEngine().getGlobalDB().isExternal(strFunc))
         {
             propsList = new List(Atom.createAtom("built_in"), propsList);
             propsList = new List(Atom.createAtom("foreign"), propsList);
+            propsList = new List(Atom.createAtom("visible"), propsList);
+
         }
 
         //      System.out.println(propsList);
