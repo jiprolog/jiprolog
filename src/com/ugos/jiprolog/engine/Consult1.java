@@ -127,7 +127,7 @@ class Consult1 extends BuiltIn
                 if(!wam.query(goal))
                 {
                     wam.closeQuery();
-                    throw JIPRuntimeException.create(27, strFileName[0] + "-" + goal.toString(engine));
+                    throw JIPRuntimeException.create(27, strFileName[0] + ". goal: " + goal.toString(engine));
                 }
 
                 wam.closeQuery();

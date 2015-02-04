@@ -29,7 +29,7 @@ final class PrettyPrinter extends Object
     //private static OperatorManager s_opManager = new OperatorManager();
 
     private static final char[] ESCAPE = {'a', 'b', 't', 'n', 'v', 'f', 'r'};
-    private static String Q_CHARS = "()[].,{}\"";
+    private static String Q_CHARS = "()[].,`{}\"";
 
     public static final String print(final PrologObject obj, final OperatorManager opManager, final boolean bQ)
     {

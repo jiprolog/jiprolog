@@ -220,7 +220,7 @@ final class PrologParser
                         {
                             Variable var;
 
-                            if(tok.m_strToken.equals("_"))
+                            if(tok.m_strToken.startsWith("_"))
                             {
                                 var = new Variable(true);
                             }
@@ -364,17 +364,35 @@ final class PrologParser
                                         else
                                         {
 //                                          tratto lastop come operatore infisso
+                                        	if(lastLastObj instanceof Operator && ((Operator)lastObj).getInfix() != null)
+                                			{
+                                                //tratto lastOP come funtore
+                                                term = translateTerm(STATE_ARG_LIST, lnReader);
 
-                                            term = translateTerm(STATE_ROUND_BRACKET, lnReader);
-//                                            System.out.println("term " + term);
-                                            if (term == null)
-                                            {
-                                                termStack.push(ConsCell.NIL);
-                                            }
-                                            else
-                                            {
-                                                termStack.push(term);
-                                            }
+//                                                System.out.println("term " + term);
+
+        	                                    termStack.pop();
+        	                                    if(!(term instanceof ConsCell) || term  instanceof List || term  instanceof Functor)
+        	                                    {
+        	                                        term = new ConsCell(term, null);
+        	                                    }
+
+        	                                    PrologObject funct = makeFunctor(Atom.createAtom(((Operator)lastObj).getName()), (ConsCell)term);
+        	                                    termStack.push(funct);
+                                			}
+                                			else
+                                			{
+	                                            term = translateTerm(STATE_ROUND_BRACKET, lnReader);
+	//                                            System.out.println("term " + term);
+	                                            if (term == null)
+	                                            {
+	                                                termStack.push(ConsCell.NIL);
+	                                            }
+	                                            else
+	                                            {
+	                                                termStack.push(term);
+	                                            }
+                                			}
                                         }
                                     }
                                 }

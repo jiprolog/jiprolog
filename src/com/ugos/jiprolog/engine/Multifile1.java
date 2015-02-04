@@ -26,7 +26,7 @@ class Multifile1 extends BuiltIn
 {
     //protected ConsCell m_pred;
 //    protected Vector m_predDefVect = new Vector();
-    
+
 //    public void bound()
 //    {
 //        final GlobalDB gdb = getJIPEngine().getGlobalDB();
@@ -41,11 +41,11 @@ class Multifile1 extends BuiltIn
 ////            m_pred = (ConsCell)m_pred.getTail();
 ////        }
 //    }
-    
+
     public boolean unify(final Hashtable varsTbl)
     {
         final Vector predDefVect = getPredDefVect();
-        
+
         final GlobalDB gdb = getJIPEngine().getGlobalDB();
         for(int i = 0; i < predDefVect.size(); i++)
         {
@@ -54,38 +54,46 @@ class Multifile1 extends BuiltIn
 
         return true;
     }
-    
+
     protected Vector getPredDefVect()
     {
         PrologObject pred = getRealTerm(getParam(1));
-        
+
         if(pred instanceof Functor)
         {
             pred = new ConsCell(pred, null);
         }
-                
+
         final Vector predDefVect = new Vector();
-        
+
         while (pred != null)
         {
-            
+
             try
             {
                 String strPredDef;
                 PrologObject head = getRealTerm(((ConsCell)pred).getHead());
-                
+
                 // head deve essere instanza di funtore /2 del tipo name/arity
-                if(head instanceof Functor && ((Functor)head).getName().equals("//2"))
-                {
-                    ConsCell params = ((Functor )head).getParams();
-                    strPredDef = ((Atom)params.getHead()).getName() + "/" + ((ConsCell)params.getTail()).getHead().toString(getJIPEngine());
-                    predDefVect.addElement(strPredDef);
-                }
+                if(head instanceof Functor)
+            	{
+                	if (((Functor)head).getName().equals("//2"))
+	                {
+	                    ConsCell params = ((Functor )head).getParams();
+	                    strPredDef = ((Atom)params.getHead()).getName() + "/" + ((ConsCell)params.getTail()).getHead().toString(getJIPEngine());
+	                    predDefVect.addElement(strPredDef);
+	                }
+	                else
+	                {
+	                    strPredDef = ((Functor)head).getName();
+	                    predDefVect.addElement(strPredDef);
+	                }
+            	}
                 else
                 {
                     throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
                 }
-                
+
                 pred = getRealTerm(((ConsCell)pred).getTail());
             }
             catch(ClassCastException ex)
@@ -93,7 +101,7 @@ class Multifile1 extends BuiltIn
                 throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
             }
         }
-        
+
         return predDefVect;
     }
 }
