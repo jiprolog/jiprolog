@@ -220,7 +220,7 @@ final class PrologParser
                         {
                             Variable var;
 
-                            if(tok.m_strToken.startsWith("_"))
+                            if(tok.m_strToken.equals("_"))
                             {
                                 var = new Variable(true);
                             }
