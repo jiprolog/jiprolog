@@ -365,7 +365,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 if(head instanceof Functor && ((Functor)head).getName().equals("//2"))
                 {
                     ConsCell params = ((Functor )head).getParams();
-                    strPredDef = ((Atom)params.getHead()).getName() + "/" + ((ConsCell)params.getTail()).getHead();
+                    PrologObject h = params.getHead();
+                    if(h instanceof Variable)
+                    	h = ((Variable)h).getObject();
+                    strPredDef = ((Atom)h).getName() + "/" + ((ConsCell)params.getTail()).getHead();
                 }
                 else
                 {

@@ -16,7 +16,7 @@ public class Pid1 extends BuiltIn
 
 		    String pid = nameOfRunningVM.substring(0, p);
 
-		    return getParam(1).unify(Atom.createAtom(pid), varsTbl);
+		    return getParam(1).unify(Expression.createNumber(pid), varsTbl);
 		}
 		catch(Throwable t)
 		{
