@@ -23,18 +23,18 @@ package com.ugos.jiprolog.extensions.sets;
 import com.ugos.jiprolog.engine.*;
 
 import java.util.*;
-  
+
 public class Bagof3 extends Findall3
-{ 
+{
     private Vector  m_solVect = null;
     private JIPCons m_freeVars;
     private JIPList m_solList = null;
-    
+
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
         JIPTerm query = input.getNth(2);
-        
+
         // check if input is a variable
         if (query instanceof JIPVariable)
         {
@@ -49,7 +49,7 @@ public class Bagof3 extends Findall3
                 query = ((JIPVariable)query).getValue();
             }
         }
-        
+
         // check if input is a variable
         if (term instanceof JIPVariable)
         {
@@ -60,20 +60,20 @@ public class Bagof3 extends Findall3
                 term = ((JIPVariable)term).getValue();
             }
         }
-                               
+
         JIPTerm res = input.getNth(3);
-        
+
         if(m_solVect == null)
         {
             m_solVect = collect(query);
             m_freeVars = extractFreeVars(query);
         }
-        
+
         if(m_solVect.isEmpty())
             return false;
-        
+
         m_solList = null;
-        
+
         JIPTerm sol;
         m_freeVars.clear();
         int j = 0;
@@ -94,27 +94,27 @@ public class Bagof3 extends Findall3
                 j++;
             }
         }
-        
+
         if(m_solList == null)
             return false;
             //m_solList = JIPList.NIL;
         else
             m_solList = m_solList.reverse();
-        
+
         return res.unify(m_solList, varsTbl);
     }
-    
+
     public final boolean hasMoreChoicePoints()
     {
         return m_solList != JIPList.NIL && (super.hasMoreChoicePoints() || !m_solVect.isEmpty());
     }
-    
+
     private final JIPCons extractFreeVars(JIPTerm obj)
     {
         if(obj instanceof JIPFunctor)
         {
             if (((JIPFunctor)obj).getName().equals("^"))
-                return JIPCons.create(((JIPFunctor)obj).getParams().getHead(), null);
+                return JIPCons.create(((JIPFunctor)obj).getParams().getHead(), extractFreeVars(((JIPFunctor)obj).getParams().getTail()));
             else
                 return JIPCons.NIL;
         }

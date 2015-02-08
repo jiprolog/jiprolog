@@ -534,8 +534,8 @@ delete_file(File):-
 delete_directory(Dir):-
     xcall('com.ugos.jiprolog.extensions.io.DeleteFile1', [Dir]).
 
-rename_file(File):-
-    xcall('com.ugos.jiprolog.extensions.io.RenameFile1', [File]).
+rename_file(File, NewFile):-
+    xcall('com.ugos.jiprolog.extensions.io.RenameFile2', [File, NewFile]).
 
 dir:-
     chdir(CurDir),
