@@ -50,7 +50,7 @@ final class Expression extends PrologObject //implements Serializable
         floating = (int)dNum != dNum;
     }
 
-    public final PrologObject copy(final Hashtable varTable)
+    public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         return this;
     }

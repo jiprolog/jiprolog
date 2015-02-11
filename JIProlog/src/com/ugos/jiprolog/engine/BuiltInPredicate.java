@@ -25,21 +25,21 @@ import java.util.Hashtable;
 final class BuiltInPredicate extends Functor
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     private BuiltIn     m_builtIn;
-    
+
     public BuiltInPredicate (final String strName, final ConsCell params)
     {
         super(strName, params);
     }
-    
+
     public BuiltInPredicate(final Atom name, final ConsCell params)
     {
         this(name.getName(), params);
         m_builtIn = null;
     }
 
-    public final PrologObject copy(final Hashtable<Variable, Variable> varTable)
+    public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         BuiltInPredicate bpred;
 
@@ -49,26 +49,26 @@ final class BuiltInPredicate extends Functor
         }
         else
         {
-            bpred = new BuiltInPredicate(getName(), (ConsCell)(getParams().copy(varTable)));
+            bpred = new BuiltInPredicate(getName(), (ConsCell)(getParams().copy(true, varTable)));
         }
-                        
+
         //bpred.m_builtIn = m_builtIn;
-        
+
         return bpred;
     }
-    
+
     public final void init(final WAM wam)
     {
         m_builtIn = wam.getJIPEngine().getBuiltInFactory().getInstance(getName(), this, wam);
     }
-    
+
 //    public final boolean match(final WAM prolog)
 //    {
 //        //System.out.println("built in match");
 //
 //        return m_builtIn.match(getParams(), prolog);
 //    }
-    
+
     public final boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
     {
         if (m_builtIn != null)
@@ -90,7 +90,7 @@ final class BuiltInPredicate extends Functor
             return super._unify(obj, table);
         }
     }
-    
+
     public final boolean hasMoreChoicePoints()
     {
         if(m_builtIn != null && m_builtIn.hasMoreChoicePoints())

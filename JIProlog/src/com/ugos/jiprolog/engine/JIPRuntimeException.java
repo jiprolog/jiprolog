@@ -157,7 +157,7 @@ public class JIPRuntimeException extends RuntimeException
         }
         else
         {
-            return ((m_term != null) ? (new JIPTerm(m_term.copy())) : ((m_curNode == null) ? (null) : (new JIPTerm(m_curNode.getGoal().copy()))));
+            return ((m_term != null) ? (new JIPTerm(m_term.copy(true))) : ((m_curNode == null) ? (null) : (new JIPTerm(m_curNode.getGoal().copy(true)))));
         }
     }
 

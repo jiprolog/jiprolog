@@ -27,7 +27,7 @@ final class Atom1 extends BuiltIn
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         final PrologObject term = getRealTerm(getParam(1));
-        
+
         if(term instanceof Atom)
         {
             return true;

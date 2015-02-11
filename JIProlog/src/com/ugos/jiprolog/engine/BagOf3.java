@@ -9,38 +9,38 @@ class BagOf3 extends BuiltIn
 {
     Vector  m_solVect;
     WAM m_wam;
-    
+
     public final boolean unify(final Hashtable varsTbl)
     {
-        PrologObject term  = getParam(1);        
+        PrologObject term  = getParam(1);
         if(term instanceof Variable)
         	term = ((Variable)term).getObject();
-        
+
         PrologObject query = getParam(2);
         if(query == null)
             throw new JIPParameterUnboundedException(2);
-        
+
         PrologObject res = getParam(3);
-        
-        
+
+
         // separa le variabili non libere dalla query
         final ConsCell vars = extractVars(query);
         final Stack solStack = new Stack();
-        
+
         // cancella le variabili non libere
         term.clear();
         if(vars != null)
             vars.clear();
-        
-        // colleziona le soluzioni        
+
+        // colleziona le soluzioni
         m_solVect = getSolutions(query);
-        
+
         int i = 0;
         while(i < m_solVect.size())
         {
             if(query.unify((PrologObject)m_solVect.elementAt(i), varsTbl))
-            {                
-                solStack.push(term.copy());
+            {
+                solStack.push(term.copy(false));
                 m_solVect.removeElementAt(i);
                 // cancella le variabili non libere
                 term.clear();
@@ -52,41 +52,41 @@ class BagOf3 extends BuiltIn
                 i++;
             }
         }
-        
+
         List solList = null;
-            
+
         while(!solStack.isEmpty())
         {
             solList = new List((PrologObject)solStack.pop(), solList);
         }
-            
+
         if(solList == null)
             solList = List.NIL;
-        
+
         return res.unify(solList, varsTbl);
-    }    
-        
+    }
+
     public final boolean isDeterministic()
     {
         return false;
     }
-        
+
     final Vector getSolutions(PrologObject query)
-    {        
+    {
         m_wam = getNewWAM();
-        
+
         Vector solVect = new Vector();
         if(m_wam.query(new ConsCell(query, null)))
         {
-            solVect.addElement(query.copy());
+            solVect.addElement(query.copy(false));
             while(m_wam.nextSolution())
             {
-                solVect.addElement(query.copy());
+                solVect.addElement(query.copy(false));
             }
         }
-                    
+
         m_wam.closeQuery();
-        
+
         return solVect;
     }
 
@@ -97,7 +97,7 @@ class BagOf3 extends BuiltIn
         else
             return new WAM(m_jipEngine);
     }
-        
+
     final ConsCell extractVars(PrologObject obj)
     {
         if(obj instanceof Functor)
@@ -119,5 +119,5 @@ class BagOf3 extends BuiltIn
             return null;
     }
 }
-         
-        
+
+

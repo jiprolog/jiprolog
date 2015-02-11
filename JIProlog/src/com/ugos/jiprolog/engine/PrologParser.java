@@ -1085,14 +1085,14 @@ final class PrologParser
             }
             else //obj instanceof PrologObject
             {
-                if(!termStack.isEmpty())
-                {
+//                if(!termStack.isEmpty())
+//                {
                     PrologObject term = (PrologObject)obj;//termStack.pop();
                     Operator op = (Operator)termStack.pop();
                     termStack.push(term);
                     term = resolveOperator(termStack, op);
                     termStack.push(term);
-                }
+//                }
             }
 
             obj = termStack.pop();

@@ -273,13 +273,13 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final void assertz(final Clause clause, String strFile, boolean dynamic)
     {
-   		addPredicate((Clause)fixTerm(clause.copy()), false, strFile, dynamic);
+   		addPredicate((Clause)fixTerm(clause.copy(true)), false, strFile, dynamic);
 //   		addPredicate((Clause)fixTerm(clause), false, strFile);
     }
 
     final void asserta(final Clause clause, String strFile, boolean dynamic)
     {
-    	addPredicate((Clause)fixTerm(clause.copy()), true, strFile, dynamic);
+    	addPredicate((Clause)fixTerm(clause.copy(true)), true, strFile, dynamic);
 //        addPredicate((Clause)fixTerm(clause), true, strFile);
     }
 

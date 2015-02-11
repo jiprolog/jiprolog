@@ -85,7 +85,7 @@ final class AsyncWAMManager implements Runnable
             }
             else
             {
-                final PrologObject query = m_query.copy();
+                final PrologObject query = m_query.copy(false);
                 if(m_wam.query(query))
                 {
                     m_result = query;

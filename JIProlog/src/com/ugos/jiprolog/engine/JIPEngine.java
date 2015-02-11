@@ -56,7 +56,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 0;
     public static final int build = 5;
-    public static final int revision = 13;
+    public static final int revision = 14;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -1081,11 +1081,13 @@ public class JIPEngine implements Serializable
             {
                 // la copia va fatta prima di chiedere deterministic?
                 // potrebbe lanciare StackOverflowError
-                solution = container.m_query.copy();
+                solution = container.m_query.copy(true);
 //                System.out.println("sol.copy() " + solution.copy());
 
 //                System.out.println("obj " + obj);
-                solution.unify(((PrologObject)obj).copy(), new Hashtable(10));
+                PrologObject cobj = ((PrologObject)obj).copy(true);
+
+                solution.unify(cobj, new Hashtable(10));
 
 //                System.out.println("obj.copy() " + ((PrologObject)obj).copy());
 //                System.out.println("solution " + solution);

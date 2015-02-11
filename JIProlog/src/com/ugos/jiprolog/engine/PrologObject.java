@@ -36,7 +36,7 @@ abstract class PrologObject implements Clearable, Serializable
         Hashtable<Variable, Variable> vartbl = new Hashtable<Variable, Variable>(10);
         boolean bUnify = _unify(obj, vartbl);
 
-        Enumeration<Variable> en = vartbl.elements();
+        Enumeration<Variable> en = vartbl.keys();
         while(en.hasMoreElements())
         {
             en.nextElement().clear();
@@ -56,7 +56,7 @@ abstract class PrologObject implements Clearable, Serializable
         {
             // riporta le variabili instanziate nella vartable
             Variable var;
-            en = _varTbl.elements();
+            en = _varTbl.keys();
             while(en.hasMoreElements())
             {
                 var = en.nextElement();
@@ -68,7 +68,7 @@ abstract class PrologObject implements Clearable, Serializable
         else
         {
             // ripulisce le variabili eventualmente instanziate
-            en = _varTbl.elements();
+            en = _varTbl.keys();
             while(en.hasMoreElements())
                 ((Clearable)en.nextElement()).clear();
 
@@ -78,31 +78,31 @@ abstract class PrologObject implements Clearable, Serializable
 
     public final String toString()
     {
-        return PrettyPrinter.print(this, null, true);
+        return PrettyPrinter.printTerm(this, null, true);
     }
 
     public final String toString(final JIPEngine engine)
     {
-        return PrettyPrinter.print(this, engine.getOperatorManager(),false);
+        return PrettyPrinter.printTerm(this, engine.getOperatorManager(),false);
     }
 
     public final String toStringq(final JIPEngine engine)
     {
-        return PrettyPrinter.print(this, engine.getOperatorManager(),true);
+        return PrettyPrinter.printTerm(this, engine.getOperatorManager(),true);
     }
 
     final String toString(final OperatorManager opMan)
     {
-        return PrettyPrinter.print(this, opMan, false);
+        return PrettyPrinter.printTerm(this, opMan, false);
     }
 
-    public final PrologObject copy()
+    public final PrologObject copy(boolean flat)
     {
-        return copy(new Hashtable(10));
+        return copy(flat, new Hashtable(10));
     }
 
     public abstract void clear();
-    public abstract PrologObject copy(Hashtable<Variable, Variable> varTable);
+    public abstract PrologObject copy(boolean flat, Hashtable<Variable, PrologObject> varTable);
     protected abstract boolean lessThen(PrologObject obj);
     protected abstract boolean _unify(PrologObject obj, Hashtable<Variable, Variable> varTbl);
 }

@@ -72,7 +72,7 @@ final class Atom extends PrologObject //implements Serializable
         m_nHashValue = m_strAtom.hashCode();
     }
 
-    public final PrologObject copy(final Hashtable<Variable, Variable> varTable)
+    public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         return this;
     }

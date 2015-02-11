@@ -65,10 +65,10 @@ class Functor extends ConsCell
         m_strFriendlyName = m_strName;
     }
 
-    public PrologObject copy(final Hashtable<Variable, Variable> varTable)
+    public PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         if(getParams() != null)
-            return new Functor(m_strName, (ConsCell)(getParams().copy(varTable)));
+            return new Functor(m_strName, (ConsCell)(getParams().copy(flat, varTable)));
         else
             return new Functor(m_strName, null);
     }

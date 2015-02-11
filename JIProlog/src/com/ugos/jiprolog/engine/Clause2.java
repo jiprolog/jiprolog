@@ -26,61 +26,61 @@ final class Clause2 extends BuiltIn
 {
     private Enumeration  m_enum;
     private boolean m_bFail = false;
-    
+
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         PrologObject head = getParam(1);
         PrologObject body = getParam(2);
-        
+
         if (m_enum == null)
         {
             Clause clause = Clause.getClause(getRealTerm(head));
             head = clause.getHead();
-                        
+
             // Search in DB
             final GlobalDB gdb = getJIPEngine().getGlobalDB();
-                        
+
             final JIPClausesDatabase db =
                 gdb.search((Functor)head, clause.getModuleName());
-            
+
             if(db == null)
             {
                 m_bFail = true;
                 return false;
             }
-                        
+
             m_enum = db.clauses();
         }
-        
+
         boolean bFound = false;
         ConsCell currentRule = null;
         PrologObject head1, body1;
-        
+
         while(m_enum.hasMoreElements() && !bFound)
         {
-            currentRule = (ConsCell)((ConsCell)m_enum.nextElement()).copy();
-            
+            currentRule = (ConsCell)((ConsCell)m_enum.nextElement()).copy(true);
+
             head1 = currentRule.getHead();
             body1 = currentRule.getTail();
-            
+
             body1 = getRealTerm(body1);
             if(body1 == null)
                 body1 = Atom.createAtom("true");
             else if(body1 instanceof ConsCell && !(body1 instanceof Functor))
                 body1 = ((ConsCell)body1).getHead();
-            
+
             bFound = new ConsCell(head, body).unify(new ConsCell(head1, body1), varsTbl);
             //bFound = new ConsCell(head, body).unify(new ConsCell(head1, body1), varsTbl);
         }
-        
+
         return bFound;
     }
- 
+
     public final boolean hasMoreChoicePoints()
     {
         if(m_bFail)
             return false;
-        
+
         return m_enum == null ? true : m_enum.hasMoreElements();
     }
 }

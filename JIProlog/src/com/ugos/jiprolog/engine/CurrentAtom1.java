@@ -25,18 +25,18 @@ import java.util.*;
 final class CurrentAtom1 extends BuiltIn
 {
     private Enumeration<Atom> m_enum = null;
-        
+
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         if(m_enum == null)
             m_enum = Atom.s_atomTable.elements();
-                
+
         if(m_enum.hasMoreElements())
             return getParam(1).unify((Atom)m_enum.nextElement(), varsTbl);
         else
             return false;
     }
- 
+
     public final boolean hasMoreChoicePoints()
     {
         return m_enum == null ? true : m_enum.hasMoreElements();

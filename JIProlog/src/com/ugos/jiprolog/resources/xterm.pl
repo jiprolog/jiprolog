@@ -259,8 +259,9 @@ var_member_chk(Var, [Head| Tail]) :-
 	;	var_member_chk(Var, Tail)
 	).
 
-unify_with_occurs_check(Term, Term) :-
-	acyclic_term(Term).
+unify_with_occurs_check(Term1, Term2) :-
+	Term1 = Term2,
+	acyclic_term(Term1).
 
 
 %*************************************
