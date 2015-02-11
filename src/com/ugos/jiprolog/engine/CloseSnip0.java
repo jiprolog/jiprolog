@@ -28,7 +28,7 @@ final class CloseSnip0 extends BuiltIn
     {
         // estrae il nodo corrente
         final WAM.Node curNode = getWAM().getCurNode();
-        
+
         // risale lo stack in cerca dell'opensnip
         WAM.Node previousNode = curNode.m_previous;
         while(previousNode != null)
@@ -43,10 +43,10 @@ final class CloseSnip0 extends BuiltIn
                     return true;
                 }
             }
-            
+
             previousNode = previousNode.m_previous;
         }
-                
+
         throw JIPRuntimeException.create(19, null);
     }
 }

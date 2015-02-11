@@ -31,7 +31,7 @@ final class LoadLibrary1 extends BuiltIn
     {
         String strPath;
         final PrologObject param = getRealTerm(getParam(1));
-                        
+
         if (param instanceof Atom)
         {
             // try without protocol
@@ -46,19 +46,19 @@ final class LoadLibrary1 extends BuiltIn
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
         }
-        
+
         if(strPath.charAt(0) == 39 || strPath.charAt(0) == 34)
         {
             strPath = strPath.substring(1, strPath.length() - 1);
         }
-                
+
         //System.out.println(m_strSearchDir);
 //        strPath = strPath.replace('\\', '/');
-        
+
         //System.out.println(m_strSearchDir);
         String strFileName[] = new String[1];
         String strCurDir[]   = new String[1];
-                
+
         try
         {
             final InputStream ins = StreamManager.getStreamManager().getInputStream(strPath, getJIPEngine().getSearchPath(), strFileName, strCurDir);
@@ -77,7 +77,7 @@ final class LoadLibrary1 extends BuiltIn
         {
             throw JIPRuntimeException.create(9, null);
         }
-                
+
         return true;
     }
 }

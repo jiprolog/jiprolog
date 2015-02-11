@@ -30,7 +30,7 @@ final class Compare3 extends BuiltIn
         final PrologObject oper  = getRealTerm(getParam(1));
         final PrologObject term1 = getParam(2);
         final PrologObject term2 = getParam(3);
-        
+
         PrologObject oper1;
         if (oper == null)
         {
@@ -40,7 +40,7 @@ final class Compare3 extends BuiltIn
                 oper1 = Atom.createAtom(">");
             else
                 oper1 = Atom.createAtom("=");
-            
+
             return getParam(1).unify(oper1, varsTbl);
         }
         else

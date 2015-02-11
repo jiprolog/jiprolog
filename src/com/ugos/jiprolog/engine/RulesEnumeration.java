@@ -53,7 +53,7 @@ final class RulesEnumeration extends Object implements Enumeration
 
         // il riuso dello stesso oggetto Rule evita la creazione di nuovi
         // oggetti che pesano sul garbage collector
-        m_rule.m_cons = (Clause)dbCurrentClause.copy();
+        m_rule.m_cons = (Clause)dbCurrentClause.copy(true);
         m_rule.m_dbCons = dbCurrentClause;
 
         // controlla se module_transaprent

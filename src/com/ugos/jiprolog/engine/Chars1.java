@@ -27,7 +27,7 @@ final class Chars1 extends BuiltIn
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         final PrologObject term = getRealTerm(getParam(1));
-        
+
 //      System.out.println(term.getClass());
         if(term instanceof PString)
         {

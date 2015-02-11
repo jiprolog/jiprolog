@@ -33,6 +33,8 @@ final class Variable extends PrologObject//Serializable
     private String       m_strName;
     private PrologObject m_object;
 
+    private int cyclic = -1;
+
     public Variable(final String strName)
     {
         m_strName = strName;
@@ -81,24 +83,50 @@ final class Variable extends PrologObject//Serializable
         return lastVariable().hashCode();//m_nAddress;
     }
 
-    public final PrologObject copy(final Hashtable varTable)
+    public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         final Variable var = lastVariable();
         if(varTable.containsKey(var))
         {
-            return (Variable)(varTable.get(var));
+            return varTable.get(var);
         }
         else
         {
-            //System.out.println("copy " + m_strName);
-            final Variable newVar = new Variable(m_strName);
-
             // bounded
             if(var.m_object != null)
-                newVar.m_object = var.m_object.copy(varTable);
+            {
+            	if(flat)
+            	{
+            		varTable.put(var, var);
 
-            varTable.put(var, newVar);
-            return newVar;
+            		PrologObject cobj = var.m_object.copy(flat, varTable);
+
+            		varTable.put(var, cobj);
+
+
+            		return cobj;
+            	}
+            	else
+            	{
+                    //System.out.println("copy " + m_strName);
+                    final Variable newVar = new Variable(m_strName);
+                    varTable.put(var, newVar);
+
+            		newVar.m_object = var.m_object.copy(flat, varTable);
+
+            		return newVar;
+            	}
+            }
+            else
+            {
+                final Variable newVar = new Variable(m_strName);
+                varTable.put(var, newVar);
+
+        		return newVar;
+
+            }
+
+
         }
     }
 
@@ -195,6 +223,15 @@ final class Variable extends PrologObject//Serializable
         return true;
     }
 
+    public boolean cyclic()
+    {
+    	if(cyclic == -1)
+    	{
+    		cyclic = AcyclicTerm1.acyclic(this) ? 0 : 1;
+    	}
+
+    	return cyclic == 1;
+    }
 /*
     public void finalize() throws Throwable
     {

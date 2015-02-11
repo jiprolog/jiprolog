@@ -99,9 +99,9 @@ class Clause extends ConsCell
     }
 
 
-    public final PrologObject copy(final Hashtable<Variable, Variable> varTable)
+    public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
-        final Clause clause = new Clause((ConsCell)super.copy(varTable), m_strModuleName);
+        final Clause clause = new Clause((ConsCell)super.copy(flat, varTable), m_strModuleName);
         clause.m_bExported = m_bExported;
         clause.m_strFileName = m_strFileName;
         clause.m_nLineNumber = m_nLineNumber;
@@ -209,7 +209,7 @@ class Clause extends ConsCell
                 translated = BuiltIn.getRealTerm(vTranslated);
 
                 // chiama getClause e ritorna
-                clause = getClause(translated.copy(), strModuleName);
+                clause = getClause(translated.copy(false), strModuleName);
 
                 wam.closeQuery();
 

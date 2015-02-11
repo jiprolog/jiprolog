@@ -28,27 +28,27 @@ final class CurrentOp3 extends BuiltIn
     private Operator    m_supOp = null;
     private Enumeration m_enum  = null;
     private ConsCell    m_second = null;
-    
+
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         PrologObject prec  = null;
         PrologObject assoc = null;
         PrologObject op    = null;
-    
+
         if (m_enum == null)
         {
             prec  = getParam(1);
             assoc = getParam(2);
             op    = getParam(3);
-            
+
             m_second =
                 new ConsCell(prec,
                              new ConsCell(assoc,
                                           new ConsCell(op, null)));
-        
+
             m_enum = getJIPEngine().getOperatorManager().getOperators();
         }
-                
+
         if(m_supOp != null)
         {
             if(m_supOp != null)
@@ -57,7 +57,7 @@ final class CurrentOp3 extends BuiltIn
                     new ConsCell(Expression.createNumber(m_supOp.getPrecedence()),
                                  new ConsCell(Atom.createAtom(m_supOp.getAssoc()),
                                               new ConsCell(Atom.createAtom(m_supOp.getName()), null)));
-                
+
                 if(first.unify(m_second, varsTbl))
                 {
                     m_curOp = m_supOp;
@@ -66,28 +66,28 @@ final class CurrentOp3 extends BuiltIn
                 }
             }
         }
-        
+
         while(m_enum.hasMoreElements())
         {
             m_curOp = (Operator)m_enum.nextElement();
-            
+
 //          System.out.println(m_curOp);
 //            System.out.println(m_curOp.getName());
             final ConsCell first =
                 new ConsCell(Expression.createNumber(m_curOp.getPrecedence()),
                              new ConsCell(Atom.createAtom(m_curOp.getAssoc()),
                                           new ConsCell(Atom.createAtom(m_curOp.getName()), null)));
-            
+
             if(first.unify(m_second, varsTbl))
             {
                 m_supOp = m_curOp.getSupplementaryOp();
                 return true;
             }
         }
-        
+
         return false;
     }
- 
+
     public final boolean hasMoreChoicePoints()
     {
         return m_enum == null ? true : m_enum.hasMoreElements();

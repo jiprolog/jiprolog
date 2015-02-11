@@ -27,7 +27,7 @@ class Abolish1 extends BuiltIn
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         getJIPEngine().getGlobalDB().abolish(getParam(1));
-        
+
         return true;
     }
 }

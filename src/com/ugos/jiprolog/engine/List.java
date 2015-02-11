@@ -95,12 +95,12 @@ class List extends ConsCell
             return false;
     }
 
-    public PrologObject copy(final Hashtable varTable)
+    public PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         if(m_head != null)
         {
-            return new List(m_head.copy(varTable),
-                               (m_tail == null) ? null : m_tail.copy(varTable));
+            return new List(m_head.copy(flat, varTable),
+                               (m_tail == null) ? null : m_tail.copy(flat, varTable));
         }
         else
         {

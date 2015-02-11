@@ -64,7 +64,7 @@ public class JIPTerm extends Object implements Clearable
      */
     public final Object clone()
     {
-        return getJIPTerm(m_obj.copy());
+        return getJIPTerm(m_obj.copy(false));
     }
 
     /** Clears all variables in this JIPTerm object.

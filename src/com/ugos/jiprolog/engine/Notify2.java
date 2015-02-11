@@ -37,12 +37,12 @@ class Notify2 extends BuiltIn
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
         }
-        
-        notifyEvent((int)eventID.getValue(), term.copy());
-        
+
+        notifyEvent((int)eventID.getValue(), term.copy(false));
+
         return true;
     }
-        
+
     final void notifyEvent(final int nID, final PrologObject term)
     {
         getJIPEngine().notifyEvent(nID, term, getQueryHandle());

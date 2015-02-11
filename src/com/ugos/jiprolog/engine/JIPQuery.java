@@ -50,7 +50,7 @@ public class JIPQuery extends Object implements Serializable
     JIPQuery(final PrologObject query, final WAM wam)
     {
         m_wam   = wam;
-        m_query = query.copy();
+        m_query = query.copy(true);
     }
 
     /** Searches for another solution.
@@ -97,7 +97,7 @@ public class JIPQuery extends Object implements Serializable
         {
             if(bSolution)
             {
-                return JIPTerm.getJIPTerm(m_query.copy());
+                return JIPTerm.getJIPTerm(m_query.copy(false));
             }
             else
             {

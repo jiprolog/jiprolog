@@ -24,35 +24,40 @@ import java.util.Hashtable;
 
 final class AcyclicTerm1 extends BuiltIn
 {
-	private Hashtable<PrologObject, PrologObject> termTbl = new Hashtable<PrologObject, PrologObject>();
-
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
-        final PrologObject term = getRealTerm(getParam(1));
+//        final PrologObject term = getRealTerm(getParam(1));
 
-        return acyclic(term);
+        return acyclic(getParam(1));
     }
 
-    private boolean acyclic(PrologObject term)
+    public static boolean acyclic(PrologObject term)
+    {
+    	Hashtable<PrologObject, PrologObject> termTbl = new Hashtable<PrologObject, PrologObject>();
+    	return acyclic(term, termTbl);
+    }
+
+    private static boolean acyclic(PrologObject term, Hashtable<PrologObject, PrologObject> termTbl)
     {
     	if(term == null)
     	{
-    		return false;
+    		return true;
     	}
     	else if(termTbl.containsKey(term))
     	{
-    		return true;
+    		return false;
     	}
     	else if(term instanceof ConsCell)
         {
-    		return acyclic(((ConsCell)term).getHead()) || acyclic(((ConsCell)term).getTail());
+    		termTbl.put(term, term);
+    		return acyclic(((ConsCell)term).getHead(), termTbl) && acyclic(((ConsCell)term).getTail(), termTbl);
     	}
         else if(term instanceof Variable)
         {
-        	termTbl.put(term, term);
-        	return acyclic(((Variable)term).getObject());
+//        	termTbl.put(term, term);
+        	return acyclic(((Variable)term).getObject(), termTbl);
         }
 
-    	return false;
+    	return true;
     }
 }

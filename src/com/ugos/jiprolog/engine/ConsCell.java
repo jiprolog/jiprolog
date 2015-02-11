@@ -43,12 +43,12 @@ class ConsCell extends PrologObject //implements Serializable
         m_tail = tail;
     }
 
-    public PrologObject copy(final Hashtable<Variable, Variable> varTable)
+    public PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         if(m_head != null)
         {
-            return new ConsCell(m_head.copy(varTable),
-                               (m_tail == null) ? null : m_tail.copy(varTable));
+            return new ConsCell(m_head.copy(flat, varTable),
+                               (m_tail == null) ? null : m_tail.copy(flat, varTable));
         }
         else
         {

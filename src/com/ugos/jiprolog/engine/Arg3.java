@@ -24,27 +24,27 @@ import java.util.Hashtable;
 
 final class Arg3 extends BuiltIn
 {
-    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
+    public final boolean unify(final Hashtable<Variable, PrologObject> varsTbl)
     {
         final PrologObject place = getRealTerm(getParam(1));
         if(place == null)
             throw new JIPParameterUnboundedException(1);
-        
+
         if(!(place instanceof Expression))
             throw  new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
         if(!((Expression)place).isInteger())
             throw  new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
-        
+
         final PrologObject term = getRealTerm(getParam(2));
         if(term == null)
             throw new JIPParameterUnboundedException(2);
-                
+
         PrologObject val   = getParam(3);
         PrologObject param = null;
 
         try
         {
-        	
+
             if(term instanceof List)
             {
                 param = new ConsCell(((List)term).getHead(), new ConsCell(((List)term).getTail(), null)).getTerm((int)((Expression)place).getValue());
@@ -57,7 +57,7 @@ final class Arg3 extends BuiltIn
             {
                 param = ((ConsCell)term).getTerm((int)((Expression)place).getValue());
             }
-            
+
             if(param == null)
                 return false;
 
