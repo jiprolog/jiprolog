@@ -47,6 +47,6 @@ final class CloseSnip0 extends BuiltIn
             previousNode = previousNode.m_previous;
         }
 
-        throw JIPRuntimeException.create(19, null);
+        throw JIPRuntimeException.createRuntimeException(19);
     }
 }

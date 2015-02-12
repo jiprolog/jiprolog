@@ -149,7 +149,7 @@ class Functor extends ConsCell
         if(term instanceof Functor)
             return (Functor)term;
         else
-            throw JIPRuntimeException.create(45, term);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, term.toString());
 
     }
 }

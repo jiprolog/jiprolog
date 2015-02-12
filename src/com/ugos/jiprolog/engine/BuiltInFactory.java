@@ -115,13 +115,14 @@ final class BuiltInFactory extends Object
         // system
         m_BuiltInTable.put("$op/3",              new Op3());
         m_BuiltInTable.put("$current_query_handle/1",      new CurrentQueryHandle1());
-        m_BuiltInTable.put("$error/1",      new Error1());
+
         m_BuiltInTable.put("$free/1",       new Free1());
         m_BuiltInTable.put("$custom_built_in/1", new Custom1());
         m_BuiltInTable.put("$!/0", new SCut0());
 
         m_BuiltInTable.put("pid/1",      new Pid1());
-
+        m_BuiltInTable.put("error/1",      new Error1());
+        m_BuiltInTable.put("error/2",      new Error2());
         //m_BuiltInTable.put("wait/1",            new Wait1());
     }
 

@@ -70,7 +70,8 @@ public final class Get02 extends JIPXCall
             final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
             if(ins == null)
             {
-                throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
+            	throw JIPExistenceException.createStreamException("'" + m_strStreamHandle + "'");
+//            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
             }
 
             if("user_input".equals(m_strStreamHandle))
@@ -86,6 +87,8 @@ public final class Get02 extends JIPXCall
 
 //            else
                 term = JIPNumber.create(c);
+
+//                System.out.println("get0 " + c);
 
             if("user_input".equals(m_strStreamHandle))
                 getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());

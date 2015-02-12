@@ -29,24 +29,24 @@ import com.ugos.jiprolog.engine.*;
 public final class JIPio
 {
     public static final int    ERR_IOEXCEPTION  = 2000;
-
-    public static final int    ERR_INVALID_HANDLE = 2001;
-    public static final String STR_INVALID_HANDLE = "Invalid stream handle";
+//
+//    public static final int    ERR_INVALID_HANDLE = 2001;
+//    public static final String STR_INVALID_HANDLE = "Invalid stream handle";
     /*
     public static final int    ERR_FILE_NOT_FOUND = 2002;
     public static final String STR_FILE_NOT_FOUND = "File not found";
      */
-    public static final int    ERR_FILE_NOT_DELETED = 2003;
-    public static final String STR_FILE_NOT_DELETED = "Unable to delete the file/directory";
-
-    public static final int    ERR_FILE_NOT_RENAMED = 2004;
-    public static final String STR_FILE_NOT_RENAMED = "Unable to rename the file/directory";
-
-    public static final int    ERR_DIRECTORY_NOT_CREATED = 2005;
-    public static final String STR_DIRECTORY_NOT_CREATED = "Unable to create the directory";
-
-    public static final int    ERR_USER_STREAM = 2006;
-    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
+//    public static final int    ERR_FILE_NOT_DELETED = 2003;
+//    public static final String STR_FILE_NOT_DELETED = "Unable to delete the file/directory";
+//
+//    public static final int    ERR_FILE_NOT_RENAMED = 2004;
+//    public static final String STR_FILE_NOT_RENAMED = "Unable to rename the file/directory";
+//
+//    public static final int    ERR_DIRECTORY_NOT_CREATED = 2005;
+//    public static final String STR_DIRECTORY_NOT_CREATED = "Unable to create the directory";
+//
+//    public static final int    ERR_USER_STREAM = 2006;
+//    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
     private static InputStreamInfo user_input = new InputStreamInfo("user_input", "user_input");
     private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output");
@@ -244,7 +244,7 @@ public final class JIPio
         }
         else if(strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
-            throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+        	throw new JIPPermissionException("input", "stream", strHandle);
         }
 
         InputStreamInfo sinfo = getInput(strHandle);
@@ -262,7 +262,7 @@ public final class JIPio
         }
         else if(strHandle.equals("user_input"))
         {
-            throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+        	throw new JIPPermissionException("output", "stream", strHandle);
         }
 
         OutputStreamInfo sinfo = getOutput(strHandle);

@@ -33,20 +33,20 @@ public class JIPSyntaxErrorException extends JIPRuntimeException
     private String m_strFile;
     private int m_nLine;
     private String m_strTerm;
-    
+
     JIPSyntaxErrorException(final String strFileName, final int nLineNumber, final String strTerm)
     {
-        super(create(1, "File: "+ strFileName + ", Line: " + nLineNumber + ", Cause: " + strTerm));
+//        super(create(1, "File: "+ strFileName + ", Line: " + nLineNumber + ", Cause: " + strTerm));
         m_strFile = strFileName;
         m_nLine = nLineNumber;
-        m_strTerm = strTerm;  
+        m_strTerm = strTerm;
     }
-    
+
 //    JIPSyntaxErrorException(final String msg)
 //    {
 //        super(create(1, msg));
 //    }
-    
+
     /** Gets the error term associated to this exception
      * @return JIPTerm object associated to this exception
      */

@@ -32,6 +32,6 @@ public class JIPQueryClosedException extends JIPRuntimeException
 {
     JIPQueryClosedException()
     {
-        super(create(101, null));
+        super(createRuntimeException(101));
     }
 }

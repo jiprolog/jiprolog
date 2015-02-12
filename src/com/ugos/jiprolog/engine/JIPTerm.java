@@ -268,6 +268,6 @@ public class JIPTerm extends Object implements Clearable
         if(obj instanceof Clause)
             return new JIPClause((Clause)obj);
 
-        throw JIPRuntimeException.create(25, obj);
+        throw JIPRuntimeException.createRuntimeException(25, obj.toString());
     }
 }

@@ -6,6 +6,29 @@ package com.ugos.jiprolog.engine;
 /**
  * @author UgoChirico
  *
+ * A permission error occurs when an attempt to perform a prohibited operation is made. ErrorTerm has the following form: permission_error(Operation, Permission, Culprit) where Operation is the operation which caused the error, Permission the type of the tried permission and Culprit the argument which caused the error. Operation is one of:
+
+access
+add_alias
+close
+create
+input
+modify
+open
+output
+reposition
+and Permission is one of:
+
+binary_stream
+flag
+operator
+past_end_of_stream
+private_procedure
+source_sink
+static_procedure
+stream
+text_stream
+ *
  */
 public class JIPPermissionException extends JIPRuntimeException {
 

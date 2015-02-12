@@ -124,7 +124,7 @@ final class Compile1 extends Consult1
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
 
-            throw JIPRuntimeException.create(6, strPath);
+            throw JIPExistenceException.createSourceSynkException(strPath);
         }
         catch(IOException ex)
         {
@@ -152,7 +152,7 @@ final class Compile1 extends Consult1
             }
             catch(IOException ex1){}
 
-            throw JIPRuntimeException.create(9, null);
+            throw new JIPPermissionException("access", "source_sink", strPath);
         }
         catch(JIPRuntimeException ex)
         {

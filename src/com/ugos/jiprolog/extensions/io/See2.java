@@ -92,6 +92,11 @@ public final class See2 extends JIPXCall
         {
             strStreamHandle = JIPio.openInputStream(strFilePath, strStreamHandle, getJIPEngine());
         }
+        catch(FileNotFoundException ex)
+        {
+            //System.out.println("UGO " + ex);
+            throw JIPExistenceException.createSourceSynkException(strFilePath);
+        }
         catch(IOException ex)
         {
             //System.out.println("UGO " + ex);

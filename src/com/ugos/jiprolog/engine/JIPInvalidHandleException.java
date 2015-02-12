@@ -34,6 +34,6 @@ public class JIPInvalidHandleException extends JIPRuntimeException
 
     JIPInvalidHandleException()
     {
-        super(create(ERR_INVALIDHANDLE, null));
+        super(createRuntimeException(ERR_INVALIDHANDLE));
     }
 }

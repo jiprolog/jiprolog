@@ -31,66 +31,32 @@ import java.io.*;
  */
 public class JIPRuntimeException extends RuntimeException
 {
-    public static final int ID_UNKNOWN_EXCEPTION = -1;
-    public static final int ID_ISO_EXCEPTION = 500;
-    public static final int ID_USER_EXCEPTION = 1000;
+	protected JIPEngine m_engine;
+	protected WAM.Node m_curNode;
+	protected String m_strFileName;
+	protected PrologObject m_term;
 
-    private int m_errorNumber;
+	protected int m_nLineNumber;
+	protected int m_nPosition;
 
-    JIPEngine m_engine;
-    WAM.Node m_curNode;
-    String m_strFileName;
-    PrologObject m_term;
+	public static int ID_USER_EXCEPTION;
 
-    int m_nLineNumber;
-    int m_nPosition;
-    String m_strMessage;
+	protected PrologObject exceptionTerm;
 
-    static JIPRuntimeException create(final int nErrorNum, Object obj)
+	public JIPRuntimeException(int errorNumber, String message)
     {
-        //nErrorNum number of the error
-        //obj is the object to append to the message in the insertion point %1
-        //term is the predicate where the error occur
+		super(getErrorMessage(errorNumber).replace("%1", message));
+    }
 
-        String strMessage;
-        if(s_errorTable.containsKey(new Integer(nErrorNum)))
-        {
-            strMessage = (String)s_errorTable.get(new Integer(nErrorNum));
-        }
-        else
-        {
-            strMessage = (String)s_errorTable.get(new Integer(ID_UNKNOWN_EXCEPTION));
-        }
-
-        if(obj == null)
-            obj = "";
-
-        // search for insertion point %1 and insert the obj
-        int nPos = strMessage.indexOf("%1");
-
-        if(nPos > -1)
-            strMessage = strMessage.substring(0, nPos) + obj.toString() + strMessage.substring(nPos + 2, strMessage.length());
-
-        return new JIPRuntimeException(nErrorNum, strMessage);
+	public JIPRuntimeException(PrologObject exceptionTerm)
+    {
+		this.exceptionTerm = exceptionTerm;
     }
 
     JIPRuntimeException(JIPRuntimeException ex)
     {
         super(ex.getMessage());
-        m_errorNumber = ex.m_errorNumber;
         m_curNode = ex.m_curNode;
-        m_strMessage = ex.m_strMessage;
-    }
-
-    /** Constructs a new JIPRuntimeException
-     * @param nErrorNum number of the error
-     * @param strMsg message associated to this exception
-     */
-    public JIPRuntimeException(final int nErrorNum, final String strMsg)
-    {
-        super(strMsg);
-        m_errorNumber = nErrorNum;
-        m_strMessage = strMsg;
     }
 
     /** Constructs a new JIPRuntimeException with unknown error number
@@ -98,7 +64,7 @@ public class JIPRuntimeException extends RuntimeException
      */
     public JIPRuntimeException(final String strMsg)
     {
-        this(ID_ISO_EXCEPTION, strMsg);
+        super(strMsg);
     }
 
     /** Constructs a new JIPRuntimeException with ISO exception
@@ -106,15 +72,7 @@ public class JIPRuntimeException extends RuntimeException
      */
     public JIPRuntimeException()
     {
-        this(ID_UNKNOWN_EXCEPTION, "");
-    }
 
-    /** Gets the error number
-     * @return error number
-     */
-    public final int getErrorNumber()
-    {
-        return m_errorNumber;
     }
 
     /** Gets the eerror term associated to this exception
@@ -123,12 +81,23 @@ public class JIPRuntimeException extends RuntimeException
     public JIPTerm getTerm()
     {
         String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
-    	String strMessage = Atom.createAtom(super.getMessage()).toString();
 
-    	return getTerm("runtime_error(" + strMessage + ")", strTerm);
+        if(exceptionTerm != null)
+        {
+        	return getTerm(exceptionTerm.toString(), strTerm);
+        }
+        else
+        {
+        	String strMessage = super.getMessage();
+        	if(strMessage == null) strMessage = "undefined";
+
+        	strMessage = Atom.createAtom(strMessage).toString();
+
+        	return getTerm("system_error(" + strMessage + ")", strTerm);
+        }
     }
 
-    JIPTerm getTerm(final String strType, final String strTerm)
+    protected JIPTerm getTerm(final String strType, final String strTerm)
     {
         if(m_engine != null)
         {
@@ -192,24 +161,10 @@ public class JIPRuntimeException extends RuntimeException
     {
         if(getTerm() != null)
             return getTerm().toString() + "\n" + super.getMessage();
-
-//            if(m_engine != null)
-//                return getTerm().toString(m_engine) + "\n" + super.getMessage();
-//            else
-//                return getTerm().toString() + "\n" + super.getMessage();
         else
             return super.getMessage();
     }
 
-    /** Gets the inner message
-     * @return the inner message
-     */
-    public String getInnerMessage()
-    {
-    	return m_strMessage;
-    }
-
-//  #ifndef _MIDP
     /** Write the stack trace of goals to the default print stream
      */
     public void printPrologStackTrace()
@@ -253,7 +208,26 @@ public class JIPRuntimeException extends RuntimeException
     }
     //#endif
 
-    static final Hashtable s_errorTable = new Hashtable(60);
+    public static JIPRuntimeException createRuntimeException(int errorNumber)
+    {
+    	return new JIPRuntimeException(getErrorMessage(errorNumber));
+    }
+
+    public static JIPRuntimeException createRuntimeException(int errorNumber, String message)
+    {
+    	String error = getErrorMessage(errorNumber);
+    	error = error.replace("%1", message);
+
+    	return new JIPRuntimeException(error);
+    }
+
+    public static String getErrorMessage(int errorNumber)
+    {
+    	String err = s_errorTable.get(errorNumber);
+    	return err != null ? err : "";
+    }
+
+    static final Hashtable<Integer, String> s_errorTable = new Hashtable<Integer, String>();
 
     static
     {
@@ -282,9 +256,9 @@ public class JIPRuntimeException extends RuntimeException
         s_errorTable.put(new Integer(21), "Unexpected error found while consulting the file: %1");
         s_errorTable.put(new Integer(22), "The variable %1 is unbounded");
         s_errorTable.put(new Integer(23), "The meta-call variable %1 is unbounded");
-        s_errorTable.put(new Integer(24), "module directive defined twice in the file: %1");
+        s_errorTable.put(new Integer(24), "Module directive defined twice in the file: %1");
         s_errorTable.put(new Integer(25), "The type of the term %1 is unknown");
-        s_errorTable.put(new Integer(26), "Searchpath has been set to null by the environment");
+        s_errorTable.put(new Integer(26), "Working dicectory has been set to null by the environment");
         s_errorTable.put(new Integer(27), "Directive fails while compiling the file: %1");
         s_errorTable.put(new Integer(28), "The file to load may be corrupted: %1");
         s_errorTable.put(new Integer(29), "Unexpected call");
@@ -316,6 +290,7 @@ public class JIPRuntimeException extends RuntimeException
         s_errorTable.put(new Integer(102), "The query specified in the handle was not found or it was closed");
         s_errorTable.put(new Integer(103), "The predicate %1 is undefined");
         s_errorTable.put(new Integer(104), "The predicate %1 is not supported");
+        s_errorTable.put(new Integer(200), "Runtime Error");
 
         s_errorTable.put(new Integer(500), "ISO Exception");
     }

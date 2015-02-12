@@ -39,6 +39,6 @@ public class JIPAbortException extends JIPRuntimeException
      */
     public JIPAbortException()
     {
-        super(create(0, "Aborted by User"));
+        super(createRuntimeException(0, "Aborted by User"));
     }
 }

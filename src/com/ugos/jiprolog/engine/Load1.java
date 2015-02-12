@@ -51,11 +51,13 @@ class Load1 extends Consult1
         }
         catch(ClassNotFoundException ex)
         {
-            throw JIPRuntimeException.create(28, strPath);
+        	throw new JIPTypeException(JIPTypeException.LIBRARY, strPath);
+//            throw JIPRuntimeException.create(28, strPath);
         }
         catch(FileNotFoundException ex)
         {
-            throw JIPRuntimeException.create(6, strPath);
+        	throw JIPExistenceException.createSourceSynkException(strPath);
+//            throw JIPRuntimeException.create(6, strPath);
         }
         catch(IOException ex)
         {
@@ -110,7 +112,7 @@ class Load1 extends Consult1
                 if(!wam.query(goal))
                 {
                     wam.closeQuery();
-                    throw JIPRuntimeException.create(27, strStramName + "-" + goal.toString(engine));
+                    throw JIPRuntimeException.createRuntimeException(27, strStramName + "-" + goal.toString(engine));
                 }
 
                 wam.closeQuery();
@@ -124,7 +126,8 @@ class Load1 extends Consult1
             }
             catch(IOException ex1){}
 
-            throw JIPRuntimeException.create(9, strStramName);
+            throw new JIPPermissionException("access", "source_sink", strStramName);
+//            throw JIPRuntimeException.create(9, strStramName);
         }
         finally
         {

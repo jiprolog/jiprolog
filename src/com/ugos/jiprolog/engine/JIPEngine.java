@@ -55,8 +55,8 @@ public class JIPEngine implements Serializable
 
     public static final int major = 4;
     public static final int minor = 0;
-    public static final int build = 5;
-    public static final int revision = 17;
+    public static final int build = 6;
+    public static final int revision = 1;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 
@@ -713,7 +713,8 @@ public class JIPEngine implements Serializable
         }
         catch(ClassNotFoundException ex)
         {
-            throw JIPRuntimeException.create(28, strFileName);
+        	throw new JIPTypeException(JIPTypeException.LIBRARY, strFileName);
+//            throw JIPRuntimeException.create(28, strFileName);
         }
     }
 
@@ -738,7 +739,8 @@ public class JIPEngine implements Serializable
         }
         catch(ClassNotFoundException ex)
         {
-            throw JIPRuntimeException.create(28, strStreamName);
+        	throw new JIPTypeException(JIPTypeException.LIBRARY, strStreamName);
+//            throw JIPRuntimeException.create(28, strStreamName);
         }
     }
 
