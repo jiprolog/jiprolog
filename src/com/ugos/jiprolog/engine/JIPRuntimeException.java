@@ -251,7 +251,7 @@ public class JIPRuntimeException extends RuntimeException
         s_errorTable.put(new Integer(16), "The precedence of the operator %1 is out of range (0, 1200)");
         s_errorTable.put(new Integer(17), "Invalid associativity specifier: %1");
         s_errorTable.put(new Integer(18), "The path specified is not found: %1");
-        s_errorTable.put(new Integer(19), "Open snip [!/0 is not found");
+        s_errorTable.put(new Integer(19), "Open snip <!/0 is not found");
         s_errorTable.put(new Integer(20), "Unable to write to the selected file");
         s_errorTable.put(new Integer(21), "Unexpected error found while consulting the file: %1");
         s_errorTable.put(new Integer(22), "The variable %1 is unbounded");

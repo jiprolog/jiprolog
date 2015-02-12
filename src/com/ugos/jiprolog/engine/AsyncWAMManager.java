@@ -96,7 +96,7 @@ final class AsyncWAMManager implements Runnable
         }
         catch(Throwable th)
         {
-        	th.printStackTrace();
+//        	th.printStackTrace();
             m_result = th;
         }
 

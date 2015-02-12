@@ -96,7 +96,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("</2",               new Less2());
         m_BuiltInTable.put("=:=/2",             new Equal2());
         m_BuiltInTable.put("!/0",               new Cut0());
-        m_BuiltInTable.put("!]/0",              new CloseSnip0());
+        m_BuiltInTable.put("!>/0",              new CloseSnip0());
         m_BuiltInTable.put("fail/0",            new Fail0());
         m_BuiltInTable.put("halt/1",            new Halt1());
         m_BuiltInTable.put("encoding/1",        new Encoding1());
