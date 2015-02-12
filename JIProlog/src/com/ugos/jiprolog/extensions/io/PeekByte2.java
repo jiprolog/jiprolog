@@ -79,9 +79,14 @@ public final class PeekByte2 extends JIPXCall
 
             JIPTerm term;
             int c = peekChar(ins);
+
             if(c == -1)
-                term = JIPAtom.create("end_of_file");
-            else
+            {
+            	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
+            	streamInfo.setEndOfStream("at");
+            }
+//                term = JIPAtom.create("end_of_file");
+//            else
                 term = JIPNumber.create(c);
 
             return params.getNth(2).unify(term, varsTbl);

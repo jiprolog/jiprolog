@@ -7,7 +7,6 @@ public class StreamInfo
 {
     private String name;
     private String handle;
-
 	protected Properties properties = new Properties();
 
 	public StreamInfo(String name)
@@ -23,6 +22,8 @@ public class StreamInfo
 		properties.setProperty("file_name", "file_name('" + name.replace("\\", "/") + "')");
 		properties.setProperty("alias", "alias('" + handle + "')");
 		properties.setProperty("type", "type(text)");
+		properties.setProperty("end_of_stream", "end_of_stream(no)");
+
 	}
 
 	public String getName()
@@ -50,6 +51,15 @@ public class StreamInfo
 		this.name = name;
 	}
 
+	public void setEndOfStream(String pos)
+	{
+		properties.setProperty("end_of_stream", "end_of_stream(" + pos + ")");
+	}
+
+	public String getEndOfStream()
+	{
+		return properties.getProperty("end_of_stream", "no");
+	}
 
 }
 

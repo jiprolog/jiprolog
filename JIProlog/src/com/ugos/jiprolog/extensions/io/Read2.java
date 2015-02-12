@@ -30,6 +30,7 @@ public final class Read2 extends JIPXCall
     private boolean     m_bEOF;
     private String      m_strStreamHandle;
 
+    private StreamInfo streamInfo;
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         if(m_bEOF)
@@ -60,6 +61,12 @@ public final class Read2 extends JIPXCall
             {
                 // Gets the handle to the stream
                 m_strStreamHandle = ((JIPAtom)input).getName();
+
+                streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
+                if(streamInfo == null)
+                {
+                    throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
+                }
 
                 // Get the stream
                 m_termEnum = JIPio.getTermEnumeration(m_strStreamHandle, getJIPEngine());
@@ -96,6 +103,7 @@ public final class Read2 extends JIPXCall
                 {
                     m_bEOF = true;
                     term = JIPAtom.create("end_of_file");
+                    streamInfo.setEndOfStream("past");
                 }
             }
         }
