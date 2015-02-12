@@ -70,7 +70,7 @@ public final class Get02 extends JIPXCall
             final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
             if(ins == null)
             {
-            	throw JIPExistenceException.createStreamException("'" + m_strStreamHandle + "'");
+            	throw JIPExistenceException.createStreamException(m_strStreamHandle);
 //            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
             }
 

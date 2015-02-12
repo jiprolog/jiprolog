@@ -105,7 +105,8 @@ public final class Append2 extends JIPXCall
         }
 
         if(strStreamHandle == null)
-            throw new JIPRuntimeException(6, strFilePath);
+        	throw JIPExistenceException.createSourceSynkException(strFilePath);
+//            throw new JIPRuntimeException(6, strFilePath);
 
         return params.getNth(2).unify(JIPAtom.create(strStreamHandle), varsTbl);
     }
