@@ -187,7 +187,7 @@ peek_code(C):-
     '$char'(C,_).
 
 peek_code(Handle, C):-
-    peek_code(Handle, C),
+    peek_byte(Handle, C),
     '$char'(C,_).
 
 peek_chars(C):-
@@ -398,8 +398,9 @@ at_end_of_stream:-
 
 at_end_of_stream(Handle):-
     check_handle(Handle, Handle1),
-    stream_property(Handle1, end_of_stream(E)),
-    (E = at; E = past).
+    (stream_property(Handle1, end_of_stream(E)),
+    (E = at; E = past)) ;
+    peek_byte(Handle1, -1).
 
 current_output(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.CurrentOutput1', [Handle]).

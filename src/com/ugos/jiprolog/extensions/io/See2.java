@@ -104,7 +104,8 @@ public final class See2 extends JIPXCall
         }
 
         if(strStreamHandle == null)
-            throw new JIPRuntimeException(6, strFilePath);
+        	throw JIPExistenceException.createStreamException("'" + strFilePath + "'");
+
 
         // unify with the second parameter
         return params.getNth(2).unify(JIPAtom.create(strStreamHandle), varsTbl);
