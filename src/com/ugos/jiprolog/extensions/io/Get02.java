@@ -79,8 +79,12 @@ public final class Get02 extends JIPXCall
             JIPTerm term;
             int c = readNextChar(ins);
             if(c == -1)
-                term = JIPAtom.create("end_of_file");
-            else
+            {
+            	StreamInfo streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
+            	streamInfo.setEndOfStream("past");
+            }
+
+//            else
                 term = JIPNumber.create(c);
 
             if("user_input".equals(m_strStreamHandle))

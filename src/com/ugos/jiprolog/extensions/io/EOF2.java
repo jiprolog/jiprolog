@@ -28,7 +28,7 @@ import com.ugos.jiprolog.engine.JIPParameterUnboundedException;
 import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPXCall;
 
-public final class EOF1 extends JIPXCall
+public final class EOF2 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {

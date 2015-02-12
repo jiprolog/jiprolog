@@ -32,6 +32,7 @@ import java.io.*;
 public class JIPRuntimeException extends RuntimeException
 {
     public static final int ID_UNKNOWN_EXCEPTION = -1;
+    public static final int ID_ISO_EXCEPTION = 500;
     public static final int ID_USER_EXCEPTION = 1000;
 
     private int m_errorNumber;
@@ -97,7 +98,15 @@ public class JIPRuntimeException extends RuntimeException
      */
     public JIPRuntimeException(final String strMsg)
     {
-        this(ID_UNKNOWN_EXCEPTION, strMsg);
+        this(ID_ISO_EXCEPTION, strMsg);
+    }
+
+    /** Constructs a new JIPRuntimeException with ISO exception
+     * @param strMsg message associated to this exception
+     */
+    public JIPRuntimeException()
+    {
+        this(ID_UNKNOWN_EXCEPTION, "");
     }
 
     /** Gets the error number
@@ -113,27 +122,10 @@ public class JIPRuntimeException extends RuntimeException
      */
     public JIPTerm getTerm()
     {
-//        if(m_engine != null)
-//        {
-            String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
-        	String strMessage = Atom.createAtom(super.getMessage()).toString();
+        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	String strMessage = Atom.createAtom(super.getMessage()).toString();
 
-        	return getTerm("runtime_error(" + strMessage + ")", strTerm);
-
-
-//        	if(m_strFileName == null)
-//        	    m_strFileName = "undefined";
-//
-//            try
-//            {
-//                return m_engine.getTermParser().parseTerm("error(runtime_error('" + strMessage + "'), context('" + strTerm + "', file('" + m_strFileName + "', " + m_nLineNumber + ")))");
-//	        }
-//	        catch (JIPSyntaxErrorException ex)
-//	        {
-//	             return m_engine.getTermParser().parseTerm("error(runtime_error('" + strMessage + "'), context(undefined, file(undefined, undefined)))");
-//	        }
-//        }
-
+    	return getTerm("runtime_error(" + strMessage + ")", strTerm);
     }
 
     JIPTerm getTerm(final String strType, final String strTerm)
@@ -324,6 +316,8 @@ public class JIPRuntimeException extends RuntimeException
         s_errorTable.put(new Integer(102), "The query specified in the handle was not found or it was closed");
         s_errorTable.put(new Integer(103), "The predicate %1 is undefined");
         s_errorTable.put(new Integer(104), "The predicate %1 is not supported");
+
+        s_errorTable.put(new Integer(500), "ISO Exception");
     }
     /*
      Interpreter Generic Exceptions
