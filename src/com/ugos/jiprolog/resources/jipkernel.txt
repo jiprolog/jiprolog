@@ -119,7 +119,7 @@
 
 '$system':assertz(X) :-assert(X).
 
-'$system': [!.
+'$system': <!.
 
 '$system':'C'([Terminal|Rest], Terminal, Rest).
 
