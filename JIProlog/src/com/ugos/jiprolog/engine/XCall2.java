@@ -119,27 +119,26 @@ final class XCall2 extends BuiltIn
         }
         catch(ClassNotFoundException ex)
         {
-            //ex.printStackTrace();
-            throw JIPRuntimeException.create(41, strXClassName);
+        	throw JIPExistenceException.createProcedureException(strXClassName);
         }
-        //#ifndef _MIDP
-        catch(NoClassDefFoundError ex)
-        {
-            throw JIPRuntimeException.create(41, strXClassName);
-        }
-        //#endif
         catch(IllegalAccessException ex)
         {
-            throw JIPRuntimeException.create(42, strXClassName);
+        	throw JIPExistenceException.createProcedureException(strXClassName);
+//            throw JIPRuntimeException.create(38, strXClassName);
         }
         catch(InstantiationException ex)
         {
-            throw JIPRuntimeException.create(43, strXClassName);
+        	throw JIPExistenceException.createProcedureException(strXClassName);
+//            throw JIPRuntimeException.create(39, strXClassName);
         }
         catch(ClassCastException ex)
         {
-//            ex.printStackTrace();  // Debug
-            throw JIPRuntimeException.create(44, strXClassName);
+        	throw JIPExistenceException.createProcedureException(strXClassName);
+//            throw JIPRuntimeException.create(40, strXClassName);
+        }
+        catch(NoClassDefFoundError ex)
+        {
+        	throw JIPExistenceException.createProcedureException(strXClassName);
         }
     }
 }

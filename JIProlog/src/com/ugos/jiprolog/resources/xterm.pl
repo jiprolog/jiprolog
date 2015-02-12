@@ -64,17 +64,6 @@ atom_codes(Atom, Codes):-
 atom_chars(Atom, Chars) :-
 	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
 
-/*
-atom_chars(Atom, AtomList):-
-    nonvar(Atom),
-    !,
-    name(Atom, CharList),
-    convert_chars(CharList, AtomList).
-
-atom_chars(Atom, AtomList):-
-    convert_chars(CharList, AtomList),
-    name(Atom,  CharList).
-*/
 
 number_codes(Num, List):-
     number(Num),
@@ -88,7 +77,7 @@ number_codes(Num, List):-
     number(Num).
 
 number_codes(_,_):-
-    '$error'(3).
+ 	error(type_error(number, 1)).
 
 number_chars(Num, List):-
     number(Num),
@@ -102,7 +91,7 @@ number_chars(Num, List):-
     number(Num).
 
 number_chars(_,_):-
-    '$error'(3).
+	error(type_error(number, 1)).
 
 atom_number(Atom, Number):-
     atom_codes(Atom, Codes),
@@ -205,7 +194,7 @@ string_to_list(String, String):-
     !.
 
 string_to_list(_, _):-
-     '$error'(3).
+	error(type_error(atom, 1)).
 
 string_length(String, Len):-
     length(String, Len).

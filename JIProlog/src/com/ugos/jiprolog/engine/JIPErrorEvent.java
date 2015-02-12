@@ -32,12 +32,12 @@ public class JIPErrorEvent extends JIPEvent
 {
     private String m_strErr;
     private JIPRuntimeException m_ex;
-    
+
     /**
     * ID of an Error Event
     */
     public static final int ID_ERROR    = -10;
-   
+
     JIPErrorEvent(final JIPEngine source, final int nHandle, final JIPRuntimeException ex)
     {
         super(ID_ERROR, null, source, nHandle);
@@ -45,7 +45,7 @@ public class JIPErrorEvent extends JIPEvent
 //            m_strErr = ex.getMessage() + "\nRaised by " + ex.getTerm().toString(source);
 //        else
             m_strErr = ex.getMessage();
-        
+
         m_ex = ex;
     }
 
@@ -56,7 +56,7 @@ public class JIPErrorEvent extends JIPEvent
     {
         return m_strErr;
     }
-    
+
     /** Gets the file name where the error was raised
      * @return the file name where the exception was raised
      */
@@ -64,7 +64,7 @@ public class JIPErrorEvent extends JIPEvent
     {
         return m_ex.m_strFileName;
     }
-        
+
     /** Gets the line number where the error was raised
      * @return the line number where the exception was raised
      */
@@ -72,7 +72,7 @@ public class JIPErrorEvent extends JIPEvent
     {
         return m_ex.m_nLineNumber;
     }
-    
+
     /** Gets the position where the error was raised
      * @return the position where the exception was raised
      */
@@ -80,15 +80,15 @@ public class JIPErrorEvent extends JIPEvent
     {
         return m_ex.m_nPosition;
     }
-    
-    /** Gets the error number
-      * @return number of the error occurred
-      */
-    public int getErrorNumber()
-    {
-        return (m_ex).getErrorNumber();
-    }
-    
+
+//    /** Gets the error number
+//      * @return number of the error occurred
+//      */
+//    public int getErrorNumber()
+//    {
+//        return (m_ex).getErrorNumber();
+//    }
+
     /** Gets the error number
       * @return number of the error occurred
       */
@@ -96,7 +96,7 @@ public class JIPErrorEvent extends JIPEvent
     {
         return m_ex;
     }
-   
+
    /**
      * Gets a string representation of this JIPErrorEvent object
      * @return string representation of this JIPErrorEvent object

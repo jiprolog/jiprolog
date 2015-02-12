@@ -37,13 +37,12 @@ public class JIPParameterUnboundedException extends JIPRuntimeException
      */
     public JIPParameterUnboundedException(final int nParam)
     {
-        super(create(4, new Integer(nParam)));
         m_nParam = nParam;
     }
 
     JIPParameterUnboundedException()
     {
-        super(create(4, null));
+
     }
 
     /** Gets the error term associated to this exception

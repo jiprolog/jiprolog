@@ -30,51 +30,33 @@ package com.ugos.jiprolog.engine;
 public class JIPJVMException extends JIPRuntimeException
 {
     private Throwable m_ex;
-    
+
     /** Constructs a new JIPJVMException
      * @param ex the JVM exception thrown
      */
     public JIPJVMException(final Throwable ex)
     {
-        super(create(7, ex));
-        
         m_ex = ex;
     }
-    
+
     public Throwable getInnerException()
     {
     	return m_ex;
     }
-    
+
     /** Gets the error term associated to this exception
      * @return JIPTerm object associated to this exceptstrMessageXion
      */
     public JIPTerm getTerm()
     {
-//        if(m_engine == null)
-//            return super.getTerm();
-        
-        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString()))); 
-        
+        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+
         String strMessage = m_ex.getMessage();
         if(strMessage == null)
             strMessage = m_ex.toString();
-        
+
         strMessage = Atom.createAtom(strMessage).toString();
-        
+
         return getTerm("jvm_error(" + strMessage + ")", strTerm);
-        
-//        try
-//        {
-//            return m_engine.getTermParser().parseTerm("error(jvm_error('" + strMessage + "'), context('" + strTerm + "', file('" + m_strFileName + "', " + m_nLineNumber + ")))");
-//        }
-//        catch (JIPSyntaxErrorException ex)
-//        {
-//            return m_engine.getTermParser().parseTerm("error(jvm_error('" + strMessage +"'), context(undefined, file(undefined, undefined)))");
-//        }
-        
-        //String strError = "error(jvm_error('" + m_ex.getMessage() +"'), context(" + super.getTerm() + ", '" + m_ex.getMessage() + "'))";
-         
-        //return m_engine.getTermParser().parseTerm(strError);
     }
 }

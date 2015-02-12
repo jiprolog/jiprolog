@@ -20,18 +20,18 @@
 
 package com.ugos.jiprolog.engine;
 
-class UndefinedPredicateException extends JIPRuntimeException
+class UndefinedPredicateException extends JIPExistenceException
 {
     static final int ID_UNDEF_EXCEPTION = 103;
-    
+
     private String m_strPredDef;
-    
+
     UndefinedPredicateException(final Functor term)
     {
-        super(create(ID_UNDEF_EXCEPTION , term));
+    	super("procedure", term.toString());
         m_strPredDef = term.getName();
     }
-    
+
     public String getPredicateName()
     {
         return m_strPredDef;

@@ -30,7 +30,7 @@ public class WriteCanonical2 extends JIPXCall
     {
         JIPTerm input = params.getNth(1);
         JIPTerm term = params.getNth(2);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -45,23 +45,24 @@ public class WriteCanonical2 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         if(!(input instanceof JIPAtom))
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
-        
+
         JIPAtom handle = (JIPAtom)input;
 
         // Gets the handle to the stream
         String strStreamHandle = (handle).getName();
         OutputStream writer;
-        
+
         // Get the stream
         writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
-            throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
+        	throw JIPExistenceException.createStreamException("'" + strStreamHandle + "'");
+//        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
-        
+
         try
         {
             writer.write(term.toString().getBytes(getJIPEngine().getEncoding()));
@@ -71,10 +72,10 @@ public class WriteCanonical2 extends JIPXCall
         {
             throw new JIPRuntimeException(JIPio.ERR_IOEXCEPTION, ex.getMessage());
         }
-        
+
         return true;
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;

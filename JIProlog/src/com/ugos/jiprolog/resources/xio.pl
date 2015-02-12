@@ -147,10 +147,12 @@ get_byte(Handle, B):-
     get0(Handle, B).
 
 get_code(C):-
-    get0(C).
+    get0(C),
+    '$char'(C,_).
 
 get_code(Handle, C):-
-    get0(Handle, C).
+    get0(Handle, C),
+    '$char'(C,_).
 
 get_char(C):-
     current_input(Handle),
@@ -159,16 +161,18 @@ get_char(C):-
 get_char(Handle, C):-
     get0(Handle, B),
     '$char'(B,C).
-%    B = end_of_file ->
-%    	C = end_of_file ;
-%    	char_atom(B, C),
 
 
 '$char'(-1, end_of_file) :-
 	!.
 
 '$char'(C, A) :-
+	C > 31,
+	!,
 	char_atom(C, A).
+
+'$char'(_, _) :-
+	error(representation_error(character)).
 
 peek_byte(B):-
     current_input(Handle),
@@ -179,10 +183,12 @@ peek_byte(Handle, B):-
     xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle1, B]).
 
 peek_code(C):-
-    peek_byte(C).
+    peek_byte(C),
+    '$char'(C,_).
 
 peek_code(Handle, C):-
-    peek_code(Handle, C).
+    peek_code(Handle, C),
+    '$char'(C,_).
 
 peek_chars(C):-
     peek_byte(B),
@@ -191,6 +197,7 @@ peek_chars(C):-
 peek_chars(Handle, C):-
     peek_byte(Handle, B),
     '$char'(B,C).
+
 
 skip(Char):-
     get0(C),
@@ -453,8 +460,8 @@ size_file(File, Size):-
     !,
     file_attributes(File, _, _, _, _, Size, _).
 
-size_file(_File, _Size):-
-    '$error'(6).
+size_file(File, _Size):-
+    error(existence_error(stream, File)).
 
 time_file(File, Time):-
     exists_file(File),
@@ -462,7 +469,7 @@ time_file(File, Time):-
     file_attributes(File, _, _, _, _, _, Time).
 
 time_file(_File, _Size):-
-    '$error'(6).
+    error(system_error(not_implemented)).
 
 file_directory_name(File, Directory):-
     file_attributes(File, _, _, Directory, _, _, _).
@@ -533,16 +540,21 @@ check_handle(Alias, Handle):-
    !.
 
 check_handle(Alias, Alias):-
-   nonvar(Alias).
+   nonvar(Alias),
+   !.
+
+check_handle(_, _):-
+   error(instantiation_error,_).
+
 
 
 % not supported
 
 seek(_,_,_,_):-
-    '$error'(104).
+	error(system_error(not_supported)).
 
 set_stream_position(_,_):-
-    '$error'(104).
+	error(system_error(not_supported)).
 
 set_stream(Handle, Prop):-
 	check_handle(Handle, Handle1),

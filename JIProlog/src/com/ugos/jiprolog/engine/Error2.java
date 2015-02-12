@@ -22,18 +22,60 @@ package com.ugos.jiprolog.engine;
 
 import java.util.Hashtable;
 
-final class Error1 extends BuiltIn
+final class Error2 extends BuiltIn
 {
     public final boolean unify(final Hashtable varsTbl)
     {
     	PrologObject errorTerm = getRealTerm(getParam(1));
+    	PrologObject caller = getRealTerm(getParam(2));
 
     	if(errorTerm == null)
     		throw new JIPParameterUnboundedException(1);
 
+    	if(caller == null)
+    		throw new JIPParameterUnboundedException(2);
 
     	JIPRuntimeException exception = new JIPRuntimeException(errorTerm);
-    	exception.setTerm(this.getPredicate());
+    	exception.setTerm(caller);
+
+//    	if(error.startsWith("instantiation_error"))
+//    	{
+//    		throw new JIPParameterUnboundedException();
+//    	}
+//    	else if(error.startsWith("uninstantiation_error"))
+//    	{
+//    		throw new JIPParameterUnboundedException();
+//    	}
+//    	else if(error.startsWith("type_error"))
+//    	{
+//    		throw new JIPTypeException(typeError, culprit);
+//    	}
+//    	else if(error.startsWith("domain_error"))
+//    	{
+//
+//    	}
+//    	else if(error.startsWith("permission_error"))
+//    	{
+//
+//    	}
+//    	else if(error.startsWith("representation_error"))
+//    	{
+//
+//    	}
+//    	else if(error.startsWith("evaluation_error"))
+//    	{
+//
+//    	}
+//    	else if(error.startsWith("syntax_error"))
+//    	{
+//
+//    	}
+//    	else
+//    	{
+//
+//    	}
+//
+//    	exception.setTerm(caller);
 
         throw exception;
     }

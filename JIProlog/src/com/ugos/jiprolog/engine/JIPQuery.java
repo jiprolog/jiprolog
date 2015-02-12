@@ -68,7 +68,7 @@ public class JIPQuery extends Object implements Serializable
         {
 	        if(m_bNoMore)
 	        {
-	            throw JIPRuntimeException.create(49, m_query);
+	            throw JIPRuntimeException.createRuntimeException(49, m_query.toString());
 	        }
 	        else if (!m_bOpen)
 	        {

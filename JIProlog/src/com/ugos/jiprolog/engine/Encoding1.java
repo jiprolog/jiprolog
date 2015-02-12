@@ -33,16 +33,16 @@ final class Encoding1 extends Notify2
             if (!((Variable)param).isBounded())
             {
                 if(getJIPEngine().getEncoding() == null)
-                    throw JIPRuntimeException.create(26, null);
-                
-                return param.unify(Atom.createAtom(getJIPEngine().getEncoding()), varsTbl);
+                	return param.unify(List.NIL, varsTbl);
+                else
+                	return param.unify(Atom.createAtom(getJIPEngine().getEncoding()), varsTbl);
             }
             else
             {
                 param = ((Variable)param).getObject();
             }
         }
-        
+
         String strEncoding;
         if (param instanceof Atom)
         {
@@ -56,11 +56,11 @@ final class Encoding1 extends Notify2
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
         }
-        
+
         getJIPEngine().setEncoding(strEncoding);
-    
+
         notifyEvent(JIPEvent.ID_ENCODINGCHANGED, Atom.createAtom(strEncoding));
-        
+
         return true;
     }
  }

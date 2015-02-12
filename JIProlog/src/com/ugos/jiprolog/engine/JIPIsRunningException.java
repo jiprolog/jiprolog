@@ -32,6 +32,6 @@ public class JIPIsRunningException extends JIPRuntimeException
 {
     JIPIsRunningException()
     {
-        super(create(100, null));
+        super(createRuntimeException(100));
     }
 }

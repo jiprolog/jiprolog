@@ -29,7 +29,7 @@ public class MakeDirectory1 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm input = params.getNth(1);
-        
+
         // check if input is a variable
         if (input instanceof JIPVariable)
         {
@@ -44,29 +44,29 @@ public class MakeDirectory1 extends JIPXCall
                 input = ((JIPVariable)input).getValue();
             }
         }
-        
+
         // check if input is a Number
         if(input instanceof JIPAtom)
         {
             String strDirName = ((JIPAtom)input).getName();
             File ffile = new File(strDirName);
-            
+
             if(!ffile.isAbsolute())
             {
                 ffile = new File(getJIPEngine().getSearchPath() + File.separator + strDirName);
             }
 
             if(!ffile.mkdirs())
-                throw new JIPRuntimeException(JIPio.ERR_DIRECTORY_NOT_CREATED, JIPio.STR_DIRECTORY_NOT_CREATED);
+            	throw new JIPPermissionException("create", "directory", ffile.getAbsolutePath());
         }
         else
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
         }
-        
+
         return true;
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

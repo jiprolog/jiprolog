@@ -366,7 +366,7 @@ class WAM
                 if(m_startNode == null)
                 {
 //                    System.out.println("m_startNode == null");
-                    throw JIPRuntimeException.create(0, null);
+                	throw new JIPAbortException();
                 }
 
                 m_curNode = curNode;
@@ -481,7 +481,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-            ex.printStackTrace();  //DBG
+//            ex.printStackTrace();  //DBG
 
             m_curNode = null;
             m_startNode = null;
@@ -529,12 +529,12 @@ class WAM
 //        }
         catch(ClassCastException ex)
         {
-            ex.printStackTrace();
+//            ex.printStackTrace();
 
             m_curNode = null;
             m_lastNode = null;
             m_startNode = null;
-            JIPRuntimeException ex1 = JIPRuntimeException.create(29, null);//curNode.getGoal());
+            JIPRuntimeException ex1 = JIPRuntimeException.createRuntimeException(29);//curNode.getGoal());
             ex1.m_curNode = curNode;
             ex1.m_engine = m_engine;
             if(rule != null)
@@ -551,7 +551,7 @@ class WAM
         }
         catch(Throwable th)
         {
-            th.printStackTrace();   //DBG
+//            th.printStackTrace();   //DBG
 
             m_curNode = null;
             m_lastNode = null;
@@ -594,7 +594,8 @@ class WAM
             }
             else
             {
-                throw JIPRuntimeException.create(23, curNode.getGoal());
+            	throw new JIPParameterUnboundedException();
+//                throw JIPRuntimeException.create(23, curNode.getGoal());
             }
         }
 

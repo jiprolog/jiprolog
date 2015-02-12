@@ -94,6 +94,11 @@ public final class Append2 extends JIPXCall
             // try absolute path
             strStreamHandle = JIPio.openOutputStream(strFilePath, strStreamHandle, true, getJIPEngine());
         }
+        catch(FileNotFoundException ex)
+        {
+            //System.out.println("UGO " + ex);
+            throw JIPExistenceException.createSourceSynkException(strFilePath);
+        }
         catch(IOException ex)
         {
             throw new JIPRuntimeException(JIPio.ERR_IOEXCEPTION, ex.getMessage());

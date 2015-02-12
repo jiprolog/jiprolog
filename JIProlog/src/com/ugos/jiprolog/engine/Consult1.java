@@ -127,7 +127,7 @@ class Consult1 extends BuiltIn
                 if(!wam.query(goal))
                 {
                     wam.closeQuery();
-                    throw JIPRuntimeException.create(27, strFileName[0] + ". goal: " + goal.toString(engine));
+                    throw JIPRuntimeException.createRuntimeException(27, strFileName[0] + ". goal: " + goal.toString(engine));
                 }
 
                 wam.closeQuery();
@@ -139,7 +139,8 @@ class Consult1 extends BuiltIn
             if(strOldSearchPath != null)
                 engine.setSearchPath(strOldSearchPath);
 
-            throw JIPRuntimeException.create(9, "consult " + strPath);
+            throw new JIPPermissionException("access", "source_sink", strPath);
+//            throw JIPRuntimeException.create(9, "consult " + strPath);
         }
         catch(JIPRuntimeException ex)
         {
@@ -224,7 +225,7 @@ class Consult1 extends BuiltIn
             catch(IOException ex1)
             {}
 
-            throw JIPRuntimeException.create(9, "consult " + strStreamName);
+            throw new JIPPermissionException("access", "source_sink", strStreamName);
         }
         catch(JIPSyntaxErrorException ex)
         {
@@ -280,7 +281,7 @@ class Consult1 extends BuiltIn
                 if(first instanceof Functor && ((Functor)first).getName().equals("module/2"))
                 {
                     if(exportTbl.size() > 1)
-                        throw JIPRuntimeException.create(24, strPath);
+                        throw JIPRuntimeException.createRuntimeException(24, strPath);
 
                     ConsCell params = ((Functor)first).getParams();
 
@@ -302,7 +303,7 @@ class Consult1 extends BuiltIn
                         }
                         else
                         {
-                            throw JIPRuntimeException.create(47, strPath + "-" + head.toString(engine));
+                            throw JIPRuntimeException.createRuntimeException(47, strPath + "-" + head.toString(engine));
                             //throw new JIPParameterTypeException(1, head);
                         }
 
@@ -321,7 +322,7 @@ class Consult1 extends BuiltIn
                     if(!wam.query(funct.getParams()))
                     {
                         wam.closeQuery();
-                        throw JIPRuntimeException.create(27, strPath + "-" + funct.toString(engine));
+                        throw JIPRuntimeException.createRuntimeException(27, strPath + "-" + funct.toString(engine));
                     }
 
                     wam.closeQuery();
@@ -353,12 +354,12 @@ class Consult1 extends BuiltIn
         catch(ClassCastException ex)
         {
 //            ex.printStackTrace();
-            throw JIPRuntimeException.create(21, strPath + "-" + pred.toString(engine));
+            throw JIPRuntimeException.createRuntimeException(21, strPath + "-" + pred.toString(engine));
         }
-        catch(JIPParameterTypeException ex)
-        {
-            throw JIPRuntimeException.create(1, pred.toString(engine) + " at line " + pins.getLineNumber());
-        }
+//        catch(JIPParameterTypeException ex)
+//        {
+//            throw JIPRuntimeException.create(1, pred.toString(engine) + " at line " + pins.getLineNumber());
+//        }
     }
 
     private static void notifySingletonVars(Hashtable singletonVars, ParserReader pins, JIPEngine engine, int nQueryHandle)

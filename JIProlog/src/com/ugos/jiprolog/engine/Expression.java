@@ -215,15 +215,13 @@ final class Expression extends PrologObject //implements Serializable
                         {
                             dblVal =  ~(int)dVal1;
                         }
-                        //#ifndef _MIDP
                         else if(strFunName.equals("random")) // random
                         {
                             dblVal =  Math.random() * dVal1;
                         }
-                        //#endif
                         else
                         {
-                            throw JIPRuntimeException.create(2, strFunName + " is unknown");
+                            throw new JIPEvaluationException(JIPEvaluationException.undefined);//.create(2, strFunName + " is unknown");
                         }
 
                         break;
@@ -297,12 +295,14 @@ final class Expression extends PrologObject //implements Serializable
 
                         else
                         {
-                            throw JIPRuntimeException.create(2, strFunName + " is unknown");
+                        	throw new JIPEvaluationException(JIPEvaluationException.undefined);
+//                            throw JIPRuntimeException.create(2, strFunName + " is unknown");
                         }
                         break;
 
                     default:
-                        throw JIPRuntimeException.create(2, strFunName + "/" + Integer.toString(func.getArity()) + " doesn't evaluate to a numeric expression");
+                    	throw new JIPEvaluationException(JIPEvaluationException.undefined);
+//                        throw JIPRuntimeException.create(2, strFunName + "/" + Integer.toString(func.getArity()) + " doesn't evaluate to a numeric expression");
                 }
 
                 return Expression.createNumber(dblVal);
@@ -317,7 +317,8 @@ final class Expression extends PrologObject //implements Serializable
             }
             catch(NullPointerException ex)
             {
-                throw JIPRuntimeException.create(2, "Wrong number of arguments in expression");
+            	throw new JIPEvaluationException(JIPEvaluationException.undefined);
+//                throw JIPRuntimeException.create(2, "Wrong number of arguments in expression");
             }
         }
         else if(exp instanceof ConsCell && !(exp instanceof List))

@@ -40,7 +40,7 @@ final class SearchPath1 extends BuiltIn
             if (!((Variable)param).isBounded())
             {
                 if(getJIPEngine().getSearchPath() == null)
-                    throw JIPRuntimeException.create(26, null);
+                	return param.unify(List.NIL, varsTbl);
 
                 return param.unify(Atom.createAtom(getJIPEngine().getSearchPath()), varsTbl);
             }
@@ -72,7 +72,8 @@ final class SearchPath1 extends BuiltIn
 		}
         catch (FileNotFoundException e)
         {
-        	 throw JIPRuntimeException.create(18, strSearchDir);
+        	throw JIPExistenceException.createSourceSynkException(strSearchDir);
+//        	 throw JIPRuntimeException.create(18, strSearchDir);
 	    }
 	    catch(MalformedURLException ex)
 	    {
@@ -80,7 +81,8 @@ final class SearchPath1 extends BuiltIn
 	    }
 	    catch(SecurityException ex)
 	    {
-	        throw JIPRuntimeException.create(9, ex.getMessage());
+	    	throw new JIPPermissionException("access", "source_sink", strSearchDir);
+//	        throw JIPRuntimeException.create(9, ex.getMessage());
 	    }
         catch (IOException ex)
         {

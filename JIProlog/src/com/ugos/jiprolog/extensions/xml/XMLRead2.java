@@ -61,7 +61,7 @@ public class XMLRead2 extends XMLRead1
 
         if(strStream == null)
         {
-            throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
+        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
 
         JIPTerm xmlDoc = createXMLTerm(strStream);
