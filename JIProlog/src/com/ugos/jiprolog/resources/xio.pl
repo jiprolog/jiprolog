@@ -107,22 +107,27 @@ read(Handle, Term):-
     xcall('com.ugos.jiprolog.extensions.io.Read2', [Handle1, Term]).
 
 read_term(Term, Options):-
+	check_options(Options),
     current_input(Handle),
     read(Handle, Term),
     options(Handle, Term, Options).
 
 read_term(Handle, Term, Options):-
+	check_options(Options),
     read(Handle, Term),
     options(Handle, Term, Options).
 
 read_clause(Term, Options):-
+	check_options(Options),
     current_input(Handle),
     read(Handle, Term),
     options(Handle, Term, Options).
 
 read_clause(Handle, Term, Options):-
+	check_options(Options),
     read(Handle, Term),
     options(Handle, Term, Options).
+
 
 get0(Char):-
     current_input(Handle),
@@ -564,7 +569,28 @@ set_stream(Handle, Prop):-
 char_atom(B, C):-
     xcall('com.ugos.jiprolog.extensions.io.CharAtom2', [B, C]).
 
+
+check_options(Options):-
+	var(Options),
+    error(instantiation_error).
+
+check_options([]).
+
+check_options([Opt|Options]):-
+	nonvar(Opt),
+	!,
+	check_options(Options).
+
+check_options(_):-
+	error(instantiation_error).
+
+
+options(_Handle, _Term, V):-
+	var(V),
+    error(instantiation_error).
+
 options(_Handle, _Term, []):-!.
+
 
 options(Handle, Term, [Opt|Options]):-
     check_handle(Handle, Handle1),
@@ -576,25 +602,25 @@ options(Handle, Term, [_Opt|Options]):-
     options(Handle, Term, Options),
     !.
 
-option(Handle, Term, quoted(false)).
-option(Handle, Term, backquoted_string(false)).
-option(Handle, Term, character_escapes(false)).
-option(Handle, Term, ignore_ops(true)).
+%option(Handle, Term, quoted(false)).
+%option(Handle, Term, backquoted_string(false)).
+%option(Handle, Term, character_escapes(false)).
+%option(Handle, Term, ignore_ops(true)).
 option(Handle, Module:Term, module(Module)).
 option(Handle, Term, module(user)).
-option(Handle, Term, numbervars(false)).
-option(Handle, Term, portray(false)).
-option(Handle, Term, max_depth(0)).
+%option(Handle, Term, numbervars(false)).
+%option(Handle, Term, portray(false)).
+%option(Handle, Term, max_depth(0)).
 option(Handle, Term, variables(X)):-
     free_variables(Term, X),
     !.
 option(Handle, Term, variables([])).
-option(Handle, Term, variable_names([])).
-option(Handle, Term, singletons([])).
-option(Handle, Term, syntax_errors('')).
-option(Handle, Term, double_quotes(false)).
-option(Handle, Term, term_position(0)).
-option(Handle, Term, subterm_positions(_)).
+%option(Handle, Term, variable_names([])).
+%option(Handle, Term, singletons([])).
+option(Handle, Term, syntax_errors('error')).
+%option(Handle, Term, double_quotes(false)).
+%option(Handle, Term, term_position(0)).
+%option(Handle, Term, subterm_positions(_)).
 
 
 % user stream properties
