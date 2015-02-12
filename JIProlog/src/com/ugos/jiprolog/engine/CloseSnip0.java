@@ -36,7 +36,7 @@ final class CloseSnip0 extends BuiltIn
             final PrologObject goal = previousNode.getGoal();
             if(goal instanceof Functor)
             {
-                if(((Functor)goal).getName().equals("[!/0"))
+                if(((Functor)goal).getName().equals("<!/0"))
                 {
                     // imposta il backtrack alla call corrente
                     curNode.m_backtrack = previousNode.m_previous;

@@ -190,7 +190,7 @@ class PrologTokenizer
                             }
                             else
                             {
-                                if((strTerm + (char)c).equals("[!") || (strTerm + (char)c).equals("!]"))
+                                if((strTerm + (char)c).equals("!>"))
                                     strTerm += (char)c;//String.valueOf((char)c);
                                 else
                                     m_lnReader.pushback();
@@ -242,7 +242,13 @@ class PrologTokenizer
                         break;
 
                     case STATE_SPECIAL_ATOM:
-                        if((SPECIAL_CHARS.indexOf(curChar) > -1))
+                        if((strTerm + (char)curChar).equals("<!") || (strTerm + (char)curChar).equals("!>"))
+                    	{
+                        	strTerm += (char)curChar;//String.valueOf((char)c);
+                        	nTokenType = TOKEN_SPECIAL_ATOM;
+                            nState = STATE_END;
+                    	}
+                        else if((SPECIAL_CHARS.indexOf(curChar) > -1))
                         {
                             strTerm += (char)curChar;//String.valueOf((char)curChar);
                             if(strTerm.equals(OPENCOMMENT_CHAR))
