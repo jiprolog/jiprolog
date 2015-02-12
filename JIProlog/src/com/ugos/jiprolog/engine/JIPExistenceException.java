@@ -22,7 +22,7 @@ public class JIPExistenceException extends JIPRuntimeException {
 
 	public static JIPExistenceException createSourceSynkException(String culprit)
 	{
-		return new JIPExistenceException("source_synk", culprit);
+		return new JIPExistenceException("source_sink", culprit);
 	}
 
 	public static JIPExistenceException createStreamException(String culprit)
@@ -46,7 +46,7 @@ public class JIPExistenceException extends JIPRuntimeException {
 	{
 		String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
 
-    	return getTerm("existence_error(" + object + ", " + culprit + ")", strTerm);
+    	return getTerm("existence_error(" + object + ", " + Atom.createAtom(culprit) + ")", strTerm);
 	}
 
 }

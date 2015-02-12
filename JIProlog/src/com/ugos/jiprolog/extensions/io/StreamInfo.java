@@ -23,7 +23,6 @@ public class StreamInfo
 		properties.setProperty("alias", "alias('" + handle + "')");
 		properties.setProperty("type", "type(text)");
 		properties.setProperty("end_of_stream", "end_of_stream(no)");
-
 	}
 
 	public String getName()
@@ -33,7 +32,7 @@ public class StreamInfo
 
 	public String getHandle()
 	{
-		return name;
+		return handle;
 	}
 
 	public void setHandle(String handle)
