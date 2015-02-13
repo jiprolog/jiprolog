@@ -199,7 +199,18 @@ final class SearchPath1 extends BuiltIn
 	        	f = new File(basePath, strSearchDir);
 	        	if(!f.exists())
 				{
-					throw new FileNotFoundException(strSearchDir);
+	            	String runtime = System.getProperty("java.runtime.name").toLowerCase();
+
+//	    			System.out.println ("runtime=" + runtime);
+
+	    			if(runtime.contains("android"))
+	    			{
+	    		        return strSearchDir;
+	    			}
+	    			else
+	    			{
+	    				throw new FileNotFoundException(strSearchDir);
+	    			}
 				}
 
 	        	return f.getAbsolutePath();

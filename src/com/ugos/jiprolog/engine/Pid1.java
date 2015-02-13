@@ -1,6 +1,6 @@
 package com.ugos.jiprolog.engine;
 
-import java.lang.management.ManagementFactory;
+import java.lang.reflect.Method;
 import java.util.Hashtable;
 
 public class Pid1 extends BuiltIn
@@ -11,15 +11,30 @@ public class Pid1 extends BuiltIn
 	{
 		try
 		{
-			String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
-		    int p = nameOfRunningVM.indexOf('@');
+			Class clazz = Class.forName("java.lang.management.ManagementFactory");
+			Class clazz1 = Class.forName("java.lang.management.RuntimeMXBean");
 
-		    String pid = nameOfRunningVM.substring(0, p);
+			if(clazz != null)
+			{
+				Method getRuntimeMXBeanMethod = clazz.getMethod("getRuntimeMXBean");
+				Object runtimeMXBean = getRuntimeMXBeanMethod.invoke(null);
 
-		    return getParam(1).unify(Expression.createNumber(pid), varsTbl);
+				Method getNameMethod = clazz1.getDeclaredMethod("getName");
+
+				String nameOfRunningVM = (String)getNameMethod.invoke(runtimeMXBean);
+
+				int p = nameOfRunningVM.indexOf('@');
+
+				String pid = nameOfRunningVM.substring(0, p);
+
+				return getParam(1).unify(Expression.createNumber(pid), varsTbl);
+			}
+
+			return false;
 		}
 		catch(Throwable t)
 		{
+			t.printStackTrace();
 			return false;
 		}
 	}
