@@ -36,7 +36,11 @@ final class BuiltInPredicate extends Functor
     public BuiltInPredicate(final Atom name, final ConsCell params)
     {
         this(name.getName(), params);
-        m_builtIn = null;
+    }
+
+    public BuiltInPredicate(final Functor functor)
+    {
+        this(functor.getName(), functor.getParams());
     }
 
     public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)

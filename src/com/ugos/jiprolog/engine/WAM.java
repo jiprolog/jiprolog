@@ -481,7 +481,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-//            ex.printStackTrace();  //DBG
+            ex.printStackTrace();  //DBG
 
             m_curNode = null;
             m_startNode = null;
@@ -529,7 +529,7 @@ class WAM
 //        }
         catch(ClassCastException ex)
         {
-//            ex.printStackTrace();
+            ex.printStackTrace();
 
             m_curNode = null;
             m_lastNode = null;
@@ -551,7 +551,7 @@ class WAM
         }
         catch(Throwable th)
         {
-//            th.printStackTrace();   //DBG
+            th.printStackTrace();   //DBG
 
             m_curNode = null;
             m_lastNode = null;

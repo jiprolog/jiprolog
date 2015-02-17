@@ -237,6 +237,34 @@ class ConsCell extends PrologObject //implements Serializable
         }
     }
 
+    @Override
+    public boolean termEquals(PrologObject obj)
+    {
+        if(obj instanceof ConsCell)
+        {
+        	int h1 = getHeight();
+        	int h2 = ((ConsCell)obj).getHeight();
+        	if(h1 != h2)
+        	{
+        		return false;
+        	}
+        	else //if(h1 == h2)
+        	{
+	            if(m_head == ((ConsCell)obj).m_head || m_head.termEquals(((ConsCell)obj).m_head))
+	            {
+	            	return (m_tail == ((ConsCell)obj).m_tail) ||
+	            		   (m_tail == null && (((ConsCell)obj).m_tail.termEquals(List.NIL) || ((ConsCell)obj).m_tail.termEquals(ConsCell.NIL))) ||
+	            		   (m_tail != null && m_tail.termEquals(((ConsCell)obj).m_tail));
+	            }
+        	}
+        }
+        else if(obj instanceof Variable)
+            if(((Variable)obj).isBounded())
+                return termEquals(((Variable)obj).getObject());
+
+        return false;
+    }
+
     protected boolean lessThen(final PrologObject obj)
     {
         if(obj instanceof ConsCell)
@@ -256,19 +284,16 @@ class ConsCell extends PrologObject //implements Serializable
 	            {
 	            	return true;
 	            }
-	            else if(m_tail != null)
+	            else if (m_head.termEquals(((ConsCell)obj).m_head))
 	            {
-	            	if(((ConsCell)obj).m_tail != null)
-	            		return m_tail.lessThen(((ConsCell)obj).m_tail);
-	            	else
-	            		return false;
-	            }
-	            else
-	            {
-	            	if(((ConsCell)obj).m_tail != null)
-	            		return true;
-	            	else
-	            		return false;
+		            if(m_tail != null)
+		            {
+		            	return ((ConsCell)obj).m_tail != null && m_tail.lessThen(((ConsCell)obj).m_tail);
+		            }
+		            else
+		            {
+		            	return (((ConsCell)obj).m_tail != null);
+		            }
 	            }
         	}
         }

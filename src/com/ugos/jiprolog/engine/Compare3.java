@@ -55,7 +55,7 @@ final class Compare3 extends BuiltIn
                     case '>':
                         return term2.lessThen(term1);
                     case '=':
-                        return !term1.lessThen(term2) && !term2.lessThen(term1);
+                        return term1.termEquals(term2);// && !term2.lessThen(term1);
                     default:
                         throw  new JIPParameterTypeException(1, JIPParameterTypeException.COMPARATION_OPERATOR);
                 }

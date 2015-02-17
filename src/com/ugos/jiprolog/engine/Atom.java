@@ -125,4 +125,15 @@ final class Atom extends PrologObject //implements Serializable
 
         return false;
     }
+
+    @Override
+    public boolean termEquals(PrologObject obj)
+    {
+        if(obj instanceof Atom)
+            return m_strAtom.equals(((Atom)obj).m_strAtom);
+        else if(obj instanceof Variable && ((Variable)obj).isBounded())
+            return termEquals(((Variable)obj).getObject());
+
+        return false;
+    }
 }

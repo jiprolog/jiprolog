@@ -28,6 +28,16 @@ package com.ugos.jiprolog.engine;
  */
 public class JIPParameterTypeException extends JIPTypeException
 {
+	/** Constructs a new JIPParameterTypeException
+     * @param nParam the index of the bad parameter
+     * @param nExpectedType the type of the expected term
+     */
+    public JIPParameterTypeException(final int nParam, final int nExpectedType, JIPEngine engine)
+    {
+        super(nExpectedType, "" + nParam);
+        m_engine = engine;
+    }
+
     /** Constructs a new JIPParameterTypeException
      * @param nParam the index of the bad parameter
      * @param nExpectedType the type of the expected term

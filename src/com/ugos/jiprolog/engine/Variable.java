@@ -232,6 +232,25 @@ final class Variable extends PrologObject//Serializable
 
     	return cyclic == 1;
     }
+
+    @Override
+    public boolean termEquals(PrologObject obj)
+    {
+    	if(isBounded())
+    	{
+    		return lastVariable().m_object.termEquals(obj);
+    	}
+    	else if(obj instanceof Variable)
+        {
+    		if (((Variable)obj).isBounded())
+    			return false;
+    		else
+    			return lastVariable().getAddress() == ((Variable)obj).lastVariable().getAddress();
+
+        }
+
+        return false;
+    }
 /*
     public void finalize() throws Throwable
     {
