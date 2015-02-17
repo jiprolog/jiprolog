@@ -26,15 +26,10 @@ final class TermEquals2 extends BuiltIn
 {
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
+    	return getParam(1).termEquals(getParam(2));
+
 //    	String s1 = getParam(1).toString();
 //    	String s2 = getParam(2).toString();
-
-//    	System.out.println(s1);
-//    	return getParam(1).unifiable(getParam(2));
-
-
-    	String s1 = getParam(1).toString();
-    	String s2 = getParam(2).toString();
-        return s1.equals(s2);
+//        return s1.equals(s2);
     }
 }

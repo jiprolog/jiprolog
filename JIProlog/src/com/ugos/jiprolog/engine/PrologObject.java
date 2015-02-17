@@ -105,6 +105,7 @@ abstract class PrologObject implements Clearable, Serializable
     public abstract PrologObject copy(boolean flat, Hashtable<Variable, PrologObject> varTable);
     protected abstract boolean lessThen(PrologObject obj);
     protected abstract boolean _unify(PrologObject obj, Hashtable<Variable, Variable> varTbl);
+    public abstract boolean termEquals(PrologObject obj);
 }
 
 

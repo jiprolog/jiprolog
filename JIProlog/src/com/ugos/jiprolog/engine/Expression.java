@@ -365,4 +365,17 @@ final class Expression extends PrologObject //implements Serializable
     {
         return !floating;//(int)m_dValue == m_dValue;
     }
+
+    @Override
+    public boolean termEquals(PrologObject obj)
+    {
+        if(obj instanceof Expression)
+        {
+            return m_dValue == ((Expression)obj).m_dValue && floating == ((Expression)obj).floating;
+        }
+        else if(obj instanceof Variable && ((Variable)obj).isBounded())
+            return termEquals(((Variable)obj).getObject());
+
+        return false;
+    }
 }

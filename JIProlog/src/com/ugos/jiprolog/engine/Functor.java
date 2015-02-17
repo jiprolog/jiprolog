@@ -101,6 +101,10 @@ class Functor extends ConsCell
     public final void setParams(final ConsCell params)
     {
         m_tail = params;
+
+        m_nArity = params.getHeight();
+        m_strName = m_strFriendlyName + "/" + m_nArity;
+        m_head = Atom.createAtom(m_strName);
     }
 
     public boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)

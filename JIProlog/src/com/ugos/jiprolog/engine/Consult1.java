@@ -205,7 +205,9 @@ class Consult1 extends BuiltIn
                 catch(IOException ex1)
                 {}
 
-                throw new JIPJVMException(ex);
+                JIPJVMException jvmex = new JIPJVMException(ex);
+                jvmex.m_engine = engine;
+                throw jvmex;
                 //throw new JIPRuntimeException("Unable to consult " + strStreamName + ": " + ex.toString());
             }
 
@@ -225,7 +227,7 @@ class Consult1 extends BuiltIn
             catch(IOException ex1)
             {}
 
-            throw new JIPPermissionException("access", "source_sink", strStreamName);
+            throw new JIPPermissionException("access", "source_sink", strStreamName, engine);
         }
         catch(JIPSyntaxErrorException ex)
         {
@@ -239,6 +241,8 @@ class Consult1 extends BuiltIn
             }
             catch(IOException ex1)
             {}
+
+            ex.m_engine = engine;
 
             throw ex;
         }
@@ -255,17 +259,21 @@ class Consult1 extends BuiltIn
             catch(IOException ex1)
             {}
 
+            ex.m_engine = engine;
+
             throw ex;
         }
     }
 
-    protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable exportTbl, Vector<PrologObject> initializationVector, WAM wam)
+    protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable<String, String> exportTbl, Vector<PrologObject> initializationVector, WAM wam)
     {
 //        System.out.println("ASSERT");  //DBG
 //        System.out.println(pred);  //DBG
 //
         try
         {
+        	GlobalDB globalDB = engine.getGlobalDB();
+
             String strModuleName = (String)exportTbl.get("#module");
 
             // directive
@@ -299,7 +307,7 @@ class Consult1 extends BuiltIn
                             String strPredDef = ((Atom)parms.getHead()).getName() + "/" + ((ConsCell)parms.getTail()).getHead();
                             //System.out.println("strPredDef " + strPredDef);  //DBG
                             exportTbl.put(strPredDef, strModuleName);
-                            engine.getGlobalDB().setExported(strPredDef);
+                            globalDB.setExported(strPredDef);
                         }
                         else
                         {
@@ -334,6 +342,8 @@ class Consult1 extends BuiltIn
                 clause.setFileName(strPath);
                 if(pins != null)
                 {
+//                	System.out.println("line number " + pins.getLineNumber());
+
                     clause.setLineNumber(pins.getLineNumber());
                     clause.setPosition(pins.getRead());
                 }
@@ -348,7 +358,7 @@ class Consult1 extends BuiltIn
                 }
 
 //                  System.out.println("ASSERT: " + clause);  //DBG
-                engine.getGlobalDB().assertz(clause, strPath, false);
+                globalDB.assertz(clause, strPath, false);
             }
         }
         catch(ClassCastException ex)

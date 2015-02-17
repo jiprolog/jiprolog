@@ -292,6 +292,7 @@
 '$kernel':prolog_flag(max_arity, 255).
 '$kernel':prolog_flag(version_data, V):-'$kernel':prolog_flag(dialect, X), ver(Major, Minor, Build, Revision), V =.. [X, Major, Minor, Build, Revision].
 '$kernel':prolog_flag(pid, P) :- pid(P).
+'$kernel':prolog_flag(encoding, E) :- encoding(E).
 
 '$system':current_prolog_flag(Flag, X):-'$kernel':prolog_flag(Flag, X).
 '$system':current_prolog_flag(Flag, X):-env(Flag, X).

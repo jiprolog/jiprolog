@@ -51,7 +51,7 @@ public class JIPTypeException extends JIPRuntimeException {
     public static final int FILE = 14;
 
 
-    private static final String s_stringMap[] = new String[12];
+    private static final String s_stringMap[] = new String[15];
 
     static
     {

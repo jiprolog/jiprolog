@@ -54,13 +54,6 @@
     sublist/3,
     forall/2,
     apply/2,
-    call/2,
-    call/3,
-    call/4,
-    call/5,
-    call/6,
-  	call/7,
-  	call/8,
     ignore/1,
   	setup_call_cleanup/3,
   	call_cleanup/2.
@@ -81,13 +74,6 @@
   	sublist/3,
   	forall/2,
   	apply/2,
-  	call/2,
-  	call/3,
-  	call/4,
-  	call/5,
-  	call/6,
-  	call/7,
-  	call/8,
   	ignore/1,
   	setup_call_cleanup/3,
   	call_cleanup/2]).
@@ -156,17 +142,8 @@ apply(Term,Args):-
     Term =.. L1,
     append(L1,Args,L2),
     Goal =.. L2,
-        !,
+    !,
     Goal.
-
-% call/2,3,4,5,6,7,8
-call(Closure,X1):-apply(Closure,[X1]).
-call(Closure,X1,X2):-apply(Closure,[X1,X2]).
-call(Closure,X1,X2,X3):-apply(Closure,[X1,X2,X3]).
-call(Closure,X1,X2,X3,X4):-apply(Closure,[X1,X2,X3,X4]).
-call(Closure,X1,X2,X3,X4,X5):-apply(Closure,[X1,X2,X3,X4,X5]).
-call(Closure,X1,X2,X3,X4,X5,X6):-apply(Closure,[X1,X2,X3,X4,X5,X6]).
-call(Closure,X1,X2,X3,X4,X5,X6,X7):-apply(Closure,[X1,X2,X3,X4,X5,X6,X7]).
 
 %setup_call_cleanup/3
 setup_call_cleanup(Setup, Goal, Cleanup):-

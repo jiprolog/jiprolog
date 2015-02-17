@@ -85,15 +85,22 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             return ((JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + strPredName)).isMultifile();
         }
+        else if(m_clauseTable.containsKey(strPredName))
+        {
+            return ((JIPClausesDatabase)m_clauseTable.get(strPredName)).isMultifile();
+        }
 
         return false;
     }
 
     final void multifile(final String strPredName)
     {
+        if(isSystem(strPredName) && !m_bCheckDisabled)
+        	throw new JIPPermissionException("modify", "static_procedure", strPredName, jipEngine);
+
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR, jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -113,7 +120,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             m_clauseTable.put(strDef, db);
         }
 
-        db.setMultifile();
+        if(db instanceof DefaultClausesDatabase)
+        	db.setMultifile();
+        else
+        	throw new JIPPermissionException("modify", "extern_procedure", strPredName);
+
     }
 
     final void moduleTransparent(final String strPredName)
@@ -172,7 +183,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR, jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -411,7 +422,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile, boolean dynamic)
     {
         if(!m_bCheckDisabled && isSystem((Functor)clause.getHead()))
-        	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName());
+        	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName(), jipEngine);
 
         // Estrae il nome del funtore
         PrologObject head = clause.getHead();
@@ -427,7 +438,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
         else
         {
-        	throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head.toString());
+        	JIPTypeException ex = new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head.toString());
+        	ex.m_engine = jipEngine;
+        	throw ex;
         }
 
         // verifica se il predicato è stato già asserted in un altro file
@@ -438,7 +451,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 String strFileName = (String)m_pred2FileMap.get(strFunctName);
                 if(!strFileName.equals(strFile) && !isMultifile(((Functor)head).getName()))
                 {
-                	throw new JIPPermissionException("modify", "static_procedure", strFunctName + "(" + strFileName + ", " + strFile + ")");
+                	throw new JIPPermissionException("modify", "static_procedure", strFunctName, jipEngine);
                 }
             }
         }
@@ -455,7 +468,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
             if(dynamic && !db.isDynamic())
             {
-            	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName());
+            	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName(), jipEngine);
 //            	throw JIPRuntimeException.create(30, ((Functor)clause.getHead()).getName());
             }
 
@@ -463,14 +476,14 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             {
                 // Aggiunge il predicato
                 if(!db.addClauseAt(0, new JIPClause(clause)))
-                	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName());
+                	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName(), jipEngine);
 //                    throw JIPRuntimeException.create(10, clause);
             }
             else
             {
                 // Aggiunge il predicato
                 if(!db.addClause(new JIPClause(clause)))
-                	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName());
+                	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName(), jipEngine);
 //                    throw JIPRuntimeException.create(10, clause);
             }
         }
@@ -486,7 +499,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
             // Aggiunge il predicato
             if(!db.addClause(new JIPClause(clause)))
-            	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName());
+            	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName(), jipEngine);
 //                throw JIPRuntimeException.create(10, clause);
 
             // Aggiunge il vettore alla tabella
@@ -501,6 +514,12 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             	Vector<String> preds = m_file2PredMap.get(strFile);
             	if(!preds.contains(strFunctName))
             		preds.add(strFunctName);
+            }
+            else
+            {
+              	Vector<String> preds = new Vector<String>();
+           		preds.add(strFunctName);
+           		m_file2PredMap.put(strFile, preds);
             }
         }
 
@@ -700,24 +719,81 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         return term;
     }
 
-      // unconsult non funziona sui predicati multifile
     final void unconsult(final String strFileName)
     {
-        Enumeration<String> en = m_pred2FileMap.keys();
-        while(en.hasMoreElements())
+    	Vector<String> predVector = m_file2PredMap.get(strFileName);
+    	if(predVector == null)
+    		return;
+
+    	for(String strPredName : predVector)
         {
-            String strPredName = en.nextElement();
-            String strFile = m_pred2FileMap.get(strPredName);
-            if(strFile.equals(strFileName))
-            {a
-                if(m_clauseTable.containsKey(strPredName))
-                {
+            if(m_clauseTable.containsKey(strPredName))
+            {
+            	if(isMultifile(strPredName))
+            	{
+            		JIPClausesDatabase db =
+            				m_clauseTable.get(strPredName);
+
+            		Enumeration en1 = db.clauses();
+            		Vector<Clause> clausesToRemove = new Vector<Clause>();
+
+            		while(en1.hasMoreElements())
+            	    {
+            			Clause clause = (Clause)en1.nextElement();
+            			String f = clause.getFileName();
+            			if(strFileName.equalsIgnoreCase(f))
+            			{
+            				clausesToRemove.add(clause);
+            			}
+            	    }
+
+            		for(Clause c : clausesToRemove)
+            		{
+            			db.removeClause(new JIPClause(c));
+            		}
+            	}
+            	else
+            	{
+                    m_pred2FileMap.remove(strPredName);
                     m_clauseTable.remove(strPredName);
-                    if(!isMultifile(strPredName))
-                        m_pred2FileMap.remove(strPredName);
-                }
+            	}
             }
         }
+
+
+
+//        Enumeration<String> en = m_pred2FileMap.keys();
+//        while(en.hasMoreElements())
+//        {
+//            String strPredName = en.nextElement();
+//            String strFile = m_pred2FileMap.get(strPredName);
+//            if(strFile.equals(strFileName))
+//            {
+//                if(m_clauseTable.containsKey(strPredName))
+//                {
+//                	if(isMultifile(strPredName))
+//                	{
+//                		JIPClausesDatabase db =
+//                				m_clauseTable.get(strPredName);
+//
+//                		Enumeration en1 = db.clauses();
+//                		while(en1.hasMoreElements())
+//                	    {
+//                			Clause clause = (Clause)en1.nextElement();
+//                			if(strFileName.equalsIgnoreCase(clause.getFileName()))
+//                			{
+//                				db.removeClause(new JIPClause(clause));
+//                			}
+//                	    }
+//                	}
+//                	else
+//                	{
+//                        m_pred2FileMap.remove(strPredName);
+//                        m_clauseTable.remove(strPredName);
+//                	}
+//                }
+//            }
+//        }
     }
 
     final ArrayList<String> getFiles()

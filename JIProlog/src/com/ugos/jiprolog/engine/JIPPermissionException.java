@@ -40,6 +40,12 @@ public class JIPPermissionException extends JIPRuntimeException {
 	private String permission;
 	private String culprit;
 
+	public JIPPermissionException(String operation, String permission, String culprit, JIPEngine engine)
+	{
+		this(operation, permission, culprit);
+		m_engine = engine;
+	}
+
 	public JIPPermissionException(String operation, String permission, String culprit)
 	{
 		this.operation = operation;

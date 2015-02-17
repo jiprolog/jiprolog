@@ -109,7 +109,7 @@ public class JIPRuntimeException extends RuntimeException
             try
             {
                 return
-                	m_engine.getTermParser().parseTerm("error(" + strType.replace("\\", "\\\\") + ", context(" + strTerm + ", file(" + strFileName + ", " + m_nLineNumber + ")))");
+                	m_engine.getTermParser().parseTerm("error(" + Atom.createAtom(strType) + ", context(" + strTerm + ", file(" + strFileName + ", " + m_nLineNumber + ")))");
 	        }
 	        catch (JIPSyntaxErrorException ex)
 	        {
