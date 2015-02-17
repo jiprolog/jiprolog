@@ -32,8 +32,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     // associazione tra predicati e file
     private Hashtable<String, String> m_pred2FileMap;
-    private Hashtable m_moduleTransparentTbl;
+    private Hashtable<String, String> m_moduleTransparentTbl;
     private Hashtable<String, String> m_exportedTable;
+    private Hashtable<String, Vector<String>> m_file2PredMap;
+
 
     static final String SYSTEM_MODULE = "$system";
     static final String USER_MODULE   = "$user";
@@ -43,12 +45,15 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     private JIPEngine jipEngine;
 
-    private GlobalDB(GlobalDB gdb)
+    @SuppressWarnings("unchecked")
+	private GlobalDB(GlobalDB gdb)
     {
         m_clauseTable            = (Hashtable<String, JIPClausesDatabase>)gdb.m_clauseTable.clone();
-        m_pred2FileMap           = (Hashtable)gdb.m_pred2FileMap.clone();
-        m_moduleTransparentTbl   = (Hashtable)gdb.m_moduleTransparentTbl.clone();
-        m_exportedTable 		 = (Hashtable)gdb.m_exportedTable.clone();
+        m_pred2FileMap           = (Hashtable<String, String>)gdb.m_pred2FileMap.clone();
+        m_moduleTransparentTbl   = (Hashtable<String, String>)gdb.m_moduleTransparentTbl.clone();
+        m_exportedTable 		 = (Hashtable<String, String>)gdb.m_exportedTable.clone();
+        m_file2PredMap			 = (Hashtable<String, Vector<String>>)gdb.m_file2PredMap.clone();
+
         jipEngine 				 = gdb.jipEngine;
 
     }
@@ -62,10 +67,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     public GlobalDB(JIPEngine engine)
     {
-        m_clauseTable            = new Hashtable<String, JIPClausesDatabase>(100);
-        m_pred2FileMap           = new Hashtable<String, String>(100);
-        m_moduleTransparentTbl   = new Hashtable(100);
+        m_clauseTable            = new Hashtable<String, JIPClausesDatabase>();
+        m_pred2FileMap           = new Hashtable<String, String>();
+        m_moduleTransparentTbl   = new Hashtable<String, String>();
         m_exportedTable 		 = new Hashtable<String, String>();
+        m_file2PredMap			 = new Hashtable<String, Vector<String>>();
         jipEngine				 = engine;
 
         loadKernel(this);
@@ -406,7 +412,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
         if(!m_bCheckDisabled && isSystem((Functor)clause.getHead()))
         	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getName());
-//            throw JIPRuntimeException.create(15, ((Functor)clause.getHead()).getName());
 
         // Estrae il nome del funtore
         PrologObject head = clause.getHead();
@@ -423,7 +428,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         else
         {
         	throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head.toString());
-//            throw JIPRuntimeException.create(11, head);
         }
 
         // verifica se il predicato è stato già asserted in un altro file
@@ -431,12 +435,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             if(m_pred2FileMap.containsKey(strFunctName))
             {
-//             System.out.println("contains: "); //DEBUG
                 String strFileName = (String)m_pred2FileMap.get(strFunctName);
                 if(!strFileName.equals(strFile) && !isMultifile(((Functor)head).getName()))
                 {
                 	throw new JIPPermissionException("modify", "static_procedure", strFunctName + "(" + strFileName + ", " + strFile + ")");
-//                    throw JIPRuntimeException.create(5, strFunctName + "(" + strFileName + ", " + strFile + ")");
                 }
             }
         }
@@ -492,7 +494,15 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
 
         if(strFile != null)
+        {
             m_pred2FileMap.put(strFunctName, strFile);
+            if(m_file2PredMap.containsKey(strFile))
+            {
+            	Vector<String> preds = m_file2PredMap.get(strFile);
+            	if(!preds.contains(strFunctName))
+            		preds.add(strFunctName);
+            }
+        }
 
         if(m_moduleTransparentTbl.containsKey(strFunctName))
             db.setModuleTransparent();
@@ -699,7 +709,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             String strPredName = en.nextElement();
             String strFile = m_pred2FileMap.get(strPredName);
             if(strFile.equals(strFileName))
-            {
+            {a
                 if(m_clauseTable.containsKey(strPredName))
                 {
                     m_clauseTable.remove(strPredName);
