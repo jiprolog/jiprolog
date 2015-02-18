@@ -45,6 +45,10 @@ final class Compare3 extends BuiltIn
         }
         else
         {
+            final String operator = ((Atom)oper).getName();
+            if(operator.length() > 1)
+            	throw new JIPDomainException("order",operator);
+
             try
             {
                 final char op = ((Atom)oper).getName().charAt(0);
