@@ -183,13 +183,17 @@ merge_set(L1, L2, L3):-
     remove_duplicates(L31, L3).
 
 /* remove duplicates from a set */
-remove_duplicates([],[]):-!.
+remove_duplicates([], []) :-
+ !.
 
-remove_duplicates([X,X|Xs], Ys):-
-    remove_duplicates([X|Xs],Ys).
+remove_duplicates([X, Y| Xs], Ys) :-
+ !,
+ ( X == Y ->
+  remove_duplicates([Y| Xs], Ys)
+ ; Ys = [X| Ys2],
+  remove_duplicates([Y|Xs], Ys2)
+ ).
 
-remove_duplicates([X|Xs], [X|Ys]):-
-    remove_duplicates(Xs,Ys).
 
 findall(X, Goal, List):-
    xcall('com.ugos.jiprolog.extensions.sets.Findall3', [X, Goal, List]).

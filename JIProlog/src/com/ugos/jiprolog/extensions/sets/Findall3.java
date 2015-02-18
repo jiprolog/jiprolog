@@ -30,8 +30,10 @@ public class Findall3 extends JIPXCall
 
     public boolean unify(final JIPCons input, Hashtable varsTbl)
     {
-        final JIPTerm term = input.getNth(1);
-        JIPTerm query = input.getNth(2);
+    	JIPCons input1 = (JIPCons)input.clone();
+
+        JIPTerm term = input1.getNth(1);
+        JIPTerm query = input1.getNth(2);
 
         // check if input is a variable
         if (query instanceof JIPVariable)
@@ -75,12 +77,7 @@ public class Findall3 extends JIPXCall
         else
             solList = solList.reverse();
 
-        //System.out.println("unify");
-
-        boolean b = res.unify(solList, varsTbl);
-
-        //System.out.println(b);
-        return b;
+        return res.unify(solList, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()
