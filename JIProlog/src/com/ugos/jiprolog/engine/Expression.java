@@ -344,14 +344,11 @@ final class Expression extends PrologObject //implements Serializable
     {
         if(obj instanceof Expression)
         {
-            if(m_dValue < ((Expression)obj).m_dValue)
+        	if(floating && !((Expression)obj).floating)
+        		return true;
+        	else if(m_dValue < ((Expression)obj).m_dValue)
             {
             	return true;
-            }
-            else if(m_dValue == ((Expression)obj).m_dValue)
-            {
-            	if(floating && !((Expression)obj).floating)
-            		return true;
             }
         }
         else if(obj instanceof Atom)
