@@ -194,6 +194,7 @@ remove_duplicates([X, Y| Xs], Ys) :-
   remove_duplicates([Y|Xs], Ys2)
  ).
 
+remove_duplicates([Y], [Y]).
 
 findall(X, Goal, List):-
    xcall('com.ugos.jiprolog.extensions.sets.Findall3', [X, Goal, List]).
