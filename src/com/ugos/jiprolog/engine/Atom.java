@@ -120,6 +120,10 @@ final class Atom extends PrologObject //implements Serializable
             return m_strAtom.compareTo( ((Atom)obj).m_strAtom) < 0;
         else if(obj instanceof Variable && ((Variable)obj).isBounded())
             return lessThen(((Variable)obj).getObject());
+        else if(obj.unifiable(List.NIL))
+        {
+        	return false;
+        }
         else if(obj instanceof ConsCell)
         	return true;
 

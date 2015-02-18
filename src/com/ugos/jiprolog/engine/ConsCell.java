@@ -297,6 +297,10 @@ class ConsCell extends PrologObject //implements Serializable
 	            }
         	}
         }
+        else if(obj instanceof Atom && this.unifiable(List.NIL))
+		{
+        	return true;
+		}
         else if(obj instanceof Variable)
             if(((Variable)obj).isBounded())
                 return lessThen(((Variable)obj).getObject());

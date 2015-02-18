@@ -354,6 +354,14 @@ final class Expression extends PrologObject //implements Serializable
             		return true;
             }
         }
+        else if(obj instanceof Atom)
+        {
+        	return true;
+        }
+        else if(obj.unifiable(List.NIL))
+        {
+        	return true;
+        }
         else if(obj instanceof Variable)
             if(((Variable)obj).isBounded())
                 return lessThen(((Variable)obj).getObject());
