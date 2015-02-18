@@ -14,7 +14,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<!-- Main project -->
 		<property name="project.name" value="JIProlog 4.0" />
 		<property name="project.root" value="c:/progetti/Applicazioni/JIProlog/" />
-		<property name="project.version" value="4.0.6.14"/>
+		<property name="project.version" value="4.0.6.15"/>
 		<property name="project.deploy.dir" value="${project.root}/Deploy" />
 		<property name="project.src" value="src" />
 		<property name="project.bin" value="bin" />
