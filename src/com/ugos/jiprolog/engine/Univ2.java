@@ -28,24 +28,24 @@ final class Univ2 extends BuiltIn
     {
         PrologObject func  = getRealTerm(getParam(1));
         PrologObject param = getRealTerm(getParam(2));
-        
+
         PrologObject term   = null;
         PrologObject list   = null;
-        
+
         if (func == null)
         {
             if(param == null)
                 throw new JIPParameterUnboundedException(2);
-            
+
             if(!(param instanceof List))
                 throw new JIPParameterTypeException(2, JIPParameterTypeException.LIST);
-                
+
             try
             {
                 term = getParam(1);
-                
+
                 PrologObject head = getRealTerm(((ConsCell)param).getHead());
-                
+
                 if(head instanceof Expression)
                 {
                     PrologObject params = ((ConsCell)param).getTail();
@@ -55,7 +55,7 @@ final class Univ2 extends BuiltIn
                         if(params != null && params != List.NIL && params != ConsCell.NIL)
                             return false;
                     }
-                    
+
                     list = head;  // ???
                 }
                 else if (head instanceof Atom)
@@ -63,7 +63,7 @@ final class Univ2 extends BuiltIn
 //                    System.out.println("Atom " + head);
                     //String strName;
                     //System.out.println(head.getClass());
-                    
+
                     PrologObject params = ((ConsCell)param).getTail();
 //                    System.out.println("Param " + params);
                     if(params == null)
@@ -81,7 +81,7 @@ final class Univ2 extends BuiltIn
                             // caso X =.. [a|Y].
                             throw new JIPParameterTypeException(2, JIPParameterTypeException.LIST);
                         }
-                        
+
                         int nArity = ((List)params).getHeight();
 //                        System.out.println("Arity " + nArity);
                         if(nArity == 0)
@@ -91,9 +91,10 @@ final class Univ2 extends BuiltIn
                         else
                         {
                             ConsCell funparms = ((List)params).getConsCell();
+
 //                          System.out.println("funparams " + funparms);
                             final String strName = ((Atom)head).getName() + "/" + Integer.toString(nArity);
-                                    
+
                             //System.out.println("******" + params.getClass() + "******");
             //                  strName = ((Atom)head).getName() + "/" + Integer.toString(nArity);
                             final Atom name = Atom.createAtom(strName);
@@ -102,7 +103,7 @@ final class Univ2 extends BuiltIn
                             else
                                 list = new Functor(name, funparms);
                         }
-                        
+
 //                      System.out.println(m_list);
     //                  System.out.println(((Functor)m_list).getName());
                     }
@@ -126,10 +127,10 @@ final class Univ2 extends BuiltIn
                 term = new List(Atom.createAtom(","), new List((ConsCell)func));
             else
                 term = new List(func, null);
-                
+
             list = getParam(2);
         }
-        
+
         return term.unify(list, varsTbl);
     }
 }

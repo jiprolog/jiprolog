@@ -32,8 +32,9 @@ public class Bagof3 extends Findall3
 
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
-        JIPTerm term = input.getNth(1);
-        JIPTerm query = input.getNth(2);
+    	JIPCons input1 = (JIPCons)input.clone();
+        JIPTerm term = input1.getNth(1);
+        JIPTerm query = input1.getNth(2);
 
         // check if input is a variable
         if (query instanceof JIPVariable)
@@ -62,6 +63,7 @@ public class Bagof3 extends Findall3
         }
 
         JIPTerm res = input.getNth(3);
+                
 
         if(m_solVect == null)
         {
@@ -100,6 +102,8 @@ public class Bagof3 extends Findall3
             //m_solList = JIPList.NIL;
         else
             m_solList = m_solList.reverse();
+
+//        res.clear();
 
         return res.unify(m_solList, varsTbl);
     }

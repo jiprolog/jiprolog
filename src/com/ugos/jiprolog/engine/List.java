@@ -121,7 +121,13 @@ class List extends ConsCell
         if(m_tail == null)
             return new ConsCell(m_head, null);
         else
-            return new ConsCell(m_head, ((List)BuiltIn.getRealTerm(m_tail)).getConsCell());
+        {
+        	List tail = ((List)BuiltIn.getRealTerm(m_tail));
+        	if(tail == null)
+        		return new ConsCell(m_head, tail);
+        	else
+        		return new ConsCell(m_head, ((List)BuiltIn.getRealTerm(m_tail)).getConsCell());
+        }
     }
 }
 
