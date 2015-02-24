@@ -31,7 +31,7 @@ public class Shell2 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
-        
+
         // check if input is a variable
         if (term instanceof JIPVariable)
         {
@@ -53,9 +53,36 @@ public class Shell2 extends JIPXCall
 
         try
         {
-            Process proc = Runtime.getRuntime().exec(((JIPAtom)term).getName());
+        	String runtime = System.getProperty("java.runtime.name").toLowerCase();
+        	String os = System.getProperty ("os.name").toLowerCase();
+			String arch = System.getProperty ("os.arch").toLowerCase();
+			String cmd;
+			if(os.contains("win"))
+			{
+				cmd = "cmd /C ";
+			}
+			else if(os.contains("mac") || os.contains("darwin"))
+			{
+				cmd = "bash -c ";
+			}
+			else // linux
+			{
+				if(runtime.contains("android"))
+				{
+					cmd = "";
+				}
+				else
+				{
+					cmd = "bash -c ";
+				}
+			}
+
+			cmd += ((JIPAtom)term).getName();
+
+            Process proc = Runtime.getRuntime().exec(cmd);
+
             int nExit = proc.waitFor();
-            
+
             return input.getNth(2).unify(JIPNumber.create(nExit), varsTbl);
         }
         catch(Exception ex)
@@ -63,7 +90,7 @@ public class Shell2 extends JIPXCall
             throw new JIPJVMException(ex);
         }
     }
-        
+
     public boolean hasMoreChoicePoints()
     {
         return false;
