@@ -29,30 +29,14 @@
       bsort/3,
       qsort/3,
       msort/3,
+      msort/2,
       sort/2,
+      keysort/2,
       merge/2,
       merge_set/2,
-      remove_duplicates/2,
-      findall/3,
-      findall/4,
-      setof/3,
-      bagof/3]).
+      remove_duplicates/2]).
 
-:-'$custom_built_in'([
-      sort/2,
-      findall/3,
-      findall/4,
-      setof/3,
-      bagof/3]).
-
-
-:-module_transparent
-      findall/3,
-      findall/4,
-      setof/3,
-      bagof/3.
-
-:-assert(ver(jipxsets, '3.0.1')).
+:-assert(ver(jipxsets, '4.0.1')).
 
 %:-use_module('list.jip').
 
@@ -121,6 +105,7 @@ bsort(Order,List,Sorted) :-
     append(List1,[II,I|List2],Newlist),
     !,
     bsort(Order,Newlist,Sorted).
+
 bsort(Order,List,List).
 
 /* quick sort */
@@ -129,6 +114,7 @@ qsort(Order,[Head|Rest],Result):-
      qsort(Order,Gtr_than_Head,Grts),
      qsort(Order,Smlr_than_head,Smls),
      append(Grts,[Head|Smls],Result),!.
+
 qsort(_,[],[]):- !.
 
 split(Order,Marker,[First|Rest],[First|Grtr],Smlr):-
@@ -144,6 +130,7 @@ split(_,_,[],[],[]):- !.
 order(Order,A,B) :-
     O =.. [Order,A,B],
     O.
+
 
 /* merge sort */
 msort(Rel, L,S ):-
@@ -169,10 +156,10 @@ merge2(L1,[Y|L2],Rel, [Y|L] ):-
     merge2(L2,L1,Rel, L ).
 
 % sort(?List, ?Sorted)
-sort(L1,L2):-
-    qsort(@=<,L1,DupL),
-    remove_duplicates(DupL,L2),
-    !.
+%sort(L1,L2):-
+%    qsort(@=<,L1,DupL),
+%    remove_duplicates(DupL,L2),
+%    !.
 
 /* merge two sets */
 merge(L1, L2, L3):-
@@ -196,17 +183,63 @@ remove_duplicates([X, Y| Xs], Ys) :-
 
 remove_duplicates([Y], [Y]).
 
-findall(X, Goal, List):-
-   xcall('com.ugos.jiprolog.extensions.sets.Findall3', [X, Goal, List]).
 
-bagof(X, Goal, List1):-
-    xcall('com.ugos.jiprolog.extensions.sets.Bagof3', [X, Goal, List1]),
-    remove_duplicates(List1, List).
+sort(_, _, [], []).
+sort(_, _, [X], [X]).
+sort(Key, Order, [X,Y|L], Sorted) :-
+	halve(L, [Y|L], Front, Back),
+	sort(Key, Order, [X|Front], F),
+	sort(Key, Order, Back, B),
+	merge(Key, Order, F, B, Sorted).
 
-setof(X, Goal, List):-
-    xcall('com.ugos.jiprolog.extensions.sets.Bagof3', [X, Goal, List1]),
-    sort(List1, List).
 
-findall(Term, Goal, List, Tail) :-
-	findall(Term, Goal, List0),
-	append(List0, Tail, List).
+halve([_,_|Count], [H|T], [H|F], B) :- !,
+	halve(Count, T, F, B).
+halve(_, B, [], B).
+
+
+merge(Key, Order, [H1|T1], [H2|T2], [Hm|Tm]) :- !,
+	compare(Key, Order, H1, H2, R),
+	(   R = (<), !, Hm = H1, merge(Key, Order, T1, [H2|T2], Tm)
+	;   R = (>), !, Hm = H2, merge(Key, Order, [H1|T1], T2, Tm)
+	;   R = (=), !, Hm = H1, merge(Key, Order, T1, T2, Tm)
+	).
+merge(_, _, [], L, L) :- !.
+merge(_, _, L, [], L).
+
+
+compare(Key, Order, X, Y, R) :-
+	compare(Key, X, Y, R0),
+	combine(Order, R0, R).
+
+compare(0, X, Y, R) :- !,
+	compare(R, X, Y).
+
+compare(N, X, Y, R) :-
+	arg(N, X, Xn),
+	arg(N, Y, Yn),
+	compare(R, Xn, Yn).
+
+
+combine(<, R, R).
+combine(=<, >, >) :- !.
+combine(=<, _, <).
+combine(>=, <, >) :- !.
+combine(>=, _, <).
+combine(>, <, >) :- !.
+combine(>, >, <) :- !.
+combine(>, =, =).
+
+
+keysort(R, S) :-
+	sort(1, =<, R, S).
+
+
+msort(R, S) :-
+	sort(0, =<, R, S).
+
+
+sort(R, S) :-
+	sort(0, <, R, S).
+
+

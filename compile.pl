@@ -6,6 +6,7 @@ compile:-
 	compile('src/com/ugos/jiprolog/resources/list.pl'),
 	compile('src/com/ugos/jiprolog/resources/sys.pl'),
 	compile('src/com/ugos/jiprolog/resources/xsets.pl'),
+	compile('src/com/ugos/jiprolog/resources/setof.pl'),
 	compile('src/com/ugos/jiprolog/resources/xio.pl'),
 	compile('src/com/ugos/jiprolog/resources/xdb.pl'),
 	compile('src/com/ugos/jiprolog/resources/xexception.pl'),

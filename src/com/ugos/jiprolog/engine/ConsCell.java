@@ -259,8 +259,13 @@ class ConsCell extends PrologObject //implements Serializable
         	}
         }
         else if(obj instanceof Variable)
+        {
             if(((Variable)obj).isBounded())
                 return termEquals(((Variable)obj).getObject());
+        }
+        else if(obj == null && this.termEquals(ConsCell.NIL))
+        	return true;
+
 
         return false;
     }
