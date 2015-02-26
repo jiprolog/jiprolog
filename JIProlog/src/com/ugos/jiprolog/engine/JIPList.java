@@ -30,7 +30,7 @@ package com.ugos.jiprolog.engine;
 public class JIPList extends JIPTerm
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     JIPList(List list)
     {
         super(list);
@@ -39,7 +39,7 @@ public class JIPList extends JIPTerm
     /** Empty list or nil []
      */
     public static final JIPList NIL = new JIPList(List.NIL);
-    
+
     /** Creates a new List
      * @param head the head of the List
      * @param tail the tail the List
@@ -74,7 +74,7 @@ public class JIPList extends JIPTerm
         List cell = new List(ConsCell.append((ConsCell)head.getTerm(), (ConsCell)tail.getTerm()));
         return new JIPList(cell);
     }
-    
+
     /** Returns a new JIPList object by reversing this JIPList object
       * @return new JIPList object by reversing this JIPList object
       */
@@ -83,8 +83,14 @@ public class JIPList extends JIPTerm
         return new JIPList(new List(((ConsCell)getTerm()).reverse()));
     }
 
-    
-    
+    /** Returns the length of this JIPList object
+     * @return the length of this JIPList object
+     */
+   public final int length()
+   {
+       return ((ConsCell)getTerm()).getHeight();
+   }
+
     /** Returns the head of this JIPList object
      * @return head of this JIPList
      * @see com.ugos.jiprolog.engine.JIPTerm
@@ -92,7 +98,7 @@ public class JIPList extends JIPTerm
     public final JIPTerm getHead()
     {
         PrologObject head = ((ConsCell)getTerm()).getHead();
-        
+
         if (head == null)
         {
             return null;
@@ -102,14 +108,14 @@ public class JIPList extends JIPTerm
             return JIPTerm.getJIPTerm(head);
         }
     }
-    
+
     /** Returns the tail of this JIPList object
      * @return tail of this JIPList object
      */
     public final JIPTerm getTail()
     {
         final PrologObject tail = ((ConsCell)getTerm()).getTail();
-        
+
         if (tail == null)
         {
             return null;
@@ -119,7 +125,7 @@ public class JIPList extends JIPTerm
             return JIPTerm.getJIPTerm(tail);
         }
     }
-    
+
     /** Returns the nth term in this list. <br>
      * Raises ArrayIndexOutOfBound if the parameter is out of bound
      * @param n index ot the term to extract
@@ -130,13 +136,13 @@ public class JIPList extends JIPTerm
     {
         return JIPTerm.getJIPTerm(((ConsCell)getTerm()).getTerm(n));
     }
-    
+
     /** Returns true if this list is []. <br>
      */
     public final boolean isNIL()
     {
         return getHead() == null;
     }
-    
-    
+
+
 }

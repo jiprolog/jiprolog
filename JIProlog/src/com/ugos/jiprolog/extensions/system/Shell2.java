@@ -46,40 +46,73 @@ public class Shell2 extends JIPXCall
                 term = ((JIPVariable)term).getValue();
             }
         }
-        if (!(term instanceof JIPAtom))
+        if (!(term instanceof JIPList))
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPParameterTypeException(1, JIPParameterTypeException.LIST);
         }
+
+        JIPList commands = (JIPList)term;
+
+        int size = commands.length();
+        Process proc;
+
 
         try
         {
         	String runtime = System.getProperty("java.runtime.name").toLowerCase();
         	String os = System.getProperty ("os.name").toLowerCase();
-			String arch = System.getProperty ("os.arch").toLowerCase();
-			String cmd;
+//			String arch = System.getProperty ("os.arch").toLowerCase();
+
 			if(os.contains("win"))
 			{
-				cmd = "cmd /C ";
-			}
-			else if(os.contains("mac") || os.contains("darwin"))
-			{
-				cmd = "bash -c ";
-			}
-			else // linux
-			{
-				if(runtime.contains("android"))
-				{
-					cmd = "";
-				}
-				else
-				{
-					cmd = "bash -c ";
-				}
-			}
+				String cmd = "cmd.exe /C ";
 
-			cmd += ((JIPAtom)term).getName();
+		        for(int i = 1; i <= size; i++)
+		        {
+		        	cmd += commands.getNth(i).toString();
+		        }
 
-            Process proc = Runtime.getRuntime().exec(cmd);
+		        proc = Runtime.getRuntime().exec(cmd);
+
+			}
+			else if(runtime.contains("android"))
+			{
+				// TODO
+				return false;
+			}
+			else // linux mac //if(os.contains("mac") || os.contains("darwin") || os.contains("linux))
+			{
+				String shell  = System.getenv("SHELL");
+				System.out.println("SHELL ENV: " + shell);
+
+				String args[] = new String[size + 2];
+
+				args[0] = shell;
+				args[1] = "-c";
+
+		        for(int i = 1; i <= size; i++)
+		        {
+		        	args[i + 1] = commands.getNth(i).toString();
+		        }
+
+		        proc = Runtime.getRuntime().exec(args);
+
+			}
+//			else // linux
+//			{
+//				if(runtime.contains("android"))
+//				{
+//					// TODO
+//				}
+//				else
+//				{
+//					String shell  = System.getenv("SHELL");
+//					System.out.println("SHELL ENV: " + shell);
+//					args[0] = shell;
+//					args[1] = "-c";
+//				}
+//			}
+
 
             int nExit = proc.waitFor();
 
@@ -87,6 +120,7 @@ public class Shell2 extends JIPXCall
         }
         catch(Exception ex)
         {
+        	ex.printStackTrace();
             throw new JIPJVMException(ex);
         }
     }
