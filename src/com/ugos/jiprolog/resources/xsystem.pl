@@ -37,10 +37,12 @@ wait(Millis):-
     xcall('com.ugos.jiprolog.extensions.system.Sleep1', [Millis]).
 
 shell(Command, Status):-
-    xcall('com.ugos.jiprolog.extensions.system.Shell2', [Command, Status]).
+	split_command(Command, List),
+    xcall('com.ugos.jiprolog.extensions.system.Shell2', [List, Status]).
 
 shell(Command):-
-    shell(Command, 0).
+	split_command(Command, List),
+    shell(List, 0).
 
 statistics:-
     xcall('com.ugos.jiprolog.extensions.system.Statistics0', []).
@@ -79,6 +81,22 @@ time(Time, Hour, Minute, Second, Millisecond ):-
 time(Hour, Minute, Second, Millisecond ):-
     time(_,_,_,Hour, Minute, Second, Millisecond).
 
+split_command(Command, List) :-
+	atom_chars(Command, Chars),
+	split_command_(Chars, Lists),
+	lists_to_atoms(Lists, List).
+
+split_command_([], [[]]).
+split_command_([' '| Chars], [[]| List]) :-
+	!,
+	split_command_(Chars, List).
+split_command_([Char| Chars], [[Char|Tail]| List]) :-
+	split_command_(Chars, [Tail| List]).
+
+lists_to_atoms([], []).
+lists_to_atoms([List| Lists], [Atom| Atoms]) :-
+	atom_chars(Atom, List),
+	lists_to_atoms(Lists, Atoms).
 
 %*************************************
 
