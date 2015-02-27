@@ -60,22 +60,22 @@ final class Univ2 extends BuiltIn
                 }
                 else if (head instanceof Atom)
                 {
-                    System.out.println("Atom " + head);
+//                    System.out.println("Atom " + head);
                     //String strName;
-                    System.out.println(head.getClass());
+//                    System.out.println(head.getClass());
 
                     PrologObject params = ((ConsCell)param).getTail();
-                    System.out.println("Param " + params);
+//                    System.out.println("Param " + params);
                     if(params == null)
                     {
                         list = head;
-                        System.out.println("NULL " + head);
+//                        System.out.println("NULL " + head);
                     }
                     else
                     {
                         params = getRealTerm(params);
-                        System.out.println("Param " + params);
-                        System.out.println("Class " + params.getClass());
+//                        System.out.println("Param " + params);
+//                        System.out.println("Class " + params.getClass());
                         if(params == null)
                         {
                             // caso X =.. [a|Y].
@@ -83,7 +83,7 @@ final class Univ2 extends BuiltIn
                         }
 
                         int nArity = ((List)params).getHeight();
-                        System.out.println("Arity " + nArity);
+//                        System.out.println("Arity " + nArity);
                         if(nArity == 0)
                         {
                             list = head;
@@ -92,10 +92,10 @@ final class Univ2 extends BuiltIn
                         {
                             ConsCell funparms = ((List)params).getConsCell();
 
-                          System.out.println("funparams " + funparms);
+//                          System.out.println("funparams " + funparms);
                             final String strName = ((Atom)head).getName() + "/" + Integer.toString(nArity);
 
-                            System.out.println("******" + params.getClass() + "******");
+//                            System.out.println("******" + params.getClass() + "******");
             //                  strName = ((Atom)head).getName() + "/" + Integer.toString(nArity);
                             final Atom name = Atom.createAtom(strName);
                             if(BuiltInFactory.isBuiltIn(strName))
@@ -104,8 +104,8 @@ final class Univ2 extends BuiltIn
                                 list = new Functor(name, funparms);
                         }
 
-                      System.out.println(list);
-                      System.out.println(((Functor)list).getName());
+//                      System.out.println(list);
+//                      System.out.println(((Functor)list).getName());
                     }
                 }
                 else

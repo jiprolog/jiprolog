@@ -77,26 +77,24 @@ public class Shell2 extends JIPXCall
 			}
 			else if(runtime.contains("android"))
 			{
-				// TODO
-				return false;
+				proc = Runtime.getRuntime().exec(commands.toString());
 			}
 			else // linux mac //if(os.contains("mac") || os.contains("darwin") || os.contains("linux))
 			{
 				String shell  = System.getenv("SHELL");
 				System.out.println("SHELL ENV: " + shell);
 
-				String args[] = new String[size + 2];
 
-				args[0] = shell;
-				args[1] = "-c";
-
-		        for(int i = 1; i <= size; i++)
-		        {
-		        	args[i + 1] = commands.getNth(i).toString();
-		        }
-
-		        proc = Runtime.getRuntime().exec(args);
-
+				if(shell == null)
+				{
+					String[] cmd = { "/bin/sh", "-c", commands.toString() };
+			        proc = Runtime.getRuntime().exec(cmd);
+				}
+				else
+				{
+					String[] cmd = { shell, "-c", commands.toString() };
+			        proc = Runtime.getRuntime().exec(cmd);
+				}
 			}
 //			else // linux
 //			{
