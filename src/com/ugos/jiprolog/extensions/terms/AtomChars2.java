@@ -103,7 +103,8 @@ public class AtomChars2 extends JIPXCall
                 throw new JIPParameterTypeException(2,JIPParameterTypeException.LIST);
             }
         }
-        else if(atom.unifiable(JIPList.NIL))
+        else if(atom.unifiable(JIPList.NIL))// ||
+//        		(atom instanceof JIPCons && ((JIPCons)atom).getHead().unifiable(JIPCons.NIL) && ((JIPCons)atom).getTail().unifiable(JIPCons.NIL)))
         {
         	atom =  JIPString.create("[]", true);
         }
