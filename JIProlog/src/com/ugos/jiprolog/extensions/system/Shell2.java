@@ -46,16 +46,14 @@ public class Shell2 extends JIPXCall
                 term = ((JIPVariable)term).getValue();
             }
         }
-        if (!(term instanceof JIPList))
+        if (!(term instanceof JIPAtom))
         {
             throw new JIPParameterTypeException(1, JIPParameterTypeException.LIST);
         }
 
-        JIPList commands = (JIPList)term;
+        JIPAtom commands = (JIPAtom)term;
 
-        int size = commands.length();
         Process proc;
-
 
         try
         {
@@ -65,19 +63,14 @@ public class Shell2 extends JIPXCall
 
 			if(os.contains("win"))
 			{
-				String cmd = "cmd.exe /C ";
-
-		        for(int i = 1; i <= size; i++)
-		        {
-		        	cmd += commands.getNth(i).toString();
-		        }
+				String cmd = "cmd.exe /C " + commands.getName();
 
 		        proc = Runtime.getRuntime().exec(cmd);
 
 			}
 			else if(runtime.contains("android"))
 			{
-				proc = Runtime.getRuntime().exec(commands.toString());
+				proc = Runtime.getRuntime().exec(commands.getName());
 			}
 			else // linux mac //if(os.contains("mac") || os.contains("darwin") || os.contains("linux))
 			{
@@ -87,12 +80,12 @@ public class Shell2 extends JIPXCall
 
 				if(shell == null)
 				{
-					String[] cmd = { "/bin/sh", "-c", commands.toString() };
+					String[] cmd = { "/bin/sh", "-c", commands.getName() };
 			        proc = Runtime.getRuntime().exec(cmd);
 				}
 				else
 				{
-					String[] cmd = { shell, "-c", commands.toString() };
+					String[] cmd = { shell, "-c", commands.getName() };
 			        proc = Runtime.getRuntime().exec(cmd);
 				}
 			}
