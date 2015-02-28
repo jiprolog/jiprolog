@@ -38,11 +38,11 @@ wait(Millis):-
 
 shell(Command, Status):-
 %	split_command(Command, List),
-    xcall('com.ugos.jiprolog.extensions.system.Shell2', [List, Status]).
+    xcall('com.ugos.jiprolog.extensions.system.Shell2', [Command, Status]).
 
 shell(Command):-
 %	split_command(Command, List),
-    shell(List, 0).
+    shell(Command, 0).
 
 statistics:-
     xcall('com.ugos.jiprolog.extensions.system.Statistics0', []).
