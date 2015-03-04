@@ -51,6 +51,13 @@
 '$system':is_list([]).
 '$system':is_list([_|T]):- is_list(T).
 
+'$system':list_or_partial_list(Var) :-
+    var(Var),
+    !.
+'$system':list_or_partial_list([]).
+'$system':list_or_partial_list([_| Tail]) :-
+    list_or_partial_list(Tail).
+
 '$system':nil([]).
 
 %'$system':retractall(X):- retract(X), fail.
@@ -165,15 +172,25 @@
 
 /* Kernel Internal predicates */
 
+%'$kernel':translate(((LHS_in1, LHS_in2) --> RHS_in), (LHS_out:-RHS_out)):-
+%    nonvar(LHS_in1),
+%    list(LHS_in2),
+%    !,
+%    tag(LHS_in1, S0, Sn, LHS_out),
+%    make_connects(LHS_in2, Sn, S1, Conn),
+%    dcg_rhs(RHS_in, S0, S1, RHS_1),
+%    dcg_and(Conn, RHS_1, RHS_2),
+%    flatten2(RHS_2, RHS_out).
+
 '$kernel':translate(((LHS_in1, LHS_in2) --> RHS_in), (LHS_out:-RHS_out)):-
     nonvar(LHS_in1),
-    list(LHS_in2),
     !,
     tag(LHS_in1, S0, Sn, LHS_out),
-    make_connects(LHS_in2, Sn, S1, Conn),
     dcg_rhs(RHS_in, S0, S1, RHS_1),
-    dcg_and(Conn, RHS_1, RHS_2),
+    make_connects(LHS_in2, Sn, S1, Conn),
+    dcg_and(RHS_1, Conn, RHS_2),
     flatten2(RHS_2, RHS_out).
+
 
 '$kernel':translate((Module:LHS_in --> RHS_in), (Module:LHS_out:-RHS_out)):-
     !,
@@ -272,13 +289,21 @@
 
 '$kernel':flatten1(In1, (In1, In2), In2).
 
-'$kernel':make_connects([First|Rest], S0, Sn, Conns):-
-    nonvar(Rest),
-    !,
-    make_connects(Rest, SI, Sn, Cs),
-    dcg_and('C'(S0, First, SI), Cs, Conns).
+%'$kernel':make_connects([First|Rest], S0, Sn, Conns):-
+%    nonvar(Rest),
+%    !,
+%    make_connects(Rest, SI, Sn, Cs),
+%    dcg_and('C'(S0, First, SI), Cs, Conns).
+%
+%'$kernel':make_connects([], S, S, true).
 
-'$kernel':make_connects([], S, S, true).
+'$kernel':make_connects(Terminals, S0, Sn, Conns):-
+	(	list(Terminals) ->
+		append(Terminals, Sn, List),
+		Conns = (S0 = List)
+	;	list_or_partial_list(Terminals),
+		Conns = append(Terminals, Sn, S0)
+	).
 
 '$kernel':prolog_flag(prolog_name, 'JIProlog').
 '$kernel':prolog_flag(prolog_version, Ver) :- ver(Ver).
