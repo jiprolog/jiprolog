@@ -216,6 +216,11 @@
     dcg_rhs(RHS_in2, S1, Sn, RHS_out2),
     dcg_and(RHS_out1, RHS_out2, RHS_out).
 
+'$kernel':dcg_rhs((RHS_in1 -> RHS_in2), S0, Sn, (RHS_out1 -> RHS_out2)) :-
+    !,
+    dcg_rhs(RHS_in1, S0, S1, RHS_out1),
+    dcg_rhs(RHS_in2, S1, Sn, RHS_out2).
+
 '$kernel':dcg_rhs((RHS_in1 ; RHS_in2), S0, Sn, (RHS_out1 ; RHS_out2)):-
     !,
     dcg_or(RHS_in1, S0, Sn, RHS_out1),
