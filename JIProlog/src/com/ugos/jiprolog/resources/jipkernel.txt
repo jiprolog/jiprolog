@@ -232,7 +232,10 @@
 '$kernel':dcg_rhs({}(RHS_in), S0, S0, RHS_in):-
     !.
 
-'$kernel':dcg_rhs(!, S0, S0, !):-
+%'$kernel':dcg_rhs(!, S0, S0, !):-
+%    !.
+
+'$kernel':dcg_rhs(!, S0, Sn, (!, (S0 = Sn))):-
     !.
 
 '$kernel':dcg_rhs(RHS_in, S0, Sn, C):-
@@ -265,11 +268,20 @@
 
 '$kernel':dcg_and(In1, In2, (In1, In2)).
 
-
 '$kernel':tag(In, S0, Sn, Out):-
-    In =.. [Predicate|Arguments],
-    append(Arguments, [S0, Sn], NewArguments),
-    Out =.. [Predicate|NewArguments].
+ ( In == [] ->
+  make_connects(In, S0, Sn, Out)
+ ; In = [_| _] ->
+  make_connects(In, S0, Sn, Out)
+ ;   In =.. [Predicate|Arguments],
+     append(Arguments, [S0, Sn], NewArguments),
+     Out =.. [Predicate|NewArguments]
+ ).
+
+%'$kernel':tag(In, S0, Sn, Out):-
+%    In =.. [Predicate|Arguments],
+%    append(Arguments, [S0, Sn], NewArguments),
+%    Out =.. [Predicate|NewArguments].
 
 
 '$kernel':flatten2(In, In):-
