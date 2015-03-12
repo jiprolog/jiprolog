@@ -132,7 +132,7 @@
 
 '$system':phrase(T, S):-phrase(T, S, []).
 
-'$system':phrase(T, S0, S):-'$kernel':tag(T, S0, S, G), G.
+'$system':phrase(T, S0, S):-'$kernel':dcg_rhs(T, S0, S, G), G.
 
 '$system':expand_term(X, Y):-'$kernel':translate(X, Y).
 
@@ -206,7 +206,8 @@
 
 '$kernel':translate(T, T).
 
-'$kernel':dcg_rhs(X, S0, S, phrase(X, S0, S)):-
+
+'$kernel':dcg_rhs(X, S0, Sn, phrase(X, S0, Sn)):-
     var(X),
     !.
 
@@ -226,24 +227,31 @@
     dcg_or(RHS_in1, S0, Sn, RHS_out1),
     dcg_or(RHS_in2, S0, Sn, RHS_out2).
 
-'$kernel':dcg_rhs({RHS_in}, S0, S0, RHS_in):-
+'$kernel':dcg_rhs({RHS_in}, S0, Sn, (RHS_in, (S0 = Sn))):-
     !.
 
-'$kernel':dcg_rhs({}(RHS_in), S0, S0, RHS_in):-
+'$kernel':dcg_rhs({}(RHS_in), S0, Sn, (RHS_in, (S0 = Sn))):-
     !.
-
-%'$kernel':dcg_rhs(!, S0, S0, !):-
-%    !.
 
 '$kernel':dcg_rhs(!, S0, Sn, (!, (S0 = Sn))):-
     !.
 
-'$kernel':dcg_rhs(RHS_in, S0, Sn, C):-
-    list(RHS_in),
-    !,
-    make_connects(RHS_in, S0, Sn, C).
+'$kernel':dcg_rhs(\+ RHS_in, S0, Sn, (\+ Goal, (S0 = Sn))) :-
+	!,
+	dcg_rhs(RHS_in, S0, _, Goal).
+
+'$kernel':dcg_rhs(call(RHS_in), S0, Sn, call(RHS_in, S0, Sn)) :-
+	!.
+
+'$kernel':dcg_rhs([], S0, Sn, (S0 = Sn)) :-
+	!.
+
+'$kernel':dcg_rhs([T| Ts], S0, Sn, Goal) :-
+	!,
+	make_connects([T| Ts], S0, Sn, Goal).
 
 '$kernel':dcg_rhs(Module:RHS_in, S0, Sn, Module:RHS_out):-
+	!,
     tag(RHS_in, S0, Sn, RHS_out).
 
 '$kernel':dcg_rhs(RHS_in, S0, Sn, RHS_out):-
@@ -268,20 +276,11 @@
 
 '$kernel':dcg_and(In1, In2, (In1, In2)).
 
-'$kernel':tag(In, S0, Sn, Out):-
- ( In == [] ->
-  make_connects(In, S0, Sn, Out)
- ; In = [_| _] ->
-  make_connects(In, S0, Sn, Out)
- ;   In =.. [Predicate|Arguments],
-     append(Arguments, [S0, Sn], NewArguments),
-     Out =.. [Predicate|NewArguments]
- ).
 
-%'$kernel':tag(In, S0, Sn, Out):-
-%    In =.. [Predicate|Arguments],
-%    append(Arguments, [S0, Sn], NewArguments),
-%    Out =.. [Predicate|NewArguments].
+'$kernel':tag(In, S0, Sn, Out):-
+	In =.. [Predicate| Arguments],
+	append(Arguments, [S0, Sn], NewArguments),
+	Out =.. [Predicate| NewArguments].
 
 
 '$kernel':flatten2(In, In):-
