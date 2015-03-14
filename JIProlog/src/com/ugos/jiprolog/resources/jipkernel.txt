@@ -130,9 +130,13 @@
 
 '$system':'C'([Terminal|Rest], Terminal, Rest).
 
-'$system':phrase(T, S):-phrase(T, S, []).
+'$system':phrase(T, Input):-'$kernel':dcg_rhs(T, S0, S, G), S0 = Input, S = [], G.
 
-'$system':phrase(T, S0, S):-'$kernel':dcg_rhs(T, S0, S, G), G.
+'$system':phrase(T, Input, Rest):-'$kernel':dcg_rhs(T, S0, S, G), S0 = Input, S = Rest, G.
+
+%'$system':phrase(T, S):-phrase(T, S, []).
+
+%'$system':phrase(T, S0, S):-'$kernel':dcg_rhs(T, S0, S, G), G.
 
 '$system':expand_term(X, Y):-'$kernel':translate(X, Y).
 
