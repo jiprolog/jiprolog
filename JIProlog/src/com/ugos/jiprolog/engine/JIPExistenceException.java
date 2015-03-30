@@ -44,9 +44,9 @@ public class JIPExistenceException extends JIPRuntimeException {
 	@Override
 	public JIPTerm getTerm()
 	{
-		String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	return getTerm(new Functor("existence_error/2", new ConsCell (Atom.createAtom(object), new ConsCell(Atom.createAtom(culprit),  null))));
 
-    	return getTerm("existence_error(" + object + ", " + Atom.createAtom(culprit) + ")", strTerm);
+//    	return getTerm("existence_error(" + object + ", " + Atom.createAtom(culprit) + ")", strTerm);
 	}
 
 }

@@ -51,7 +51,7 @@ final class Functor3 extends BuiltIn
                 	throw new JIPParameterUnboundedException(3);
 
                 if(!(arity instanceof Expression))
-                	throw new JIPParameterTypeException(3, JIPParameterTypeException.EVALUABLE);
+                	throw new JIPParameterTypeException(3, JIPParameterTypeException.INTEGER);
 
                 if(!((Expression)arity).isInteger())
                 	throw new JIPParameterTypeException(3, JIPParameterTypeException.INTEGER);

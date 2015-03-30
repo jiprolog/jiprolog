@@ -65,7 +65,7 @@ public class JIPTypeException extends JIPRuntimeException {
         s_stringMap[LIST] = "list";
         s_stringMap[UNDEFINED] = "undefined";
         s_stringMap[COMPARATION_OPERATOR] = "comparation_operator";
-        s_stringMap[EVALUABLE] = "EVALUABLE";
+        s_stringMap[EVALUABLE] = "evaluable";
         s_stringMap[CALLABLE] = "callable";
         s_stringMap[LIBRARY] = "library";
         s_stringMap[URL] = "url";
@@ -88,9 +88,9 @@ public class JIPTypeException extends JIPRuntimeException {
 	@Override
 	public JIPTerm getTerm()
 	{
-		String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	return getTerm(new Functor("type_error/2", new ConsCell (Atom.createAtom(typeError), new ConsCell(Atom.createAtom(culprit),  null))));
 
-    	return getTerm("type_error(" + typeError + ", " + culprit + ")", strTerm);
+//    	return getTerm("type_error(" + typeError + ", " + culprit + ")", strTerm);
 	}
 
 }

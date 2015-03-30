@@ -30,11 +30,8 @@ stream
 text_stream
  *
  */
-public class JIPPermissionException extends JIPRuntimeException {
-
-	/**
-	 *
-	 */
+public class JIPPermissionException extends JIPRuntimeException
+{
 	private static final long serialVersionUID = -1401367774721127591L;
 	private String operation;
 	private String permission;
@@ -56,9 +53,9 @@ public class JIPPermissionException extends JIPRuntimeException {
 	@Override
 	public JIPTerm getTerm()
 	{
-		String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	return getTerm(new Functor("permission_error/3", new ConsCell (Atom.createAtom(operation), new ConsCell(Atom.createAtom(permission), new ConsCell(Atom.createAtom(culprit), null)))));
 
-    	return getTerm("permission_error(" + operation + ", " + permission + ", " + culprit + ")", strTerm);
+//    	return getTerm("permission_error(" + operation + ", " + permission + ", " + culprit + ")", strTerm);
 	}
 
 }

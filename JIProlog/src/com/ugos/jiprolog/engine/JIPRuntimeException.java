@@ -75,16 +75,14 @@ public class JIPRuntimeException extends RuntimeException
 
     }
 
-    /** Gets the eerror term associated to this exception
+    /** Gets the error term associated to this exception
      * @return JIPTerm object associated to this exception
      */
     public JIPTerm getTerm()
     {
-        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
-
         if(exceptionTerm != null)
         {
-        	return getTerm(exceptionTerm.toString(), strTerm);
+        	return getTerm(exceptionTerm);
         }
         else
         {
@@ -93,33 +91,22 @@ public class JIPRuntimeException extends RuntimeException
 
         	strMessage = Atom.createAtom(strMessage).toString();
 
-        	return getTerm("system_error(" + strMessage + ")", strTerm);
+        	return getTerm(new Functor("system_error/1", new ConsCell (Atom.createAtom(strMessage),null)));
         }
     }
 
-    protected JIPTerm getTerm(final String strType, final String strTerm)
+    protected JIPTerm getTerm(final PrologObject type)
     {
-        if(m_engine != null)
-        {
-        	if(m_strFileName == null)
-        	    m_strFileName = "undefined";
+    	if(m_strFileName == null)
+    	    m_strFileName = "undefined";
 
-        	String strFileName = Atom.createAtom(m_strFileName).toString();
+		PrologObject term  = (m_term != null) ? m_term : ((m_curNode == null) ? Atom.createAtom("undefined") : m_curNode.getGoal() );
 
-            try
-            {
-                return
-                	m_engine.getTermParser().parseTerm("error(" + Atom.createAtom(strType) + ", context(" + strTerm + ", file(" + strFileName + ", " + m_nLineNumber + ")))");
-	        }
-	        catch (JIPSyntaxErrorException ex)
-	        {
-	             return m_engine.getTermParser().parseTerm("error(" + strType + ", context(undefined, file(undefined, undefined)))");
-	        }
-        }
-        else
-        {
-            return ((m_term != null) ? (new JIPTerm(m_term.copy(true))) : ((m_curNode == null) ? (null) : (new JIPTerm(m_curNode.getGoal().copy(true)))));
-        }
+    	Functor fileFunctor = new Functor("file/2", new ConsCell(Atom.createAtom(m_strFileName), new ConsCell(Expression.createNumber(m_nLineNumber), null)));
+    	Functor contextFunctor = new Functor("context/2", new ConsCell(term, new ConsCell(fileFunctor, null)));
+    	Functor errorFunctor = new Functor("error/2", new ConsCell(type, new ConsCell(contextFunctor, null)));
+
+        return JIPTerm.getJIPTerm(errorFunctor);
     }
 
     /** Sets the error term associated to this exception
