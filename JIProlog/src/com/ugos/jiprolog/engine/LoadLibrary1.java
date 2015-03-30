@@ -67,7 +67,7 @@ final class LoadLibrary1 extends BuiltIn
         }
         catch(FileNotFoundException ex)
         {
-        	throw JIPExistenceException.createSourceSynkException(strPath);
+        	throw JIPExistenceException.createSourceSynkException(Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(6, strPath);
         }
         catch(IOException ex)
@@ -76,7 +76,7 @@ final class LoadLibrary1 extends BuiltIn
         }
         catch(SecurityException ex)
         {
-        	throw new JIPPermissionException("access", "source_sink", strPath);
+        	throw new JIPPermissionException("access", "source_sink", Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(9, null);
         }
 

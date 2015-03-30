@@ -51,12 +51,12 @@ class Load1 extends Consult1
         }
         catch(ClassNotFoundException ex)
         {
-        	throw new JIPTypeException(JIPTypeException.LIBRARY, strPath);
+        	throw new JIPTypeException(JIPTypeException.LIBRARY, Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(28, strPath);
         }
         catch(FileNotFoundException ex)
         {
-        	throw JIPExistenceException.createSourceSynkException(strPath);
+        	throw JIPExistenceException.createSourceSynkException(Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(6, strPath);
         }
         catch(IOException ex)
@@ -126,7 +126,7 @@ class Load1 extends Consult1
             }
             catch(IOException ex1){}
 
-            throw new JIPPermissionException("access", "source_sink", strStramName);
+            throw new JIPPermissionException("access", "source_sink", Atom.createAtom(strStramName));
 //            throw JIPRuntimeException.create(9, strStramName);
         }
         finally

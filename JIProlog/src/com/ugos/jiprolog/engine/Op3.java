@@ -43,23 +43,23 @@ final class Op3 extends BuiltIn
             if(op1.getName().equals(".") ||
                op1.getName().equals(","))
             {
-            	throw new JIPPermissionException("modify", "operator", op1.getName());
+            	throw new JIPPermissionException("modify", "operator", op1);
 //                throw JIPRuntimeException.create(48, op1.getName());
             }
 
             if(getJIPEngine().getGlobalDB().isSystem(op1.getName()))
-            	throw new JIPPermissionException("modify", "operator", op1.getName());
+            	throw new JIPPermissionException("modify", "operator", op1);
 //                throw JIPRuntimeException.create(14, op1.getName());
 
             if(prec1.getValue() > 1200 || prec1.getValue() < 0)
-            	throw new JIPDomainException("operator_priority", op1.getName());
+            	throw new JIPDomainException("operator_priority", op1);
 //                throw JIPRuntimeException.create(16,op1.getName());
 
             final String strAssoc = assoc1.getName();
             if(!(strAssoc.equals("xfx") || strAssoc.equals("xfy") || strAssoc.equals("yfx") ||
                  strAssoc.equals("yfy") || strAssoc.equals("fx") || strAssoc.equals("fy") ||
                  strAssoc.equals("xf") || strAssoc.equals("yf")))
-            	throw new JIPDomainException("operator_specifier", op1.getName());
+            	throw new JIPDomainException("operator_specifier", op1);
 //                throw JIPRuntimeException.create(17, op1.getName() + " - " + strAssoc);
 
 

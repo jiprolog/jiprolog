@@ -109,7 +109,7 @@ final class Expression extends PrologObject //implements Serializable
             }
             else
             {
-                throw new JIPParameterTypeException(-1, JIPParameterTypeException.EVALUABLE);
+                throw new JIPParameterTypeException(new Functor(Atom.createAtom(strExp)), JIPParameterTypeException.EVALUABLE);
                 //throw JIPRuntimeException.create(2, ((Atom)exp).getName() + " doesn't evaluate to a numeric expression");
                 //return computeCalculus();
             }

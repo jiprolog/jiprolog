@@ -124,7 +124,7 @@ final class Compile1 extends Consult1
             if(oldins != null)
                 engine.setCurrentInputStream(oldins, strOldInputStreamName);
 
-            throw JIPExistenceException.createSourceSynkException(strPath);
+            throw JIPExistenceException.createSourceSynkException(Atom.createAtom(strPath));
         }
         catch(IOException ex)
         {
@@ -152,7 +152,7 @@ final class Compile1 extends Consult1
             }
             catch(IOException ex1){}
 
-            throw new JIPPermissionException("access", "source_sink", strPath);
+            throw new JIPPermissionException("access", "source_sink", Atom.createAtom(strPath));
         }
         catch(JIPRuntimeException ex)
         {

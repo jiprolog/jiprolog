@@ -483,6 +483,9 @@ class WAM
 //            notifyStop();
             ex.printStackTrace();  //DBG
 
+            if(curNode.getGoal() instanceof BuiltInPredicate)
+            	((BuiltInPredicate)curNode.getGoal()).deinit();
+
             m_curNode = null;
             m_startNode = null;
             m_lastNode = null;
@@ -531,6 +534,9 @@ class WAM
         {
             ex.printStackTrace();
 
+            if(curNode.getGoal() instanceof BuiltInPredicate)
+            	((BuiltInPredicate)curNode.getGoal()).deinit();
+
             m_curNode = null;
             m_lastNode = null;
             m_startNode = null;
@@ -552,6 +558,9 @@ class WAM
         catch(Throwable th)
         {
             th.printStackTrace();   //DBG
+
+            if(curNode.getGoal() instanceof BuiltInPredicate)
+            	((BuiltInPredicate)curNode.getGoal()).deinit();
 
             m_curNode = null;
             m_lastNode = null;

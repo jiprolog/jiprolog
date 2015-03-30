@@ -35,25 +35,38 @@ public class JIPPermissionException extends JIPRuntimeException
 	private static final long serialVersionUID = -1401367774721127591L;
 	private String operation;
 	private String permission;
-	private String culprit;
+	private PrologObject culprit;
 
-	public JIPPermissionException(String operation, String permission, String culprit, JIPEngine engine)
+	JIPPermissionException(String operation, String permission, PrologObject culprit, JIPEngine engine)
 	{
 		this(operation, permission, culprit);
 		m_engine = engine;
 	}
 
-	public JIPPermissionException(String operation, String permission, String culprit)
+	public JIPPermissionException(String operation, String permission, JIPTerm culprit, JIPEngine engine)
+	{
+		this(operation, permission, culprit.getTerm());
+		m_engine = engine;
+	}
+
+	JIPPermissionException(String operation, String permission, PrologObject culprit)
 	{
 		this.operation = operation;
 		this.permission = permission;
 		this.culprit = culprit;
 	}
 
+	public JIPPermissionException(String operation, String permission, JIPTerm culprit)
+	{
+		this.operation = operation;
+		this.permission = permission;
+		this.culprit = culprit.getTerm();
+	}
+
 	@Override
 	public JIPTerm getTerm()
 	{
-    	return getTerm(new Functor("permission_error/3", new ConsCell (Atom.createAtom(operation), new ConsCell(Atom.createAtom(permission), new ConsCell(Atom.createAtom(culprit), null)))));
+    	return getTerm(new Functor("permission_error/3", new ConsCell (Atom.createAtom(operation), new ConsCell(Atom.createAtom(permission), new ConsCell(culprit, null)))));
 
 //    	return getTerm("permission_error(" + operation + ", " + permission + ", " + culprit + ")", strTerm);
 	}

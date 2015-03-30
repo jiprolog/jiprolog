@@ -97,7 +97,7 @@ public final class Append2 extends JIPXCall
         catch(FileNotFoundException ex)
         {
             //System.out.println("UGO " + ex);
-            throw JIPExistenceException.createSourceSynkException(strFilePath);
+            throw JIPExistenceException.createSourceSynkException(JIPAtom.create(strFilePath));
         }
         catch(IOException ex)
         {
@@ -105,7 +105,7 @@ public final class Append2 extends JIPXCall
         }
 
         if(strStreamHandle == null)
-        	throw JIPExistenceException.createSourceSynkException(strFilePath);
+        	throw JIPExistenceException.createSourceSynkException(JIPAtom.create(strFilePath));
 //            throw new JIPRuntimeException(6, strFilePath);
 
         return params.getNth(2).unify(JIPAtom.create(strStreamHandle), varsTbl);

@@ -50,18 +50,24 @@ write_option
 public class JIPDomainException extends JIPRuntimeException {
 
 	private String domain;
-	private String culprit;
+	private PrologObject culprit;
 
-	public JIPDomainException(String domain, String culprit)
+	JIPDomainException(String domain, PrologObject culprit)
 	{
 		this.domain = domain;
 		this.culprit = culprit;
 	}
 
+	public JIPDomainException(String domain, JIPTerm culprit)
+	{
+		this.domain = domain;
+		this.culprit = culprit.getTerm();
+	}
+
 	@Override
 	public JIPTerm getTerm()
 	{
-    	return getTerm(new Functor("domain_error/2", new ConsCell (Atom.createAtom(domain), new ConsCell(Atom.createAtom(culprit),  null))));
+    	return getTerm(new Functor("domain_error/2", new ConsCell (Atom.createAtom(domain), new ConsCell(culprit,  null))));
 
 //    	return getTerm("domain_error(" + domain + ", " + culprit + ")");
 	}

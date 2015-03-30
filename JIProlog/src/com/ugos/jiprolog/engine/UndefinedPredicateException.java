@@ -28,7 +28,7 @@ class UndefinedPredicateException extends JIPExistenceException
 
     UndefinedPredicateException(final Functor term)
     {
-    	super("procedure", term.toString());
+    	super("procedure", term);
         m_strPredDef = term.getName();
     }
 

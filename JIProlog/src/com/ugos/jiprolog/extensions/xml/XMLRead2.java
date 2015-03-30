@@ -61,7 +61,7 @@ public class XMLRead2 extends XMLRead1
 
         if(strStream == null)
         {
-        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
+        	throw new JIPDomainException("stream_or_alias", JIPAtom.create(strStreamHandle));
         }
 
         JIPTerm xmlDoc = createXMLTerm(strStream);
