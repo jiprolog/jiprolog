@@ -24,7 +24,7 @@ import java.util.*;
 
 final class Equal2 extends BuiltIn
 {
-    public final boolean unify(final Hashtable varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         Expression exp1;
         Expression exp2;
@@ -35,9 +35,14 @@ final class Equal2 extends BuiltIn
         }
         catch(ClassCastException ex)
         {
-            throw new JIPParameterTypeException();
+             PrologObject arg1 = getRealTerm(getParam(1));
+
+             if(!(arg1 instanceof Expression))
+                  throw new JIPParameterTypeException(1, JIPParameterTypeException.EVALUABLE);
+             else
+                 throw new JIPParameterTypeException(2, JIPParameterTypeException.EVALUABLE);
         }
-                
+
         return exp1.getValue() == exp2.getValue();
     }
 }

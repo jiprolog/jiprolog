@@ -29,7 +29,21 @@ public class Numbervars3 extends JIPXCall
 {
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
-        JIPTerm term = input.getNth(1);
+    	JIPTerm term  = input.getNth(1);
+        JIPTerm start = input.getNth(2).getValue();
+        JIPTerm end   = input.getNth(3);
+
+        // check if input is a variable
+        if (start == null)
+        {
+            throw new JIPParameterUnboundedException(1);
+        }
+        else if(!(start instanceof JIPNumber))
+            throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
+        else if(!((JIPNumber)start).isInteger())
+            throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
+
+        int nStart = (int)((JIPNumber)start).getDoubleValue();
 
         // check if input is a variable
         if (term instanceof JIPVariable)
@@ -37,40 +51,15 @@ public class Numbervars3 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)term).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                term.unify(JIPAtom.create("'$VAR'(" + nStart + ")"), varsTbl);
+                return end.unify(JIPNumber.create(nStart + 1), varsTbl);
             }
             else
             {
-                //extracts the term
-                term = ((JIPVariable)term).getValue();
+            	term = term.getValue();
             }
         }
 
-        JIPTerm start = input.getNth(2);
-        // check if input is a variable
-        if (start instanceof JIPVariable)
-        {
-            // try to extract the term
-            if(!((JIPVariable)start).isBounded())
-            {
-                throw new JIPParameterUnboundedException(1);
-            }
-            else
-            {
-                //extracts the term
-                start = ((JIPVariable)start).getValue();
-            }
-        }
-
-        JIPTerm end = input.getNth(3);
-
-        if(!(start instanceof JIPNumber))
-            throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
-
-        if(!((JIPNumber)start).isInteger())
-            throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
-
-        int nStart = (int)((JIPNumber)start).getDoubleValue();
         int nCount = 0;
         JIPVariable vars[] = term.getVariables();
 
@@ -78,7 +67,7 @@ public class Numbervars3 extends JIPXCall
         {
             if(!vars[i].isBounded())
             {
-                vars[i].unify(JIPAtom.create("'$VAR'(" + (nCount + 1 + nStart) + ")"), varsTbl);
+                vars[i].unify(JIPAtom.create("'$VAR'(" + (nCount + nStart) + ")"), varsTbl);
                 nCount++;
             }
         }
@@ -86,7 +75,8 @@ public class Numbervars3 extends JIPXCall
         if(nCount == 0)
             nCount++;
 
-        return end.unify(JIPNumber.create(nCount), varsTbl);
+        return end.unify(JIPNumber.create(nStart + nCount), varsTbl);
+//        return end.unify(JIPNumber.create(nCount), varsTbl);
     }
 
     public boolean hasMoreChoicePoints()

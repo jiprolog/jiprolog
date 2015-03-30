@@ -109,7 +109,7 @@ final class Expression extends PrologObject //implements Serializable
             }
             else
             {
-                throw new JIPParameterTypeException(-1, JIPParameterTypeException.NUMERIC_EXPRESSION);
+                throw new JIPParameterTypeException(-1, JIPParameterTypeException.EVALUABLE);
                 //throw JIPRuntimeException.create(2, ((Atom)exp).getName() + " doesn't evaluate to a numeric expression");
                 //return computeCalculus();
             }
@@ -328,9 +328,13 @@ final class Expression extends PrologObject //implements Serializable
 
             return compute(((ConsCell)exp).getHead());
         }
+        else if (exp == null)
+        {
+            throw new JIPParameterUnboundedException();
+        }
         else
         {
-            throw new JIPParameterTypeException(-1, JIPParameterTypeException.NUMERIC_EXPRESSION);
+        	throw new JIPParameterTypeException(-1, JIPParameterTypeException.EVALUABLE);
         }
     }
 

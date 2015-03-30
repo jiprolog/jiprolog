@@ -45,7 +45,7 @@ public class JIPTypeException extends JIPRuntimeException {
     public static final int LIST = 8;
     public static final int COMPARATION_OPERATOR = 9;
     public static final int CALLABLE = 10;
-    public static final int NUMERIC_EXPRESSION = 11;
+    public static final int EVALUABLE = 11;
     public static final int LIBRARY = 12;
     public static final int URL = 13;
     public static final int FILE = 14;
@@ -65,7 +65,7 @@ public class JIPTypeException extends JIPRuntimeException {
         s_stringMap[LIST] = "list";
         s_stringMap[UNDEFINED] = "undefined";
         s_stringMap[COMPARATION_OPERATOR] = "comparation_operator";
-        s_stringMap[NUMERIC_EXPRESSION] = "numeric_expression";
+        s_stringMap[EVALUABLE] = "EVALUABLE";
         s_stringMap[CALLABLE] = "callable";
         s_stringMap[LIBRARY] = "library";
         s_stringMap[URL] = "url";
