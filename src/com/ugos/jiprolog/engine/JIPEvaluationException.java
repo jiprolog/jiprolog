@@ -28,9 +28,9 @@ public class JIPEvaluationException extends JIPRuntimeException {
 	@Override
 	public JIPTerm getTerm()
 	{
-		String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	return getTerm(new Functor("evaluation_error/1", new ConsCell (Atom.createAtom(error), null)));
 
-    	return getTerm("evaluation_error(" + error + ")", strTerm);
+//    	return getTerm("evaluation_error(" + error + ")", strTerm);
 	}
 
 }

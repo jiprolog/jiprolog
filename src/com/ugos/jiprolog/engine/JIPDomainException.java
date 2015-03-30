@@ -61,9 +61,9 @@ public class JIPDomainException extends JIPRuntimeException {
 	@Override
 	public JIPTerm getTerm()
 	{
-		String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	return getTerm(new Functor("domain_error/2", new ConsCell (Atom.createAtom(domain), new ConsCell(Atom.createAtom(culprit),  null))));
 
-    	return getTerm("domain_error(" + domain + ", " + culprit + ")", strTerm);
+//    	return getTerm("domain_error(" + domain + ", " + culprit + ")");
 	}
 
 }

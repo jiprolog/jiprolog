@@ -50,8 +50,8 @@ public class JIPParameterUnboundedException extends JIPRuntimeException
      */
     public JIPTerm getTerm()
     {
-        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
+    	return getTerm(Atom.createAtom("instantiation_error"));
 
-        return getTerm("instantiation_error", strTerm);
+//        return getTerm("instantiation_error", strTerm);
     }
 }

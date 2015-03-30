@@ -72,8 +72,10 @@ public class Numbervars3 extends JIPXCall
             }
         }
 
-        if(nCount == 0)
-            nCount++;
+//        if(vars.length > 0)
+//            nCount++;
+//        if(nCount == 0)
+//            nCount++;
 
         return end.unify(JIPNumber.create(nStart + nCount), varsTbl);
 //        return end.unify(JIPNumber.create(nCount), varsTbl);

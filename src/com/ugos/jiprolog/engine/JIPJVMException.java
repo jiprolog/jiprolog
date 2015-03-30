@@ -49,14 +49,12 @@ public class JIPJVMException extends JIPRuntimeException
      */
     public JIPTerm getTerm()
     {
-        String strTerm = ((m_term != null) ? (m_term.toString()) : ((m_curNode == null) ? ("undefined") : (m_curNode.getGoal().toString())));
-
         String strMessage = m_ex.getMessage();
         if(strMessage == null)
             strMessage = m_ex.toString();
 
-        strMessage = Atom.createAtom(strMessage).toString();
+    	return getTerm(new Functor("jvm_error/1", new ConsCell (Atom.createAtom(strMessage), null)));
 
-        return getTerm("jvm_error(" + strMessage + ")", strTerm);
+//        return getTerm("jvm_error(" + strMessage + ")", strTerm);
     }
 }
