@@ -25,15 +25,15 @@ import com.ugos.jiprolog.engine.*;
 import java.util.Enumeration;
 import java.io.*;
 
-public class TextClausesDatabase extends JIPClausesDatabase
+public class TextAtomClausesDatabase extends JIPClausesDatabase
 {
     public final static String SEPARATOR = "#";
 
     private PrintWriter m_writer;
     private String      m_strFileName;
-    private String      m_strSeparator = SEPARATOR;
+    private String      separator = SEPARATOR;
 
-    public TextClausesDatabase()
+    public TextAtomClausesDatabase()
     {
         super();
     }
@@ -50,7 +50,7 @@ public class TextClausesDatabase extends JIPClausesDatabase
         m_strFileName = attrs[0];
 
         if(attrs.length > 1)
-        	m_strSeparator = attrs[1];
+        	setSeparator(attrs[1]);
     }
 
     public boolean addClauseAt(int nPos, JIPClause clause)
@@ -116,11 +116,19 @@ public class TextClausesDatabase extends JIPClausesDatabase
 
     public Enumeration clauses()
     {
-        return new TextClausesEnumeration(this);
+        return new TextAtomClausesEnumeration(this);
     }
 
     public void finalize()
     {
         m_writer.close();
     }
+
+	public String getSeparator() {
+		return separator;
+	}
+
+	public void setSeparator(String separator) {
+		this.separator = separator;
+	}
 }
