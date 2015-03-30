@@ -72,7 +72,7 @@ final class SearchPath1 extends BuiltIn
 		}
         catch (FileNotFoundException e)
         {
-        	throw JIPExistenceException.createSourceSynkException(strSearchDir);
+        	throw JIPExistenceException.createSourceSynkException(Atom.createAtom(strSearchDir));
 //        	 throw JIPRuntimeException.create(18, strSearchDir);
 	    }
 	    catch(MalformedURLException ex)
@@ -81,7 +81,7 @@ final class SearchPath1 extends BuiltIn
 	    }
 	    catch(SecurityException ex)
 	    {
-	    	throw new JIPPermissionException("access", "source_sink", strSearchDir);
+	    	throw new JIPPermissionException("access", "source_sink", Atom.createAtom(strSearchDir));
 //	        throw JIPRuntimeException.create(9, ex.getMessage());
 	    }
         catch (IOException ex)

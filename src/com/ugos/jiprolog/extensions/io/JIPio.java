@@ -244,7 +244,7 @@ public final class JIPio
         }
         else if(strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
-        	throw new JIPPermissionException("input", "stream", strHandle);
+        	throw new JIPPermissionException("input", "stream", JIPAtom.create(strHandle));
         }
 
         InputStreamInfo sinfo = getInput(strHandle);
@@ -262,7 +262,7 @@ public final class JIPio
         }
         else if(strHandle.equals("user_input"))
         {
-        	throw new JIPPermissionException("output", "stream", strHandle);
+        	throw new JIPPermissionException("output", "stream", JIPAtom.create(strHandle));
         }
 
         OutputStreamInfo sinfo = getOutput(strHandle);

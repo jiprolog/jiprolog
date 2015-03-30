@@ -57,7 +57,7 @@ public class MakeDirectory1 extends JIPXCall
             }
 
             if(!ffile.mkdirs())
-            	throw new JIPPermissionException("create", "directory", ffile.getAbsolutePath());
+            	throw new JIPPermissionException("create", "directory", JIPAtom.create(ffile.getAbsolutePath()));
         }
         else
         {

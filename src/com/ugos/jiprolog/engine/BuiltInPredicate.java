@@ -66,6 +66,10 @@ final class BuiltInPredicate extends Functor
         m_builtIn = wam.getJIPEngine().getBuiltInFactory().getInstance(getName(), this, wam);
     }
 
+    public final void deinit()
+    {
+        m_builtIn = null;
+    }
 //    public final boolean match(final WAM prolog)
 //    {
 //        //System.out.println("built in match");

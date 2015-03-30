@@ -34,7 +34,7 @@ public class JIPParameterTypeException extends JIPTypeException
      */
     public JIPParameterTypeException(final int nParam, final int nExpectedType, JIPEngine engine)
     {
-        super(nExpectedType, "" + nParam);
+        super(nExpectedType, Expression.createNumber(nParam));
         m_engine = engine;
     }
 
@@ -44,13 +44,31 @@ public class JIPParameterTypeException extends JIPTypeException
      */
     public JIPParameterTypeException(final int nParam, final int nExpectedType)
     {
-        super(nExpectedType, "" + nParam);
+        super(nExpectedType, Expression.createNumber(nParam));
+    }
+
+    /** Constructs a new JIPParameterTypeException
+     * @param nParam the index of the bad parameter
+     * @param nExpectedType the type of the expected term
+     */
+    public JIPParameterTypeException(final JIPTerm term, final int nExpectedType)
+    {
+        super(nExpectedType, term.getTerm());
+    }
+
+    /** Constructs a new JIPParameterTypeException
+     * @param nParam the index of the bad parameter
+     * @param nExpectedType the type of the expected term
+     */
+    JIPParameterTypeException(final PrologObject term, final int nExpectedType)
+    {
+        super(nExpectedType, term);
     }
 
     /** Constructs a new JIPParameterTypeException
      */
     public JIPParameterTypeException()
     {
-    	super(UNDEFINED, "" + "Undefined");
+    	super(UNDEFINED, Atom.createAtom("Undefined"));
     }
 }

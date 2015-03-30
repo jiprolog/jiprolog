@@ -73,9 +73,9 @@ public class JIPTypeException extends JIPRuntimeException {
     }
 
 	private String typeError;
-	private String culprit;
+	private PrologObject culprit;
 
-	public JIPTypeException(int typeError, String culprit)
+	public JIPTypeException(int typeError, PrologObject culprit)
 	{
 		if(typeError < UNDEFINED && typeError > CALLABLE)
 			this.typeError = s_stringMap[UNDEFINED];
@@ -88,7 +88,7 @@ public class JIPTypeException extends JIPRuntimeException {
 	@Override
 	public JIPTerm getTerm()
 	{
-    	return getTerm(new Functor("type_error/2", new ConsCell (Atom.createAtom(typeError), new ConsCell(Atom.createAtom(culprit),  null))));
+    	return getTerm(new Functor("type_error/2", new ConsCell (Atom.createAtom(typeError), new ConsCell(culprit,  null))));
 
 //    	return getTerm("type_error(" + typeError + ", " + culprit + ")", strTerm);
 	}

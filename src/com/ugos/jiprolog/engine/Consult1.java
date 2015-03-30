@@ -139,7 +139,7 @@ class Consult1 extends BuiltIn
             if(strOldSearchPath != null)
                 engine.setSearchPath(strOldSearchPath);
 
-            throw new JIPPermissionException("access", "source_sink", strPath);
+            throw new JIPPermissionException("access", "source_sink", Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(9, "consult " + strPath);
         }
         catch(JIPRuntimeException ex)
@@ -227,7 +227,7 @@ class Consult1 extends BuiltIn
             catch(IOException ex1)
             {}
 
-            throw new JIPPermissionException("access", "source_sink", strStreamName, engine);
+            throw new JIPPermissionException("access", "source_sink", Atom.createAtom(strStreamName), engine);
         }
         catch(JIPSyntaxErrorException ex)
         {

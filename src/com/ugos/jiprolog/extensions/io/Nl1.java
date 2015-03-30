@@ -54,7 +54,7 @@ public final class Nl1 extends JIPXCall
         writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
-        	throw JIPExistenceException.createStreamException("'" + strStreamHandle + "'");
+        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
         }
 
         try

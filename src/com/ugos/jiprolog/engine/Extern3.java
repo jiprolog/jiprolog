@@ -105,21 +105,21 @@ final class Extern3 extends BuiltIn
         }
         catch(ClassNotFoundException ex)
         {
-        	throw JIPExistenceException.createProcedureException(strXClassName);
+        	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
         }
         catch(IllegalAccessException ex)
         {
-        	throw JIPExistenceException.createProcedureException(strXClassName);
+        	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
 //            throw JIPRuntimeException.create(38, strXClassName);
         }
         catch(InstantiationException ex)
         {
-        	throw JIPExistenceException.createProcedureException(strXClassName);
+        	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
 //            throw JIPRuntimeException.create(39, strXClassName);
         }
         catch(ClassCastException ex)
         {
-        	throw JIPExistenceException.createProcedureException(strXClassName);
+        	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
 //            throw JIPRuntimeException.create(40, strXClassName);
         }
     }

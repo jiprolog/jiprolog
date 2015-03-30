@@ -285,7 +285,7 @@ public class StreamManager
         if(strPath.toUpperCase().startsWith("HTTP://") || strPath.toUpperCase().startsWith("HTTPS://"))
         {
             //strPath = strPath.replace('\\', '/');
-        	throw new JIPTypeException(JIPTypeException.URL, strPath);
+        	throw new JIPTypeException(JIPTypeException.URL, Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(20, strPath);
         }
         else if(strPath.toUpperCase().startsWith("FILE:/"))
@@ -308,7 +308,7 @@ public class StreamManager
         else if(strPath.toUpperCase().startsWith("JAR://"))
         {
             //strPath = strPath.replace('\\', '/');
-        	throw new JIPTypeException(JIPTypeException.FILE, strPath);
+        	throw new JIPTypeException(JIPTypeException.FILE, Atom.createAtom(strPath));
 //            throw JIPRuntimeException.create(20, strPath);
         }
         else
