@@ -96,7 +96,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     final void multifile(final String strPredName)
     {
         if(isSystem(strPredName) && !m_bCheckDisabled)
-        	throw new JIPPermissionException("modify", "static_procedure", Atom.createAtom(strPredName), jipEngine);
+        	throw new JIPPermissionException("modify", "static_procedure", Functor.getPredicateIndicator(strPredName), jipEngine);
 
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
@@ -123,14 +123,14 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(db instanceof DefaultClausesDatabase)
         	db.setMultifile();
         else
-        	throw new JIPPermissionException("modify", "extern_procedure", Atom.createAtom(strPredName));
+        	throw new JIPPermissionException("modify", "extern_procedure", Functor.getPredicateIndicator(strPredName));
 
     }
 
     final void moduleTransparent(final String strPredName)
     {
         if(isSystem(strPredName) && !m_bCheckDisabled)
-        	throw new JIPPermissionException("modify", "static_procedure", Atom.createAtom(strPredName));
+        	throw new JIPPermissionException("modify", "static_procedure", Functor.getPredicateIndicator(strPredName));
 //            throw JIPRuntimeException.create(46, Atom.createAtom(strPredName));
 
         m_moduleTransparentTbl.put(strPredName, strPredName);
@@ -310,7 +310,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 //      System.out.println("functor " + functor);  // DBG
 
         if(isSystem(functor.getName()))
-        	throw new JIPPermissionException("modify", "static_procedure", functor.m_head);
+        	throw new JIPPermissionException("modify", "static_procedure", functor.getPredicateIndicator());
 //            throw JIPRuntimeException.create(13, functor);
 
         JIPClausesDatabase db;
@@ -414,7 +414,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
         catch(ClassCastException ex)
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
         }
     }
 
@@ -422,7 +422,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile, boolean dynamic)
     {
         if(!m_bCheckDisabled && isSystem((Functor)clause.getHead()))
-        	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).m_head, jipEngine);
+        	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getPredicateIndicator(), jipEngine);
 
         // Estrae il nome del funtore
         PrologObject head = clause.getHead();
@@ -451,7 +451,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 String strFileName = (String)m_pred2FileMap.get(strFunctName);
                 if(!strFileName.equals(strFile) && !isMultifile(((Functor)head).getName()))
                 {
-                	throw new JIPPermissionException("modify", "static_procedure", Atom.createAtom(strFunctName), jipEngine);
+                	throw new JIPPermissionException("modify", "static_procedure", Functor.getPredicateIndicator(strFunctName), jipEngine);
                 }
             }
         }

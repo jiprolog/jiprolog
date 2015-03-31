@@ -116,11 +116,34 @@ atom_concat(Atom1, Atom2, Concat):-
     atom_chars(Atom2, CAtom2).
 
 sub_atom(Atom, Before, Length, After, SubAtom):-
-	atom_concat(Prefix, Suffix, Atom),
-	atom_concat(BeforeAtom, SubAtom, Prefix),
-	atom_length(SubAtom, Length),
-	atom_length(BeforeAtom, Before),
-	atom_length(Suffix, After).
+ 	atom(Atom), (var(SubAtom); atom(SubAtom)),
+ 	% the other error conditions are checked by the calls to atom_length/2
+ 	!,
+ 	atom_concat(Prefix, Suffix, Atom),
+ 	atom_concat(SubAtom, AfterAtom, Suffix),
+ 	atom_length(SubAtom, Length),
+ 	atom_length(Prefix, Before),
+ 	atom_length(AfterAtom, After).
+
+sub_atom(Atom, _, _, _, _):-
+ 	var(Atom),
+ 	error(instantiation_error).
+
+sub_atom(Atom, _, _, _, _):-
+ 	\+ atom(Atom),
+ 	error(type_error(atom, Atom)).
+
+sub_atom(_, _, _, _, SubAtom):-
+ 	% nonvar(SubAtom),
+ 	% \+ atom(SubAtom),
+ 	error(type_error(atom, SubAtom)).
+
+%sub_atom(Atom, Before, Length, After, SubAtom):-
+%	atom_concat(Prefix, Suffix, Atom),
+%	atom_concat(BeforeAtom, SubAtom, Prefix),
+%	atom_length(SubAtom, Length),
+%	atom_length(BeforeAtom, Before),
+%	atom_length(Suffix, After).
 
 
 concat_atom([A1], A1).
