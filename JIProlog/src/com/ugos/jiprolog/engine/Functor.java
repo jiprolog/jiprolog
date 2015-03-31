@@ -156,4 +156,25 @@ class Functor extends ConsCell
             throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, term);
 
     }
+
+    public Functor getPredicateIndicator()
+    {
+    	return getPredicateIndicator(getName());
+    }
+
+    public static Functor getPredicateIndicator(String predicateIndicator)
+    {
+        int nArity = 0;
+        String friendlyName = predicateIndicator;
+
+        int nPos = predicateIndicator.lastIndexOf('/');
+        if(nPos > -1)
+        {
+            nArity = Integer.parseInt(predicateIndicator.substring(nPos + 1, predicateIndicator.length()));
+            friendlyName = predicateIndicator.substring(0, nPos);
+        }
+
+        return new Functor("//2", new ConsCell(Atom.createAtom(friendlyName), new ConsCell(Expression.createNumber(nArity), null)));
+
+    }
 }

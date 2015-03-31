@@ -350,6 +350,8 @@ final class Expression extends PrologObject //implements Serializable
         {
         	if(floating && !((Expression)obj).floating)
         		return true;
+        	else if(((Expression)obj).floating && !floating)
+        		return false;
         	else if(m_dValue < ((Expression)obj).m_dValue)
             {
             	return true;

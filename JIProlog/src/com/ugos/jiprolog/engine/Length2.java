@@ -28,6 +28,24 @@ final class Length2 extends BuiltIn
     {
         final PrologObject pred = getRealTerm(getParam(1));
 
+        final PrologObject length = getRealTerm(getParam(2));
+
+        if(length != null)
+        {
+            if(!(length instanceof Expression))
+            {
+            	throw new JIPTypeException(JIPParameterTypeException.INTEGER, length);
+            }
+            else if(!((Expression)length).isInteger())
+        	{
+        		throw new JIPTypeException(JIPParameterTypeException.INTEGER, length);
+        	}
+        	else if(((Expression)length).getValue() < 0)
+        	{
+        		throw new JIPDomainException("not_less_than_zero", length);
+        	}
+        }
+
         if(pred instanceof ConsCell)
         {
             return Expression.createNumber(((ConsCell)pred).getHeight()).unify(getParam(2), varsTbl);
@@ -44,14 +62,6 @@ final class Length2 extends BuiltIn
         }
         else
         {
-            final PrologObject length = getRealTerm(getParam(2));
-
-            if(length == null)
-                throw new JIPParameterUnboundedException(2);
-
-            if(!(length instanceof Expression))
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.INTEGER);
-
             List list = null;
             for(int i = 0; i < (int)((Expression)length).getValue(); i++)
             {
