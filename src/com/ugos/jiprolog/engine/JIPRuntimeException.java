@@ -147,7 +147,7 @@ public class JIPRuntimeException extends RuntimeException
     public String getMessage()
     {
         if(getTerm() != null)
-            return getTerm().toString() + "\n" + super.getMessage();
+            return getTerm().toString();
         else
             return super.getMessage();
     }
