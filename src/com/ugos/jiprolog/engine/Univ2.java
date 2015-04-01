@@ -38,7 +38,10 @@ final class Univ2 extends BuiltIn
                 throw new JIPParameterUnboundedException(2);
 
             if(!(param instanceof List))
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.LIST);
+                throw new JIPTypeException(JIPParameterTypeException.LIST, param);
+
+            if(param.unifiable(List.NIL))
+                throw new JIPDomainException("non_empty_list", param);
 
             try
             {
@@ -108,9 +111,18 @@ final class Univ2 extends BuiltIn
 //                      System.out.println(((Functor)list).getName());
                     }
                 }
-                else
+                else if (head == null)
+                {
                     throw new JIPParameterUnboundedException(2);
-                //Atom.printAtoms();
+                }
+			    else if (((List)param).getHeight() == 1)
+			    {
+			    	throw new JIPTypeException(JIPTypeException.ATOMIC, head);
+			    }
+			    else
+			    	throw new JIPTypeException(JIPTypeException.ATOM, head);
+//                else
+//                    throw new JIPParameterUnboundedException(2);
             }
             catch(ClassCastException ex)
             {
