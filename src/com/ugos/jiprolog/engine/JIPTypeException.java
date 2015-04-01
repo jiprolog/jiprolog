@@ -52,7 +52,7 @@ public class JIPTypeException extends JIPRuntimeException {
     public static final int ATOMIC = 15;
 
 
-    private static final String s_stringMap[] = new String[15];
+    private static final String s_stringMap[] = new String[16];
 
     static
     {

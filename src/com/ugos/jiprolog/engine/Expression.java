@@ -350,9 +350,9 @@ final class Expression extends PrologObject //implements Serializable
         	else if(((Expression)obj).floating && !floating)
         		return false;
         	else if(m_dValue < ((Expression)obj).m_dValue)
-            {
             	return true;
-            }
+        	else
+        		return false;
         }
         else if(obj instanceof Atom)
         {
@@ -369,7 +369,7 @@ final class Expression extends PrologObject //implements Serializable
             }
         }
 
-        return false;
+        return true;
     }
 
     public final boolean isInteger()
