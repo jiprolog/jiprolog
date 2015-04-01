@@ -26,7 +26,8 @@ public class InputStreamInfo extends StreamInfo
     {
     	properties.setProperty("mode", "mode(read)");
 		properties.setProperty("input", "input");
-		properties.setProperty("eof_action", "eof_action(eof_code)");
+		properties.setProperty("eof_action", "eof_action(reset)");
+//		properties.setProperty("eof_action", "eof_action(eof_code)");
 		properties.setProperty("reposition", "reposition(false)");
 
 	}
