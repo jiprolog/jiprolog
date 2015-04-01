@@ -217,8 +217,9 @@ final class Variable extends PrologObject//Serializable
                 if(((Variable)obj).isBounded())
                     return true;
                 else
+                	return getName().compareTo(((Variable)obj).getName()) < 0;
                     //return m_nAddress < ((Variable)obj).m_nAddress;
-                    return getAddress() < ((Variable)obj).getAddress();
+//                    return getAddress() < ((Variable)obj).getAddress();
 
         return true;
     }
