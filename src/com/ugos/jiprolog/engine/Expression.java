@@ -27,7 +27,7 @@ final class Expression extends PrologObject //implements Serializable
 {
     final static long serialVersionUID = 300000004L;
 
-    private double m_dValue;
+    private final double m_dValue;
     private boolean floating = false;
 
     public static Expression createNumber(final double dNum)
@@ -37,7 +37,7 @@ final class Expression extends PrologObject //implements Serializable
 
     public static Expression createNumber(final String strNum)
     {
-    	Expression expr = new Expression(Double.valueOf(strNum).doubleValue());
+    	final Expression expr = new Expression(Double.valueOf(strNum).doubleValue());
     	if(strNum.contains("."))
     		expr.floating = true;
 
@@ -361,13 +361,16 @@ final class Expression extends PrologObject //implements Serializable
         {
         	return true;
         }
-        else if(obj.unifiable(List.NIL))
-        {
-        	return true;
-        }
         else if(obj instanceof Variable)
+        {
             if(((Variable)obj).isBounded())
-                return lessThen(((Variable)obj).getObject());
+            {
+                if(obj.unifiable(List.NIL))
+                	return true;
+                else
+                	return lessThen(((Variable)obj).getObject());
+            }
+        }
 
         return false;
     }
