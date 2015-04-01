@@ -22,7 +22,10 @@ public class OutputStreamInfo extends StreamInfo
 
     private void init()
     {
-    	properties.setProperty("mode", "mode(write)");
+    	properties.setProperty("mode", "mode(append)");
+//    	properties.setProperty("mode", "mode(write)");
 		properties.setProperty("output", "output");
+		properties.setProperty("reposition", "reposition(false)");
+		properties.setProperty("eof_action", "eof_action(reset)");
 	}
 }
