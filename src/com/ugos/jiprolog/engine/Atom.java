@@ -27,7 +27,7 @@ final class Atom extends PrologObject //implements Serializable
 {
     final static long serialVersionUID = 300000001L;
 
-    static final Hashtable<String, Atom> s_atomTable = new Hashtable<String, Atom>(100);
+    static final Hashtable<String, Atom> s_atomTable = new Hashtable<String, Atom>(101);
 
     final static Atom FSEMICOLON = Atom.createAtom(";/2");
     final static Atom FIF        = Atom.createAtom("->/2");
@@ -46,7 +46,7 @@ final class Atom extends PrologObject //implements Serializable
         }
 
 //      System.out.println("***** not found ******");
-        Atom atom = new Atom(strAtom);
+        final Atom atom = new Atom(strAtom);
         s_atomTable.put(strAtom, atom);
 
         return atom;
