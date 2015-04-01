@@ -75,11 +75,8 @@ final class Expression extends PrologObject //implements Serializable
     {
     }
 
-    public static final Expression compute(final PrologObject expr)
+    public static final Expression compute(PrologObject exp)
     {
-        PrologObject exp = expr;
-//      System.out.println(exp);  //DBG
-//      System.out.println(exp.getClass());  //DBG
         if(exp instanceof Variable)
             exp = ((Variable)exp).getObject();
 
