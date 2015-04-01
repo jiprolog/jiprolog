@@ -65,16 +65,14 @@ public final class Read2 extends JIPXCall
                 streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
                 if(streamInfo == null)
                 {
-                	throw JIPExistenceException.createStreamException("'" + m_strStreamHandle + "'");
-//                	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
+                	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
                 }
 
                 // Get the stream
                 m_termEnum = JIPio.getTermEnumeration(m_strStreamHandle, getJIPEngine());
                 if(m_termEnum == null)
                 {
-                	throw JIPExistenceException.createSourceSynkException(m_strStreamHandle);
-//                	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
+                	throw JIPExistenceException.createSourceSynkException(JIPAtom.create(m_strStreamHandle));
                 }
             }
             else
