@@ -56,7 +56,8 @@ final class Univ2 extends BuiltIn
                     {
                         params = getRealTerm(params);
                         if(params != null && params != List.NIL && params != ConsCell.NIL)
-                            return false;
+                        	throw new JIPTypeException(JIPTypeException.ATOM, head);
+//                            return false;
                     }
 
                     list = head;  // ???
@@ -77,9 +78,8 @@ final class Univ2 extends BuiltIn
                     else
                     {
                         params = getRealTerm(params);
-//                        System.out.println("Param " + params);
-//                        System.out.println("Class " + params.getClass());
-                        if(params == null)
+
+                        if(((ConsCell)params).isPartial())
                         {
                             // caso X =.. [a|Y].
                             throw new JIPParameterTypeException(2, JIPParameterTypeException.LIST);
@@ -128,7 +128,7 @@ final class Univ2 extends BuiltIn
             {
                 //System.out.println(ex);
                 ex.printStackTrace();
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.UNDEFINED);
+                throw new JIPTypeException(JIPTypeException.LIST, param);
             }
         }
         else

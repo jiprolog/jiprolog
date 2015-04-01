@@ -225,6 +225,26 @@ class ConsCell extends PrologObject //implements Serializable
         }
     }
 
+    static final boolean isPartial(final ConsCell cell)
+    {
+        PrologObject tail = cell.getTail();
+        if(tail == null || tail == ConsCell.NIL || tail == List.NIL)
+        {
+            return false;
+        }
+        else if(tail instanceof Variable)
+        {
+        	if(!((Variable)tail).isBounded())
+        		return true;
+        	else
+        		return isPartial((ConsCell)BuiltIn.getRealTerm(tail));
+        }
+        else
+        {
+            return isPartial((ConsCell)BuiltIn.getRealTerm(tail));
+        }
+    }
+
     static final int getHeight(final ConsCell cell, final int nHeight)
     {
         if(cell == null || cell == ConsCell.NIL || cell == List.NIL)
@@ -235,6 +255,11 @@ class ConsCell extends PrologObject //implements Serializable
         {
             return getHeight((ConsCell)BuiltIn.getRealTerm(cell.getTail()), nHeight + 1);
         }
+    }
+
+    public boolean isPartial()
+    {
+    	return isPartial(this);
     }
 
     @Override
@@ -334,4 +359,5 @@ class ConsCell extends PrologObject //implements Serializable
             throw new IndexOutOfBoundsException(Integer.toString(n));
             //throw new JIPRuntimeException("ParameterIndexOutOfBounds" + Integer.toString(n));
     }
+
 }
