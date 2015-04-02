@@ -100,7 +100,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR, jipEngine);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName), jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -183,7 +183,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR, jipEngine);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName), jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -218,7 +218,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName));
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -423,7 +423,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 }
                 else
                 {
-                    throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR);
+                    throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
                 }
 
 

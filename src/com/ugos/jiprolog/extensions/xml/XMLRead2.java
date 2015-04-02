@@ -51,7 +51,7 @@ public class XMLRead2 extends XMLRead1
 
         // check if input is a Number
         if(!(input instanceof JIPAtom))
-            throw new JIPTypeException(2, JIPTypeException.ATOM);
+            throw new JIPTypeException(JIPTypeException.ATOM, input);
 
         // Gets the handle to the stream
         final String strStreamHandle = ((JIPAtom)input).getName();
