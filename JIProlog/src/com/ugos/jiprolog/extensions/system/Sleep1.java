@@ -47,12 +47,12 @@ public class Sleep1 extends JIPXCall
         }
         if (!(term instanceof JIPNumber))
         {
-            throw new JIPTypeException(1, JIPTypeException.INTEGER);
+            throw new JIPTypeException(JIPTypeException.INTEGER, term);
         }
 
         if (!((JIPNumber)term).isInteger())
         {
-            throw new JIPTypeException(1, JIPTypeException.INTEGER);
+            throw new JIPTypeException(JIPTypeException.INTEGER, term);
         }
 
         try

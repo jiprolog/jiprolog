@@ -39,9 +39,9 @@ public class Numbervars3 extends JIPXCall
             throw new JIPParameterUnboundedException(1);
         }
         else if(!(start instanceof JIPNumber))
-            throw new JIPTypeException(2, JIPTypeException.INTEGER);
+            throw new JIPTypeException(JIPTypeException.INTEGER, start);
         else if(!((JIPNumber)start).isInteger())
-            throw new JIPTypeException(2, JIPTypeException.INTEGER);
+            throw new JIPTypeException(JIPTypeException.INTEGER, start);
 
         int nStart = (int)((JIPNumber)start).getDoubleValue();
 

@@ -51,10 +51,10 @@ final class Functor3 extends BuiltIn
                 	throw new JIPParameterUnboundedException(3);
 
                 if(!(arity instanceof Expression))
-                	throw new JIPTypeException(3, JIPTypeException.INTEGER);
+                	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
 
                 if(!((Expression)arity).isInteger())
-                	throw new JIPTypeException(3, JIPTypeException.INTEGER);
+                	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
 
                 // if arity == 0 generate an atom
                 if(((Expression)arity).getValue() == 0)
@@ -63,7 +63,7 @@ final class Functor3 extends BuiltIn
                 }
 
                 if(!(name instanceof Atom))
-                    throw new JIPTypeException(2, JIPTypeException.ATOM);
+                    throw new JIPTypeException(JIPTypeException.ATOM, name);
 
                 if(((Atom)name).getName().equals(".") )
                 {
@@ -102,7 +102,7 @@ final class Functor3 extends BuiltIn
             }
             catch(ClassCastException ex)
             {
-                 throw new JIPTypeException();
+                 throw new JIPTypeException(JIPTypeException.FUNCTOR, func);
             }
         }
         else
@@ -132,7 +132,7 @@ final class Functor3 extends BuiltIn
                     }
                     catch(ClassCastException ex)
                     {
-                        throw new JIPTypeException(1, JIPTypeException.FUNCTOR);
+                        throw new JIPTypeException(JIPTypeException.FUNCTOR, func);
                     }
                 }
 
@@ -156,7 +156,7 @@ final class Functor3 extends BuiltIn
                 funcArity = Expression.createNumber(2);
             }
             else
-                throw new JIPTypeException(1, JIPTypeException.UNDEFINED);
+                throw new JIPTypeException(JIPTypeException.UNDEFINED, func);
 
             return new ConsCell(funcName, new ConsCell(funcArity, null)).unify(
                     new ConsCell(getParam(2), new ConsCell(getParam(3), null)), varsTbl);

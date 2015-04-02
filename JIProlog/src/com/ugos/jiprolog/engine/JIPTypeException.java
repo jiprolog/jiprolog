@@ -92,6 +92,12 @@ public class JIPTypeException extends JIPRuntimeException {
 		this.culprit = culprit;
 	}
 
+	JIPTypeException(int typeError, PrologObject culprit, JIPEngine engine)
+	{
+		this(typeError, culprit);
+		m_engine = engine;
+	}
+
 	@Override
 	public JIPTerm getTerm()
 	{

@@ -114,7 +114,7 @@ public class Name2 extends JIPXCall
             }
             else
             {
-                throw new JIPTypeException(2,JIPTypeException.LIST);
+                throw new JIPTypeException(JIPTypeException.LIST, string);
             }
         }
         else if(atom.unifiable(JIPList.NIL))
@@ -123,7 +123,7 @@ public class Name2 extends JIPXCall
         }
         else
         {
-            throw new JIPTypeException(1, JIPTypeException.UNDEFINED);
+            throw new JIPTypeException(JIPTypeException.UNDEFINED, atom);
         }
 
         return atom.unify(string, varsTbl);

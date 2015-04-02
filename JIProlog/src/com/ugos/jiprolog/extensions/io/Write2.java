@@ -47,7 +47,7 @@ public class Write2 extends JIPXCall
         }
 
         if(!(input instanceof JIPAtom))
-            throw new JIPTypeException(1, JIPTypeException.ATOM);
+            throw new JIPTypeException(JIPTypeException.ATOM, input);
 
         JIPAtom handle = (JIPAtom)input;
 

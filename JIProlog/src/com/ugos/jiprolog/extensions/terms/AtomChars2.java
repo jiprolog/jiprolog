@@ -100,7 +100,7 @@ public class AtomChars2 extends JIPXCall
             }
             else
             {
-                throw new JIPTypeException(2,JIPTypeException.LIST);
+                throw new JIPTypeException(JIPTypeException.LIST, chars);
             }
         }
         else if(atom.unifiable(JIPList.NIL))// ||
@@ -110,7 +110,7 @@ public class AtomChars2 extends JIPXCall
         }
         else
         {
-            throw new JIPTypeException(1, JIPTypeException.UNDEFINED);
+            throw new JIPTypeException(JIPTypeException.UNDEFINED, atom);
         }
 
         return atom.unify(chars, varsTbl);

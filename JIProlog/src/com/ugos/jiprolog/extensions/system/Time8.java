@@ -48,7 +48,7 @@ public class Time8 extends JIPXCall
         }
         if (!(millis instanceof JIPNumber))
         {
-            throw new JIPTypeException(1, JIPTypeException.INTEGER);
+            throw new JIPTypeException(JIPTypeException.INTEGER, millis);
         }
 
         final GregorianCalendar calendar = new GregorianCalendar();

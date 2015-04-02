@@ -77,7 +77,7 @@ public final class Read2 extends JIPXCall
             }
             else
             {
-                throw new JIPTypeException(1, JIPTypeException.ATOM);
+                throw new JIPTypeException(JIPTypeException.ATOM, input);
             }
         }
 

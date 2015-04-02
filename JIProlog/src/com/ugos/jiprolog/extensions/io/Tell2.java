@@ -60,7 +60,7 @@ public final class Tell2 extends JIPXCall
         }
         else
         {
-            throw new JIPTypeException(1, JIPTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, input);
         }
 
         // delete ' at the beggining and end of string

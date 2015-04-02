@@ -45,7 +45,7 @@ public final class SetInput1 extends JIPXCall
         }
 
         if(!(input instanceof JIPAtom))
-            throw new JIPTypeException(1, JIPTypeException.ATOM);
+            throw new JIPTypeException(JIPTypeException.ATOM, input);
 
         // Gets the handle to the stream
         final String strStreamHandle = ((JIPAtom)input).getName();

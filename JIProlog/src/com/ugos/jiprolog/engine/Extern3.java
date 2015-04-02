@@ -55,7 +55,7 @@ final class Extern3 extends BuiltIn
         }
         else
         {
-            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
         }
 
         final PrologObject exClass = getRealTerm(getParam(2));
@@ -65,7 +65,7 @@ final class Extern3 extends BuiltIn
         else if(exClass instanceof Atom)
             strXClassName = ((Atom)exClass).getName();
         else
-            throw new JIPTypeException(2, JIPTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, exClass);
 
         final PrologObject attribs = getRealTerm(getParam(3));
         if(attribs instanceof PString)
@@ -73,7 +73,7 @@ final class Extern3 extends BuiltIn
         else if(attribs instanceof Atom)
             strAttributes = ((Atom)attribs).getName();
         else
-            throw new JIPTypeException(3, JIPTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, attribs);
 
         apply(strFunctName, nArity, strModuleName, strXClassName, strAttributes);
 

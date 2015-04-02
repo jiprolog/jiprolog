@@ -44,7 +44,7 @@ final class XCall2 extends BuiltIn
             else if(exClass instanceof Atom)
                 strXClassName = ((Atom)exClass).getName();
             else
-                throw new JIPTypeException(1, JIPTypeException.ATOM_OR_STRING);
+                throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, exClass);
 
             // Create an instance of JIPXCall class
             m_exObj = createXCall(strXClassName);
@@ -55,7 +55,7 @@ final class XCall2 extends BuiltIn
 
         final PrologObject params = getRealTerm(getParam(2));
             if(!(params instanceof List))
-                throw new JIPTypeException(2, JIPTypeException.LIST);
+                throw new JIPTypeException(JIPTypeException.LIST, params);
 
         JIPCons exParams = new JIPCons(((List)params).getConsCell());
 
