@@ -51,7 +51,7 @@ public class CallN extends BuiltIn {
 		}
 		else
 		{
-			throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+			throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, closure);
 		}
 
         if(BuiltInFactory.isBuiltIn(goal.getName()))

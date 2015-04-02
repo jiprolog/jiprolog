@@ -54,7 +54,7 @@ final class Encoding1 extends Notify2
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, param);
         }
 
         getJIPEngine().setEncoding(strEncoding);

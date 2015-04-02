@@ -48,7 +48,7 @@ final class SetEnv2 extends BuiltIn
         if(termKey instanceof Atom || termKey instanceof PString)
         	key = termKey.toString(getJIPEngine());
         else
-        	throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+        	throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, termKey);
 
         Object val;
         if(termValue instanceof Atom || termValue instanceof PString)

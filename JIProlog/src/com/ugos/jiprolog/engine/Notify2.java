@@ -35,7 +35,7 @@ class Notify2 extends BuiltIn
         }
         catch(JIPRuntimeException ex)
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+            throw new JIPTypeException(JIPTypeException.INTEGER, term);
         }
 
         notifyEvent((int)eventID.getValue(), term.copy(false));

@@ -59,7 +59,7 @@ class Consult1 extends BuiltIn
                     }
                     else
                     {
-                        throw new JIPParameterTypeException(1,JIPParameterTypeException.ATOM_OR_STRING);
+                        throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, head);
                     }
 
                     consult(strPath, getJIPEngine(), getQueryHandle());
@@ -75,7 +75,7 @@ class Consult1 extends BuiltIn
             }
             else
             {
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+                throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
             }
         }
         catch(IOException ex)
@@ -312,7 +312,7 @@ class Consult1 extends BuiltIn
                         else
                         {
                             throw JIPRuntimeException.createRuntimeException(47, strPath + "-" + head.toString(engine));
-                            //throw new JIPParameterTypeException(1, head);
+                            //throw new JIPTypeException(1, head);
                         }
 
                         exportList = (List)exportList.getTail();
@@ -366,7 +366,7 @@ class Consult1 extends BuiltIn
 //            ex.printStackTrace();
             throw JIPRuntimeException.createRuntimeException(21, strPath + "-" + pred.toString(engine));
         }
-//        catch(JIPParameterTypeException ex)
+//        catch(JIPTypeException ex)
 //        {
 //            throw JIPRuntimeException.create(1, pred.toString(engine) + " at line " + pins.getLineNumber());
 //        }

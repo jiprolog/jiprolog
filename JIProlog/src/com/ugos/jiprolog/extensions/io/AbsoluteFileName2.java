@@ -29,7 +29,7 @@ public final class AbsoluteFileName2 extends JIPXCall
     {
         JIPTerm file = params.getNth(1);
         JIPTerm abs = params.getNth(2);
-        
+
         // check if input is a variable
         if (file instanceof JIPVariable)
         {
@@ -44,14 +44,14 @@ public final class AbsoluteFileName2 extends JIPXCall
                 file = ((JIPVariable)file).getValue();
             }
         }
-        
+
         if(!(file instanceof JIPAtom))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
-                
+            throw new JIPTypeException(JIPTypeException.ATOM, file);
+
         String strFileName = ((JIPAtom)file).getName();
-        
+
         File ffile = new File(strFileName);
-        
+
         try
         {
             return abs.unify(JIPAtom.create(ffile.getCanonicalPath()), varsTbl);
@@ -61,7 +61,7 @@ public final class AbsoluteFileName2 extends JIPXCall
             throw new JIPJVMException(ex);
         }
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

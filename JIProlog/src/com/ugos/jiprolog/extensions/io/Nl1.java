@@ -45,7 +45,7 @@ public final class Nl1 extends JIPXCall
         }
 
         if(!(input instanceof JIPAtom))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(1, JIPTypeException.ATOM);
 
         String strStreamHandle = ((JIPAtom)input).getName();
         OutputStream writer;

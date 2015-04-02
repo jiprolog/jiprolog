@@ -50,7 +50,7 @@ public class Gensym2 extends JIPXCall
 
         if (!(base instanceof JIPAtom))
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(1, JIPTypeException.ATOM);
         }
         
         JIPAtom unique = JIPAtom.create(((JIPAtom)base).getName() + s_nCount);

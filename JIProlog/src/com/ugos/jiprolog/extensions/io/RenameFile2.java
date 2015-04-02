@@ -82,14 +82,14 @@ public class RenameFile2 extends JIPXCall
             else if(newName instanceof JIPNumber)
                 strNewName = "" + ((JIPNumber)newName).getValue();
             else
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
+                throw new JIPTypeException(2, JIPTypeException.ATOM);
 
             if(!ffile.renameTo(new File(strNewName)))
                 return false;//throw new JIPRuntimeException(JIPio.ERR_FILE_NOT_RENAMED, JIPio.STR_FILE_NOT_RENAMED);
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(1, JIPTypeException.ATOM);
         }
 
         return true;

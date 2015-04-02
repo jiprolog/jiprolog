@@ -666,7 +666,7 @@ class WAM
             return getRules(curNode);
         }
 
-        throw new JIPParameterTypeException();
+        throw new JIPTypeException(JIPTypeException.CALLABLE, term);
     }
 }
 

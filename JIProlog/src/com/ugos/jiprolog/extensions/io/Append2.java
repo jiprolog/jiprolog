@@ -58,7 +58,7 @@ public final class Append2 extends JIPXCall
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, input);
         }
 
         // delete ' at the beggining and end of string

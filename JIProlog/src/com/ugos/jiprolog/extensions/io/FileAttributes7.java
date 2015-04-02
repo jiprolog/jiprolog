@@ -28,7 +28,7 @@ public final class FileAttributes7 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm file = params.getNth(1);
-        
+
         // check if input is a variable
         if (file instanceof JIPVariable)
         {
@@ -43,10 +43,10 @@ public final class FileAttributes7 extends JIPXCall
                 file = ((JIPVariable)file).getValue();
             }
         }
-        
+
         if(!(file instanceof JIPAtom))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
-                
+            throw new JIPTypeException(JIPTypeException.ATOM, file);
+
         String strFileName = ((JIPAtom)file).getName();
         File ffile = new File(strFileName);
         if(!ffile.isAbsolute())
@@ -54,11 +54,11 @@ public final class FileAttributes7 extends JIPXCall
             //System.out.println("absolute");
             ffile = new File(getJIPEngine().getSearchPath() + File.separator + strFileName);
         }
-                
+
         JIPTerm ext;
         JIPAtom dir;
         //JIPNumber size, time;
-        
+
         try
         {
             String strName = ffile.getName();
@@ -72,15 +72,15 @@ public final class FileAttributes7 extends JIPXCall
             {
                 ext  = JIPList.NIL;
             }
-                        
+
             // name
             if(!params.getNth(2).unify(JIPAtom.create(strName), varsTbl))
                 return false;
-            
+
             // extension
             if(!params.getNth(3).unify(ext, varsTbl))
                 return false;
-                        
+
             // dir
             nPos = ffile.getCanonicalPath().lastIndexOf(File.separatorChar);
             if(nPos > -1)
@@ -91,22 +91,22 @@ public final class FileAttributes7 extends JIPXCall
             {
                 dir = JIPAtom.create(ffile.getCanonicalPath());
             }
-            
+
             if(!params.getNth(4).unify(dir, varsTbl))
                 return false;
-            
+
             // absolute path
             if(!params.getNth(5).unify(JIPAtom.create(ffile.getCanonicalPath()), varsTbl))
                 return false;
-            
+
             // size
             if(!params.getNth(6).unify(JIPNumber.create(ffile.length()), varsTbl))
                 return false;
-            
+
             // time
             if(!params.getNth(7).unify(JIPNumber.create(ffile.lastModified()), varsTbl))
                 return false;
-                       
+
             return true;
         }
         catch(IOException ex)
@@ -114,7 +114,7 @@ public final class FileAttributes7 extends JIPXCall
             throw new JIPJVMException(ex);
         }
     }
-    
+
     public boolean hasMoreChoicePoints()
     {
         return false;

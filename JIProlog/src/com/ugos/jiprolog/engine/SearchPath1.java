@@ -61,7 +61,7 @@ final class SearchPath1 extends BuiltIn
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, param);
         }
 
         try

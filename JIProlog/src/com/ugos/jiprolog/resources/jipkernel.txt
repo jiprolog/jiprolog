@@ -6,16 +6,106 @@
  *
  * Copyright (C) 2002-2015 by Ugo Chirico. All Rights Reserved
  *
- * WARNING: DO NOT REMOVE THIS PREDICATES. IT IS NEEDED BY JIPROLOG
+ * WARNING: DO NOT REMOVE THESE PREDICATES. THEY ARE REQUIRED BY JIPROLOG
  *
  */
 
 
-'$system':op(X,Y,[]):-!.
-'$system':op(X,Y,[OP|Rest]):-
-    !, '$op'(X,Y,OP), op(X,Y,Rest).
-'$system':op(X,Y,OP):-
-    '$op'(X,Y,OP).
+%'$system':op(X,Y,[]):-!.
+%'$system':op(X,Y,[OP|Rest]):-
+%    !, '$op'(X,Y,OP), op(X,Y,Rest).
+%'$system':op(X,Y,OP):-
+%    '$op'(X,Y,OP).
+
+% op/3 error checking code contributed by Paulo Moura
+% and based on one of its contributions to XSB
+
+'$system':op(Priority, Specifier, Operators) :-
+	check_operator_priority(Priority),
+	check_operator_specifier(Specifier),
+	check_operator_names(Operators, Priority, Specifier),
+	(	atom(Operators) ->
+		add_operators([Operators], Priority, Specifier)
+	;	add_operators(Operators, Priority, Specifier)
+	).
+
+add_operators([], _, _).
+add_operators([Operator| Operators], Priority, Specifier) :-
+	'$op'(Priority, Specifier, Operator),
+	add_operators(Operators, Priority, Specifier).
+
+check_operator_priority(Priority) :-
+	(	var(Priority) ->
+		error(instantiation_error)
+	;	\+ integer(Priority),
+		error(type_error(integer, Priority))
+	;	(Priority < 0; Priority > 1200) ->
+		error(domain_error(operator_priority, Priority))
+	;	true
+	).
+
+check_operator_specifier(Term) :-
+	(	var(Term) ->
+		error(instantiation_error)
+	;	\+ atom(Term) ->
+		error(type_error(atom, Term))
+	;	operator_specifier(Term, _) ->
+		true
+	;	error(domain_error(operator_specifier, Term))
+	).
+
+operator_specifier(fx,  prefix).
+operator_specifier(fy,  prefix).
+operator_specifier(xfx, infix).
+operator_specifier(xfy, infix).
+operator_specifier(yfx, infix).
+operator_specifier(xf,  postfix).
+operator_specifier(yf,  postfix).
+
+check_operator_names(Term, Priority, Specifier) :-
+	(	\+ ground(Term) ->
+		error(instantiation_error)
+	;	forbidden_operator(Term, Priority, Specifier, Permission) ->
+		error(permission_error(Permission, operator)
+	;	atom(Term) ->
+		true
+	;	\+ is_list(Term) ->
+		error(type_error(list, Term))
+	;	\+ (member(Operator, Term), \+ check_operator_name(Operator, Priority, Specifier))
+	).
+
+forbidden_operator((','), _, _, modify) :-
+	!.
+forbidden_operator(('{}'), _, _, create) :-
+	!.
+forbidden_operator(('|'), Priority, Specifier, create) :-
+	!,
+	(	Priority \== 0, Priority \== 1105 ->
+		true
+	;	Specifier \== xfy
+	).
+forbidden_operator(Operator, _, Specifier, create) :-
+	atom(Operator),
+	(	operator_specifier(Specifier, infix),
+		current_op(_, PostfixSpecifier, Operator),
+		operator_specifier(PostfixSpecifier, postfix) ->
+		true
+	;	operator_specifier(Specifier, postfix),
+		current_op(_, InfixSpecifier, Operator),
+		operator_specifier(InfixSpecifier, infix) ->
+		true
+	;	fail
+	).
+
+check_operator_name(Term, Priority, Specifier) :-
+	(	var(Term) ->
+		error(instantiation_error)
+	;	forbidden_operator(Term, Priority, Specifier, Permission) ->
+		error(permission_error(Permission, operator)
+	;	atom(Term) ->
+		true
+	;	error(type_error(atom, Term))
+	).
 
 '$system':call(X):-X.
 
@@ -63,7 +153,8 @@
 %'$system':retractall(X):- retract(X), fail.
 %'$system':retractall(_):-!.
 
-'$system':current_predicate(X/Y):- current_functor(X, Y).
+'$system':current_predicate(X/Y):- !, current_functor(X, Y).
+'$system':current_predicate(A):- error(type_error(predicate_indicator,A)).
 
 '$system': @>(X, Y) :- compare(>, X, Y).
 

@@ -64,7 +64,7 @@ public class JIPClause extends JIPTerm
     /** Creates a new JIPClause object starting from e JIPTerm object
      * @param term the JIPTerm object to trasform in a clause
      * @return new JIPClause object
-     * @throws com.ugos.jiprolog.engine.JIPParameterTypeException if term cannot be trasformed in a clause
+     * @throws com.ugos.jiprolog.engine.JIPTypeException if term cannot be trasformed in a clause
      * @see com.ugos.jiprolog.engine.JIPTerm
      */
     public static final JIPClause create(final JIPTerm term)

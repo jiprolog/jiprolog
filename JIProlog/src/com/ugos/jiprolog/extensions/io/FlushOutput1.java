@@ -47,7 +47,7 @@ public final class FlushOutput1 extends JIPXCall
         }
 
         if(!(input instanceof JIPAtom))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(JIPTypeException.ATOM, input);
 
         String strStreamHandle = ((JIPAtom)input).getName();
         OutputStream writer;

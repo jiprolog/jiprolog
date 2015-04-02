@@ -91,14 +91,14 @@ class Multifile1 extends BuiltIn
             	}
                 else
                 {
-                    throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+                    throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
                 }
 
                 pred = getRealTerm(((ConsCell)pred).getTail());
             }
             catch(ClassCastException ex)
             {
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+                throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
             }
         }
 

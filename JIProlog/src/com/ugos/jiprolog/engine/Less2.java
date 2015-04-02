@@ -31,13 +31,21 @@ final class Less2 extends BuiltIn
         try
         {
             exp1 = Expression.compute(getRealTerm(getParam(1)));
+        }
+        catch(ClassCastException ex)
+        {
+        	throw new JIPTypeException(JIPTypeException.EVALUABLE, getParam(1));
+        }
+
+        try
+        {
             exp2 = Expression.compute(getRealTerm(getParam(2)));
         }
         catch(ClassCastException ex)
         {
-            throw new JIPParameterTypeException();
+        	throw new JIPTypeException(JIPTypeException.EVALUABLE, getParam(2));
         }
-        
+
         return exp1.getValue()< exp2.getValue();
     }
 }

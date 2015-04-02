@@ -65,7 +65,7 @@ public class DeleteFile1 extends JIPXCall
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(JIPTypeException.ATOM, input);
         }
 
         return true;

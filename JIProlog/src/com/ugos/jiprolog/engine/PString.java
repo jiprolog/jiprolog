@@ -75,13 +75,13 @@ final class PString extends List //implements Serializable
 
                 if (!ascii.isInteger())
                 {
-                    throw new JIPParameterTypeException();
+                    throw new JIPTypeException(JIPTypeException.INTEGER, head);
                 }
 
                 int nAscii = (int)ascii.getValue();
 
                 if(nAscii < 0 || nAscii > 255)
-                    throw new JIPParameterTypeException();
+                	throw new JIPTypeException(JIPTypeException.INTEGER, head);
 
                 m_strString += String.valueOf((char)nAscii);
             }
@@ -91,7 +91,7 @@ final class PString extends List //implements Serializable
 
             	if(a.length() > 1)
             	{
-            		throw new JIPParameterTypeException();
+            		throw new JIPTypeException(JIPTypeException.INTEGER, head);
             	}
 
             	char code = a.charAt(0);
@@ -100,7 +100,7 @@ final class PString extends List //implements Serializable
             }
             else
             {
-                throw new JIPParameterTypeException();
+            	throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, head);
             }
 
             if (tail instanceof Variable)

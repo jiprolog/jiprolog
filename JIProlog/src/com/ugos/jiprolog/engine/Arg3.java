@@ -31,9 +31,9 @@ final class Arg3 extends BuiltIn
             throw new JIPParameterUnboundedException(1);
 
         if(!(place instanceof Expression))
-            throw  new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+            throw  new JIPTypeException(1, JIPTypeException.INTEGER);
         if(!((Expression)place).isInteger())
-            throw  new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+            throw  new JIPTypeException(1, JIPTypeException.INTEGER);
 
         final PrologObject term = getRealTerm(getParam(2));
         if(term == null)
@@ -65,7 +65,7 @@ final class Arg3 extends BuiltIn
         }
         catch (ClassCastException ex)
         {
-            throw  new JIPParameterTypeException(2, JIPParameterTypeException.COMPOUND);
+            throw  new JIPTypeException(2, JIPTypeException.COMPOUND);
         }
     }
 

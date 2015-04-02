@@ -26,48 +26,48 @@ package com.ugos.jiprolog.engine;
  * Home Page: http://www.ugochirico.com
  * @see com.ugos.jiprolog.engine.JIPRuntimeException
  */
-public class JIPParameterTypeException extends JIPTypeException
+public class JIPTypeException extends JIPTypeException
 {
-	/** Constructs a new JIPParameterTypeException
+	/** Constructs a new JIPTypeException
      * @param nParam the index of the bad parameter
      * @param nExpectedType the type of the expected term
      */
-    public JIPParameterTypeException(final int nParam, final int nExpectedType, JIPEngine engine)
+    public JIPTypeException(final int nParam, final int nExpectedType, JIPEngine engine)
     {
         super(nExpectedType, Expression.createNumber(nParam));
         m_engine = engine;
     }
 
-    /** Constructs a new JIPParameterTypeException
+    /** Constructs a new JIPTypeException
      * @param nParam the index of the bad parameter
      * @param nExpectedType the type of the expected term
      */
-    public JIPParameterTypeException(final int nParam, final int nExpectedType)
+    public JIPTypeException(final int nParam, final int nExpectedType)
     {
         super(nExpectedType, Expression.createNumber(nParam));
     }
 
-    /** Constructs a new JIPParameterTypeException
+    /** Constructs a new JIPTypeException
      * @param nParam the index of the bad parameter
      * @param nExpectedType the type of the expected term
      */
-    public JIPParameterTypeException(final JIPTerm term, final int nExpectedType)
+    public JIPTypeException(final JIPTerm term, final int nExpectedType)
     {
         super(nExpectedType, term.getTerm());
     }
 
-    /** Constructs a new JIPParameterTypeException
+    /** Constructs a new JIPTypeException
      * @param nParam the index of the bad parameter
      * @param nExpectedType the type of the expected term
      */
-    JIPParameterTypeException(final PrologObject term, final int nExpectedType)
+    JIPTypeException(final PrologObject term, final int nExpectedType)
     {
         super(nExpectedType, term);
     }
 
-    /** Constructs a new JIPParameterTypeException
+    /** Constructs a new JIPTypeException
      */
-    public JIPParameterTypeException()
+    public JIPTypeException()
     {
     	super(UNDEFINED, Atom.createAtom("Undefined"));
     }
