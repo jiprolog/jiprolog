@@ -76,8 +76,8 @@ number_codes(Num, List):-
     name(Num, List),
     number(Num).
 
-number_codes(_,_):-
- 	error(type_error(number, 1)).
+number_codes(Num,_):-
+ 	error(type_error(number, Num)).
 
 number_chars(Num, List):-
     number(Num),
@@ -90,8 +90,8 @@ number_chars(Num, List):-
     atom_chars(Num, List),
     number(Num).
 
-number_chars(_,_):-
-	error(type_error(number, 1)).
+number_chars(Num,_):-
+	error(type_error(number, Num)).
 
 atom_number(Atom, Number):-
     atom_codes(Atom, Codes),
@@ -216,8 +216,8 @@ string_to_list(String, String):-
     string(String),
     !.
 
-string_to_list(_, _):-
-	error(type_error(atom, 1)).
+string_to_list(String, _):-
+	error(type_error(atom, String)).
 
 string_length(String, Len):-
     length(String, Len).
