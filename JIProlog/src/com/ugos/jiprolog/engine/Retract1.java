@@ -59,7 +59,7 @@ final class Retract1 extends BuiltIn
 		        GlobalDB globalDB = getJIPEngine().getGlobalDB();
 
 		        if(globalDB.isSystem(functor.getName()))
-		        	throw new JIPPermissionException("modify", "static_procedure", functor.m_head);
+		        	throw new JIPPermissionException("modify", "static_procedure", functor.getPredicateIndicator());
 //		            throw JIPRuntimeException.create(13, functor);
 
 		        db = globalDB.search(functor, clause.getModuleName());

@@ -74,7 +74,7 @@ public final class PeekByte2 extends JIPXCall
             PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
             if(ins == null)
             {
-            	throw JIPExistenceException.createStreamException("'" + strStreamHandle + "'");
+            	throw JIPExistenceException.createStreamException(strStreamHandle);
 //            	throw new JIPDomainException("stream_or_alias", strStreamHandle);
             }
 

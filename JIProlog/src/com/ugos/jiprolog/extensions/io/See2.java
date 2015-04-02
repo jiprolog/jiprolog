@@ -104,7 +104,7 @@ public final class See2 extends JIPXCall
         }
 
         if(strStreamHandle == null)
-        	throw JIPExistenceException.createStreamException("'" + strFilePath + "'");
+        	throw JIPExistenceException.createStreamException(strFilePath);
 
 
         // unify with the second parameter

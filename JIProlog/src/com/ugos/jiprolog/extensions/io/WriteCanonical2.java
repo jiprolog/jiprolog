@@ -59,7 +59,7 @@ public class WriteCanonical2 extends JIPXCall
         writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
-        	throw JIPExistenceException.createStreamException("'" + strStreamHandle + "'");
+        	throw JIPExistenceException.createStreamException(strStreamHandle);
 //        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
 

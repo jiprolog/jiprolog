@@ -148,11 +148,10 @@ class Clause extends ConsCell
             params = func.getParams();
 
             PrologObject lhs = BuiltIn.getRealTerm(params.getHead());
-            //PrologObject rhs = BuiltIn.getRealTerm(((ConsCell)params.getTail()).getHead());
             PrologObject rhs = BuiltIn.getRealTerm(params.getTail());
 
-//            System.out.println("lhs: " + lhs);
-//            System.out.println("rhs: " + rhs);
+            if(lhs == null || rhs == null)
+            	throw new JIPParameterUnboundedException();
 
             // verifica se lhs ha la specifica del modulo
             if((lhs instanceof Functor) && ((Functor)lhs).getName().equals(":/2"))
@@ -174,6 +173,9 @@ class Clause extends ConsCell
 
 //            System.out.println("lhs: " + lhs);
 //            System.out.println("rhs: " + rhs);
+
+            if(!(lhs instanceof Functor))
+            	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
 
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
