@@ -410,7 +410,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     {
                     	throw new JIPTypeException(JIPTypeException.INTEGER, t);
                     }
-                    else if(t instanceof ConsCell)
+                    else if(!(t instanceof ConsCell))
                     {
                     	throw new JIPTypeException(JIPTypeException.INTEGER, t);
                     }

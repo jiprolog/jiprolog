@@ -50,39 +50,39 @@ public class JIPCatch3 extends JIPXCall
                 return false;
             }
         }
-
-        // Open Query
-        // Check if goal is running
-        if(m_jipQuery == null)
-        {
-            //  Extract inputs
-            JIPTerm goal = null;
-
-            goal = params.getNth(1);
-            if (goal instanceof JIPVariable)
-            {
-                // try to extract the term
-                if(!((JIPVariable)goal).isBounded())
-                {
-                    throw new JIPParameterUnboundedException(1);
-                }
-                else
-                {
-                    //extracts the term
-                    goal = ((JIPVariable)goal).getValue();
-                }
-            }
-
-            m_mask = params.getNth(2);
-
-            m_engine = getJIPEngine();
-
-            m_jipQuery = m_engine.openSynchronousQuery(goal);
-        }
-
         // Run Query
         try
         {
+	        // Open Query
+	        // Check if goal is running
+	        if(m_jipQuery == null)
+	        {
+	            m_mask = params.getNth(2);
+
+	            m_engine = getJIPEngine();
+
+	            //  Extract inputs
+	            JIPTerm goal = null;
+
+	            goal = params.getNth(1);
+	            if (goal instanceof JIPVariable)
+	            {
+	                // try to extract the term
+	                if(!((JIPVariable)goal).isBounded())
+	                {
+	                    throw new JIPParameterUnboundedException(1);
+	                }
+	                else
+	                {
+	                    //extracts the term
+	                    goal = ((JIPVariable)goal).getValue();
+	                }
+	            }
+
+
+	            m_jipQuery = m_engine.openSynchronousQuery(goal);
+	        }
+
             solution = m_jipQuery.nextSolution();
             if(solution == null)
             {
@@ -104,8 +104,11 @@ public class JIPCatch3 extends JIPXCall
             //System.out.println("m_mask " + m_mask);
 
             // close the query
-            m_jipQuery.close();
-            m_jipQuery = null;
+            if(m_jipQuery != null)
+            {
+            	m_jipQuery.close();
+            	m_jipQuery = null;
+            }
 
             // Check if unify with mask
             if(m_thrownTerm.unify(m_mask, varsTbl))
