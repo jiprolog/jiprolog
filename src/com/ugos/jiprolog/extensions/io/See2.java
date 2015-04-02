@@ -57,7 +57,7 @@ public final class See2 extends JIPXCall
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(1, JIPTypeException.ATOM_OR_STRING);
         }
 
         // delete ' at the beggining and end of string

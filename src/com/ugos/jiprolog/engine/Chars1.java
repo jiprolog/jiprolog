@@ -40,7 +40,7 @@ final class Chars1 extends BuiltIn
                 new PString((List)term);
                 return true;
             }
-            catch(JIPParameterTypeException ex)
+            catch(JIPTypeException ex)
             {
 //              System.out.println(ex);
             }

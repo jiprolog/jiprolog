@@ -30,7 +30,7 @@ final class Halt1 extends BuiltIn
         if(exitVal instanceof Expression)
         {
             if(!((Expression)exitVal).isInteger())
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+                throw new JIPTypeException(1, JIPTypeException.INTEGER);
             
             System.exit((int)((Expression)exitVal).getValue());    
         }
@@ -40,7 +40,7 @@ final class Halt1 extends BuiltIn
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+            throw new JIPTypeException(1, JIPTypeException.INTEGER);
         }
         
         return true;

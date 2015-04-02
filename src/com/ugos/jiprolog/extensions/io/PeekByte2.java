@@ -93,7 +93,7 @@ public final class PeekByte2 extends JIPXCall
             return params.getNth(2).unify(term, varsTbl);
         }
         else
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(1, JIPTypeException.ATOM);
     }
 
     public boolean hasMoreChoicePoints()

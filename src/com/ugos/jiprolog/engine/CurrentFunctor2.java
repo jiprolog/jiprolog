@@ -27,9 +27,18 @@ final class CurrentFunctor2 extends BuiltIn
     private Enumeration m_enum = null;
     private boolean m_bSystem = true;
 
+    @Override
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
-//      System.out.println("unify");
+        PrologObject paramName = getRealTerm(getParam(1));
+        PrologObject paramArity = getRealTerm(getParam(2));
+
+        if(paramName != null && !((paramName instanceof Functor) || paramName instanceof Atom))
+         throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, new Functor("//2", new ConsCell(paramName, new ConsCell(paramArity, null))));
+
+        if(paramArity != null && !(paramArity instanceof Expression))
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, new Functor("//2", new ConsCell(paramName, new ConsCell(paramArity, null))));
+
         if(m_enum == null)
         {
             m_enum = getJIPEngine().getGlobalDB().databases();
@@ -41,7 +50,6 @@ final class CurrentFunctor2 extends BuiltIn
 
         if(m_bSystem)
         {
-//          System.out.println(m_enum);
             while(m_enum.hasMoreElements())
             {
                 JIPClausesDatabase db = (JIPClausesDatabase)m_enum.nextElement();
@@ -62,19 +70,17 @@ final class CurrentFunctor2 extends BuiltIn
                 }
             }
 
-//          System.out.println("not unify");
             m_bSystem = false;
             m_enum = BuiltInFactory.m_BuiltInTable.keys();
-//          System.out.println(m_enum);
+
             return unify(varsTbl);
         }
         else
         {
-//          System.out.println("built ins");
             while(m_enum.hasMoreElements())
             {
                 final String strPredDef = (String)m_enum.nextElement();
-//              System.out.println(strPredDef);
+
                 int nPos = strPredDef.lastIndexOf('/');
 
                 funcName = Atom.createAtom(strPredDef.substring(0, nPos));
@@ -91,6 +97,7 @@ final class CurrentFunctor2 extends BuiltIn
         }
     }
 
+    @Override
     public final boolean hasMoreChoicePoints()
     {
         return m_enum == null ? true : m_enum.hasMoreElements();

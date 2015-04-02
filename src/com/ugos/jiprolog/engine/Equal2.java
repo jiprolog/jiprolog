@@ -38,9 +38,9 @@ final class Equal2 extends BuiltIn
              PrologObject arg1 = getRealTerm(getParam(1));
 
              if(!(arg1 instanceof Expression))
-                  throw new JIPParameterTypeException(1, JIPParameterTypeException.EVALUABLE);
+                  throw new JIPTypeException(JIPTypeException.EVALUABLE, arg1);
              else
-                 throw new JIPParameterTypeException(2, JIPParameterTypeException.EVALUABLE);
+                 throw new JIPTypeException(JIPTypeException.EVALUABLE, arg1);
         }
 
         return exp1.getValue() == exp2.getValue();

@@ -48,7 +48,7 @@ final class Compile1 extends Consult1
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
         }
 
         compile(strPath, getJIPEngine());

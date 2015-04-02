@@ -39,7 +39,7 @@ public final class StreamHandle1 extends JIPXCall
             throw new JIPParameterUnboundedException(1);
 
         if(!(handle instanceof JIPAtom))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(1, JIPTypeException.ATOM);
 
         JIPTerm prop = params.getNth(2);
         JIPTerm prop1 = prop.getValue();

@@ -28,7 +28,7 @@ final class Unconsult1 extends BuiltIn
     {
         final PrologObject path = getRealTerm(getParam(1));
         String strPath;
-        
+
         if(path instanceof Atom)
         {
             strPath = ((Atom)path).getName();
@@ -39,19 +39,19 @@ final class Unconsult1 extends BuiltIn
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
         }
-        
+
         if(strPath.charAt(0) == 39 || strPath.charAt(0) == 34)
         {
             strPath = strPath.substring(1, strPath.length() - 1);
         }
-        
+
 //        strPath = strPath.replace((char)92, '/');
-        
+
         //final String[] strCurDir = new String[1];
         //final String[] strFileName = new String[1];
-                
+
         //return getJIPEngine().getGlobalDB().unconsult(strPath);
         getJIPEngine().getGlobalDB().unconsult(strPath);
         return true;

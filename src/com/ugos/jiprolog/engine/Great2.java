@@ -35,7 +35,7 @@ final class Great2 extends BuiltIn
         }
         catch(ClassCastException ex)
         {
-            throw new JIPParameterTypeException();
+            throw new JIPTypeException();
         }
                 
         return exp1.getValue() > exp2.getValue();

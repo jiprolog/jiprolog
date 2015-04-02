@@ -61,7 +61,7 @@ public class MakeDirectory1 extends JIPXCall
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(1, JIPTypeException.ATOM);
         }
 
         return true;

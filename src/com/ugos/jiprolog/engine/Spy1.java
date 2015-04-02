@@ -27,10 +27,10 @@ final class Spy1 extends BuiltIn
     {
         spy(getRealTerm(getParam(1)));
         getJIPEngine().setTrace(true);
-        
+
         return true;
     }
-    
+
     final void spy(PrologObject pred)
     {
         if(pred == null)
@@ -55,17 +55,17 @@ final class Spy1 extends BuiltIn
                     spyTable = new Hashtable(10);
                     getJIPEngine().setEnvVariable("__spy__", spyTable);
                 }
-                
+
                 spyTable.put(strPredDef, strPredDef);
             }
             else
             {
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+                throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
             }
         }
         else
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
-        
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
+
 //        else if(pred instanceof Atom)
 //        {
 //            Hashtable spyTable = (Hashtable)getJIPEngine().getEnvVariable("__spy__");

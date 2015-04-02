@@ -106,7 +106,7 @@ final class Expression extends PrologObject //implements Serializable
             }
             else
             {
-                throw new JIPParameterTypeException(new Functor(Atom.createAtom(strExp)), JIPParameterTypeException.EVALUABLE);
+                throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strExp)));
                 //throw JIPRuntimeException.create(2, ((Atom)exp).getName() + " doesn't evaluate to a numeric expression");
                 //return computeCalculus();
             }
@@ -310,7 +310,7 @@ final class Expression extends PrologObject //implements Serializable
             }
             catch(ClassCastException ex)
             {
-                throw new JIPParameterTypeException();
+            	throw new JIPTypeException(JIPTypeException.EVALUABLE, exp);
             }
             catch(NullPointerException ex)
             {
@@ -321,7 +321,7 @@ final class Expression extends PrologObject //implements Serializable
         else if(exp instanceof ConsCell && !(exp instanceof List))
         {
             if(((ConsCell)exp).getHeight() != 1)
-                throw new JIPParameterTypeException();
+            	throw new JIPTypeException(JIPTypeException.EVALUABLE, exp);
 
             return compute(((ConsCell)exp).getHead());
         }
@@ -331,7 +331,7 @@ final class Expression extends PrologObject //implements Serializable
         }
         else
         {
-        	throw new JIPParameterTypeException(-1, JIPParameterTypeException.EVALUABLE);
+        	throw new JIPTypeException(JIPTypeException.EVALUABLE, exp);
         }
     }
 

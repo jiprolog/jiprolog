@@ -27,7 +27,7 @@ final class Nospy1 extends BuiltIn
     {
         PrologObject preds = getRealTerm(getParam(1));
         noSpy(preds);
-        
+
         Hashtable spyTable = (Hashtable)getJIPEngine().getEnvVariable("__spy__");
         if(spyTable != null && spyTable.size() == 0 && getJIPEngine().getEnvVariable("__trace__") == null)
         {
@@ -37,10 +37,10 @@ final class Nospy1 extends BuiltIn
                 ((WAMTrace)getWAM()).notifyStop();
             }
         }
-        
+
         return true;
     }
-    
+
     final void noSpy(PrologObject pred)
     {
         if(pred == null)
@@ -65,12 +65,12 @@ final class Nospy1 extends BuiltIn
             }
             else
             {
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+                throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
             }
         }
         else
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
-        
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
+
 //        else if(pred instanceof Atom)
 //        {
 //            Hashtable spyTable = (Hashtable)getJIPEngine().getEnvVariable("__spy__");

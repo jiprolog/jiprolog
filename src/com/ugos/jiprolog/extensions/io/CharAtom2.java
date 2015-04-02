@@ -46,11 +46,11 @@ public class CharAtom2 extends JIPXCall
         if((cha instanceof JIPNumber))
         {
             if(!((JIPNumber)cha).isInteger())
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+                throw new JIPTypeException(JIPTypeException.INTEGER, cha);
 
             int c = (int)((JIPNumber)cha).getDoubleValue();
             if(c < 0 || c > 255)
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+                throw new JIPTypeException(JIPTypeException.INTEGER, cha);
 
             //PrologObject term1 = atom;
             JIPTerm term = JIPAtom.create("" + (char)c);
@@ -69,11 +69,11 @@ public class CharAtom2 extends JIPXCall
             }
 
             if(!(atom instanceof JIPAtom))
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
+                throw new JIPTypeException(JIPTypeException.ATOM, atom);
 
             String strAtom = ((JIPAtom)atom).getName();
             if(strAtom.length() > 1)
-                throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
+                throw new JIPTypeException(JIPTypeException.ATOM, atom);
 
             return cha.unify(JIPNumber.create(strAtom.charAt(0)), varsTbl);
         }

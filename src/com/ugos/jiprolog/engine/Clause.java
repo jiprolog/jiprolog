@@ -133,8 +133,8 @@ class Clause extends ConsCell
             pred = new Functor(((Atom)pred).getName() + "/0", null);
 
         if(!(pred instanceof Functor))
-        	throw new JIPTypeException(JIPParameterTypeException.CALLABLE, pred);
-//            throw new JIPParameterTypeException(1, JIPParameterTypeException.FUNCTOR);
+        	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
+//            throw new JIPTypeException(1, JIPTypeException.FUNCTOR);
 
         Functor func = (Functor)pred;
 
@@ -223,7 +223,7 @@ class Clause extends ConsCell
             }
             else
             {
-                throw new JIPParameterTypeException(1, JIPParameterTypeException.CALLABLE);
+                throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
                 //throw new JIPRuntimeException("unable to translate clause!!!!");
             }
         }

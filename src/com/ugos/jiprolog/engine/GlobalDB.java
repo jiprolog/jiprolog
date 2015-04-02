@@ -100,7 +100,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR, jipEngine);
+            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR, jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -183,7 +183,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR, jipEngine);
+            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR, jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -218,7 +218,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
         int nPos = strPredName.lastIndexOf('/');
         if(nPos < 0)
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR);
 
         final String strDef = USER_MODULE + ":" + strPredName;
         JIPClausesDatabase db;
@@ -359,6 +359,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(pred instanceof Variable)
             pred = ((Variable)pred).getObject();
 
+        if(pred == null)
+        	throw new JIPParameterUnboundedException();
+
         if(!(pred instanceof List))
             pred = new ConsCell(pred, null);
 
@@ -379,7 +382,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     head = ((ConsCell)((Functor)head).getParams().getTail()).getHead();
                 }
 
+
                 String strPredDef;
+                String name;
+                PrologObject arity;
                 // head deve essere instanza di funtore /2 del tipo name/arity
                 if(head instanceof Functor && ((Functor)head).getName().equals("//2"))
                 {
@@ -387,11 +393,37 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     PrologObject h = params.getHead();
                     if(h instanceof Variable)
                     	h = ((Variable)h).getObject();
-                    strPredDef = ((Atom)h).getName() + "/" + ((ConsCell)params.getTail()).getHead();
+
+                    if(h == null)
+                    	throw new JIPParameterUnboundedException(1);
+
+                    name = ((Atom)h).getName();
+                    PrologObject t = ((ConsCell)params.getTail());
+
+                    if(t instanceof Variable)
+                    	t = ((Variable)h).getObject();
+
+                    if(t == null)
+                    	throw new JIPParameterUnboundedException(1);
+
+                    if(t.unifiable(ConsCell.NIL))
+                    {
+                    	throw new JIPTypeException(JIPTypeException.INTEGER, t);
+                    }
+                    else if(t instanceof ConsCell)
+                    {
+                    	throw new JIPTypeException(JIPTypeException.INTEGER, t);
+                    }
+
+                    arity = ((ConsCell)t).getHead();
+                    if(!(arity instanceof Expression))
+                    	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
+
+                    strPredDef = name + "/" + ((Expression)arity).getValue();
                 }
                 else
                 {
-                    throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+                    throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR);
                 }
 
 

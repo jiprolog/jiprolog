@@ -96,7 +96,7 @@ public final class Get02 extends JIPXCall
             return params.getNth(2).unify(term, varsTbl);
         }
         else
-            throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(2, JIPTypeException.ATOM);
     }
 
     public boolean hasMoreChoicePoints()

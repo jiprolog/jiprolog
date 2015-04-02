@@ -34,11 +34,11 @@ final class Length2 extends BuiltIn
         {
             if(!(length instanceof Expression))
             {
-            	throw new JIPTypeException(JIPParameterTypeException.INTEGER, length);
+            	throw new JIPTypeException(JIPTypeException.INTEGER, length);
             }
             else if(!((Expression)length).isInteger())
         	{
-        		throw new JIPTypeException(JIPParameterTypeException.INTEGER, length);
+        		throw new JIPTypeException(JIPTypeException.INTEGER, length);
         	}
         	else if(((Expression)length).getValue() < 0)
         	{
@@ -58,7 +58,7 @@ final class Length2 extends BuiltIn
         {
         	String s = pred.toString();
         	return Expression.createNumber(s.length()).unify(getParam(2), varsTbl);
-//            throw new JIPParameterTypeException(1, JIPParameterTypeException.INTEGER);
+//            throw new JIPTypeException(1, JIPTypeException.INTEGER);
         }
         else
         {

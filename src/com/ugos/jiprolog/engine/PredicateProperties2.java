@@ -35,7 +35,7 @@ final class PredicateProperties2 extends BuiltIn
         	parm = new Functor((Atom)parm);
         }
         else if(!(parm instanceof Functor))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.FUNCTOR);
+            throw new JIPTypeException(JIPTypeException.FUNCTOR, parm);
 
         Functor funct = (Functor)parm;
 //      System.out.println("Name: " + funct.getName() + "|||");
@@ -45,7 +45,7 @@ final class PredicateProperties2 extends BuiltIn
         	funct = new Functor("/2", new ConsCell(Atom.createAtom(funct.getFriendlyName()), new ConsCell(Expression.createNumber(funct.getArity()), null)));
 //        }
 //
-//            throw new JIPParameterTypeException(1, JIPParameterTypeException.PREDICATE_INDICATOR);
+//            throw new JIPTypeException(1, JIPTypeException.PREDICATE_INDICATOR);
 
         if(funct.getParams().getHead() == null)
         	return false;

@@ -75,7 +75,7 @@ final class Op3 extends BuiltIn
         }
         catch(ClassCastException ex)
         {
-             throw new JIPParameterTypeException();
+             throw new JIPTypeException(JIPTypeException.ATOM, prec);
         }
 
         return true;

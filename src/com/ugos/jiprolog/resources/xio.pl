@@ -70,6 +70,10 @@ open(_, _, Handle, _):-
 %	error(uninstantiation_error(Options)).
 	error(type_error(variable,Options)).
 
+open(File, _, _, _):-
+	\+ atom(File),
+	error(domain_error(source_sink,File)).
+
 open(_, Mode, _, _):-
 	Mode \== read,
 	Mode \== write,
@@ -506,13 +510,40 @@ at_end_of_stream:-
     at_end_of_stream(Handle).
 
 at_end_of_stream(Handle):-
+	var(Handle),
+	error(instantiation_error).
+
+at_end_of_stream(Handle):-
+	\+ atom(Handle),
+	error(domain_error(stream_or_alias,Handle)).
+
+at_end_of_stream(Handle):-
     check_handle(Handle, Handle1),
-    (stream_property(Handle1, end_of_stream(E)),
-    (E = at; E = past)) ;
-    peek_byte(Handle1, -1).
+	(	\+ current_stream(Handle1) ->
+		error(existence_error(stream,Handle))
+	;	stream_property(Handle1, end_of_stream(E)) ->
+		(	E = at
+		;	E = past
+		)
+	;	peek_byte(Handle1, -1)
+	).
+
+current_output(Handle):-
+	nonvar(Handle),
+	(	\+ atom(Handle)
+	;	\+ current_stream(Handle)
+	),
+	error(domain_error(stream,Handle)).
 
 current_output(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.CurrentOutput1', [Handle]).
+
+current_input(Handle):-
+	nonvar(Handle),
+	(	\+ atom(Handle)
+	;	\+ current_stream(Handle)
+	),
+	error(domain_error(stream,Handle)).
 
 current_input(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.CurrentInput1', [Handle]).
@@ -521,7 +552,40 @@ current_stream(Handle):-
 	 xcall('com.ugos.jiprolog.extensions.io.CurrentStream1', [Handle]).
 
 set_output(Handle):-
+	var(Handle),
+	error(instantiation_error).
+
+set_output(Handle):-
+	\+ atom(Handle),
+	error(domain_error(stream_or_alias,Handle)).
+
+set_output(Handle):-
+	check_handle(Handle, Handle1),
+	(	\+ current_stream(Handle1) ->
+		error(existence_error(stream,Handle))
+	;	\+ stream_property(Handle1, mode(append)),
+		\+ stream_property(Handle1, mode(write)) ->
+		error(permission_error(output,stream,Handle))
+	).
+
+set_output(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.SetOutput1', [Handle]).
+
+set_input(Handle):-
+	var(Handle),
+	error(instantiation_error).
+
+set_input(Handle):-
+	\+ atom(Handle),
+	error(domain_error(stream_or_alias,Handle)).
+
+set_input(Handle):-
+	check_handle(Handle, Handle1),
+	(	\+ current_stream(Handle1) ->
+		error(existence_error(stream,Handle))
+	;	\+ stream_property(Handle1, mode(read)) ->
+		error(permission_error(input,stream,Handle))
+	).
 
 set_input(Handle):-
     xcall('com.ugos.jiprolog.extensions.io.SetInput1', [Handle]).

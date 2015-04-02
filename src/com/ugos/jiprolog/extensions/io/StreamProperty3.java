@@ -49,7 +49,7 @@ public final class StreamProperty3 extends JIPXCall
     		return false;
 
         if(!(handle instanceof JIPAtom))
-            throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
+            throw new JIPTypeException(2, JIPTypeException.ATOM);
 
         JIPTerm prop = params.getNth(3);
 
@@ -76,7 +76,7 @@ public final class StreamProperty3 extends JIPXCall
         		streamInfo.getProperties().setProperty(key, prop1.toString());
         	}
         	else
-                throw new JIPParameterTypeException(3, JIPParameterTypeException.COMPOUND);
+                throw new JIPTypeException(3, JIPTypeException.COMPOUND);
 
         	return true;
         }
@@ -133,7 +133,7 @@ public final class StreamProperty3 extends JIPXCall
 
             	}
             	else
-                    throw new JIPParameterTypeException(3, JIPParameterTypeException.COMPOUND);
+                    throw new JIPTypeException(3, JIPTypeException.COMPOUND);
 
 
             	if(sterm == null)

@@ -31,7 +31,7 @@ public final class AccessFile2 extends JIPXCall
     {
         JIPTerm file = params.getNth(1);
         JIPTerm mode = params.getNth(2);
-        
+
         // check if input is a variable
         if (file instanceof JIPVariable)
         {
@@ -46,7 +46,7 @@ public final class AccessFile2 extends JIPXCall
                 file = ((JIPVariable)file).getValue();
             }
         }
-        
+
         // check if input is a variable
         if (mode instanceof JIPVariable)
         {
@@ -61,24 +61,24 @@ public final class AccessFile2 extends JIPXCall
                 mode = ((JIPVariable)mode).getValue();
             }
         }
-        
+
         if(!(file instanceof JIPAtom))
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM);
-        
+            throw new JIPTypeException(JIPTypeException.ATOM, file);
+
         if(!(mode instanceof JIPAtom))
-            throw new JIPParameterTypeException(2, JIPParameterTypeException.ATOM);
-        
+            throw new JIPTypeException(JIPTypeException.ATOM, mode);
+
         String strFileName = ((JIPAtom)file).getName();
-        
+
         File ffile = new File(strFileName);
         //System.out.println("strFileName " + strFileName);
         if(!ffile.isAbsolute())
         {
             ffile = new File(getJIPEngine().getSearchPath() + File.separator + strFileName);
         }
-        
+
         //System.out.println("getAbsolutePath() " + ffile.getAbsolutePath());
-        
+
         if(ffile.canWrite() && (mode.unify(JIPAtom.create("write"), varsTbl)))
         {
 //          System.out.println("write");
@@ -104,12 +104,12 @@ public final class AccessFile2 extends JIPXCall
 //          System.out.println("directory");
             return true;
         }
-        
-        
+
+
 //      System.out.println("none");
         return false;
     }
-       
+
     public boolean hasMoreChoicePoints()
     {
         return false;

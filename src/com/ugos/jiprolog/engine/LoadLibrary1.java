@@ -44,7 +44,7 @@ final class LoadLibrary1 extends BuiltIn
         }
         else
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.ATOM_OR_STRING);
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, param);
         }
 
         if(strPath.charAt(0) == 39 || strPath.charAt(0) == 34)

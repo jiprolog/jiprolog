@@ -38,7 +38,7 @@ final class Univ2 extends BuiltIn
                 throw new JIPParameterUnboundedException(2);
 
             if(!(param instanceof List))
-                throw new JIPTypeException(JIPParameterTypeException.LIST, param);
+                throw new JIPTypeException(JIPTypeException.LIST, param);
 
             if(param.unifiable(List.NIL))
                 throw new JIPDomainException("non_empty_list", param);
@@ -82,7 +82,7 @@ final class Univ2 extends BuiltIn
                         if(((ConsCell)params).isPartial())
                         {
                             // caso X =.. [a|Y].
-                            throw new JIPParameterTypeException(2, JIPParameterTypeException.LIST);
+                            throw new JIPTypeException(JIPTypeException.LIST, params);
                         }
 
                         int nArity = ((List)params).getHeight();

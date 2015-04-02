@@ -48,7 +48,7 @@ public class Shell2 extends JIPXCall
         }
         if (!(term instanceof JIPAtom))
         {
-            throw new JIPParameterTypeException(1, JIPParameterTypeException.LIST);
+            throw new JIPTypeException(1, JIPTypeException.LIST);
         }
 
         JIPAtom commands = (JIPAtom)term;

@@ -285,7 +285,7 @@ public class JIPRuntimeException extends RuntimeException
      Interpreter Generic Exceptions
      - 1, AbortException
      - 2, ArithmeticException
-     - 3, JIPParameterTypeException
+     - 3, JIPTypeException
      - 4, JIPParameterUnboundedException
      - 5, PredicateDefinedException
      - 6, FileNotFoundException
