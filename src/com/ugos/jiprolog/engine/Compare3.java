@@ -38,9 +38,9 @@ final class Compare3 extends BuiltIn
         final PrologObject term1 = getParam(2);
         final PrologObject term2 = getParam(3);
 
-        System.out.println("order " + order);
-        System.out.println("term1 " + term1);
-        System.out.println("term2 " + term2);
+//        System.out.println("order " + order);
+//        System.out.println("term1 " + term1);
+//        System.out.println("term2 " + term2);
 
         if (order == null)
         {
@@ -53,7 +53,7 @@ final class Compare3 extends BuiltIn
                 oper1 = Atom.createAtom("=");
 //            else
 
-            System.out.println("order " + oper1);
+//            System.out.println("order " + oper1);
 
             return getParam(1).unify(oper1, varsTbl);
         }
@@ -69,25 +69,13 @@ final class Compare3 extends BuiltIn
             switch(operator.charAt(0))
             {
                 case '<':
-                    if(term1.lessThen(term2))
-                    {
-                    	System.out.println("order <");
-                    	return true;
-                    }
+                    return term1.lessThen(term2);
 
                 case '>':
-                    if(term2.lessThen(term1))
-                    {
-                    	System.out.println("order >");
-                    	return true;
-                    }
+                    return term2.lessThen(term1);
 
                 case '=':
-                    if(term1.termEquals(term2)) // && !term2.lessThen(term1);
-                    {
-                    	System.out.println("order =");
-                    	return true;
-                    }
+                    return term1.termEquals(term2); // && !term2.lessThen(term1);
 
                 default:
                     throw new JIPDomainException("order",order);
