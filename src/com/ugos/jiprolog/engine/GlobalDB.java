@@ -362,6 +362,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(pred == null)
         	throw new JIPParameterUnboundedException();
 
+        if(pred instanceof Atom)
+        	throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
+
         if(!(pred instanceof List))
             pred = new ConsCell(pred, null);
 
@@ -397,48 +400,53 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     if(h == null)
                     	throw new JIPParameterUnboundedException(1);
 
+                    if(!(h instanceof Atom))
+                    	throw new JIPTypeException(JIPTypeException.ATOM, h);
+
                     name = ((Atom)h).getName();
                     PrologObject t = ((ConsCell)params.getTail());
 
                     if(t instanceof Variable)
-                    	t = ((Variable)h).getObject();
+                    	t = ((Variable)t).getObject();
 
                     if(t == null)
-                    	throw new JIPParameterUnboundedException(1);
+                    	throw new JIPParameterUnboundedException();
 
-                    if(t.unifiable(ConsCell.NIL))
-                    {
-                    	throw new JIPTypeException(JIPTypeException.INTEGER, t);
-                    }
-                    else if(!(t instanceof ConsCell))
+                    if(!(t instanceof ConsCell))
                     {
                     	throw new JIPTypeException(JIPTypeException.INTEGER, t);
                     }
 
                     arity = ((ConsCell)t).getHead();
+
+                    if(arity instanceof Variable)
+                    	arity = ((Variable)arity).getObject();
+
+                    if(arity == null)
+                    	throw new JIPParameterUnboundedException();
+
                     if(!(arity instanceof Expression))
                     	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
 
-                    strPredDef = name + "/" + ((Expression)arity).getValue();
+                    int valArity =  (int)((Expression)arity).getValue();
+                    if(valArity < 0)
+                    	throw new JIPDomainException("not_less_than_zero", arity);
+
+                    strPredDef = name + "/" + (int)((Expression)arity).getValue();
+
                 }
                 else
                 {
-                    throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
+                    throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head);
                 }
 
 
-    //            if(head instanceof Atom)  // atom deve essere un preddef
-    //                head = new Functor(((Atom)head).getName(), null);
+                if(isSystem(strPredDef))
+                	throw new JIPPermissionException("modify", "static_procedure", head);
 
-//                  if(isSystem(((Functor)head).getName()))
-//                      throw JIPRuntimeException.create(18, head, null);
-                    if(isSystem(strPredDef))
-                    	throw new JIPPermissionException("modify", "static_procedure", head);
-//                        throw JIPRuntimeException.create(12, head);
+//                if(!isDynamic(strPredDef))
+//                	throw new JIPPermissionException("modify", "static_procedure", head);
 
-                // aggiungere il modulo
-
-                //m_clauseTable.remove(strModuleName + ":" + ((Functor)head).getName());
                 m_clauseTable.remove(strModuleName + ":" + strPredDef);
 
                 pred = ((ConsCell)pred).getTail();
@@ -446,7 +454,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
         catch(ClassCastException ex)
         {
-            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
+            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head);
         }
     }
 
