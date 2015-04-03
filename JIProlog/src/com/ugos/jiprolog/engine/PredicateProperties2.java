@@ -52,15 +52,14 @@ final class PredicateProperties2 extends BuiltIn
 
         Clause clause = Clause.getClause(funct.getParams().getHead());
         String strFunc = clause.getHead().toString(getJIPEngine()) + "/" + ((ConsCell)funct.getParams().getTail()).getHead().toString(getJIPEngine());
-        //String strFunc = funct.getParams().getHead().toString(getJIPEngine()) + "/" + ((ConsCell)funct.getParams().getTail()).getHead().toString(getJIPEngine());
-        //String strFunc = funct.getParams().getHead().toString(getJIPEngine()) + "/" + ((ConsCell)funct.getParams().getTail()).getHead().toString(getJIPEngine());
-
-//        System.out.println(strFunc);
 
         List propsList = null;
 
         if(getJIPEngine().getGlobalDB().isDynamic(strFunc))
             propsList = new List(Atom.createAtom("dynamic"), propsList);
+        else
+            propsList = new List(Atom.createAtom("static"), propsList);
+
 
 //      System.out.println(propsList);
         if(getJIPEngine().getGlobalDB().isMultifile(strFunc))
