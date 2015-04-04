@@ -52,6 +52,9 @@ final class PString extends List //implements Serializable
     {
         super(string);
 
+        if(string.isPartial())
+        	throw new JIPParameterUnboundedException();
+
         PrologObject tail = string;
         PrologObject head = ((ConsCell)tail).getHead();
 
@@ -66,6 +69,10 @@ final class PString extends List //implements Serializable
                 if (((Variable)head).isBounded())
                 {
                     head = ((Variable)head).getObject();
+                }
+                else
+                {
+                	throw new JIPParameterUnboundedException();
                 }
             }
 
@@ -100,12 +107,21 @@ final class PString extends List //implements Serializable
             }
             else
             {
-            	throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, head);
+            	throw new JIPTypeException(JIPTypeException.CHARACTER, head);
             }
 
             if (tail instanceof Variable)
             {
                 tail = ((Variable)tail).getObject();;
+            }
+
+            if(tail == null)
+            {
+            	throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, head);
+            }
+            else if (!(tail instanceof ConsCell))
+            {
+            	throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, head);
             }
 
 //          System.out.println("1" + tail.getClass());

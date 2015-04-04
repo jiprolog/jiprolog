@@ -106,9 +106,7 @@ final class Expression extends PrologObject //implements Serializable
             }
             else
             {
-                throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strExp)));
-                //throw JIPRuntimeException.create(2, ((Atom)exp).getName() + " doesn't evaluate to a numeric expression");
-                //return computeCalculus();
+                throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strExp)).getPredicateIndicator());
             }
         }
         else if(exp instanceof Functor)
@@ -218,7 +216,8 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else
                         {
-                            throw new JIPEvaluationException(JIPEvaluationException.undefined);//.create(2, strFunName + " is unknown");
+//                        	throw new JIPEvaluationException(JIPEvaluationException.undefined);//.create(2, strFunName + " is unknown");
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                         }
 
                         break;
@@ -289,17 +288,14 @@ final class Expression extends PrologObject //implements Serializable
                         {
                             dblVal =  (int)(dVal1 - dVal1 % dVal2) / dVal2;
                         }
-
                         else
                         {
-                        	throw new JIPEvaluationException(JIPEvaluationException.undefined);
-//                            throw JIPRuntimeException.create(2, strFunName + " is unknown");
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                         }
                         break;
 
                     default:
-                    	throw new JIPEvaluationException(JIPEvaluationException.undefined);
-//                        throw JIPRuntimeException.create(2, strFunName + "/" + Integer.toString(func.getArity()) + " doesn't evaluate to a numeric expression");
+                        throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                 }
 
                 return Expression.createNumber(dblVal);

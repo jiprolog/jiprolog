@@ -110,7 +110,7 @@ public class AtomChars2 extends JIPXCall
         }
         else
         {
-            throw new JIPTypeException(JIPTypeException.UNDEFINED, atom);
+            throw new JIPTypeException(JIPTypeException.ATOM, atom);
         }
 
         return atom.unify(chars, varsTbl);
