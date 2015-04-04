@@ -82,16 +82,33 @@ number_codes(Num,_):-
 number_chars(Num, List):-
     number(Num),
     !,
-    atom_chars(Num, List).
+    number_codes(Num, Codes),
+ 	atom_codes(Atom, Codes),
+ 	atom_chars(Atom, List).
 
 number_chars(Num, List):-
     var(Num),
     !,
-    atom_chars(Num, List),
-    number(Num).
+    atom_chars(Atom, List),
+ 	atom_codes(Atom, Codes),
+ 	number_codes(Num, Codes).
 
 number_chars(Num,_):-
 	error(type_error(number, Num)).
+
+%number_chars(Num, List):-
+%    number(Num),
+%    !,
+%    atom_chars(Num, List).
+
+%number_chars(Num, List):-
+%    var(Num),
+%    !,
+%    atom_chars(Num, List),
+%    number(Num).
+
+%number_chars(Num,_):-
+%	error(type_error(number, Num)).
 
 atom_number(Atom, Number):-
     atom_codes(Atom, Codes),

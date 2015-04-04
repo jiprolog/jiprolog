@@ -89,7 +89,7 @@ final class PredicateProperties2 extends BuiltIn
         if(strFile != null)
         {
             // se è definito in un file
-            propsList = new List(new Functor("file/1", new ConsCell(Atom.createAtom("'" + strFile + "'"), null)), propsList);
+            propsList = new List(new Functor("file/1", new ConsCell(Atom.createAtom(strFile), null)), propsList);
 
             // se è interpretato
             if(!BuiltInFactory.isBuiltIn(strFunc) && !getJIPEngine().getGlobalDB().isExternal(strFunc))
