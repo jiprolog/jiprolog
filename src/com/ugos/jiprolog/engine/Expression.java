@@ -35,6 +35,13 @@ final class Expression extends PrologObject //implements Serializable
         return new Expression(dNum);
     }
 
+    static Expression createDouble(final double dNum)
+    {
+        Expression exp = new Expression(dNum);
+        exp.floating = true;
+        return exp;
+    }
+
     public static Expression createNumber(final String strNum)
     {
     	final Expression expr = new Expression(Double.valueOf(strNum).doubleValue());
@@ -130,10 +137,13 @@ final class Expression extends PrologObject //implements Serializable
                         if (strFunName.equals("-"))
                         {
                             dblVal = - dVal1;
+                            return Expression.createNumber(dblVal);
+
                         }
                         else if (strFunName.equals("+"))
                         {
                             dblVal = dVal1;
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("sin"))
                         {
@@ -170,14 +180,17 @@ final class Expression extends PrologObject //implements Serializable
                         else if (strFunName.equals("int") || strFunName.equals("integer") || strFunName.equals("round"))
                         {
                             dblVal =  Math.rint(dVal1);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("ceil") || strFunName.equals("ceiling"))
                         {
                             dblVal =  Math.ceil(dVal1);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("floor") || strFunName.equals("truncate") || strFunName.equals("rnd"))
                         {
                             dblVal =  Math.floor(dVal1);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("float"))
                         {
@@ -190,10 +203,12 @@ final class Expression extends PrologObject //implements Serializable
                         else if (strFunName.equals("float_integer_part"))
                         {
                             dblVal =  dVal1 - (int)dVal1;
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("abs"))
                         {
                             dblVal =  Math.abs(dVal1);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("sqrt"))
                         {
@@ -205,10 +220,13 @@ final class Expression extends PrologObject //implements Serializable
                                 dblVal = 1;
                             else
                                 dblVal = -1;
+
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("\\")) // bitwise negation
                         {
                             dblVal =  ~(int)dVal1;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("random")) // random
                         {
@@ -231,10 +249,12 @@ final class Expression extends PrologObject //implements Serializable
                         if(strFunName.equals("+"))
                         {
                             dblVal =  dVal1 + dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("-"))
                         {
                             dblVal =  dVal1 - dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("/"))
                         {
@@ -243,46 +263,57 @@ final class Expression extends PrologObject //implements Serializable
                         else if(strFunName.equals("//"))
                         {
                             dblVal =  ((int)dVal1 / (int)dVal2);
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("*"))
                         {
                             dblVal =  dVal1 * dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
                         {
                             dblVal =  Math.pow(dVal1, dVal2);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("min"))
                         {
                             dblVal =  Math.min(dVal1, dVal2);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("max"))
                         {
                             dblVal =  Math.max(dVal1, dVal2);
+                            return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("mod") || strFunName.equals("rem"))
                         {
                             dblVal =  dVal1 % dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("/\\"))  // bitwise and
                         {
                             dblVal =  (int)dVal1 & (int)dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("\\/")) // bitwise or
                         {
                             dblVal =  (int)dVal1 | (int)dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("<<")) // left shift
                         {
                             dblVal =  (int)dVal1 << (int)dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("xor")) // xor
                         {
                             dblVal =  (int)dVal1 ^ (int)dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals(">>")) // right shift
                         {
                             dblVal =  (int)dVal1 >> (int)dVal2;
+                            return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("div")) // DIV
                         {
@@ -298,7 +329,7 @@ final class Expression extends PrologObject //implements Serializable
                         throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                 }
 
-                return Expression.createNumber(dblVal);
+                return Expression.createDouble(dblVal);
             }
             catch(JIPRuntimeException ex)
             {

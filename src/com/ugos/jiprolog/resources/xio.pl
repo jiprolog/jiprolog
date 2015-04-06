@@ -249,11 +249,11 @@ peek_code(Handle, C):-
     peek_byte(Handle, C),
     '$char'(C,_).
 
-peek_chars(C):-
+peek_char(C):-
     peek_byte(B),
     '$char'(B,C).
 
-peek_chars(Handle, C):-
+peek_char(Handle, C):-
     peek_byte(Handle, B),
     '$char'(B,C).
 
