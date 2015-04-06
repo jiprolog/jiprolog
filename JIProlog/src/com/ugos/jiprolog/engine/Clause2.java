@@ -32,13 +32,26 @@ final class Clause2 extends BuiltIn
         PrologObject head = getParam(1);
         PrologObject body = getParam(2);
 
+        PrologObject bd = getRealTerm(body);
+
+        if(!(bd == null) && !(bd instanceof Functor))
+            throw new JIPTypeException(JIPTypeException.CALLABLE, body);
+
         if (m_enum == null)
         {
             Clause clause = Clause.getClause(getRealTerm(head));
+
             head = clause.getHead();
+
+            if(!(head instanceof Functor))
+            	throw new JIPTypeException(JIPTypeException.CALLABLE, head);
 
             // Search in DB
             final GlobalDB gdb = getJIPEngine().getGlobalDB();
+
+            if(gdb.isSystem((Functor)head))
+                throw new JIPPermissionException("access", "private_procedure", ((Functor)head).getPredicateIndicator());
+
 
             final JIPClausesDatabase db =
                 gdb.search((Functor)head, clause.getModuleName());

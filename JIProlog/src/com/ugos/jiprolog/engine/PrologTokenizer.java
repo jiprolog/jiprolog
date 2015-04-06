@@ -332,6 +332,11 @@ class PrologTokenizer
                             strTerm += (char)curChar;//String.valueOf((char)curChar);
                             nState = STATE_INTEGER;
                         }
+                        else if(NUMBER_CHARS.indexOf(curChar) > -1)
+                        {
+                        	strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            nState = STATE_INTEGER;
+                        }
                         else
                         {
                             throw syntaxError("invalid_character('" + (char)curChar + "')");

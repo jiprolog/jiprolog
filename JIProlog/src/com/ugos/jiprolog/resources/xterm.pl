@@ -132,6 +132,22 @@ atom_concat(Atom1, Atom2, Concat):-
     atom_chars(Atom1, CAtom1),
     atom_chars(Atom2, CAtom2).
 
+atom_concat(Atom1, _, Concat):-
+ var(Atom1), var(Concat),
+ error(instantiation_error).
+
+atom_concat(_, Atom2, Concat):-
+ var(Atom2), var(Concat),
+ error(instantiation_error).
+
+atom_concat(Atom1, _, _):-
+ \+ atom(Atom1),
+ error(type_error(atom,Atom1)).
+
+atom_concat(_, Atom2, _):-
+ \+ atom(Atom2),
+ error(type_error(atom,Atom2)).
+
 sub_atom(Atom, Before, Length, After, SubAtom):-
  	atom(Atom), (var(SubAtom); atom(SubAtom)),
  	% the other error conditions are checked by the calls to atom_length/2
@@ -174,8 +190,15 @@ concat_atom([A1, A2|List], Sep, Atom):-
     atom_concat(C1, A2, C),
     concat_atom([C|List], Sep, Atom).
 
-atom_length(Atom, Len):-
-    length(Atom, Len).
+atom_length(Atom, Length):-
+ ( atom(Atom) ->
+  length(Atom, Length)
+ ; var(Atom) ->
+  error(instantiation_error)
+ ; error(type_error(atom,Atom))
+ ).
+%atom_length(Atom, Len):-
+%    length(Atom, Len).
 
 atom_prefix(Atom, Prefix):-
     atom_concat(Prefix, _, Atom).
