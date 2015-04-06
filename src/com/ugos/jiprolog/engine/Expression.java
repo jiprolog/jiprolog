@@ -68,7 +68,7 @@ final class Expression extends PrologObject //implements Serializable
 
         if(obj instanceof Expression)
         {
-            return (((Expression)obj).m_dValue == m_dValue);
+            return ((Expression)obj).floating == floating && (((Expression)obj).m_dValue == m_dValue);
         }
         else if(obj instanceof Variable)
         {
@@ -129,21 +129,28 @@ final class Expression extends PrologObject //implements Serializable
 //                System.out.println(strFunName);
 //                System.out.println(params);
 //
+                Expression retexp;
                 switch(func.getArity())
                 {
                     case 1:
-                        PrologObject exp1 = params.getHead();
-                        double dVal1 = Expression.compute(exp1).m_dValue;
+
+                        Expression exp1 = Expression.compute(params.getHead());
+                        double dVal1 = exp1.m_dValue;
                         if (strFunName.equals("-"))
                         {
                             dblVal = - dVal1;
-                            return Expression.createNumber(dblVal);
 
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger();
+                            return retexp;
                         }
                         else if (strFunName.equals("+"))
                         {
                             dblVal = dVal1;
-                            return Expression.createNumber(dblVal);
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger();
+                            return retexp;
+
                         }
                         else if (strFunName.equals("sin"))
                         {
@@ -208,7 +215,9 @@ final class Expression extends PrologObject //implements Serializable
                         else if (strFunName.equals("abs"))
                         {
                             dblVal =  Math.abs(dVal1);
-                            return Expression.createNumber(dblVal);
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger();
+                            return retexp;
                         }
                         else if (strFunName.equals("sqrt"))
                         {
@@ -235,25 +244,40 @@ final class Expression extends PrologObject //implements Serializable
                         else
                         {
 //                        	throw new JIPEvaluationException(JIPEvaluationException.undefined);//.create(2, strFunName + " is unknown");
-                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/1")).getPredicateIndicator());
+
                         }
 
                         break;
 
                     case 2:
-                        exp1 = params.getHead();
-                        final PrologObject exp2 = ((ConsCell)params.getTail()).getHead();
+                        exp1 = Expression.compute(params.getHead());
+                        dVal1 = exp1.m_dValue;
+
+                        final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                         dVal1 = Expression.compute(exp1).m_dValue;
                         final double dVal2 = Expression.compute(exp2).m_dValue;
 
                         if(strFunName.equals("+"))
                         {
                             dblVal =  dVal1 + dVal2;
-                            return Expression.createNumber(dblVal);
+
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+
+                            return retexp;
                         }
                         else if(strFunName.equals("-"))
                         {
                             dblVal =  dVal1 - dVal2;
+
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+                            return retexp;
+                        }
+                        else if (strFunName.equals("atan2"))
+                        {
+                            dblVal =  Math.atan2(dVal1, dVal2);
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("/"))
@@ -268,16 +292,23 @@ final class Expression extends PrologObject //implements Serializable
                         else if(strFunName.equals("*"))
                         {
                             dblVal =  dVal1 * dVal2;
-                            return Expression.createNumber(dblVal);
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+                            return retexp;
                         }
                         else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
                         {
                             dblVal =  Math.pow(dVal1, dVal2);
-                            return Expression.createNumber(dblVal);
+
+                            retexp = Expression.createNumber(dblVal);
+                            if(dblVal <= Integer.MAX_VALUE)
+                            	retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+                            return retexp;
                         }
                         else if (strFunName.equals("min"))
                         {
                             dblVal =  Math.min(dVal1, dVal2);
+
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("max"))
@@ -321,12 +352,12 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else
                         {
-                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                         }
                         break;
 
                     default:
-                        throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName)).getPredicateIndicator());//.create(2, strFunName + " is unknown");
+                        throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                 }
 
                 return Expression.createDouble(dblVal);

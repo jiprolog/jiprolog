@@ -459,8 +459,9 @@ check_operator_name(Term, Priority, Specifier) :-
 
 '$system':current_prolog_flag(Flag, X):-'$kernel':prolog_flag(Flag, X).
 '$system':current_prolog_flag(Flag, X):-env(Flag, X).
+'$system':current_prolog_flag(Flag, _):- \+ atom(Flag), error(type_error(atom,Flag)).
 
-'$system':set_prolog_flag(Flag, X):-ground(Flag), '$kernel':prolog_flag(Flag, _), !, fail.
+'$system':set_prolog_flag(Flag,_):- ground(Flag), '$kernel':prolog_flag(Flag, _), error(permission_error(modify,flag,Flag)).
 '$system':set_prolog_flag(Flag, X):-set_env(Flag, X).
 
 /*

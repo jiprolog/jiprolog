@@ -84,22 +84,21 @@ final class OperatorManager
 
         put(500, "yfx", "/\\");
         put(500, "yfx", "\\/");
-        put(500, "fx", "\\");
-
+//        put(500, "fx", "\\");
+        put(200, "fy", "\\");
         put(400, "yfx", "<<");
         put(400, "yfx", ">>");
         put(400, "yfx", "xor");
 
-        put(300, "xfx", "mod");
-        put(300, "xfx", "rem");
+        put(400, "yfx", "mod");
+        put(400, "yfx", "rem");
 
         put(1150, "fx",  "multifile");
         put(1150, "fx",  "module_transparent");
         put(1150, "fx", "dynamic");
+        put(400, "yfx", "div");
 
         //put(400, "fx", "cd");
-
-
 //      put(400, "xfx", "class");
 //      put(400, "fx",  "class");
 //      put(450, "xfx", "checks");
