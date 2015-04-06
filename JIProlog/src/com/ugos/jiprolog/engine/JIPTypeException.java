@@ -50,7 +50,7 @@ public class JIPTypeException extends JIPRuntimeException {
     public static final int URL = 13;
     public static final int FILE = 14;
     public static final int ATOMIC = 15;
-    public static final int CHARACTER = 15;
+    public static final int CHARACTER = 16;
 
 
     private static final String s_stringMap[] = new String[17];

@@ -52,6 +52,15 @@ public final class FlushOutput1 extends JIPXCall
         String strStreamHandle = ((JIPAtom)input).getName();
         OutputStream writer;
 
+    	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
+    	if(streamInfo == null)
+        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+
+    	Properties props = streamInfo.getProperties();
+        if(!(props.getProperty("mode", "").equals("mode(append)")) &&
+           !(props.getProperty("mode", "").equals("mode(write)")))
+            throw new JIPPermissionException("output", "stream", input);
+
         // Get the stream
         writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)

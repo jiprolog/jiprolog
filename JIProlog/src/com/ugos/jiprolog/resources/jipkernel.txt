@@ -248,15 +248,39 @@ check_operator_name(Term, Priority, Specifier) :-
     member(Property, Properties).
 
 '$system':between(Lower, Upper, Integer) :-
-	integer(Lower),
-	integer(Upper),
-	(	var(Integer) ->
-		Lower =< Upper,
-		'$kernel':generate_num(Lower, Upper, Integer)
-	;	integer(Integer),
-		Lower =< Integer,
-		Integer =< Upper
-	).
+ integer(Lower),
+ integer(Upper),
+ !,
+ ( var(Integer) ->
+  Lower =< Upper,
+  '$kernel':generate_num(Lower, Upper, Integer)
+ ; integer(Integer) ->
+  Lower =< Integer,
+  Integer =< Upper
+ ; error(type_error(integer,Integer))
+ ).
+
+'$system':between(Lower, Upper, _) :-
+ ( var(Lower) ->
+  error(instantiation_error)
+ ; var(Upper) ->
+  error(instantiation_error)
+ ; \+ integer(Lower) ->
+  error(type_error(integer,Lower))
+ ; % \+ integer(Upper) ->
+  error(type_error(integer,Upper))
+ ).
+
+%'$system':between(Lower, Upper, Integer) :-
+%	integer(Lower),
+%	integer(Upper),
+%	(	var(Integer) ->
+%		Lower =< Upper,
+%		'$kernel':generate_num(Lower, Upper, Integer)
+%	;	integer(Integer),
+%		Lower =< Integer,
+%		Integer =< Upper
+%	).
 
 '$kernel':generate_num(Lower, _, Lower).
 '$kernel':generate_num(Lower, Upper, Integer) :-

@@ -36,6 +36,10 @@ final class Functor3 extends BuiltIn
             if(name == null)
                 throw new JIPParameterUnboundedException(2);
 
+            if(!(name instanceof Expression) && !(name instanceof Atom))
+                throw new JIPTypeException(JIPTypeException.ATOMIC, name);
+
+
 //            if(name == arity)
 //                return false;
 
@@ -55,6 +59,9 @@ final class Functor3 extends BuiltIn
 
                 if(!((Expression)arity).isInteger())
                 	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
+
+                if(((Expression)arity).getValue() < 0)
+                    throw new JIPDomainException("not_less_than_zero", arity);
 
                 // if arity == 0 generate an atom
                 if(((Expression)arity).getValue() == 0)
