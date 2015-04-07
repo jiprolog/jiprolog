@@ -34,7 +34,7 @@ final class Clause2 extends BuiltIn
 
         PrologObject bd = getRealTerm(body);
 
-        if(!(bd == null) && !(bd instanceof Functor))
+        if(!(bd == null) && !(bd instanceof Functor) && !(bd instanceof Atom))
             throw new JIPTypeException(JIPTypeException.CALLABLE, body);
 
         if (m_enum == null)

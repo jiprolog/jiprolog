@@ -42,6 +42,8 @@ class WAM
     int       m_nBaseCounter;
     boolean   m_bClosed = false;
 
+    private final Stack<String> moduleStack = new Stack<String>();
+
     static final Enumeration s_emptyEnum = new Vector(1).elements();
 
     protected class Node
@@ -432,16 +434,22 @@ class WAM
                     }
                     else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
                     {
+                    	if(!moduleStack.isEmpty())
+                    		moduleStack.pop();
+
                         // crea un nuovo nodo
                         newNode = new Node((ConsCell)curNode.m_callList.getTail(), curNode.m_parent, curNode, curNode.m_strModule);
                     }
-                    else
+                    else  // torna al parent
                     {
                         parentNode = curNode.m_parent;
                         //System.out.println("parentNode" + parentNode.m_callList);
 
                         while(newNode == null && parentNode != null)
                         {
+                        	if(!moduleStack.isEmpty())
+                        		moduleStack.pop();
+
                             if(((ConsCell)parentNode.m_callList.getTail()) != null)
                             {
                                 newNode = new Node((ConsCell)parentNode.m_callList.getTail(), parentNode.m_parent, curNode, parentNode.m_strModule);
@@ -470,6 +478,9 @@ class WAM
                     // non ci sono clausole unificanti
                     // BACKTRACK
 //                    notifyFail(curCall);
+
+                	if(!moduleStack.isEmpty())
+                		moduleStack.pop();
 
 //                    System.out.println("Fail " + curNode.getGoal());  // dbg
                     curNode.m_ruleEnum = null;
@@ -617,6 +628,8 @@ class WAM
 
         if (term instanceof BuiltInPredicate)
         {
+            moduleStack.push(curNode.m_strModule);
+
             return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
         }
         else if (term instanceof Functor)
@@ -632,6 +645,8 @@ class WAM
                 curNode.m_callList.setHead(term);
             }
 
+            moduleStack.push(curNode.m_strModule);
+
             if (term instanceof BuiltInPredicate)
                 return new RulesEnumerationBuiltIn((BuiltInPredicate)term, strModule, this);
             else
@@ -639,6 +654,8 @@ class WAM
         }
         else if (term instanceof List)
         {
+            moduleStack.push(curNode.m_strModule);
+
             // consult/1
             term = new BuiltInPredicate("consult/1", new ConsCell(term, null));
             curNode.setGoal(term);
