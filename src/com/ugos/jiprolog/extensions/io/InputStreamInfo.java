@@ -10,6 +10,12 @@ public class InputStreamInfo extends StreamInfo
     PushBackInputStream m_stream;
     Enumeration m_enum;
 
+    public InputStreamInfo(String name, String handle, String mode, String eof_action)
+    {
+    	super(name, handle);
+    	init(mode, eof_action);
+    }
+
     public InputStreamInfo(String name, String handle)
     {
     	super(name, handle);
@@ -20,6 +26,16 @@ public class InputStreamInfo extends StreamInfo
 	{
     	super(name);
     	init();
+	}
+
+    private void init(String mode, String eof_action)
+    {
+    	properties.setProperty("mode", "mode(" + mode + ")");
+		properties.setProperty("input", "input");
+		properties.setProperty("eof_action", "eof_action(" + eof_action + ")");
+//		properties.setProperty("eof_action", "eof_action(eof_code)");
+		properties.setProperty("reposition", "reposition(false)");
+
 	}
 
     private void init()

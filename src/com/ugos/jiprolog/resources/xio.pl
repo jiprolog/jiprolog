@@ -81,6 +81,7 @@ open(_, Mode, _, _):-
 	error(domain_error(io_mode,Mode)).
 
 open(_, _, _, Options):-
+	valid_open_options(Options),
 	member(alias(Alias), Options),
 	stream_property(_, alias(Alias)),
 	error(permission_error(open,source_sink,alias(Alias))).
@@ -93,6 +94,31 @@ open(File, Mode, Handle, Options):-
 open(File, Mode, Handle):-
 	open(File, Mode, Handle, []).
 
+valid_open_options([Option| Options]) :-
+	(	var(Option) ->
+		error(instantiation_error)
+	;	jipxio:valid_open_option(Option) ->
+		jipxio:valid_open_options(Options)
+	;	error(domain_error(stream_option,Option))
+	).
+
+valid_open_options([]).
+
+valid_open_option(eof_action(Action)) :-
+	(	Action == error
+	;	Action == eof_code
+	;	Action == reset
+	).
+valid_open_option(alias(Alias)) :-
+	atom(Alias).
+valid_open_option(type(Type)) :-
+	(	Type == text
+	;	Type == binary
+	).
+valid_open_option(reposition(Reposition)) :-
+	(	Reposition == true
+	;	Reposition == false
+	).
 
 open_(File, write, Handle):-
     tell(File, Handle).
@@ -241,7 +267,7 @@ get_char(Handle, C):-
 	(	'$char'(B,C) ->
 		true
 	;	error(representation_error(character))
-	).
+	).
 '$char'(-1, end_of_file) :-
 	!.
 
@@ -287,7 +313,7 @@ peek_code(Handle, C):-
 peek_char(C):-
     current_input(Handle),
     peek_char(Handle, C).
-peek_char(Handle, C):-	nonvar( C ), 	\+ atom( C ), 	error(type_error(in_character,C)).
+peek_char(Handle, C):-	nonvar( C ), 	\+ atom( C ), 	error(type_error(in_character,C)).
 
 peek_char(Handle, C):-
     peek_byte(Handle, B),
@@ -449,7 +475,7 @@ put(C):-
 
 put_byte(C):-
     current_output(Handle),
-    put_byte(C).
+    put_byte(Handle, C).
 
 put_byte(Handle, C):-
 	(	var(C) ->
@@ -461,7 +487,7 @@ put_byte(Handle, C):-
 
 put_char(C):-
     current_output(Handle),
-    put_char(C).
+    put_char(Handle, C).
 
 put_char(Handle, C):-
 	(	var(C) ->
@@ -473,7 +499,7 @@ put_char(Handle, C):-
 
 put_code(C):-
     current_output(Handle),
-    put_code(C).
+    put_code(Handle, C).
 
 put_code(Handle, C):-
 	(	var(C) ->

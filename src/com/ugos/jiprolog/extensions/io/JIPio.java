@@ -48,9 +48,9 @@ public final class JIPio
 //    public static final int    ERR_USER_STREAM = 2006;
 //    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
-    private static InputStreamInfo user_input = new InputStreamInfo("user_input", "user_input");
-    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output");
-    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", "user_error");
+    private static InputStreamInfo user_input = new InputStreamInfo("user_input", "user_input", "read", "reset");
+    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output", "append", "reset");
+    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", "user_error", "append", "reset");
 
     public static Hashtable<String, InputStreamInfo> itable = new Hashtable<String, InputStreamInfo>();
     public static Hashtable<String, OutputStreamInfo> otable = new Hashtable<String, OutputStreamInfo>();
