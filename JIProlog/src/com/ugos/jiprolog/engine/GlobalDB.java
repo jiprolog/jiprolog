@@ -575,6 +575,33 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         m_clauseTable.put(strModuleName + ":" + strFuncName, db);
     }
 
+    final synchronized JIPClausesDatabase search(final Functor funct, final Stack<String> moduleStack)
+    {
+//    	JIPClausesDatabase db;
+
+//    	System.out.println("module stack: " + moduleStack);
+    	for(String module : moduleStack)
+    	{
+//    		System.out.println("search in module: " + module);
+
+//    		db = (JIPClausesDatabase)m_clauseTable.get(module + ":" + funct.getName());
+//    		if(db != null)
+//    			return db;
+
+    		JIPClausesDatabase db = search(funct, module);
+    		if(db != null)
+    			return db;
+    	}
+
+//        db = (JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + funct.getName());
+//        if(db == null)
+//        {
+//            return (JIPClausesDatabase)m_clauseTable.get(SYSTEM_MODULE + ":" + funct.getName());
+//        }
+
+    	return null;
+    }
+
     // called by rulesenumeration
     final synchronized JIPClausesDatabase search(final Functor funct, final String strModule)
     {
