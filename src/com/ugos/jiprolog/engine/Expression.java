@@ -251,7 +251,15 @@ final class Expression extends PrologObject //implements Serializable
                         break;
 
                     case 2:
-                        exp1 = Expression.compute(params.getHead());
+                    	PrologObject head = params.getHead();
+                        if(head instanceof Variable)
+                        	head = ((Variable)head).getObject();
+
+                        if(head == null)
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
+
+
+                        exp1 = Expression.compute(head);
                         dVal1 = exp1.m_dValue;
 
                         final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
@@ -277,6 +285,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("atan2"))
                         {
+                        	if(dVal1 == 0 && dVal2 == 0)
+                        		throw new JIPEvaluationException(JIPEvaluationException.undefined);
+
                             dblVal =  Math.atan2(dVal1, dVal2);
                             return Expression.createNumber(dblVal);
                         }
