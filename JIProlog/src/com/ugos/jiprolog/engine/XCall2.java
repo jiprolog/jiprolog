@@ -138,6 +138,7 @@ final class XCall2 extends BuiltIn
         }
         catch(NoClassDefFoundError ex)
         {
+        	ex.printStackTrace();
         	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
         }
     }
