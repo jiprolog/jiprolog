@@ -133,11 +133,13 @@ final class Expression extends PrologObject //implements Serializable
                 switch(func.getArity())
                 {
                     case 1:
+                    	double dVal1;
 
-                        Expression exp1 = Expression.compute(params.getHead());
-                        double dVal1 = exp1.m_dValue;
                         if (strFunName.equals("-"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal = - dVal1;
 
                             retexp = Expression.createNumber(dblVal);
@@ -146,6 +148,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("+"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal = dVal1;
                             retexp = Expression.createNumber(dblVal);
                             retexp.floating = !exp1.isInteger();
@@ -154,66 +159,111 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("sin"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.sin(dVal1);
                         }
                         else if (strFunName.equals("cos"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.cos(dVal1);
                         }
                         else if (strFunName.equals("tan"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.tan(dVal1);
                         }
                         else if (strFunName.equals("asin"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.asin(dVal1);
                         }
                         else if (strFunName.equals("acos"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.acos(dVal1);
                         }
                         else if (strFunName.equals("atan"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.atan(dVal1);
                         }
                         else if (strFunName.equals("log"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.log(dVal1);
                         }
                         else if (strFunName.equals("exp"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.exp(dVal1);
                         }
                         else if (strFunName.equals("int") || strFunName.equals("integer") || strFunName.equals("round"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.rint(dVal1);
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("ceil") || strFunName.equals("ceiling"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.ceil(dVal1);
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("floor") || strFunName.equals("truncate") || strFunName.equals("rnd"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.floor(dVal1);
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("float"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  dVal1;
                         }
                         else if (strFunName.equals("float_fractional_part"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  dVal1 - (int)dVal1;
                         }
                         else if (strFunName.equals("float_integer_part"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  dVal1 - (int)dVal1;
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("abs"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.abs(dVal1);
                             retexp = Expression.createNumber(dblVal);
                             retexp.floating = !exp1.isInteger();
@@ -221,10 +271,16 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("sqrt"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.sqrt(dVal1);
                         }
                         else if (strFunName.equals("sign"))
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             if(dVal1 > 0)
                                 dblVal = 1;
                             else
@@ -234,11 +290,17 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("\\")) // bitwise negation
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  ~(int)dVal1;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("random")) // random
                         {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
                             dblVal =  Math.random() * dVal1;
                         }
                         else
@@ -259,15 +321,15 @@ final class Expression extends PrologObject //implements Serializable
                             throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
 
 
-                        exp1 = Expression.compute(head);
-                        dVal1 = exp1.m_dValue;
-
-                        final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
-                        dVal1 = Expression.compute(exp1).m_dValue;
-                        final double dVal2 = Expression.compute(exp2).m_dValue;
 
                         if(strFunName.equals("+"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  dVal1 + dVal2;
 
                             retexp = Expression.createNumber(dblVal);
@@ -277,6 +339,13 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("-"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
+
                             dblVal =  dVal1 - dVal2;
 
                             retexp = Expression.createNumber(dblVal);
@@ -285,6 +354,13 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("atan2"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
+
                         	if(dVal1 == 0 && dVal2 == 0)
                         		throw new JIPEvaluationException(JIPEvaluationException.undefined);
 
@@ -293,15 +369,33 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("/"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  dVal1 / dVal2;
                         }
                         else if(strFunName.equals("//"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  ((int)dVal1 / (int)dVal2);
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("*"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  dVal1 * dVal2;
                             retexp = Expression.createNumber(dblVal);
                             retexp.floating = !exp1.isInteger() || !exp2.isInteger();
@@ -309,6 +403,12 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  Math.pow(dVal1, dVal2);
 
                             retexp = Expression.createNumber(dblVal);
@@ -318,47 +418,101 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("min"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  Math.min(dVal1, dVal2);
 
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("max"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  Math.max(dVal1, dVal2);
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("mod") || strFunName.equals("rem"))
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  dVal1 % dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("/\\"))  // bitwise and
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  (int)dVal1 & (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("\\/")) // bitwise or
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  (int)dVal1 | (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("<<")) // left shift
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  (int)dVal1 << (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("xor")) // xor
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  (int)dVal1 ^ (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals(">>")) // right shift
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  (int)dVal1 >> (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("div")) // DIV
                         {
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
                             dblVal =  (int)(dVal1 - dVal1 % dVal2) / dVal2;
                         }
                         else
