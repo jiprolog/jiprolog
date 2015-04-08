@@ -338,6 +338,9 @@ final class Expression extends PrologObject //implements Serializable
                             retexp = Expression.createNumber(dblVal);
                             retexp.floating = !exp1.isInteger() || !exp2.isInteger();
 
+                            if(!retexp.floating && dblVal > Integer.MAX_VALUE)
+                            	throw new JIPEvaluationException("int_overflow");
+
                             return retexp;
                         }
                         else if(strFunName.equals("-"))
@@ -356,6 +359,10 @@ final class Expression extends PrologObject //implements Serializable
 
                             retexp = Expression.createNumber(dblVal);
                             retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+
+                            if(!retexp.floating && dblVal < Integer.MIN_VALUE)
+                            	throw new JIPEvaluationException("int_overflow");
+
                             return retexp;
                         }
                         else if (strFunName.equals("atan2"))
@@ -417,6 +424,10 @@ final class Expression extends PrologObject //implements Serializable
                             dblVal =  dVal1 * dVal2;
                             retexp = Expression.createNumber(dblVal);
                             retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+
+                            if(!retexp.floating && dblVal > Integer.MAX_VALUE)
+                            	throw new JIPEvaluationException("int_overflow");
+
                             return retexp;
                         }
                         else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
@@ -433,8 +444,9 @@ final class Expression extends PrologObject //implements Serializable
                             dblVal =  Math.pow(dVal1, dVal2);
 
                             retexp = Expression.createNumber(dblVal);
-                            if(dblVal <= Integer.MAX_VALUE)
-                            	retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+//                            if(dblVal <= Integer.MAX_VALUE)
+//                            	retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+
                             return retexp;
                         }
                         else if (strFunName.equals("min"))
