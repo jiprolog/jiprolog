@@ -53,6 +53,11 @@ final class Expression extends PrologObject //implements Serializable
 
     private Expression(final double dNum)
     {
+        if(Double.isNaN(dNum))
+            throw new JIPEvaluationException("undefined");
+        else if(Double.isInfinite(dNum))
+        	throw new JIPEvaluationException("undefined");
+
         m_dValue   = dNum;
         floating = (int)dNum != dNum;
     }
@@ -317,13 +322,11 @@ final class Expression extends PrologObject //implements Serializable
                         if(head instanceof Variable)
                         	head = ((Variable)head).getObject();
 
-                        if(head == null)
-                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
-
-
-
                         if(strFunName.equals("+"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -339,6 +342,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("-"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -354,6 +360,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("atan2"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -369,6 +378,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("/"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -379,6 +391,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("//"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -390,6 +405,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("*"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -403,6 +421,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -418,6 +439,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if (strFunName.equals("min"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -426,10 +450,16 @@ final class Expression extends PrologObject //implements Serializable
 
                             dblVal =  Math.min(dVal1, dVal2);
 
-                            return Expression.createNumber(dblVal);
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+
+                            return retexp;
                         }
                         else if (strFunName.equals("max"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -437,10 +467,17 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             dblVal =  Math.max(dVal1, dVal2);
-                            return Expression.createNumber(dblVal);
+
+                            retexp = Expression.createNumber(dblVal);
+                            retexp.floating = !exp1.isInteger() || !exp2.isInteger();
+
+                            return retexp;
                         }
                         else if (strFunName.equals("mod") || strFunName.equals("rem"))
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -452,6 +489,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("/\\"))  // bitwise and
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -463,6 +503,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("\\/")) // bitwise or
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -474,6 +517,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("<<")) // left shift
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -496,6 +542,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals(">>")) // right shift
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -507,6 +556,9 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else if(strFunName.equals("div")) // DIV
                         {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
                         	final Expression exp1 = Expression.compute(head);
                             dVal1 = exp1.m_dValue;
 
@@ -522,7 +574,7 @@ final class Expression extends PrologObject //implements Serializable
                         break;
 
                     default:
-                        throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
+                        throw new JIPTypeException(JIPTypeException.EVALUABLE, func.getPredicateIndicator());//.create(2, strFunName + " is unknown");
                 }
 
                 return Expression.createDouble(dblVal);
