@@ -25,12 +25,12 @@ import com.ugos.jiprolog.engine.*;
 
 import java.util.*;
 
-public class AtomChars2 extends JIPXCall
+public class AtomCodes2 extends JIPXCall
 {
     public final boolean unify(final JIPCons input, Hashtable<JIPVariable, JIPVariable> varsTbl)
     {
         JIPTerm atom   = input.getNth(1);
-        JIPTerm chars = input.getNth(2);
+        JIPTerm codes = input.getNth(2);
 
         // check if input is a variable
         if (atom instanceof JIPVariable)
@@ -52,17 +52,17 @@ public class AtomChars2 extends JIPXCall
             }
             else
             {
-                atom = JIPString.create(strAtom, true);
+                atom = JIPString.create(strAtom, false);
             }
         }
         else if (atom instanceof JIPVariable)
         {
         	// means atom unbounded
-            if (chars instanceof JIPVariable)
+            if (codes instanceof JIPVariable)
             {
-                if (((JIPVariable)chars).isBounded())
+                if (((JIPVariable)codes).isBounded())
                 {
-                    chars = ((JIPVariable)chars).getValue();
+                    codes = ((JIPVariable)codes).getValue();
                 }
                 else
                 {
@@ -70,27 +70,26 @@ public class AtomChars2 extends JIPXCall
                 }
             }
 
-            if(chars == JIPList.NIL)
+            if(codes == JIPList.NIL)
             {
-                chars = JIPAtom.create("");
+                codes = JIPAtom.create("");
             }
-            else if (chars instanceof JIPList)
+            else if (codes instanceof JIPList)
             {
-                // check if number of atom
-                String strVal = (JIPString.create((JIPList)chars)).getStringValue();
+                String strVal = (JIPString.create((JIPList)codes)).getStringValue();
 
-//                if(strVal.startsWith(" ") || strVal.endsWith(" "))
-//                {
-                	chars = JIPAtom.create(strVal);
-//                }
-//                else
-//                {
-//                	chars = JIPAtom.create(strVal);
-//                }
+                if(strVal.startsWith(" ") || strVal.endsWith(" "))
+                {
+                	codes = JIPAtom.create(strVal);
+                }
+                else
+                {
+                	codes = JIPAtom.create(strVal);
+                }
             }
             else
             {
-                throw new JIPTypeException(JIPTypeException.LIST, chars);
+                throw new JIPTypeException(JIPTypeException.LIST, codes);
             }
         }
         else if(atom.unifiable(JIPList.NIL))// ||
@@ -103,7 +102,7 @@ public class AtomChars2 extends JIPXCall
             throw new JIPTypeException(JIPTypeException.ATOM, atom);
         }
 
-        return atom.unify(chars, varsTbl);
+        return atom.unify(codes, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()

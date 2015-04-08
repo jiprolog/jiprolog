@@ -34,6 +34,14 @@ public class JIPSyntaxErrorException extends JIPRuntimeException
     private int m_nLine;
     private String m_strTerm;
 
+    public JIPSyntaxErrorException(final String strTerm)
+    {
+        super(createRuntimeException(1, strTerm));
+//        m_strFile = strFileName;
+//        m_nLine = nLineNumber;
+        m_strTerm = strTerm;
+    }
+
     JIPSyntaxErrorException(final String strFileName, final int nLineNumber, final String strTerm)
     {
         super(createRuntimeException(1, "File: "+ strFileName + ", Line: " + nLineNumber + ", Cause: " + strTerm));
