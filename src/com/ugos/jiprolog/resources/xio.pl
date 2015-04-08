@@ -81,7 +81,7 @@ open(_, Mode, _, _):-
 	error(domain_error(io_mode,Mode)).
 
 open(_, _, _, Options):-
-	valid_open_options(Options),
+	%valid_open_options(Options),
 	member(alias(Alias), Options),
 	stream_property(_, alias(Alias)),
 	error(permission_error(open,source_sink,alias(Alias))).

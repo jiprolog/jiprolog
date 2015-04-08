@@ -41,6 +41,33 @@ final class CurrentOp3 extends BuiltIn
             assoc = getParam(2);
             op    = getParam(3);
 
+            PrologObject test = getRealTerm(prec);
+            if(test != null)
+            {
+            	if(!(test instanceof Expression))
+            		throw new JIPTypeException(JIPTypeException.INTEGER, prec);
+            	else if(!((Expression)test).isInteger())
+            		throw new JIPTypeException(JIPTypeException.INTEGER, prec);
+            	else if(((Expression)test).getValue() < 0 || ((Expression)test).getValue() > 1200)
+            		 throw new JIPDomainException("operator_priority", prec);
+            }
+
+            test = getRealTerm(assoc);
+            if(test != null)
+            {
+            	if(!(test instanceof Atom))
+            		throw new JIPTypeException(JIPTypeException.ATOM, assoc);
+            	else if(!"fx, fy, xfx, xfy, yfx, xf, yf".contains(((Atom)test).getName()))
+            		throw new JIPDomainException("operator_specifier", assoc);
+            }
+
+            test = getRealTerm(op);
+            if(test != null)
+            {
+            	if(!(test instanceof Atom))
+            		 throw new JIPTypeException(JIPTypeException.ATOM, op);
+            }
+
             m_second =
                 new ConsCell(prec,
                              new ConsCell(assoc,
