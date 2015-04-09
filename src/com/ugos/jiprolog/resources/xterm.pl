@@ -55,46 +55,57 @@ copy_term(Term, Copy):-
 name(Atom, CharList):-
     xcall('com.ugos.jiprolog.extensions.terms.Name2', [Atom, CharList]).
 
-char_code(Atom, Code):-
-    name(Atom, [Code]).
+%char_code(Atom, Code):-
+%    name(Atom, [Code]).
 
-atom_codes(Atom, Codes):-
-    name(Atom, Codes).
+char_code(Atom, Code) :-
+	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Atom, [Code]]).
+
+%atom_codes(Atom, Codes):-
+%    name(Atom, Codes).
+
+atom_codes(Atom, Codes) :-
+	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Atom, Codes]).
 
 atom_chars(Atom, Chars) :-
 	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
 
+number_codes(Number, Codes) :-
+	xcall('com.ugos.jiprolog.extensions.terms.NumberCodes2', [Number, Codes]).
 
-number_codes(Num, List):-
-    number(Num),
-    !,
-    name(Num, List).
+%number_codes(Num, List):-
+%    number(Num),
+%    !,
+%    name(Num, List).
+%
+%number_codes(Num, List):-
+%    var(Num),
+%    !,
+%    name(Num, List),
+%    number(Num).
+%
+%number_codes(Num,_):-
+% 	error(type_error(number, Num)).
 
-number_codes(Num, List):-
-    var(Num),
-    !,
-    name(Num, List),
-    number(Num).
+number_chars(Number, Chars) :-
+	xcall('com.ugos.jiprolog.extensions.terms.NumberChars2', [Number, Chars]).
 
-number_codes(Num,_):-
- 	error(type_error(number, Num)).
-
-number_chars(Num, List):-
-    number(Num),
-    !,
-    number_codes(Num, Codes),
- 	atom_codes(Atom, Codes),
- 	atom_chars(Atom, List).
-
-number_chars(Num, List):-
-    var(Num),
-    !,
-    atom_chars(Atom, List),
- 	atom_codes(Atom, Codes),
- 	number_codes(Num, Codes).
-
-number_chars(Num,_):-
-	error(type_error(number, Num)).
+%number_chars(Num, List):-
+%    number(Num),
+%    !,
+%    number_codes(Num, Codes),
+% 	atom_codes(Atom, Codes),
+% 	atom_chars(Atom, List).
+%
+%number_chars(Num, List):-
+%    var(Num),
+%    !,
+%    atom_chars(Atom, List),
+% 	atom_codes(Atom, Codes),
+% 	number_codes(Num, Codes).
+%
+%number_chars(Num,_):-
+%	error(type_error(number, Num)).
 
 %number_chars(Num, List):-
 %    number(Num),
