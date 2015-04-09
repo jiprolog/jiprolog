@@ -78,11 +78,20 @@ public class NumberChars2 extends JIPXCall
 				{
                 	String strVal = (JIPString.create((JIPList)chars)).getStringValue();
 
-                	Double d = Double.parseDouble(strVal);
-                	if(strVal.contains("."))
-                		chars = JIPNumber.create(d);
+                	if(strVal.startsWith("0x"))
+                		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 16));
+                	else if(strVal.startsWith("0o"))
+                    		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 8));
+                	else if(strVal.startsWith("0b"))
+                		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 2));
                 	else
-                		chars = JIPNumber.create(d.intValue());
+                	{
+	                	Double d = Double.parseDouble(strVal);
+	                	if(strVal.contains("."))
+	                		chars = JIPNumber.create(d);
+	                	else
+	                		chars = JIPNumber.create(d.intValue());
+                	}
             	}
 				catch (NumberFormatException e) {
 	                throw new JIPSyntaxErrorException("not_a_number");
