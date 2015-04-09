@@ -88,7 +88,8 @@ final class PString extends List //implements Serializable
                 int nAscii = (int)ascii.getValue();
 
                 if(nAscii < 0 || nAscii > 255)
-                	throw new JIPTypeException(JIPTypeException.INTEGER, head);
+                	throw new JIPRepresentationException("character_code", head);
+//                	throw new JIPTypeException(JIPTypeException.INTEGER, head);
 
                 m_strString += String.valueOf((char)nAscii);
             }

@@ -37,7 +37,7 @@ public class JIPNumber extends JIPTerm
       */
     public static final JIPNumber create(final double d)
     {
-        return new JIPNumber(Expression.createNumber(d));
+        return new JIPNumber(Expression.createDouble(d));
     }
 
     /** Creates a new JIPNumber object

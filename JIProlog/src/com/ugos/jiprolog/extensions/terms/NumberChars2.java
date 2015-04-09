@@ -78,9 +78,13 @@ public class NumberChars2 extends JIPXCall
 				{
                 	String strVal = (JIPString.create((JIPList)chars)).getStringValue();
 
-                	chars = JIPNumber.create(Integer.parseInt(strVal));
+                	Double d = Double.parseDouble(strVal);
+                	if(strVal.contains("."))
+                		chars = JIPNumber.create(d);
+                	else
+                		chars = JIPNumber.create(d.intValue());
             	}
-				catch (JIPRuntimeException e) {
+				catch (NumberFormatException e) {
 	                throw new JIPSyntaxErrorException("not_a_number");
 				}
             }
