@@ -33,9 +33,12 @@ class PrologTokenizer
     static final String SPECIAL_CHARS   = "+-*/~^<>:?@#$&=.\\";
     static final String SINGLETON_CHARS = "!\"()|{}[];,";
     static final String NUMBER_CHARS    = "0123456789";
-    static final String EXPONENT_CHARS    = "+-eE";
+    static final String EXPONENT_CHARS  = "+-eE";
     //static final String WHITESPACE_CHARS = "\n\r\t\b\f";
-    static final String SIGN_CHARS   = "-+";
+    static final String SIGN_CHARS      = "-+";
+    static final String NUMBER_BINARY_CHARS      = "01";
+    static final String NUMBER_OCTAL_CHARS       = "01234567";
+    static final String NUMBER_HEXADECIMAL_CHARS = "0123456789abcdefABCDEF";
 
     static final char   LINECOMMENT_CHAR = '%';
     static final String OPENCOMMENT_CHAR = "/*";
@@ -44,32 +47,35 @@ class PrologTokenizer
     static final char   DOUBLEQUOTE_CHAR = '\"';
 
     private static final int STATE_END          = -1;
-    private static final int STATE_NONE         = 0;
-    private static final int STATE_ATOM         = 1;
-    private static final int STATE_SPECIAL_ATOM = 2;
-    private static final int STATE_NUMBER       = 3;
-    private static final int STATE_EXPONENT     = 4;
-    private static final int STATE_INTEGER      = 5;
-    private static final int STATE_SIGN       	= 6;
-    private static final int STATE_LINECOMMENT  = 7;
-    private static final int STATE_COMMENT      = 8;
-    private static final int STATE_QUOTE        = 9;
+    private static final int STATE_NONE         =  0;
+    private static final int STATE_ATOM         =  1;
+    private static final int STATE_SPECIAL_ATOM =  2;
+    private static final int STATE_NUMBER       =  3;
+    private static final int STATE_EXPONENT     =  4;
+    private static final int STATE_INTEGER      =  5;
+    private static final int STATE_SIGN       	=  6;
+    private static final int STATE_LINECOMMENT  =  7;
+    private static final int STATE_COMMENT      =  8;
+    private static final int STATE_QUOTE        =  9;
     private static final int STATE_DOUBLEQUOTE  = 10;
     private static final int STATE_VARIABLE     = 11;
     private static final int STATE_DECIMAL      = 12;
     private static final int STATE_ASCII        = 13;
+    private static final int STATE_BINARY       = 14;
+    private static final int STATE_OCTAL        = 15;
+    private static final int STATE_HEXADECIMAL  = 16;
 
-    static final int TOKEN_UNKNOWN      = -1;
-    static final int TOKEN_ATOM         = 1;
-    static final int TOKEN_SPECIAL_ATOM = 2;
-    static final int TOKEN_NUMBER       = 3;
-    static final int TOKEN_SINGLETON    = 4;
-    static final int TOKEN_SIGN         = 5;
-    static final int TOKEN_VARIABLE     = 6;
-    static final int TOKEN_PREDDEF      = 7;
-    static final int TOKEN_DBLQUOTE     = 8;
-    static final int TOKEN_QUOTE        = 9;
-    static final int TOKEN_WHITESPACE   = 10;
+    static final int TOKEN_UNKNOWN            = -1;
+    static final int TOKEN_ATOM               =  1;
+    static final int TOKEN_SPECIAL_ATOM       =  2;
+    static final int TOKEN_NUMBER             =  3;
+    static final int TOKEN_SINGLETON          =  4;
+    static final int TOKEN_SIGN               =  5;
+    static final int TOKEN_VARIABLE           =  6;
+    static final int TOKEN_PREDDEF            =  7;
+    static final int TOKEN_DBLQUOTE           =  8;
+    static final int TOKEN_QUOTE              =  9;
+    static final int TOKEN_WHITESPACE         = 10;
 
     private Token m_nextToken;
 
@@ -318,6 +324,27 @@ class PrologTokenizer
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
                         }
+                        else if(curChar == 'b')
+						{
+                            if(strTerm.equals("0"))
+                                nState = STATE_BINARY;
+                            else
+                                throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
+						}
+                        else if(curChar == 'o')
+						{
+                            if(strTerm.equals("0"))
+                                nState = STATE_OCTAL;
+                            else
+                                throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
+						}
+                        else if(curChar == 'x')
+						{
+                            if(strTerm.equals("0"))
+                                nState = STATE_HEXADECIMAL;
+                            else
+                                throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
+						}
                         else
                         {
                             nTokenType = TOKEN_NUMBER;
@@ -444,6 +471,48 @@ class PrologTokenizer
 
                         nTokenType = TOKEN_NUMBER;
                         nState = STATE_END;
+                        break;
+
+                    case STATE_BINARY:
+                        if(NUMBER_BINARY_CHARS.indexOf(curChar) > -1)
+                        {
+                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                        }
+                        else
+                        {
+                            strTerm = "" + Integer.parseInt(strTerm, 2);
+                            nTokenType = TOKEN_NUMBER;
+                            nState = STATE_END;
+                            m_lnReader.pushback();
+                        }
+                        break;
+
+                    case STATE_OCTAL:
+                        if(NUMBER_OCTAL_CHARS.indexOf(curChar) > -1)
+                        {
+                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                        }
+                        else
+                        {
+                            strTerm = "" + Integer.parseInt(strTerm, 8);
+                            nTokenType = TOKEN_NUMBER;
+                            nState = STATE_END;
+                            m_lnReader.pushback();
+                        }
+                        break;
+
+                    case STATE_HEXADECIMAL:
+                        if(NUMBER_HEXADECIMAL_CHARS.indexOf(curChar) > -1)
+                        {
+                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                        }
+                        else
+                        {
+                            strTerm = "" + Integer.parseInt(strTerm, 16);
+                            nTokenType = TOKEN_NUMBER;
+                            nState = STATE_END;
+                            m_lnReader.pushback();
+                        }
                         break;
 
                     case STATE_LINECOMMENT:
