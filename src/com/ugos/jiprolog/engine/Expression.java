@@ -510,6 +510,12 @@ final class Expression extends PrologObject //implements Serializable
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
 
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+
                             dblVal =  (int)dVal1 & (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
@@ -523,6 +529,12 @@ final class Expression extends PrologObject //implements Serializable
 
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
+
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
 
                             dblVal =  (int)dVal1 | (int)dVal2;
                             return Expression.createNumber(dblVal);
@@ -538,6 +550,12 @@ final class Expression extends PrologObject //implements Serializable
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
 
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+
                             dblVal =  (int)dVal1 << (int)dVal2;
                             return Expression.createNumber(dblVal);
                         }
@@ -548,6 +566,12 @@ final class Expression extends PrologObject //implements Serializable
 
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
+
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
 
                             dblVal =  (int)dVal1 ^ (int)dVal2;
                             return Expression.createNumber(dblVal);
@@ -562,6 +586,12 @@ final class Expression extends PrologObject //implements Serializable
 
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
+
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
 
                             dblVal =  (int)dVal1 >> (int)dVal2;
                             return Expression.createNumber(dblVal);

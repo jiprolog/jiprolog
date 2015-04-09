@@ -60,7 +60,7 @@ public class JIPSyntaxErrorException extends JIPRuntimeException
      */
     public JIPTerm getTerm()
     {
-        if(m_engine != null)
+        if(m_engine != null && m_strFile != null)
         {
             String strFile = Atom.createAtom(m_strFile).toString();
 	        String strTerm = Atom.createAtom(m_strTerm).toString();
@@ -75,7 +75,8 @@ public class JIPSyntaxErrorException extends JIPRuntimeException
         }
         else
         {
-            return super.getTerm();
+            return JIPFunctor.create("error",
+            		JIPCons.create(JIPFunctor.create("syntax_error", JIPCons.create(JIPAtom.create("undefined"), null)), JIPCons.create(JIPAtom.create("undefined"), null)));
         }
     }
 }

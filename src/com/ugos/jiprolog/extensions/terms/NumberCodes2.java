@@ -75,10 +75,14 @@ public class NumberCodes2 extends JIPXCall
             else if (codes instanceof JIPList)
 				try {
                 	String strVal = (JIPString.create((JIPList)codes)).getStringValue();
-                	codes = JIPNumber.create(Integer.parseInt(strVal));
 
-//                	codes = JIPNumber.create(strVal);
-            	} catch (JIPRuntimeException e) {
+                	Double d = Double.parseDouble(strVal);
+                	if(strVal.contains("."))
+                		codes = JIPNumber.create(d);
+                	else
+                		codes = JIPNumber.create(d.intValue());
+
+            	} catch (NumberFormatException e) {
 	                throw new JIPSyntaxErrorException("not_a_number");
 				}
             else

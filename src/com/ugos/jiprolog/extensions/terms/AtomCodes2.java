@@ -95,7 +95,7 @@ public class AtomCodes2 extends JIPXCall
         else if(atom.unifiable(JIPList.NIL))// ||
 //        		(atom instanceof JIPCons && ((JIPCons)atom).getHead().unifiable(JIPCons.NIL) && ((JIPCons)atom).getTail().unifiable(JIPCons.NIL)))
         {
-        	atom =  JIPString.create("[]", true);
+        	atom =  JIPString.create("[]", false);
         }
         else
         {
