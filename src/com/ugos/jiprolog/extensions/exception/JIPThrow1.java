@@ -23,6 +23,8 @@ package com.ugos.jiprolog.extensions.exception;
 import java.util.Hashtable;
 
 import com.ugos.jiprolog.engine.JIPCons;
+import com.ugos.jiprolog.engine.JIPParameterUnboundedException;
+import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPVariable;
 import com.ugos.jiprolog.engine.JIPXCall;
 
@@ -30,7 +32,12 @@ public class JIPThrow1 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, Hashtable<JIPVariable, JIPVariable> varsTbl)
     {
-        throw new JIPUserException(params.getNth(1));
+        JIPTerm exception = params.getNth(1);
+
+        if ((exception instanceof JIPVariable) && !((JIPVariable)exception).isBounded())
+            throw new JIPParameterUnboundedException(1);
+        else
+            throw new JIPUserException(exception);
     }
 
     public boolean hasMoreChoicePoints()
