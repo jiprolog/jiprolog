@@ -87,7 +87,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("float/1",           new Float1());
         m_BuiltInTable.put("var/1",             new Var1());
         m_BuiltInTable.put("functor/3",         new Functor3());
-//        m_BuiltInTable.put("arg/3",             new Arg3());
+        m_BuiltInTable.put("arg/3",             new Arg3());
         m_BuiltInTable.put("=../2",             new Univ2());
         m_BuiltInTable.put("notify/2",          new Notify2());
         m_BuiltInTable.put("chdir/1",      	new SearchPath1());

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/ugos/JIProlog/engine/ParserInputStream.java|com/ugos/JIProlog/engine/Findall3.java|com/ugos/JIProlog/engine/BagOf3.java|com/ugos/jiprolog/extensions/io/CopyOfStreamProperty3.java|com/ugos/util/MapperHolder.java|com/ugos/jiprolog/engine/Arg3.java|com/ugos/jiprolog/engine/JIPParameterTypeException.java" kind="src" path="src"/>
+	<classpathentry excluding="com/ugos/JIProlog/engine/ParserInputStream.java|com/ugos/JIProlog/engine/Findall3.java|com/ugos/JIProlog/engine/BagOf3.java|com/ugos/jiprolog/extensions/io/CopyOfStreamProperty3.java|com/ugos/util/MapperHolder.java|com/ugos/jiprolog/engine/JIPParameterTypeException.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="lib"/>
 </classpath>
