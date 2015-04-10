@@ -298,6 +298,9 @@ final class Expression extends PrologObject //implements Serializable
                         	Expression exp1 = Expression.compute(params.getHead());
                             dVal1 = exp1.m_dValue;
 
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
+
                             dblVal =  ~(int)dVal1;
                             return Expression.createNumber(dblVal);
                         }
@@ -511,10 +514,10 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             if(!exp1.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
 
                             if(!exp2.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
 
                             dblVal =  (int)dVal1 & (int)dVal2;
                             return Expression.createNumber(dblVal);
@@ -531,10 +534,10 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             if(!exp1.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
 
                             if(!exp2.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
 
                             dblVal =  (int)dVal1 | (int)dVal2;
                             return Expression.createNumber(dblVal);
@@ -551,10 +554,10 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             if(!exp1.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
 
                             if(!exp2.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
 
                             dblVal =  (int)dVal1 << (int)dVal2;
                             return Expression.createNumber(dblVal);
@@ -568,10 +571,10 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             if(!exp1.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
 
                             if(!exp2.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
 
                             dblVal =  (int)dVal1 ^ (int)dVal2;
                             return Expression.createNumber(dblVal);
@@ -588,10 +591,10 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             if(!exp1.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
 
                             if(!exp2.isInteger())
-                            	throw new JIPTypeException(JIPTypeException.FLOAT, exp2);
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
 
                             dblVal =  (int)dVal1 >> (int)dVal2;
                             return Expression.createNumber(dblVal);
