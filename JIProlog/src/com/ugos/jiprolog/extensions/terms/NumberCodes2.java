@@ -76,12 +76,25 @@ public class NumberCodes2 extends JIPXCall
 				try {
                 	String strVal = (JIPString.create((JIPList)codes)).getStringValue();
 
-                	if(strVal.startsWith("0x"))
+                	if(strVal.startsWith("0'"))
+						codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
+                	else if(strVal.startsWith("0x"))
                 		codes = JIPNumber.create(Integer.parseInt(strVal.substring(2), 16));
+                	else if(strVal.startsWith(" 0x"))
+                		codes = JIPNumber.create(Integer.parseInt(strVal.substring(3), 16));
                 	else if(strVal.startsWith("0o"))
                 		codes = JIPNumber.create(Integer.parseInt(strVal.substring(2), 8));
+                	else if(strVal.startsWith(" 0o"))
+                		codes = JIPNumber.create(Integer.parseInt(strVal.substring(3), 8));
                 	else if(strVal.startsWith("0b"))
                 		codes = JIPNumber.create(Integer.parseInt(strVal.substring(2), 2));
+                	else if(strVal.startsWith(" 0b"))
+                		codes = JIPNumber.create(Integer.parseInt(strVal.substring(3), 2));
+                	else if(strVal.startsWith("0''"))
+                		codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
+                	else if(strVal.startsWith("0\'"))
+                		codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
+
                 	else
                 	{
 	                	Double d = Double.parseDouble(strVal);

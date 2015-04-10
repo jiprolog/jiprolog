@@ -196,8 +196,8 @@ check_operator_name(Term, Priority, Specifier) :-
     N is N1 + 1.
 
 % arg/3
-'$system':arg(N, F, E):-
-	F =.. [_|X], member(E, X, N).
+%'$system':arg(N, F, E):-
+%	F =.. [_|X], member(E, X, N).
 
 '$system':true.
 

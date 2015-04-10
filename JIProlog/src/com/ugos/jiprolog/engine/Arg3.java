@@ -24,20 +24,29 @@ import java.util.Hashtable;
 
 final class Arg3 extends BuiltIn
 {
-    public final boolean unify(final Hashtable<Variable, PrologObject> varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         final PrologObject place = getRealTerm(getParam(1));
+        final PrologObject term = getRealTerm(getParam(2));
+
+        // instantiation errors come first
         if(place == null)
             throw new JIPParameterUnboundedException(1);
-
+        if(term == null)
+            throw new JIPParameterUnboundedException(2);
+        // then type errors
         if(!(place instanceof Expression))
             throw new JIPTypeException(JIPTypeException.INTEGER, place);
         if(!((Expression)place).isInteger())
             throw new JIPTypeException(JIPTypeException.INTEGER, place);
+        if(!(term instanceof Functor) && !(term instanceof List))
+            throw new JIPTypeException(JIPTypeException.COMPOUND, term);
 
-        final PrologObject term = getRealTerm(getParam(2));
-        if(term == null)
-            throw new JIPParameterUnboundedException(2);
+        // and after that domain errors
+        if(((Expression)place).getValue() < 0)
+            throw new JIPDomainException("not_less_than_zero", place);
+
+    	int index = (int)((Expression)place).getValue();
 
         PrologObject val   = getParam(3);
         PrologObject param = null;
@@ -45,17 +54,34 @@ final class Arg3 extends BuiltIn
         try
         {
 
-            if(term instanceof List)
+            if(term instanceof List) // [Arg1|Arg2] = '.'(Arg1, Arg2)
             {
-                param = new ConsCell(((List)term).getHead(), new ConsCell(((List)term).getTail(), null)).getTerm((int)((Expression)place).getValue());
+//				if(((Expression)place).getValue() == 1)
+//					param = (List)term)
+//					param = new ConsCell(((List)term).getHead();
+//				else if(((Expression)place).getValue() == 2)
+//					param = new ConsCell(((List)term).getTail();
+
+            	if(index > ((Functor)term).getParams().getHeight())
+            		return false;
+
+            	param = ((List)term).getTerm(index);
+
+//                param = new ConsCell(((List)term).getHead(), new ConsCell(((List)term).getTail(), null)).getTerm();
             }
             else if(term instanceof Functor)
             {
-                param = ((Functor)term).getParams().getTerm((int)((Expression)place).getValue());
+            	if(index > ((Functor)term).getParams().getHeight())
+            		return false;
+
+                param = ((Functor)term).getParams().getTerm(index);
             }
             else // ConsCell
             {
-                param = ((ConsCell)term).getTerm((int)((Expression)place).getValue());
+            	if(index > ((Functor)term).getParams().getHeight())
+            		return false;
+
+                param = ((ConsCell)term).getTerm(index);
             }
 
             if(param == null)
