@@ -402,7 +402,7 @@ class WAM
                 curNode.m_nLevel = nCallCount;
 
                 bUnify = false;
-                varTbl = new Hashtable(10); // imposta l'hashtable per le variabili
+                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
                 while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
                 {
                     rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
@@ -492,7 +492,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-//            ex.printStackTrace();  //DBG
+            ex.printStackTrace();  //DBG
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
@@ -634,11 +634,10 @@ class WAM
         }
         else if (term instanceof Functor)
         {
-            String strModule = curNode.m_strModule;
             // controlla se si tratta di :
             if(((Functor)term).getName().equals(":/2"))
             {
-                strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
+            	curNode.m_strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
                 term = ((ConsCell)((Functor)term).getParams().getTail()).getHead();
                 term = Functor.getFunctor(term);
 
@@ -648,9 +647,9 @@ class WAM
             moduleStack.push(curNode.m_strModule);
 
             if (term instanceof BuiltInPredicate)
-                return new RulesEnumerationBuiltIn((BuiltInPredicate)term, strModule, this);
+                return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
             else
-                return new RulesEnumeration((Functor)term, strModule, m_globalDB);
+                return new RulesEnumeration((Functor)term, moduleStack, m_globalDB);
         }
         else if (term instanceof List)
         {

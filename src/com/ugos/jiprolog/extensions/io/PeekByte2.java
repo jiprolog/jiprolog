@@ -90,7 +90,7 @@ public final class PeekByte2 extends JIPXCall
 
 				if(properties.getProperty("end_of_stream","no").equals("end_of_stream(no)"))
 				{
-            		streamInfo.setEndOfStream("end_of_stream(at)");
+            		streamInfo.setEndOfStream("at");
 					term = JIPNumber.create(c);
 				}
 				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))

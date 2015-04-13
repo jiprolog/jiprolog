@@ -67,8 +67,7 @@ open(_, _, _, Options):-
 
 open(_, _, Handle, _):-
 	nonvar(Handle),
-%	error(uninstantiation_error(Options)).
-	error(type_error(variable,Options)).
+	error(uninstantiation_error(Handle)).
 
 open(File, _, _, _):-
 	\+ atom(File),
@@ -81,7 +80,7 @@ open(_, Mode, _, _):-
 	error(domain_error(io_mode,Mode)).
 
 open(_, _, _, Options):-
-	%valid_open_options(Options),
+	valid_open_options(Options),
 	member(alias(Alias), Options),
 	stream_property(_, alias(Alias)),
 	error(permission_error(open,source_sink,alias(Alias))).
@@ -264,10 +263,11 @@ get_char(Handle, C):-
 		get0(Handle, B)
 	;	error(type_error(character,C))
 	),
-	(	'$char'(B,C) ->
-		true
-	;	error(representation_error(character))
-	).
+	( 	'$char'(B,C0) ->
+  		C = C0
+ 		; error(representation_error(character))
+ 	).
+
 '$char'(-1, end_of_file) :-
 	!.
 
@@ -317,10 +317,10 @@ peek_char(Handle, C):-	nonvar( C ), 	\+ atom( C ), 	error(type_error(in_characte
 
 peek_char(Handle, C):-
     peek_byte(Handle, B),
-    (	'$char'(B,C) ->
-		true
-	;	error(representation_error(character))
-	).
+    ( 	'$char'(B,C0) ->
+  		C = C0
+ 	; 	error(representation_error(character))
+ 	).
 
 
 skip(Char):-
