@@ -80,15 +80,36 @@ public final class PeekByte2 extends JIPXCall
 
             JIPTerm term;
             int c = peekChar(ins);
+        	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
+			Properties properties = streamInfo.getProperties();
 
             if(c == -1)
             {
-            	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
-            	streamInfo.setEndOfStream("at");
-            }
+//            	System.out.println("end_of_stream " + properties.getProperty("end_of_stream"));
+//            	System.out.println("eof_action " + properties.getProperty("eof_action"));
+
+				if(properties.getProperty("end_of_stream","no").equals("end_of_stream(no)"))
+				{
+            		streamInfo.setEndOfStream("end_of_stream(at)");
+					term = JIPNumber.create(c);
+				}
+				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
+				{
+					term = JIPNumber.create(c);
+				}
+				else if(properties.getProperty("eof_action").equals("eof_action(error)"))
+				{
+		            throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(strStreamHandle));
+				}
+				else
+				{ // eof_action(reset)
+					properties.setProperty("end_of_stream","no");
+					return unify(params, varsTbl);
+				}
+			}
 //                term = JIPAtom.create("end_of_file");
 //            else
-                term = JIPNumber.create(c);
+            term = JIPNumber.create(c);
 
             return params.getNth(2).unify(term, varsTbl);
         }

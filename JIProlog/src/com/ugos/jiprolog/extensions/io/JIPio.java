@@ -130,6 +130,13 @@ public final class JIPio
         if(strPath.equals("user_input"))
         {
             reader = engine.getUserInputStream();
+            InputStreamInfo sinfo = itable.get("user_input");
+
+            reader = new PushBackInputStream(reader);
+
+            sinfo.m_stream = (PushBackInputStream)reader;
+
+            return sinfo.getHandle();
         }
         else
         {
@@ -153,19 +160,19 @@ public final class JIPio
                 // try as normal path
                 reader = new FileInputStream(strPath);
             }
+
+	        reader = new PushBackInputStream(reader);
+
+	        InputStreamInfo sinfo =
+	        		new InputStreamInfo(strPath,
+	        							strHandle != null ? strHandle : "#" + strPath.hashCode(),
+	        							"read",
+	        						    "eof_code");
+
+	        sinfo.m_stream = (PushBackInputStream)reader;
+
+	        return put(sinfo);
         }
-
-        reader = new PushBackInputStream(reader);
-
-        InputStreamInfo sinfo = new InputStreamInfo(strPath);
-        sinfo.m_stream = (PushBackInputStream)reader;
-        //sinfo.m_pointer = termEnum;
-        if(strHandle != null)
-            sinfo.setHandle(strHandle);
-        else
-            sinfo.setHandle("#" + sinfo.hashCode());
-
-        return put(sinfo);
     }
 
     public static final String openOutputStream(String strPath, final String strHandle, boolean bAppend, final JIPEngine engine) throws IOException
@@ -175,6 +182,12 @@ public final class JIPio
         if(strPath.equals("user_output") || strPath.equals("user_error"))
         {
             writer = engine.getUserOutputStream();
+
+            OutputStreamInfo sinfo = otable.get(strPath);
+
+            sinfo.m_stream = writer;
+
+            return sinfo.getHandle();
         }
         else
         {
@@ -197,19 +210,19 @@ public final class JIPio
                 // try as normal path
                 writer = new FileOutputStream(strPath, bAppend);
             }
+
+	        OutputStreamInfo sinfo = new OutputStreamInfo(strPath);
+	        sinfo.m_stream = writer;
+	        //sinfo.m_pointer = writer;
+
+	        if(strHandle != null)
+	            sinfo.setHandle(strHandle);
+	        else
+	            sinfo.setHandle("#" + sinfo.hashCode());
+
+
+	        return put(sinfo);
         }
-
-        OutputStreamInfo sinfo = new OutputStreamInfo(strPath);
-        sinfo.m_stream = writer;
-        //sinfo.m_pointer = writer;
-
-        if(strHandle != null)
-            sinfo.setHandle(strHandle);
-        else
-            sinfo.setHandle("#" + sinfo.hashCode());
-
-
-        return put(sinfo);
     }
 
     public final static Enumeration getTermEnumeration(final String strHandle, final JIPEngine engine )
