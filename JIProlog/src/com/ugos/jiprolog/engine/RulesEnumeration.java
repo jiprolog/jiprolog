@@ -23,6 +23,7 @@ package com.ugos.jiprolog.engine;
 //import com.ugos.debug.*;
 
 import java.util.Enumeration;
+import java.util.Stack;
 
 final class RulesEnumeration extends Object implements Enumeration
 {
@@ -30,16 +31,16 @@ final class RulesEnumeration extends Object implements Enumeration
     private boolean             m_bModuleTranparent;
     private PrologRule          m_rule;
 
-    public RulesEnumeration(final Functor query, final String strModule, final GlobalDB gdb)
+    public RulesEnumeration(final Functor query, final Stack<String> moduleStack, final GlobalDB gdb)
     {
-        final JIPClausesDatabase db = gdb.search(query, strModule);
+        final JIPClausesDatabase db = gdb.search(query, moduleStack);
         if(db == null)
             throw new UndefinedPredicateException(query);
 
         m_selProgramEnum  = db.clauses();
         m_bModuleTranparent = db.isModuleTransparent();
         m_rule = new PrologRule();
-        m_rule.m_strModule = strModule;
+        m_rule.m_strModule = moduleStack.peek();
     }
 
     public final boolean hasMoreElements()

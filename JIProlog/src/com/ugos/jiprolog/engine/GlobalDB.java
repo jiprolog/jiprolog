@@ -577,29 +577,33 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final synchronized JIPClausesDatabase search(final Functor funct, final Stack<String> moduleStack)
     {
-//    	JIPClausesDatabase db;
+    	JIPClausesDatabase db;
 
-//    	System.out.println("module stack: " + moduleStack);
+    	String moduleFunName = ":" + funct.getName();
     	for(String module : moduleStack)
     	{
-//    		System.out.println("search in module: " + module);
-
-//    		db = (JIPClausesDatabase)m_clauseTable.get(module + ":" + funct.getName());
-//    		if(db != null)
-//    			return db;
-
-    		JIPClausesDatabase db = search(funct, module);
+    		db = (JIPClausesDatabase)m_clauseTable.get(module + moduleFunName);
     		if(db != null)
     			return db;
     	}
 
-//        db = (JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + funct.getName());
-//        if(db == null)
-//        {
-//            return (JIPClausesDatabase)m_clauseTable.get(SYSTEM_MODULE + ":" + funct.getName());
-//        }
+        db = (JIPClausesDatabase)m_clauseTable.get(USER_MODULE + moduleFunName);//":" + funct.getName());
+        if(db == null)
+        {
+        	db = (JIPClausesDatabase)m_clauseTable.get(SYSTEM_MODULE + moduleFunName);//":" + funct.getName());
+        	if(db == null)
+        	{
+//        		db = (JIPClausesDatabase)m_clauseTable.get(KERNEL_MODULE + ":" + funct.getName());
+//            	if(db == null)
+//            	{
+//            		System.out.println("funct: " + funct.getName());
+//            	}
+//            	System.out.println("\nmodule stack: " + moduleStack);
 
-    	return null;
+        	}
+        }
+
+    	return db;
     }
 
     // called by rulesenumeration
