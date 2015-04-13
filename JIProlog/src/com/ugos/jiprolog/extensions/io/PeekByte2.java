@@ -103,7 +103,7 @@ public final class PeekByte2 extends JIPXCall
 				}
 				else
 				{ // eof_action(reset)
-					properties.setProperty("end_of_stream","no");
+					properties.setProperty("end_of_stream","end_of_stream(no)");
 					return unify(params, varsTbl);
 				}
 			}
