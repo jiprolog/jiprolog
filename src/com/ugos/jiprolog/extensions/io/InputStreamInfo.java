@@ -16,17 +16,17 @@ public class InputStreamInfo extends StreamInfo
     	init(mode, eof_action);
     }
 
-    public InputStreamInfo(String name, String handle)
-    {
-    	super(name, handle);
-    	init();
-    }
+//    public InputStreamInfo(String name, String handle)
+//    {
+//    	super(name, handle);
+//    	init();
+//    }
 
-    public InputStreamInfo(String name)
-	{
-    	super(name);
-    	init();
-	}
+//    public InputStreamInfo(String name)
+//	{
+//    	super(name);
+//    	init();
+//	}
 
     private void init(String mode, String eof_action)
     {
@@ -38,15 +38,15 @@ public class InputStreamInfo extends StreamInfo
 
 	}
 
-    private void init()
-    {
-    	properties.setProperty("mode", "mode(read)");
-		properties.setProperty("input", "input");
-		properties.setProperty("eof_action", "eof_action(reset)");
-//		properties.setProperty("eof_action", "eof_action(eof_code)");
-		properties.setProperty("reposition", "reposition(false)");
-
-	}
+//    private void init()
+//    {
+//    	properties.setProperty("mode", "mode(read)");
+//		properties.setProperty("input", "input");
+//		properties.setProperty("eof_action", "eof_action(reset)");
+////		properties.setProperty("eof_action", "eof_action(eof_code)");
+//		properties.setProperty("reposition", "reposition(false)");
+//
+//	}
 
     public int getLineNumber()
     {

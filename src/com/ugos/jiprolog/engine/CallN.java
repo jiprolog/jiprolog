@@ -23,7 +23,13 @@ public class CallN extends BuiltIn {
 		}
 
 		Functor goal;
-		if(closure instanceof Functor)
+
+		if(closure instanceof Atom)
+		{
+			goal = new Functor((Atom)closure);
+			goal.setParams((ConsCell)params);
+		}
+		else if(closure instanceof Functor)
 		{
 			goal = (Functor)closure;
 
@@ -44,14 +50,13 @@ public class CallN extends BuiltIn {
 			goal = goal1;
 //			goal.setParams(newParams);
 		}
-		else if(closure instanceof Atom)
+        else if(closure == null)
 		{
-			goal = new Functor((Atom)closure);
-			goal.setParams((ConsCell)params);
+        	throw new JIPParameterUnboundedException();
 		}
 		else
 		{
-			throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, closure);
+			throw new JIPTypeException(JIPTypeException.CALLABLE, closure);
 		}
 
         if(BuiltInFactory.isBuiltIn(goal.getName()))
