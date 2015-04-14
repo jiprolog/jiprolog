@@ -234,12 +234,20 @@ final class Expression extends PrologObject //implements Serializable
                             dblVal =  Math.ceil(dVal1);
                             return Expression.createNumber(dblVal);
                         }
-                        else if (strFunName.equals("floor") || strFunName.equals("truncate") || strFunName.equals("rnd"))
+                        else if (strFunName.equals("floor") || strFunName.equals("rnd"))
                         {
                         	Expression exp1 = Expression.compute(params.getHead());
                             dVal1 = exp1.m_dValue;
 
                             dblVal =  Math.floor(dVal1);
+                            return Expression.createNumber(dblVal);
+                        }
+                        else if (strFunName.equals("truncate"))
+                        {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
+                            dblVal =  (int)dVal1;
                             return Expression.createNumber(dblVal);
                         }
                         else if (strFunName.equals("float"))
@@ -410,6 +418,15 @@ final class Expression extends PrologObject //implements Serializable
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
 
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
+
+                            if((int)dVal2 == 0)
+                            	throw new JIPEvaluationException(JIPEvaluationException.zero_divisor);
+
                             dblVal =  ((int)dVal1 / (int)dVal2);
                             return Expression.createNumber(dblVal);
                         }
@@ -488,7 +505,7 @@ final class Expression extends PrologObject //implements Serializable
 
                             return retexp;
                         }
-                        else if (strFunName.equals("mod") || strFunName.equals("rem"))
+                        else if (strFunName.equals("mod"))
                         {
                             if(head == null)
                             	throw new JIPParameterUnboundedException();
@@ -499,7 +516,39 @@ final class Expression extends PrologObject //implements Serializable
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
 
-                            dblVal =  dVal1 % dVal2;
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
+
+                            if((int)dVal2 == 0)
+                            	throw new JIPEvaluationException(JIPEvaluationException.zero_divisor);
+
+                            dblVal = (Math.abs(dVal1) % dVal2) * Math.signum(dVal2);
+                            return Expression.createNumber(dblVal);
+                        }
+                        else if (strFunName.equals("rem"))
+                        {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
+                            if(!exp1.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp1);
+
+                            if(!exp2.isInteger())
+                            	throw new JIPTypeException(JIPTypeException.INTEGER, exp2);
+
+                            if((int)dVal2 == 0)
+                            	throw new JIPEvaluationException(JIPEvaluationException.zero_divisor);
+
+                            dblVal = dVal1 % dVal2;
                             return Expression.createNumber(dblVal);
                         }
                         else if(strFunName.equals("/\\"))  // bitwise and

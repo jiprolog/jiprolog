@@ -76,26 +76,31 @@ public class NumberChars2 extends JIPXCall
             {
 				try
 				{
-                	String strVal = (JIPString.create((JIPList)chars)).getStringValue();
+                	String strVal0 = (JIPString.create((JIPList)chars)).getStringValue();
 
-                	if(strVal.startsWith("0'"))
+					// remove leading whitespace
+					String strVal = strVal0.replaceAll("^\\s+", "");
+
+					// trailing whitespace is considered a syntax error
+					if(strVal0.length() != strVal.length())
+						throw new JIPSyntaxErrorException("not_a_number");
+
+                	if(strVal.startsWith("0''") && strVal.length() > 3)
+                	      chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
+                	else if(strVal.startsWith("0\'") && strVal.length() > 3)
+              	      chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
+                	else if(strVal.startsWith("0'"))
 						chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
                 	else if(strVal.startsWith("0x"))
                 		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 16));
-					else if(strVal.startsWith(" 0x"))
-                		chars = JIPNumber.create(Integer.parseInt(strVal.substring(3), 16));
                 	else if(strVal.startsWith("0o"))
                     		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 8));
-					else if(strVal.startsWith(" 0o"))
-                		chars = JIPNumber.create(Integer.parseInt(strVal.substring(3), 8));
                 	else if(strVal.startsWith("0b"))
                 		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 2));
-                	else if(strVal.startsWith("0b"))
-                		chars = JIPNumber.create(Integer.parseInt(strVal.substring(3), 2));
-                	else if(strVal.startsWith("0''"))
-                	      chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
-                	else if(strVal.startsWith("0\'"))
-              	      chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
+
+//					// trailing whitespace is considered a syntax error
+//					if(codes.length() != strVal.length())
+//		                throw new JIPSyntaxErrorException("not_a_number");
 
                 	else
                 	{

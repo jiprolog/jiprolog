@@ -125,6 +125,7 @@ atom_number(Atom, Number):-
     atom_codes(Atom, Codes),
     catch(number_codes(Number, Codes), _, fail).
 
+
 atom_concat(Atom1, Atom2, Concat):-
     (atom(Atom1) ; number(Atom1)),
     (atom(Atom2) ; number(Atom2)),
@@ -144,20 +145,26 @@ atom_concat(Atom1, Atom2, Concat):-
     atom_chars(Atom2, CAtom2).
 
 atom_concat(Atom1, _, Concat):-
- var(Atom1), var(Concat),
- error(instantiation_error).
+    var(Atom1), var(Concat),
+    error(instantiation_error).
 
 atom_concat(_, Atom2, Concat):-
- var(Atom2), var(Concat),
- error(instantiation_error).
+    var(Atom2), var(Concat),
+    error(instantiation_error).
 
 atom_concat(Atom1, _, _):-
- \+ atom(Atom1),
- error(type_error(atom,Atom1)).
+	nonvar(Atom1),
+    \+ atom(Atom1),
+    error(type_error(atom,Atom1)).
 
 atom_concat(_, Atom2, _):-
- \+ atom(Atom2),
- error(type_error(atom,Atom2)).
+	nonvar(Atom2),
+    \+ atom(Atom2),
+    error(type_error(atom,Atom2)).
+
+atom_concat(_, _, Concat):-
+    error(type_error(atom,Concat)).
+
 
 sub_atom(Atom, Before, Length, After, SubAtom):-
  	atom(Atom), (var(SubAtom); atom(SubAtom)),
