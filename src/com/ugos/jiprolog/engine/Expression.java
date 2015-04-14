@@ -405,6 +405,9 @@ final class Expression extends PrologObject //implements Serializable
                             final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
                             final double dVal2 = exp2.m_dValue;
 
+                            if(dVal2 == 0)
+                            	throw new JIPEvaluationException(JIPEvaluationException.zero_divisor);
+
                             dblVal =  dVal1 / dVal2;
                         }
                         else if(strFunName.equals("//"))

@@ -74,14 +74,14 @@ public class NumberCodes2 extends JIPXCall
             }
             else if (codes instanceof JIPList)
 				try {
-					String strVal0 = (JIPString.create((JIPList)codes)).getStringValue();
+					String strVal = (JIPString.create((JIPList)codes)).getStringValue();
 
 					// remove leading whitespace
-					String strVal = strVal0.replaceAll("^\\s+", "");
+					strVal = strVal.replaceAll("^\\s+", "");
 
 					// trailing whitespace is considered a syntax error
-					if(strVal0.length() != strVal.length())
-						throw new JIPSyntaxErrorException("not_a_number");
+					if(strVal.length() != strVal.replaceAll("\\s+$", "").length())
+					    throw new JIPSyntaxErrorException("not_a_number");
 
                 	if(strVal.startsWith("0''") && strVal.length() > 3)
                 		codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
