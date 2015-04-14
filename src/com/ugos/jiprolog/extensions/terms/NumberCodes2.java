@@ -83,12 +83,13 @@ public class NumberCodes2 extends JIPXCall
 					if(strVal.length() != strVal.replaceAll("\\s+$", "").length())
 					    throw new JIPSyntaxErrorException("not_a_number");
 
-                	if(strVal.startsWith("0''") && strVal.length() > 3)
-                		codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
-                	else if(strVal.startsWith("0\'") && strVal.length() > 3)
-                		codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
-                	else if(strVal.startsWith("0'"))
-						codes = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
+//                	if(strVal.startsWith("0''") && strVal.length() > 3)
+//                		codes = JIPNumber.create(strVal.codePointAt(3));
+//                	else if(strVal.startsWith("0\'") && strVal.length() > 3)
+//                		codes = JIPNumber.create(strVal.codePointAt(3));
+//                	else
+               		if(strVal.startsWith("0'"))
+						codes = JIPNumber.create(strVal.codePointAt(2));
                 	else if(strVal.startsWith("0x"))
                 		codes = JIPNumber.create(Integer.parseInt(strVal.substring(2), 16));
                 	else if(strVal.startsWith("0o"))
