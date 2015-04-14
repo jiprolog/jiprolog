@@ -18,6 +18,13 @@ public class JIPRepresentationException extends JIPRuntimeException {
 	private String typeError;
 	private PrologObject culprit;
 
+	public JIPRepresentationException(String typeError, JIPTerm culprit)
+	{
+       	this.typeError = typeError;
+
+		this.culprit = culprit.getTerm();
+	}
+
 	JIPRepresentationException(String typeError, PrologObject culprit)
 	{
        	this.typeError = typeError;

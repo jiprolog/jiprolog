@@ -76,7 +76,7 @@ public class JIPSyntaxErrorException extends JIPRuntimeException
         else
         {
             return JIPFunctor.create("error",
-            		JIPCons.create(JIPFunctor.create("syntax_error", JIPCons.create(JIPAtom.create("undefined"), null)), JIPCons.create(JIPAtom.create("undefined"), null)));
+            		JIPCons.create(JIPFunctor.create("syntax_error", JIPCons.create(JIPAtom.create(m_strTerm), null)), JIPCons.create(JIPAtom.create("undefined"), null)));
         }
     }
 }

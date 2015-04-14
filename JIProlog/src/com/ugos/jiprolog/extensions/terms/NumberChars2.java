@@ -85,12 +85,13 @@ public class NumberChars2 extends JIPXCall
 					if(strVal.length() != strVal.replaceAll("\\s+$", "").length())
 					     throw new JIPSyntaxErrorException("not_a_number");
 
-                	if(strVal.startsWith("0''") && strVal.length() > 3)
-                	      chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(3)));
-                	else if(strVal.startsWith("0\'") && strVal.length() > 3)
-              	      chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
-                	else if(strVal.startsWith("0'"))
-						chars = JIPNumber.create(Character.getNumericValue(strVal.charAt(2)));
+//                	if(strVal.startsWith("0''") && strVal.length() > 3)
+//                	      chars = JIPNumber.create(strVal.codePointAt(3));
+//                	else if(strVal.startsWith("0\'") && strVal.length() > 3)
+//              	      chars = JIPNumber.create(strVal.codePointAt(2));
+//                	else
+                		if(strVal.startsWith("0'"))
+						chars = JIPNumber.create(strVal.codePointAt(2));
                 	else if(strVal.startsWith("0x"))
                 		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 16));
                 	else if(strVal.startsWith("0o"))
@@ -98,8 +99,8 @@ public class NumberChars2 extends JIPXCall
                 	else if(strVal.startsWith("0b"))
                 		chars = JIPNumber.create(Integer.parseInt(strVal.substring(2), 2));
 
-//					// trailing whitespace is considered a syntax error
-//					if(codes.length() != strVal.length())
+//					// trailing non numeric leftovers is a syntax error
+//					if(chars.length() != strVal.length())
 //		                throw new JIPSyntaxErrorException("not_a_number");
 
                 	else
