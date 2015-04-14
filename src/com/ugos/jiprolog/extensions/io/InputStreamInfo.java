@@ -35,7 +35,7 @@ public class InputStreamInfo extends StreamInfo
 		properties.setProperty("eof_action", "eof_action(" + eof_action + ")");
 //		properties.setProperty("eof_action", "eof_action(eof_code)");
 		properties.setProperty("reposition", "reposition(false)");
-
+		properties.setProperty("end_of_stream", "end_of_stream(no)");
 	}
 
 //    private void init()
