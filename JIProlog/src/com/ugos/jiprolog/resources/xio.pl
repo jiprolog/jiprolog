@@ -826,6 +826,7 @@ stream_property(Handle, end_of_stream(X)):-
 	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, end_of_stream(X0)]),
 	(	X0 == no,
 		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, input]),
+		\+ xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, eof_action(reset)]),
 		peek_byte(Handle, -1) ->
 		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, end_of_stream(at)]),
 		X = at
