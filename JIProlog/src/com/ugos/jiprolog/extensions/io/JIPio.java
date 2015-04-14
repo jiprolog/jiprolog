@@ -171,6 +171,12 @@ public final class JIPio
 
 	        sinfo.m_stream = (PushBackInputStream)reader;
 
+	        int n = sinfo.m_stream.read();
+	        if(n == -1)
+	        	sinfo.setEndOfStream("at");
+	        else
+	        	sinfo.m_stream.pushback();
+
 	        return put(sinfo);
         }
     }
