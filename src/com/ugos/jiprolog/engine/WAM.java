@@ -543,7 +543,7 @@ class WAM
 //        }
         catch(ClassCastException ex)
         {
-            ex.printStackTrace();
+//            ex.printStackTrace();
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
@@ -568,7 +568,7 @@ class WAM
         }
         catch(Throwable th)
         {
-            th.printStackTrace();   //DBG
+//            th.printStackTrace();   //DBG
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
