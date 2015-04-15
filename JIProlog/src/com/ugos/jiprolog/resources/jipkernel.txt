@@ -271,17 +271,6 @@ check_operator_name(Term, Priority, Specifier) :-
   error(type_error(integer,Upper))
  ).
 
-%'$system':between(Lower, Upper, Integer) :-
-%	integer(Lower),
-%	integer(Upper),
-%	(	var(Integer) ->
-%		Lower =< Upper,
-%		'$kernel':generate_num(Lower, Upper, Integer)
-%	;	integer(Integer),
-%		Lower =< Integer,
-%		Integer =< Upper
-%	).
-
 '$kernel':generate_num(Lower, _, Lower).
 '$kernel':generate_num(Lower, Upper, Integer) :-
 	Lower < Upper,
@@ -294,15 +283,6 @@ check_operator_name(Term, Priority, Specifier) :-
 
 /* Kernel Internal predicates */
 
-%'$kernel':translate(((LHS_in1, LHS_in2) --> RHS_in), (LHS_out:-RHS_out)):-
-%    nonvar(LHS_in1),
-%    list(LHS_in2),
-%    !,
-%    tag(LHS_in1, S0, Sn, LHS_out),
-%    make_connects(LHS_in2, Sn, S1, Conn),
-%    dcg_rhs(RHS_in, S0, S1, RHS_1),
-%    dcg_and(Conn, RHS_1, RHS_2),
-%    flatten2(RHS_2, RHS_out).
 
 '$kernel':translate(((LHS_in1, LHS_in2) --> RHS_in), (LHS_out:-RHS_out)):-
     nonvar(LHS_in1),
@@ -427,14 +407,6 @@ check_operator_name(Term, Priority, Specifier) :-
 
 '$kernel':flatten1(In1, (In1, In2), In2).
 
-%'$kernel':make_connects([First|Rest], S0, Sn, Conns):-
-%    nonvar(Rest),
-%    !,
-%    make_connects(Rest, SI, Sn, Cs),
-%    dcg_and('C'(S0, First, SI), Cs, Conns).
-%
-%'$kernel':make_connects([], S, S, true).
-
 '$kernel':make_connects(Terminals, S0, Sn, Conns):-
 	(	list(Terminals) ->
 		append(Terminals, Sn, List),
@@ -473,20 +445,3 @@ check_operator_name(Term, Priority, Specifier) :-
 '$system':max_arity(X):-'$kernel':prolog_flag(max_arity, X).
 '$system':dialect(X):-'$kernel':prolog_flag(dialect, X).
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

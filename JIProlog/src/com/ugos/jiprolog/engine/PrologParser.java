@@ -663,6 +663,9 @@ final class PrologParser
 //                                                System.out.println("infix " + curOp.getName());
                                                 if(termStack.size() == 1)
                                                 {
+//                                                	if(lastObj instanceof Atom && ((Atom)lastObj).getName().equals(curOp.m_strName))
+//                                                		throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + curOp.getName() + ")");
+
                                                     termStack.push(curOp.getInfix());
                                                     lastObj = null;
                                                 }
@@ -723,7 +726,7 @@ final class PrologParser
                                             }
                                             else //prefix
                                             {
-                                                throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term3(" + curOp.getName() + ")");
+                                                throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + curOp.getName() + ")");
                                                 //throw syntaxError(curOp, tok.m_strToken);
                                             }
                                         }
@@ -895,7 +898,6 @@ final class PrologParser
                                 if(lastObj instanceof PrologObject)
                                 {
                                     throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "operator_expected(" + ((PrologObject)lastObj).toString(m_opManager) + ")");
-                                    //throw syntaxError(lastObj, tok.m_strToken);
                                 }
                                 else
                                 {
@@ -951,7 +953,7 @@ final class PrologParser
         {
             ex.printStackTrace();
             if(tok != null)
-                throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term2(" + tok.m_strToken + ")");
+                throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + tok.m_strToken + ")");
                 //throw syntaxError(tok.m_strToken, null);
             else
                 throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(unknown)");
