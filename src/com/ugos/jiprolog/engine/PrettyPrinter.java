@@ -238,16 +238,7 @@ final class PrettyPrinter extends Object
             }
 
             String strParams = printParams(params, opManager, bQ, varTable);
-//          String strParams = "";
-//          while (params != null)
-//          {
-//              strParams += print(params.getHead());
-//              params = (ConsCell)params.getTail();
-//              if(params != null && params != List.NIL && params != ConsCell.NIL)
-//                  strParams += ", ";
-//          }
 
-            //return strFunctor + "(" + strParams + ")";
             return printAtomString(strFunctor, opManager, bQ) + "(" + strParams + ")";
         }
     }
@@ -371,9 +362,9 @@ final class PrettyPrinter extends Object
             if(((List)obj).isNil())
                 return "[]";
             else if(((List)obj).getTail() != null)
-                return "'.'(" + print(((List)obj).getHead(), null, bQ, varTable) + ", " + print(((List)obj).getTail(), null, bQ, varTable) + ")";
+                return "'.'(" + print(((List)obj).getHead(), null, bQ, varTable) + "," + print(((List)obj).getTail(), null, bQ, varTable) + ")";
             else
-                return "'.'(" + print(((List)obj).getHead(), null, bQ, varTable)+ ", [])";
+                return "'.'(" + print(((List)obj).getHead(), null, bQ, varTable)+ ",[])";
         }
         else
         {
@@ -408,7 +399,7 @@ final class PrettyPrinter extends Object
                     head = ((ConsCell)term).getHead();
 
                     if(head != null)
-                        strParams += ", " ;
+                        strParams += "," ;
                 }
             }
             else
@@ -479,7 +470,7 @@ final class PrettyPrinter extends Object
                             head = BuiltIn.getRealTerm(head);
 
                         if(head != null)
-                            strConsCell += ", " ;
+                            strConsCell += "," ;
                     }
                     else if(term != null)
                     {
@@ -530,7 +521,7 @@ final class PrettyPrinter extends Object
 
                 if(head != null)
                 {
-                    return "','(" + strConsCell + ", " + print(term, opManager, bQ, varTable) + ")";
+                    return "','(" + strConsCell + "," + print(term, opManager, bQ, varTable) + ")";
                 }
                 else
                 {
@@ -548,7 +539,7 @@ final class PrettyPrinter extends Object
             }
             else if(term != null)
             {
-                return "','(" + strConsCell +  ", " + print(term, opManager, bQ, varTable) + ")";
+                return "','(" + strConsCell +  "," + print(term, opManager, bQ, varTable) + ")";
             }
             else
             {

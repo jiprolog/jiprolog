@@ -253,7 +253,14 @@ class ConsCell extends PrologObject //implements Serializable
         }
         else
         {
-            return getHeight((ConsCell)BuiltIn.getRealTerm(cell.getTail()), nHeight + 1);
+        	try
+        	{
+        		return getHeight((ConsCell)BuiltIn.getRealTerm(cell.getTail()), nHeight + 1);
+        	}
+        	catch(ClassCastException ex)
+        	{
+        		return nHeight + 1;
+        	}
         }
     }
 

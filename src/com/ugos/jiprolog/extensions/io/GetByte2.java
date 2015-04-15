@@ -19,23 +19,20 @@
 
 package com.ugos.jiprolog.extensions.io;
 
+import com.ugos.jiprolog.engine.*;
+
 import java.io.*;
 import java.util.*;
 
-import com.ugos.io.*;
-import com.ugos.jiprolog.engine.*;
-
-public final class PeekByte2 extends JIPXCall
+public final class GetByte2 extends JIPXCall
 {
-//    private JIPTerm m_term;
+    private String m_strStreamHandle;
 
-   private final int peekByte(PushBackInputStream ins)
+    protected final int readNextChar(InputStream ins)
     {
         try
         {
-            int c = ins.read();
-            ins.pushback();
-            return c;
+            return ins.read();
         }
         catch(IOException ex)
         {
@@ -55,7 +52,6 @@ public final class PeekByte2 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)input).isBounded())
             {
-
                 throw new JIPParameterUnboundedException(1);
             }
             else
@@ -69,24 +65,23 @@ public final class PeekByte2 extends JIPXCall
         if(input instanceof JIPAtom)
         {
             // Gets the handle to the stream
-            final String strStreamHandle = ((JIPAtom)input).getName();
+            m_strStreamHandle = ((JIPAtom)input).getName();
 
-            // Get the stream
-            PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
-            if(ins == null)
-            {
-            	throw JIPExistenceException.createStreamException(strStreamHandle);
-//            	throw new JIPDomainException("stream_or_alias", strStreamHandle);
-            }
-
-        	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
-			Properties properties = streamInfo.getProperties();
-
-	        if(!(properties.getProperty("mode","mode(read)").equals("mode(read)")))
+	        InputStreamInfo sinfo = (InputStreamInfo)JIPio.getStreamInfo(m_strStreamHandle);
+	        String mode = sinfo.getProperties().getProperty("mode");
+	        if(!(mode.equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
 
-	        if(!(properties.getProperty("type","type(binary)").equals("type(binary)")))
+	        if(!sinfo.getProperties().getProperty("type").equals("type(binary)"))
 	        	throw new JIPPermissionException("input", "text_stream", input);
+
+            // Get the stream
+            final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
+            if(ins == null)
+            {
+            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+//            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
+            }
 
 	        if (b instanceof JIPVariable && ((JIPVariable)b).isBounded())
 	        {
@@ -101,35 +96,25 @@ public final class PeekByte2 extends JIPXCall
 		            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
 	        }
 
+            if("user_input".equals(m_strStreamHandle))
+                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
+
             JIPTerm term;
-            int c = peekByte(ins);
+            int c = readNextChar(ins);
             if(c == -1)
             {
-//            	System.out.println("end_of_stream " + properties.getProperty("end_of_stream"));
-//            	System.out.println("eof_action " + properties.getProperty("eof_action"));
-
-				if(properties.getProperty("end_of_stream","no").equals("end_of_stream(no)"))
+				if(sinfo.getProperties().getProperty("end_of_stream").equals("end_of_stream(past)") || sinfo.getProperties().getProperty("eof_action").equals("eof_action(error)"))
 				{
-            		streamInfo.setEndOfStream("at");
-					term = JIPNumber.create(c);
-				}
-				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
-				{
-					term = JIPNumber.create(c);
-				}
-				else if(properties.getProperty("eof_action").equals("eof_action(error)"))
-				{
-		            throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(strStreamHandle));
+					throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(m_strStreamHandle));
 				}
 				else
-				{ // eof_action(reset)
-					properties.setProperty("end_of_stream","end_of_stream(no)");
-					return unify(params, varsTbl);
-				}
-			}
-//                term = JIPAtom.create("end_of_file");
-//            else
+            		sinfo.setEndOfStream("past");
+            }
+
             term = JIPNumber.create(c);
+
+            if("user_input".equals(m_strStreamHandle))
+                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
 
             return params.getNth(2).unify(term, varsTbl);
         }

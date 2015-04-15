@@ -49,7 +49,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 
 	</target>
 
-	<target name="jar-it" depends="CompileLibraries" description="Jar the project.">
+	<target name="jar-it" depends="init" description="Jar the project.">
 		<jar jarfile="${project.jiprolog.root}/${project.jiprolog.ijar}" basedir="${project.jiprolog.lib}" />
 		<jar jarfile="${project.jiprolog.jipgui.root}/${project.jiprolog.jipgui.jar}" basedir="${project.jiprolog.jipgui.lib}" />
 		<jar jarfile="${project.jiprolog.jipjextplugin.root}/${project.jiprolog.jipjextplugin.jar}" basedir="${project.jiprolog.jipjextplugin.lib}" />

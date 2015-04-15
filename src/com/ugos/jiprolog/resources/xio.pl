@@ -182,6 +182,8 @@ read(Handle, Term):-
 		error(existence_error(stream,Handle))
 	;	\+ stream_property(Handle1, mode(read)) ->
 		error(permission_error(input,stream,Handle))
+	;	stream_property(Handle1, type(binary)) ->
+		error(permission_error(input,binary_stream,Handle))
 	;	xcall('com.ugos.jiprolog.extensions.io.Read2', [Handle1, Term])
 	).
 
@@ -208,65 +210,54 @@ read_clause(Handle, Term, Options):-
     options(Handle, Term, Options).
 
 
-get0(Char):-
+get0(Code):-
     current_input(Handle),
-    get0(Handle,Char).
+    get0(Handle, Code).
 
-get0(Handle, Char):-
+get0(Handle, Code):-
     check_handle(Handle, Handle1),
-    xcall('com.ugos.jiprolog.extensions.io.Get02', [Handle1, Char]).
+    xcall('com.ugos.jiprolog.extensions.io.Get02', [Handle1, Code]).
 
-get(C):-
+get(Code):-
     current_input(Handle),
-    get(Handle, C).
+    get(Handle, Code).
 
-get(Handle, C):-
-    get0(Handle, C),
-    C >= 32.
+get(Handle, Code):-
+    get0(Handle, Code),
+    Code >= 32.
 
-get_byte(B):-
+
+get_byte(Byte):-
     current_input(Handle),
-    get_byte(Handle, B).
+	xcall('com.ugos.jiprolog.extensions.io.GetByte2', [Handle, Code]).
 
-get_byte(Handle, B):-
-	(	var(B) ->
-		get0(Handle, B)
-	;	integer(B), B >= 0, B =< 255 ->
-		get0(Handle, B)
-	;	error(type_error(in_byte,B))
-	).
+get_byte(Handle, Byte):-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.GetByte2', [Handle1, Code]).
 
-get_code(C):-
+
+get_code(Code) :-
     current_input(Handle),
-    get_code(Handle, C).
+	xcall('com.ugos.jiprolog.extensions.io.GetCode2', [Handle, Code]).
 
-get_code(Handle, C):-
-	(	var(C) ->
-		get0(Handle, C)
-	;	integer(C) ->
-		get0(Handle, C)
-	;	error(type_error(integer,C))
-	),
-	(	'$char'(C,_) ->
-		true
-	;	error(representation_error(in_character_code))
-	).
+get_code(Handle, Code) :-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.GetCode2', [Handle1, Code]).
 
-get_char(C):-
+
+get_char(Char):-
     current_input(Handle),
-    get_char(Handle, C).
+	xcall('com.ugos.jiprolog.extensions.io.GetChar2', [Handle, Char]).
 
-get_char(Handle, C):-
-	(	var(C) ->
-		get0(Handle, B)
-	;	atom(C), atom_chars(C, [_]) ->
-		get0(Handle, B)
-	;	error(type_error(character,C))
-	),
-	( 	'$char'(B,C0) ->
-  		C = C0
- 		; error(representation_error(character))
- 	).
+get_char(Handle, Char):-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.GetChar2', [Handle1, Char]).
+%	xcall('com.ugos.jiprolog.extensions.io.GetChar2', [Handle1, Code]),
+%	( 	'$char'(Code, Char0) ->
+%  		Char0 = Char0
+%	;	error(representation_error(character))
+% 	).
+
 
 '$char'(-1, end_of_file) :-
 	!.
@@ -279,48 +270,38 @@ get_char(Handle, C):-
 '$char'(_, _) :-
 	error(representation_error(character)).
 
-peek_byte(B):-
+
+peek_byte(Byte) :-
     current_input(Handle),
-    peek_byte(Handle, B).
+	xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle, Byte]).
 
-peek_byte(Handle, B):-
-	nonvar( B ),
- 	( integer( B ) ->
-  	\+ (B >= -1, B =< 255)
- 	; true
- 	),
- 	error(type_error(in_byte,B)).
+peek_byte(Handle, Byte):-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle1, Byte]).
 
-peek_byte(Handle, B):-
-    check_handle(Handle, Handle1),
-    xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle1, B]).
 
-peek_code(C):-
+peek_code(Code) :-
     current_input(Handle),
-    peek_code(Handle, C).
+    xcall('com.ugos.jiprolog.extensions.io.PeekCode2', [Handle, Code]).
 
-peek_code(Handle, C):-
-	nonvar(C),
-	\+ integer(C),
-	error(type_error(integer,C)).
+peek_code(Handle, Code):-
+	check_handle(Handle, Handle1),
+    xcall('com.ugos.jiprolog.extensions.io.PeekCode2', [Handle1, Code]).
 
-peek_code(Handle, C):-
-    peek_byte(Handle, C),
-    (	'$char'(C,_) ->
-		true
-	;	error(representation_error(in_character_code))
-	).
-peek_char(C):-
+
+peek_char(Char) :-
     current_input(Handle),
-    peek_char(Handle, C).
-peek_char(Handle, C):-	nonvar( C ), 	\+ atom( C ), 	error(type_error(in_character,C)).
+    xcall('com.ugos.jiprolog.extensions.io.PeekChar2', [Handle, Char]).
 
-peek_char(Handle, C):-
-    peek_byte(Handle, B),
-    ( 	'$char'(B,C0) ->
-  		C = C0
- 	; 	error(representation_error(character))
- 	).
+peek_char(Handle, Char) :-
+	heck_handle(Handle, Handle1),
+    xcall('com.ugos.jiprolog.extensions.io.PeekChar2', [Handle1, Char]).
+%	;	xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle1, Byte])
+%	),
+%    ( 	'$char'(Byte, Char0) ->
+%  		Char = Char0
+% 	; 	error(representation_error(character))
+% 	).
 
 
 skip(Char):-
@@ -397,6 +378,8 @@ write(Handle, Term):-
 	;	\+ stream_property(Handle1, mode(append)),
 		\+ stream_property(Handle1, mode(write)) ->
 		error(permission_error(output,stream,Handle))
+	;	stream_property(Handle1, type(binary)) ->
+		error(permission_error(output,binary_stream,Handle))
 	;	xcall('com.ugos.jiprolog.extensions.io.Write2', [Handle1, Term])
 	).
 
@@ -410,6 +393,8 @@ write_canonical(Handle, Term):-
 	;	\+ stream_property(Handle1, mode(append)),
 		\+ stream_property(Handle1, mode(write)) ->
 		error(permission_error(output,stream,Handle))
+	;	stream_property(Handle1, type(binary)) ->
+		error(permission_error(output,binary_stream,Handle))
 	;	xcall('com.ugos.jiprolog.extensions.io.WriteCanonical2', [Handle1, Term])
 	).
 
@@ -426,20 +411,33 @@ display(Term):-
 display(Handle, Term):-
     write_canonical(Handle, Term).
 
+
 writeq(Term):-
     current_output(Handle),
     writeq(Handle, Term).
 
 writeq(Handle, Term):-
-    check_handle(Handle, Handle1),
-    xcall('com.ugos.jiprolog.extensions.io.Writeq2', [Handle1, Term]).
+	(	var(Handle) ->
+		error(instantiation_error)
+	;	check_handle(Handle, Handle1)
+	),
+	(	\+ current_stream(Handle1) ->
+		error(existence_error(stream,Handle))
+	;	\+ stream_property(Handle1, mode(append)),
+		\+ stream_property(Handle1, mode(write)) ->
+		error(permission_error(output,stream,Handle))
+	;	stream_property(Handle1, type(binary)) ->
+		error(permission_error(output,binary_stream,Handle))
+    ;	xcall('com.ugos.jiprolog.extensions.io.Writeq2', [Handle1, Term])
+	).
+
 
 writeln(Term):-
     write(Term), nl.
 
 writeln(Handle, Term):-
-    check_handle(Handle, Handle1),
-    write(Handle1, Term),nl.
+    write(Handle, Term), nl.
+
 
 write_term(Term, Options):-
 	check_options(Options, Options),
@@ -452,96 +450,83 @@ write_term(Handle, Term, Options):-
     write(Handle, Term),
     options(Handle, Term, Options).
 
-put(Handle, C):-
-    number(C),
-    !,
-    name(Char, [C]),
-    check_handle(Handle, Handle1),
-    write(Handle, Char).
-
-put(Handle, C):-
-    atom(C),
-    !,
-    check_handle(Handle, Handle1),
-    write(Handle, C).
-
-put(Handle, C):-
-	var(C),
-	error(instantiation_error).
 
 put(C):-
     current_output(Handle),
-    put(Handle, C).
+	xcall('com.ugos.jiprolog.extensions.io.Put2', [Handle, C]).
 
-put_byte(C):-
+put(Handle, C) :-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.Put2', [Handle1, C]).
+
+
+put_byte(Byte) :-
     current_output(Handle),
-    put_byte(Handle, C).
+	xcall('com.ugos.jiprolog.extensions.io.PutByte2', [Handle, Byte]).
 
-put_byte(Handle, C):-
-	(	var(C) ->
-		error(instantiation_error)
-	;	integer(C), C >= 0, C =< 255 ->
-		put(Handle, C)
-	;	error(type_error(byte,C))
-	).
+put_byte(Handle, Byte):-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.PutByte2', [Handle1, Byte]).
 
-put_char(C):-
+
+put_char(Char) :-
     current_output(Handle),
-    put_char(Handle, C).
+	xcall('com.ugos.jiprolog.extensions.io.PutChar2', [Handle, Char]).
 
-put_char(Handle, C):-
-	(	var(C) ->
-		error(instantiation_error)
-	;	atom(C), atom_chars(C, [_]) ->
-		put(Handle, C)
-	;	error(type_error(character,C))
-	).
+put_char(Handle, Char):-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.PutChar2', [Handle1, Char]).
 
-put_code(C):-
+
+put_code(Code) :-
     current_output(Handle),
-    put_code(Handle, C).
+	xcall('com.ugos.jiprolog.extensions.io.PutCode2', [Handle, Code]).
 
-put_code(Handle, C):-
-	(	var(C) ->
-		error(instantiation_error)
-	;	integer(C) ->
-		put(Handle, C)
-	;	error(type_error(integer,C))
-	).
+put_code(Handle, Code):-
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.PutCode2', [Handle1, Code]).
+
 
 tab(N):-
     current_output(Handle),
-    tab(Handle, N).
+    tab_(Handle, N).
 
 tab(Handle, N):-
+    check_handle(Handle, Handle1),
+	tab_(Handle1, N).
+
+tab_(Handle, N):-
     N < 1,
     !.
 
-tab(Handle, N):-
+tab_(Handle, N):-
     N1 is N - 1,
-    tab(N1),
-    put(Handle, 32).
+	xcall('com.ugos.jiprolog.extensions.io.PutCode2', [Handle1, 32]),
+    tab_(Handle, N1).
 
-nl(Handle):-
+
+nl(Handle) :-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Nl1', [Handle1]).
 
-flush_output(Handle):-
+
+flush_output :-
+    current_output(Handle),
+    xcall('com.ugos.jiprolog.extensions.io.FlushOutput1', [Handle]).
+
+flush_output(Handle) :-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.FlushOutput1', [Handle1]).
 
-flush_output:-
-    current_output(Handle),
-    flush_output(Handle).
 
-told(Handle):-
+told :-
+    current_output(Handle),
+    xcall('com.ugos.jiprolog.extensions.io.Told1', [Handle]),
+    set_output(user_output).
+
+told(Handle) :-
     check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.Told1', [Handle1]).
-
-told:-
-    current_output(Handle),
-    told(Handle),
-    set_output(user_output).
 
 
 close(Handle, Options):-
@@ -696,10 +681,9 @@ set_output(Handle):-
 	;	\+ stream_property(Handle1, mode(append)),
 		\+ stream_property(Handle1, mode(write)) ->
 		error(permission_error(output,stream,Handle))
+	;   xcall('com.ugos.jiprolog.extensions.io.SetOutput1', [Handle])
 	).
 
-set_output(Handle):-
-    xcall('com.ugos.jiprolog.extensions.io.SetOutput1', [Handle]).
 
 set_input(Handle):-
 	var(Handle),
@@ -715,10 +699,8 @@ set_input(Handle):-
 		error(existence_error(stream,Handle))
 	;	\+ stream_property(Handle1, mode(read)) ->
 		error(permission_error(input,stream,Handle))
+	;   xcall('com.ugos.jiprolog.extensions.io.SetInput1', [Handle])
 	).
-
-set_input(Handle):-
-    xcall('com.ugos.jiprolog.extensions.io.SetInput1', [Handle]).
 
 /*******************/
 

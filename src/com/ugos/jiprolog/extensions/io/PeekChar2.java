@@ -25,11 +25,11 @@ import java.util.*;
 import com.ugos.io.*;
 import com.ugos.jiprolog.engine.*;
 
-public final class PeekByte2 extends JIPXCall
+public final class PeekChar2 extends JIPXCall
 {
 //    private JIPTerm m_term;
 
-   private final int peekByte(PushBackInputStream ins)
+   private final int peekChar(PushBackInputStream ins)
     {
         try
         {
@@ -47,7 +47,7 @@ public final class PeekByte2 extends JIPXCall
     {
         // get first parameter
         JIPTerm input = params.getNth(1);
-        JIPTerm b = params.getNth(2);
+        JIPTerm code = params.getNth(2);
 
         // check if input is a variable
         if (input instanceof JIPVariable)
@@ -81,28 +81,27 @@ public final class PeekByte2 extends JIPXCall
 
         	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
 			Properties properties = streamInfo.getProperties();
-
 	        if(!(properties.getProperty("mode","mode(read)").equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
 
-	        if(!(properties.getProperty("type","type(binary)").equals("type(binary)")))
-	        	throw new JIPPermissionException("input", "text_stream", input);
+	        if(!(properties.getProperty("type","type(text)").equals("type(text)")))
+	        	throw new JIPPermissionException("input", "binary_stream", input);
 
-	        if (b instanceof JIPVariable && ((JIPVariable)b).isBounded())
+	        if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
 	        {
-                b = ((JIPVariable)b).getValue();
+                code = ((JIPVariable)code).getValue();
 
-		        if(!(b instanceof JIPNumber))
-		            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
+		        if(!(code instanceof JIPNumber))
+		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, code);
 
-		        int nCode = (int)((JIPNumber)b).getDoubleValue();
+		        int nCode = (int)((JIPNumber)code).getDoubleValue();
 
-		        if(nCode < 0 || nCode > 255)
-		            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
+		        if(nCode < -1 || nCode > 255)
+		        	throw new JIPRepresentationException("character", code);
 	        }
 
             JIPTerm term;
-            int c = peekByte(ins);
+            int c = peekChar(ins);
             if(c == -1)
             {
 //            	System.out.println("end_of_stream " + properties.getProperty("end_of_stream"));
@@ -111,7 +110,6 @@ public final class PeekByte2 extends JIPXCall
 				if(properties.getProperty("end_of_stream","no").equals("end_of_stream(no)"))
 				{
             		streamInfo.setEndOfStream("at");
-					term = JIPNumber.create(c);
 				}
 				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 				{
@@ -126,10 +124,11 @@ public final class PeekByte2 extends JIPXCall
 					properties.setProperty("end_of_stream","end_of_stream(no)");
 					return unify(params, varsTbl);
 				}
+
+				term = JIPAtom.create("end_of_file");
 			}
-//                term = JIPAtom.create("end_of_file");
-//            else
-            term = JIPNumber.create(c);
+            else
+            	term = JIPAtom.create(String.valueOf((char)c));
 
             return params.getNth(2).unify(term, varsTbl);
         }
