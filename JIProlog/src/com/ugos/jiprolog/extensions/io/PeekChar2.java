@@ -81,56 +81,35 @@ public final class PeekChar2 extends JIPXCall
 
         	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
 			Properties properties = streamInfo.getProperties();
-	        if(!(properties.getProperty("mode","mode(read)").equals("mode(read)")))
+	        if(!(properties.getProperty("mode").equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
-
-	        if(!(properties.getProperty("type","type(text)").equals("type(text)")))
+	        if(!(properties.getProperty("type").equals("type(text)")))
 	        	throw new JIPPermissionException("input", "binary_stream", input);
 
 	        if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
 	        {
                 code = ((JIPVariable)code).getValue();
-
 		        if(!(code instanceof JIPNumber))
 		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, code);
 
 		        int nCode = (int)((JIPNumber)code).getDoubleValue();
-
 		        if(nCode < -1 || nCode > 255)
-		        	throw new JIPRepresentationException("character", code);
+		        	throw new JIPRepresentationException("character");
 	        }
 
-            JIPTerm term;
-            int c = peekChar(ins);
-            if(c == -1)
-            {
-//            	System.out.println("end_of_stream " + properties.getProperty("end_of_stream"));
-//            	System.out.println("eof_action " + properties.getProperty("eof_action"));
-
-				if(properties.getProperty("end_of_stream","no").equals("end_of_stream(no)"))
-				{
-            		streamInfo.setEndOfStream("at");
-				}
+			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
+				if(properties.getProperty("eof_action").equals("eof_action(error)"))
+					throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(strStreamHandle));
 				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
-				{
-					term = JIPNumber.create(c);
-				}
-				else if(properties.getProperty("eof_action").equals("eof_action(error)"))
-				{
-		            throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(strStreamHandle));
-				}
-				else
-				{ // eof_action(reset)
-					properties.setProperty("end_of_stream","end_of_stream(no)");
+		            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
+				else // eof_action(reset)
 					return unify(params, varsTbl);
-				}
-
-				term = JIPAtom.create("end_of_file");
+			} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
+	            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
+			} else { // end_of_stream(no)
+				JIPTerm term = JIPAtom.create(String.valueOf((char)peekChar(ins)));
+	            return params.getNth(2).unify(term, varsTbl);
 			}
-            else
-            	term = JIPAtom.create(String.valueOf((char)c));
-
-            return params.getNth(2).unify(term, varsTbl);
         }
         else
             throw new JIPTypeException(JIPTypeException.ATOM, params.getNth(2));

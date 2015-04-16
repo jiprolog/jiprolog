@@ -49,7 +49,7 @@ public class PutByte2 extends JIPXCall
         if(!(output instanceof JIPAtom))
             throw new JIPTypeException(JIPTypeException.ATOM, output);
 
-        // check if input is a variable
+        // check if byte is a variable
         if (b instanceof JIPVariable)
         {
             // try to extract the term
@@ -65,33 +65,34 @@ public class PutByte2 extends JIPXCall
         }
 
         if(!(b instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.INTEGER, b);
-
+            throw new JIPTypeException(JIPTypeException.BYTE, b);
 
         JIPAtom   handle = (JIPAtom)output;
-        int nCode = (int)((JIPNumber)b).getDoubleValue();
 
         // Gets the handle to the stream
         String strStreamHandle = (handle).getName();
-        OutputStream writer;
 
-        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        // Get the stream
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        if(sinfo == null)
+        	throw JIPExistenceException.createStreamException(strStreamHandle);
+
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
         	throw new JIPPermissionException("output", "stream", output);
-
         if(!sinfo.getProperties().getProperty("type").equals("type(binary)"))
         	throw new JIPPermissionException("output", "text_stream", output);
 
-        // Get the stream
-        writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+
+        OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
         	throw JIPExistenceException.createStreamException(strStreamHandle);
-//        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
 
-        if(nCode < -1 || nCode > 255)  // ignore all
+
+        int nCode = (int)((JIPNumber)b).getDoubleValue();
+        if(nCode < 1 || nCode > 255)
         	throw new JIPTypeException(JIPTypeException.BYTE, b);
 
         try

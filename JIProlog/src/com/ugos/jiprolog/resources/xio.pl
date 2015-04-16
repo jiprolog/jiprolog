@@ -368,35 +368,14 @@ telling(Handle, File):-
     check_handle(Handle, Handle1),
     stream_property(Handle1, file_name(File)).
 
+
 write(Handle, Term):-
-	(	var(Handle) ->
-		error(instantiation_error)
-	;	check_handle(Handle, Handle1)
-	),
-	(	\+ current_stream(Handle1) ->
-		error(existence_error(stream,Handle))
-	;	\+ stream_property(Handle1, mode(append)),
-		\+ stream_property(Handle1, mode(write)) ->
-		error(permission_error(output,stream,Handle))
-	;	stream_property(Handle1, type(binary)) ->
-		error(permission_error(output,binary_stream,Handle))
-	;	xcall('com.ugos.jiprolog.extensions.io.Write2', [Handle1, Term])
-	).
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.Write2', [Handle1, Term]).
 
 write_canonical(Handle, Term):-
-	(	var(Handle) ->
-		error(instantiation_error)
-	;	check_handle(Handle, Handle1)
-	),
-	(	\+ current_stream(Handle1) ->
-		error(existence_error(stream,Handle))
-	;	\+ stream_property(Handle1, mode(append)),
-		\+ stream_property(Handle1, mode(write)) ->
-		error(permission_error(output,stream,Handle))
-	;	stream_property(Handle1, type(binary)) ->
-		error(permission_error(output,binary_stream,Handle))
-	;	xcall('com.ugos.jiprolog.extensions.io.WriteCanonical2', [Handle1, Term])
-	).
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.WriteCanonical2', [Handle1, Term]).
 
 
 print(Term):-
@@ -404,6 +383,7 @@ print(Term):-
 
 print(Handle, Term):-
     write(Handle, Term).
+
 
 display(Term):-
     write_canonical(Term).
@@ -414,22 +394,11 @@ display(Handle, Term):-
 
 writeq(Term):-
     current_output(Handle),
-    writeq(Handle, Term).
+    xcall('com.ugos.jiprolog.extensions.io.Writeq2', [Handle, Term]).
 
 writeq(Handle, Term):-
-	(	var(Handle) ->
-		error(instantiation_error)
-	;	check_handle(Handle, Handle1)
-	),
-	(	\+ current_stream(Handle1) ->
-		error(existence_error(stream,Handle))
-	;	\+ stream_property(Handle1, mode(append)),
-		\+ stream_property(Handle1, mode(write)) ->
-		error(permission_error(output,stream,Handle))
-	;	stream_property(Handle1, type(binary)) ->
-		error(permission_error(output,binary_stream,Handle))
-    ;	xcall('com.ugos.jiprolog.extensions.io.Writeq2', [Handle1, Term])
-	).
+	check_handle(Handle, Handle1),
+    xcall('com.ugos.jiprolog.extensions.io.Writeq2', [Handle1, Term]).
 
 
 writeln(Term):-
@@ -803,17 +772,17 @@ stream_property(Handle, position(line(Line))):-
 	current_stream(Handle),
 	xcall('com.ugos.jiprolog.extensions.io.StreamPosition3', [Handle, _P, Line]).
 
-stream_property(Handle, end_of_stream(X)):-
-	current_stream(Handle),
-	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, end_of_stream(X0)]),
-	(	X0 == no,
-		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, input]),
-		\+ xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, eof_action(reset)]),
-		peek_byte(Handle, -1) ->
-		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, end_of_stream(at)]),
-		X = at
-	;	X = X0
-	).
+%stream_property(Handle, end_of_stream(X)):-
+%	current_stream(Handle),
+%	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, end_of_stream(X0)]),
+%	(	X0 == no,
+%		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, input]),
+%		\+ xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, eof_action(reset)]),
+%		peek_byte(Handle, -1) ->
+%		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, end_of_stream(at)]),
+%		X = at
+%	;	X = X0
+%	).
 
 %stream_property(Handle, end_of_stream(X)):-
 %	current_stream(Handle),
