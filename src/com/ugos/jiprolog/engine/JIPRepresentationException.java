@@ -14,27 +14,17 @@ public class JIPRepresentationException extends JIPRuntimeException {
 	 *
 	 */
 
-
 	private String typeError;
-	private PrologObject culprit;
 
-	public JIPRepresentationException(String typeError, JIPTerm culprit)
+	public JIPRepresentationException(String typeError)
 	{
        	this.typeError = typeError;
-
-		this.culprit = culprit.getTerm();
 	}
 
-	JIPRepresentationException(String typeError, PrologObject culprit)
-	{
-       	this.typeError = typeError;
 
-		this.culprit = culprit;
-	}
-
-	JIPRepresentationException(String typeError, PrologObject culprit, JIPEngine engine)
+	JIPRepresentationException(String typeError, JIPEngine engine)
 	{
-		this(typeError, culprit);
+		this(typeError);
 		m_engine = engine;
 	}
 

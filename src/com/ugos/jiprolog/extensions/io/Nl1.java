@@ -27,35 +27,42 @@ public final class Nl1 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
-        JIPTerm input = params.getNth(1);
+        JIPTerm output = params.getNth(1);
 
         // check if input is a variable
-        if (input instanceof JIPVariable)
+        if (output instanceof JIPVariable)
         {
             // try to extract the term
-            if(!((JIPVariable)input).isBounded())
+            if(!((JIPVariable)output).isBounded())
             {
                 throw new JIPParameterUnboundedException(1);
             }
             else
             {
                 //extracts the term
-                input = ((JIPVariable)input).getValue();
+                output = ((JIPVariable)output).getValue();
             }
         }
 
-        if(!(input instanceof JIPAtom))
-            throw new JIPTypeException(JIPTypeException.ATOM, input);
+        if(!(output instanceof JIPAtom))
+            throw new JIPTypeException(JIPTypeException.ATOM, output);
 
-        String strStreamHandle = ((JIPAtom)input).getName();
-        OutputStream writer;
+        // Gets the handle to the stream
+        String strStreamHandle = ((JIPAtom)output).getName();
 
         // Get the stream
-        writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
         	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
         }
+
+        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        String mode = sinfo.getProperties().getProperty("mode");
+        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
+        	throw new JIPPermissionException("output", "stream", output);
+        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
+        	throw new JIPPermissionException("output", "binary_stream", output);
 
         try
         {

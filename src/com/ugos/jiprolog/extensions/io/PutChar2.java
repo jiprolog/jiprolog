@@ -65,7 +65,7 @@ public class PutChar2 extends JIPXCall
         }
 
         if(!(c instanceof JIPAtom))
-            throw new JIPTypeException(JIPTypeException.ATOM, c);
+            throw new JIPTypeException(JIPTypeException.CHARACTER, c);
 
         if(((JIPAtom)c).getName().length() > 1)
             throw new JIPTypeException(JIPTypeException.CHARACTER, c);
@@ -74,21 +74,22 @@ public class PutChar2 extends JIPXCall
 
         // Gets the handle to the stream
         String strStreamHandle = (handle).getName();
-        OutputStream writer;
 
-        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        // Get the stream
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        if(sinfo == null)
+        	throw JIPExistenceException.createStreamException(strStreamHandle);
+
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
         	throw new JIPPermissionException("output", "stream", output);
-
         if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
         	throw new JIPPermissionException("output", "binary_stream", output);
 
-
-        // Get the stream
-        writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         	throw JIPExistenceException.createStreamException(strStreamHandle);
+
 
         try
         {

@@ -67,14 +67,12 @@ public class PutCode2 extends JIPXCall
         if(!(code instanceof JIPNumber))
             throw new JIPTypeException(JIPTypeException.INTEGER, code);
 
-        JIPAtom   handle = (JIPAtom)output;
-        int nCode = (int)((JIPNumber)code).getDoubleValue();
+        JIPAtom handle = (JIPAtom)output;
 
         // Gets the handle to the stream
         String strStreamHandle = (handle).getName();
-        OutputStream writer;
 
-        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
         	throw new JIPPermissionException("output", "stream", output);
@@ -83,15 +81,18 @@ public class PutCode2 extends JIPXCall
         	throw new JIPPermissionException("output", "binary_stream", output);
 
         // Get the stream
-        writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
         	throw JIPExistenceException.createStreamException(strStreamHandle);
 //        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
 
-        if(nCode < -1 || nCode > 255)  // ignore all
-            throw new JIPRepresentationException("character_code", code);
+
+
+        int nCode = (int)((JIPNumber)code).getDoubleValue();
+        if(nCode < 1 || nCode > 65536)
+            throw new JIPRepresentationException("character_code");
 
         try
         {
