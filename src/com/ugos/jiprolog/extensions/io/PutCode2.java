@@ -73,6 +73,9 @@ public class PutCode2 extends JIPXCall
         String strStreamHandle = (handle).getName();
 
         StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        if(sinfo == null)
+        	throw JIPExistenceException.createStreamException(strStreamHandle);
+
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
         	throw new JIPPermissionException("output", "stream", output);
@@ -85,10 +88,7 @@ public class PutCode2 extends JIPXCall
         if(writer == null)
         {
         	throw JIPExistenceException.createStreamException(strStreamHandle);
-//        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
-
-
 
         int nCode = (int)((JIPNumber)code).getDoubleValue();
         if(nCode < 1 || nCode > 65536)

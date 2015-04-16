@@ -72,19 +72,23 @@ public final class PeekByte2 extends JIPXCall
             final String strStreamHandle = ((JIPAtom)input).getName();
 
             // Get the stream
-            PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
-            if(ins == null)
-            {
-            	throw JIPExistenceException.createStreamException(strStreamHandle);
-//            	throw new JIPDomainException("stream_or_alias", strStreamHandle);
-            }
 
         	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
+	        if(streamInfo == null)
+            	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+
 			Properties properties = streamInfo.getProperties();
 	        if(!(properties.getProperty("mode").equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
 	        if(!(properties.getProperty("type").equals("type(binary)")))
 	        	throw new JIPPermissionException("input", "text_stream", input);
+
+	        PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
+            if(ins == null)
+            {
+            	throw JIPExistenceException.createStreamException(strStreamHandle);
+//            	throw new JIPDomainException("stream_or_alias", strStreamHandle);
+            }
 
 	        if (b instanceof JIPVariable && ((JIPVariable)b).isBounded())
 	        {

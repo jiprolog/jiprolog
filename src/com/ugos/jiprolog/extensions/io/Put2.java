@@ -92,7 +92,10 @@ public class Put2 extends JIPXCall
         String strStreamHandle = (handle).getName();
         OutputStream writer;
 
-        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        if(sinfo == null)
+        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
         	throw new JIPPermissionException("output", "stream", input);

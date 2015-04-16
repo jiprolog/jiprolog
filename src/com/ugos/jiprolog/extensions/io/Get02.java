@@ -66,6 +66,14 @@ public final class Get02 extends JIPXCall
             // Gets the handle to the stream
             m_strStreamHandle = ((JIPAtom)input).getName();
 
+            StreamInfo streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
+	        if(streamInfo == null)
+            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+
+	        Properties properties = streamInfo.getProperties();
+	        if(!(properties.getProperty("mode").equals("mode(read)")))
+	        	throw new JIPPermissionException("input", "stream", input);
+
             // Get the stream
             final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
             if(ins == null)
@@ -81,7 +89,6 @@ public final class Get02 extends JIPXCall
             int c = readNextChar(ins);
             if(c == -1)
             {
-            	StreamInfo streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
             	streamInfo.setEndOfStream("past");
             }
 

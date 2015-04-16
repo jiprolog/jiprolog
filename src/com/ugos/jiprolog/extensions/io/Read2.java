@@ -68,6 +68,12 @@ public final class Read2 extends JIPXCall
                 	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
                 }
 
+                String mode = streamInfo.getProperties().getProperty("mode");
+                if(!(mode.equals("mode(read)")))
+                	throw new JIPPermissionException("input", "stream", input);
+                if(!streamInfo.getProperties().getProperty("type").equals("type(text)"))
+                	throw new JIPPermissionException("input", "binary_stream", input);
+
                 // Get the stream
                 m_termEnum = JIPio.getTermEnumeration(m_strStreamHandle, getJIPEngine());
                 if(m_termEnum == null)

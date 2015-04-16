@@ -50,6 +50,17 @@ public final class Nl1 extends JIPXCall
         // Gets the handle to the stream
         String strStreamHandle = ((JIPAtom)output).getName();
 
+        StreamInfo sinfo = JIPio.getStreamInfo(strStreamHandle);
+        if(sinfo == null)
+        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+
+        String mode = sinfo.getProperties().getProperty("mode");
+        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
+        	throw new JIPPermissionException("output", "stream", output);
+        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
+        	throw new JIPPermissionException("output", "binary_stream", output);
+
+
         // Get the stream
         OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
@@ -57,12 +68,6 @@ public final class Nl1 extends JIPXCall
         	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
         }
 
-        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
-        String mode = sinfo.getProperties().getProperty("mode");
-        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
-        	throw new JIPPermissionException("output", "stream", output);
-        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
-        	throw new JIPPermissionException("output", "binary_stream", output);
 
         try
         {

@@ -55,6 +55,17 @@ public class Write2 extends JIPXCall
         String strStreamHandle = (handle).getName();
 
         // Get the stream
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        if(sinfo == null)
+        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+
+        String mode = sinfo.getProperties().getProperty("mode");
+        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
+        	throw new JIPPermissionException("output", "stream", input);
+        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
+        	throw new JIPPermissionException("output", "binary_stream", input);
+
+
         OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
         if(writer == null)
         {
@@ -62,12 +73,6 @@ public class Write2 extends JIPXCall
 //        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
 
-        OutputStreamInfo sinfo = (OutputStreamInfo)JIPio.getStreamInfo(strStreamHandle);
-        String mode = sinfo.getProperties().getProperty("mode");
-        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
-        	throw new JIPPermissionException("output", "stream", input);
-        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
-        	throw new JIPPermissionException("output", "binary_stream", input);
 
         try
         {
