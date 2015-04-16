@@ -92,7 +92,7 @@ public class PutByte2 extends JIPXCall
 
 
         int nCode = (int)((JIPNumber)b).getDoubleValue();
-        if(nCode < 1 || nCode > 255)
+        if(nCode < 0 || nCode > 255)
         	throw new JIPTypeException(JIPTypeException.BYTE, b);
 
         try

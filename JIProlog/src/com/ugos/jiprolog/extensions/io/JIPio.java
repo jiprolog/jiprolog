@@ -49,8 +49,8 @@ public final class JIPio
 //    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
     private static InputStreamInfo user_input = new InputStreamInfo("user_input", "user_input", "read", "reset");
-    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output", "append", "reset");
-    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", "user_error", "append", "reset");
+    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output", "append");
+    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", "user_error", "append");
 
     public static Hashtable<String, InputStreamInfo> itable = new Hashtable<String, InputStreamInfo>();
     public static Hashtable<String, OutputStreamInfo> otable = new Hashtable<String, OutputStreamInfo>();
@@ -217,15 +217,12 @@ public final class JIPio
                 writer = new FileOutputStream(strPath, bAppend);
             }
 
-	        OutputStreamInfo sinfo = new OutputStreamInfo(strPath);
+	        OutputStreamInfo sinfo =
+	        		new OutputStreamInfo(strPath,
+	        							 strHandle != null ? strHandle : "#" + strPath.hashCode(),
+	        							 bAppend ? "append" : "write");
+
 	        sinfo.m_stream = writer;
-	        //sinfo.m_pointer = writer;
-
-	        if(strHandle != null)
-	            sinfo.setHandle(strHandle);
-	        else
-	            sinfo.setHandle("#" + sinfo.hashCode());
-
 
 	        return put(sinfo);
         }
