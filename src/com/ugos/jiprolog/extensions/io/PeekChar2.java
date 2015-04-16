@@ -90,12 +90,8 @@ public final class PeekChar2 extends JIPXCall
 	        if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
 	        {
                 code = ((JIPVariable)code).getValue();
-		        if(!(code instanceof JIPNumber))
+		        if(!(code instanceof JIPAtom))
 		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, code);
-
-		        int nCode = (int)((JIPNumber)code).getDoubleValue();
-		        if(nCode < -1 || nCode > 255)
-		        	throw new JIPRepresentationException("character");
 	        }
 
 			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
@@ -107,8 +103,21 @@ public final class PeekChar2 extends JIPXCall
 					return unify(params, varsTbl);
 			} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
 	            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
-			} else { // end_of_stream(no)
-				JIPTerm term = JIPAtom.create(String.valueOf((char)peekChar(ins)));
+			}
+			else
+			{
+				// end_of_stream(no)
+				int c = peekChar(ins);
+	            if(c == -1)
+	            {
+	            	streamInfo.setEndOfStream("at");
+	            	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
+	            }
+	            else if(c == 0)
+	            	throw new JIPRepresentationException("character");
+
+				JIPTerm term = JIPAtom.create(String.valueOf((char)c));
+
 	            return params.getNth(2).unify(term, varsTbl);
 			}
         }

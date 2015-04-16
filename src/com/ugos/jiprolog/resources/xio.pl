@@ -229,11 +229,11 @@ get(Handle, Code):-
 
 get_byte(Byte):-
     current_input(Handle),
-	xcall('com.ugos.jiprolog.extensions.io.GetByte2', [Handle, Code]).
+	xcall('com.ugos.jiprolog.extensions.io.GetByte2', [Handle, Byte]).
 
 get_byte(Handle, Byte):-
 	check_handle(Handle, Handle1),
-	xcall('com.ugos.jiprolog.extensions.io.GetByte2', [Handle1, Code]).
+	xcall('com.ugos.jiprolog.extensions.io.GetByte2', [Handle1, Byte]).
 
 
 get_code(Code) :-
@@ -294,7 +294,7 @@ peek_char(Char) :-
     xcall('com.ugos.jiprolog.extensions.io.PeekChar2', [Handle, Char]).
 
 peek_char(Handle, Char) :-
-	heck_handle(Handle, Handle1),
+	check_handle(Handle, Handle1),
     xcall('com.ugos.jiprolog.extensions.io.PeekChar2', [Handle1, Char]).
 %	;	xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle1, Byte])
 %	),
