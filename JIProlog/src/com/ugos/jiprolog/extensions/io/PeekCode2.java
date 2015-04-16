@@ -93,7 +93,7 @@ public final class PeekCode2 extends JIPXCall
 		            throw new JIPTypeException(JIPTypeException.INTEGER, code);
 
 		        int nCode = (int)((JIPNumber)code).getDoubleValue();
-		        if(nCode < -1 || nCode > 255)
+		        if(nCode == 0 || nCode < -1 || nCode > 255)
 		        	throw new JIPRepresentationException("in_character_code");
 	        }
 
@@ -107,7 +107,10 @@ public final class PeekCode2 extends JIPXCall
 			} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
 	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 			} else { // end_of_stream(no)
-				JIPTerm term = JIPNumber.create(peekCode(ins));
+				int c = peekCode(ins);
+		        if(c == 0 || c < -1 || c > 255)
+		        	throw new JIPRepresentationException("character");
+				JIPTerm term = JIPNumber.create(c);
 	            return params.getNth(2).unify(term, varsTbl);
 			}
         }

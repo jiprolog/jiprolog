@@ -68,19 +68,20 @@ public final class GetCode2 extends JIPXCall
             m_strStreamHandle = ((JIPAtom)input).getName();
 
             // Get the stream
-            final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
-            if(ins == null)
-            {
-            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
-//            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
-            }
 
-	        InputStreamInfo sinfo = (InputStreamInfo)JIPio.getStreamInfo(m_strStreamHandle);
-			Properties properties = sinfo.getProperties();
+            StreamInfo sinfo = JIPio.getStreamInfo(m_strStreamHandle);
+	        if(sinfo == null)
+            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+
+	        Properties properties = sinfo.getProperties();
 	        if(!(properties.getProperty("mode").equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
 	        if(!properties.getProperty("type").equals("type(text)"))
 	        	throw new JIPPermissionException("input", "binary_stream", input);
+
+	        final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
+            if(ins == null)
+            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
 
 	        if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
 	        {
