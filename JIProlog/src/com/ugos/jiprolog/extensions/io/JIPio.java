@@ -165,7 +165,7 @@ public final class JIPio
 
 	        InputStreamInfo sinfo =
 	        		new InputStreamInfo(strPath,
-	        							strHandle != null ? strHandle : "#" + strPath.hashCode(),
+	        							strHandle != null ? strHandle : "#" + System.currentTimeMillis(),
 	        							"read",
 	        						    "eof_code");
 
@@ -219,7 +219,7 @@ public final class JIPio
 
 	        OutputStreamInfo sinfo =
 	        		new OutputStreamInfo(strPath,
-	        							 strHandle != null ? strHandle : "#" + strPath.hashCode(),
+	        							 strHandle != null ? strHandle : "#" + System.currentTimeMillis(),
 	        							 bAppend ? "append" : "write");
 
 	        sinfo.m_stream = writer;
