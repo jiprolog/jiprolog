@@ -390,8 +390,17 @@ class WAM
                         // in questo caso la eneration deve essere vuota
                         if(!m_globalDB.isDynamic(ex.getPredicateName()))
                         {
-                            ex.m_curNode = curNode;
-                            m_engine.notifyEvent(JIPEvent.ID_UNDEFPREDICATE, Atom.createAtom(ex.getPredicateName()), hashCode());
+                        	String unknown = (String)m_engine.getEnvVariable("unknown");
+                        	if(unknown.equals("warning"))
+                        	{
+	                            ex.m_curNode = curNode;
+	                            m_engine.notifyEvent(JIPEvent.ID_UNDEFPREDICATE, Atom.createAtom(ex.getPredicateName()), hashCode());
+                        	}
+                        	else if(unknown.equals("error"))
+                        	{
+                        		throw JIPExistenceException.createProcedureException(((Functor)ex.getCulprit()).getPredicateIndicator());
+                        	}
+
                         }
 
                         curNode.m_ruleEnum = s_emptyEnum;

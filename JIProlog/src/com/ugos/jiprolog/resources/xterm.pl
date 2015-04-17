@@ -74,8 +74,14 @@ atom_chars(Atom, Chars) :-
 number_codes(Number, Codes) :-
 	nonvar(Codes),
 	member(Code, Codes),
-	\+ integer(Code),
-	error(type_error(integer,Code)).
+	(	var(Code) ->
+		(	var(Number) ->
+			error(instantiation_error)
+		;	fail
+		)
+	;	\+ integer(Code),
+		error(type_error(integer,Code))
+	).
 
 number_codes(Number, Codes) :-
 	xcall('com.ugos.jiprolog.extensions.terms.NumberCodes2', [Number, Codes]).
@@ -84,11 +90,14 @@ number_codes(Number, Codes) :-
 number_chars(Number, Chars) :-
 	nonvar(Chars),
 	member(Char, Chars),
-	(	atom(Char) ->
-		\+ length(Char, 1)
-	;	true
-	),
-	error(type_error(character,Char)).
+	(	var(Char) ->
+		(	var(Number) ->
+			error(instantiation_error)
+		;	fail
+		)
+	;	\+ (atom(Char), length(Char, 1)),
+		error(type_error(character,Char))
+	).
 
 number_chars(Number, Chars) :-
 	xcall('com.ugos.jiprolog.extensions.terms.NumberChars2', [Number, Chars]).
