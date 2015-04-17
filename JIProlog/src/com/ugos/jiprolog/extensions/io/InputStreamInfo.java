@@ -10,9 +10,12 @@ public class InputStreamInfo extends StreamInfo
     PushBackInputStream m_stream;
     Enumeration m_enum;
 
+	private static int refCounter = 1;
+
     public InputStreamInfo(String name, String handle, String mode, String eof_action)
     {
-    	super(name, handle);
+    	super(name, handle != null ? handle : "in."+ refCounter % Integer.MAX_VALUE);
+    	refCounter++;
     	init(mode, eof_action);
     }
 

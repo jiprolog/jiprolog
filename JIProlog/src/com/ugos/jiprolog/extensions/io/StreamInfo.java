@@ -9,10 +9,10 @@ public class StreamInfo
     private String handle;
 	protected Properties properties = new Properties();
 
-	public StreamInfo(String name)
-	{
-		this(name, "#" + name.hashCode());
-	}
+//	public StreamInfo(String name)
+//	{
+//		this(name, "#" + name.hashCode());
+//	}
 
 	public StreamInfo(String name, String handle)
 	{
