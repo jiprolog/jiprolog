@@ -39,7 +39,7 @@ final class Arg3 extends BuiltIn
             throw new JIPTypeException(JIPTypeException.INTEGER, place);
         if(!((Expression)place).isInteger())
             throw new JIPTypeException(JIPTypeException.INTEGER, place);
-        if(!(term instanceof Functor) && !(term instanceof List))
+        if(!(term instanceof ConsCell))
             throw new JIPTypeException(JIPTypeException.COMPOUND, term);
 
         // and after that domain errors
@@ -53,35 +53,19 @@ final class Arg3 extends BuiltIn
 
         try
         {
+        	 if(term instanceof Functor)
+             {
+             	if(index > ((Functor)term).getParams().getHeight())
+             		return false;
 
-            if(term instanceof List) // [Arg1|Arg2] = '.'(Arg1, Arg2)
-            {
-//				if(((Expression)place).getValue() == 1)
-//					param = (List)term)
-//					param = new ConsCell(((List)term).getHead();
-//				else if(((Expression)place).getValue() == 2)
-//					param = new ConsCell(((List)term).getTail();
-
-            	if(index > ((Functor)term).getParams().getHeight())
+                 param = ((Functor)term).getParams().getTerm(index);
+             }
+        	 else if(term instanceof ConsCell) // [Arg1|Arg2] = '.'(Arg1, Arg2)
+        	 {
+            	if(index > ((ConsCell)term).getHeight())
             		return false;
 
-            	param = ((List)term).getTerm(index);
-
-//                param = new ConsCell(((List)term).getHead(), new ConsCell(((List)term).getTail(), null)).getTerm();
-            }
-            else if(term instanceof Functor)
-            {
-            	if(index > ((Functor)term).getParams().getHeight())
-            		return false;
-
-                param = ((Functor)term).getParams().getTerm(index);
-            }
-            else // ConsCell
-            {
-            	if(index > ((Functor)term).getParams().getHeight())
-            		return false;
-
-                param = ((ConsCell)term).getTerm(index);
+            	param = ((ConsCell)term).getTerm(index);
             }
 
             if(param == null)

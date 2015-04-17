@@ -20,6 +20,10 @@ public class JIPExistenceException extends JIPRuntimeException {
 	private String object;
 	private PrologObject culprit;
 
+	public PrologObject getCulprit() {
+		return culprit;
+	}
+
 	static JIPExistenceException createSourceSynkException(PrologObject culprit)
 	{
 		return new JIPExistenceException("source_sink", culprit);
