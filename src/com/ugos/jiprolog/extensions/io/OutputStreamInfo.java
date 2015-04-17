@@ -4,11 +4,14 @@ import java.io.OutputStream;
 
 public class OutputStreamInfo extends StreamInfo
 {
-    OutputStream m_stream;
+	private static int refCounter = 1;
+
+	OutputStream m_stream;
 
     public OutputStreamInfo(String name, String handle, String mode)
 	{
-    	super(name, handle);
+    	super(name, handle != null ? handle : "out."+ refCounter % Integer.MAX_VALUE);
+    	refCounter++;
     	init(mode);
 	}
 

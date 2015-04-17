@@ -70,58 +70,31 @@ atom_codes(Atom, Codes) :-
 atom_chars(Atom, Chars) :-
 	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
 
+
+number_codes(Number, Codes) :-
+	nonvar(Codes),
+	member(Code, Codes),
+	\+ integer(Code),
+	error(type_error(integer,Code)).
+
 number_codes(Number, Codes) :-
 	xcall('com.ugos.jiprolog.extensions.terms.NumberCodes2', [Number, Codes]).
 
-%number_codes(Num, List):-
-%    number(Num),
-%    !,
-%    name(Num, List).
-%
-%number_codes(Num, List):-
-%    var(Num),
-%    !,
-%    name(Num, List),
-%    number(Num).
-%
-%number_codes(Num,_):-
-% 	error(type_error(number, Num)).
+
+number_chars(Number, Chars) :-
+	nonvar(Chars),
+	member(Char, Chars),
+	(	atom(Char) ->
+		\+ length(Char, 1)
+	;	true
+	),
+	error(type_error(character,Char)).
 
 number_chars(Number, Chars) :-
 	xcall('com.ugos.jiprolog.extensions.terms.NumberChars2', [Number, Chars]).
 
-%number_chars(Num, List):-
-%    number(Num),
-%    !,
-%    number_codes(Num, Codes),
-% 	atom_codes(Atom, Codes),
-% 	atom_chars(Atom, List).
-%
-%number_chars(Num, List):-
-%    var(Num),
-%    !,
-%    atom_chars(Atom, List),
-% 	atom_codes(Atom, Codes),
-% 	number_codes(Num, Codes).
-%
-%number_chars(Num,_):-
-%	error(type_error(number, Num)).
 
-%number_chars(Num, List):-
-%    number(Num),
-%    !,
-%    atom_chars(Num, List).
-
-%number_chars(Num, List):-
-%    var(Num),
-%    !,
-%    atom_chars(Num, List),
-%    number(Num).
-
-%number_chars(Num,_):-
-%	error(type_error(number, Num)).
-
-atom_number(Atom, Number):-
+atom_number(Atom, Number) :-
     atom_codes(Atom, Codes),
     catch(number_codes(Number, Codes), _, fail).
 

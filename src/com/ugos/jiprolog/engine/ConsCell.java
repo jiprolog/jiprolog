@@ -70,9 +70,9 @@ class ConsCell extends PrologObject //implements Serializable
         {
             if(m_head != null)
             {
-                if(m_tail == null)
+                if(m_tail == null || m_tail.termEquals(ConsCell.NIL))
                 {
-                    if(((ConsCell)obj).m_tail == null)
+                    if(((ConsCell)obj).m_tail == null || ((ConsCell)obj).m_tail.termEquals(ConsCell.NIL))
                     {
 //                      System.out.println("*** 1 ");
 //                      System.out.println("*** " + m_head.getClass());
@@ -87,7 +87,7 @@ class ConsCell extends PrologObject //implements Serializable
                 }
                 else //m_tail != null
                 {
-                    if(((ConsCell)obj).m_tail == null)
+                    if(((ConsCell)obj).m_tail == null || ((ConsCell)obj).m_tail.termEquals(ConsCell.NIL))
                     {
 //                      System.out.println("*** 3 ");
                         return ((ConsCell)obj).m_head._unify(this, table);
