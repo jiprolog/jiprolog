@@ -22,7 +22,7 @@ public class StreamInfo
 		properties.setProperty("file_name", "file_name('" + name.replace("\\", "/") + "')");
 		properties.setProperty("alias", "alias('" + handle + "')");
 		properties.setProperty("type", "type(text)");
-		properties.setProperty("end_of_stream", "end_of_stream(no)");
+		properties.setProperty("end_of_stream", "end_of_stream(not)");
 	}
 
 	public String getName()

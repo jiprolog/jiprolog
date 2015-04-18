@@ -793,7 +793,7 @@ stream_property(Handle, Prop):-
 	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]).
 
 stream_property(Handle, _):-
-	\+ nonvar(Handle),
+	nonvar(Handle),
 	\+ current_stream(Handle),
 	error(domain_error(stream,Handle)).
 

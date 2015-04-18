@@ -91,10 +91,10 @@ public final class GetChar2 extends JIPXCall
                 ch = ((JIPVariable)ch).getValue();
 		        if(!(ch instanceof JIPAtom))
 		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
-
-		        if(((JIPAtom)ch).getName().length() > 1)
-		            throw new JIPTypeException(JIPTypeException.CHARACTER, ch);
-
+				else if(((JIPAtom)ch).getName().equals("end_of_file"))
+					ch = JIPAtom.create(String.valueOf((char)-1));
+		        else if(((JIPAtom)ch).getName().length() > 1)
+					throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
 	        }
 
 			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)"))

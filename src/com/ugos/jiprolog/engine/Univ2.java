@@ -82,7 +82,8 @@ final class Univ2 extends BuiltIn
                         if(((ConsCell)params).isPartial())
                         {
                             // caso X =.. [a|Y].
-                            throw new JIPTypeException(JIPTypeException.LIST, params);
+//                            throw new JIPTypeException(JIPTypeException.LIST, params);
+							throw new JIPParameterUnboundedException(2);
                         }
 
                         int nArity = ((List)params).getHeight();
