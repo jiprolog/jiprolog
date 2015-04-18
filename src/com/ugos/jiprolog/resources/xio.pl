@@ -561,57 +561,25 @@ at_end_of_stream(Handle):-
 	\+ atom(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
-%at_end_of_stream(Handle):-
-%    check_handle(Handle, Handle1),
-%	(	\+ current_stream(Handle1) ->
-%		error(existence_error(stream,Handle))
-%	;	stream_property(Handle1, end_of_stream( E )),
-%		(	E = at
-%		;	E = past
-%		), !
-%	).
-
 at_end_of_stream(Handle):-
     check_handle(Handle, Handle1),
     (   \+ current_stream(Handle1) ->
         error(existence_error(stream,Handle))
-    ;   stream_property(Handle1, end_of_stream(E)) ->
+    ;   stream_property(Handle1, output) ->
+		fail
+	;	% input stream
+		stream_property(Handle1, end_of_stream(E)),
         (   E = at
         ;   E = past
-        ;   % E = no
-        peek_byte(Handle1, -1)
-        )
-    ;   % we should never get here...
+        ) ->
+		true
+	;	stream_property(Handle1, type(text)) ->
+		peek_char(Handle1, end_of_file)
+	;	% stream_property(Handle1, type(binary))
         peek_byte(Handle1, -1)
     ).
 
-/*
-at_end_of_stream(Handle):-
-    check_handle(Handle, Handle1),
- ( \+ current_stream(Handle1) ->
-  error(existence_error(stream,Handle))
- ; stream_property(Handle1, end_of_stream( E )) ->
-  writeln(stream_property(Handle1, end_of_stream( E ))),
-  ( E = at
-  ; E = past
-  )
- ; writeln(peek_byte(Handle1, -1)),
-  peek_byte(Handle1, -1)
- ).
- */
-/*
-at_end_of_stream(Handle):-
-    check_handle(Handle, Handle1),
- 	(	\+ current_stream(Handle1) ->
-  		error(existence_error(stream,Handle))
- 		; stream_property(Handle1, end_of_stream( E )),
-  		( E = at
-  		; E = past
-  		) ->
-  		true
- 		; peek_byte(Handle1, -1)
- 	).
-*/
+
 current_output(Handle):-
 	nonvar(Handle),
 	(	\+ atom(Handle)
