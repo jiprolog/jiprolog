@@ -67,7 +67,10 @@ atom_codes(Atom, Codes) :-
 	check_atom_codes_2_codes(Codes, Atom),
 	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Atom, Codes]).
 
-check_atom_codes_2_codes([Code| Codes], Atom) :-
+check_atom_codes_2_codes(Codes, _) :-
+	var(Codes),
+	!.
+check_atom_codes_2_codes([Code| _], Atom) :-
 	var(Code),
 	!,
 	(	var(Atom) ->
@@ -91,7 +94,10 @@ atom_chars(Atom, Chars) :-
 	check_atom_chars_2_chars(Chars, Atom),
 	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
 
-check_atom_chars_2_chars([Char| Chars], Atom) :-
+check_atom_chars_2_chars(Chars, _) :-
+	var(Chars),
+	!.
+check_atom_chars_2_chars([Char| _], Atom) :-
 	var(Char),
 	!,
 	(	var(Atom) ->
@@ -117,7 +123,7 @@ number_codes(Number, Codes) :-
 	check_number_codes_2_codes(Codes, Number),
 	xcall('com.ugos.jiprolog.extensions.terms.NumberCodes2', [Number, Codes]).
 
-check_number_codes_2_codes([Code| Codes], Number) :-
+check_number_codes_2_codes([Code| _], Number) :-
 	var(Code),
 	!,
 	(	var(Number) ->
@@ -141,7 +147,7 @@ number_chars(Number, Chars) :-
 	check_number_chars_2_chars(Chars, Number),
 	xcall('com.ugos.jiprolog.extensions.terms.NumberChars2', [Number, Chars]).
 
-check_number_chars_2_chars([Char| Chars], Number) :-
+check_number_chars_2_chars([Char| _], Number) :-
 	var(Char),
 	!,
 	(	var(Number) ->
