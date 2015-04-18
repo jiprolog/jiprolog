@@ -72,35 +72,53 @@ atom_chars(Atom, Chars) :-
 
 
 number_codes(Number, Codes) :-
-	nonvar(Codes),
-	member(Code, Codes),
-	(	var(Code) ->
-		(	var(Number) ->
-			error(instantiation_error)
-		;	fail
-		)
-	;	\+ integer(Code),
-		error(type_error(integer,Code))
-	).
-
-number_codes(Number, Codes) :-
+	check_number_codes_2_codes(Codes, Number),
 	xcall('com.ugos.jiprolog.extensions.terms.NumberCodes2', [Number, Codes]).
 
-
-number_chars(Number, Chars) :-
-	nonvar(Chars),
-	member(Char, Chars),
-	(	var(Char) ->
-		(	var(Number) ->
-			error(instantiation_error)
-		;	fail
-		)
-	;	\+ (atom(Char), length(Char, 1)),
-		error(type_error(character,Char))
+check_number_codes_2_codes([Code| Codes], Number) :-
+	var(Code),
+	!,
+	(	var(Number) ->
+		error(instantiation_error)
+	;	true
 	).
+check_number_codes_2_codes([Code| Codes], Number) :-
+	integer(Code),
+	!,
+	check_number_codes_2_codes(Codes, Number).
+check_number_codes_2_codes([Code| _], _) :-
+	!,
+	error(type_error(integer,Code)).
+check_number_codes_2_codes([], _) :-
+	!.
+check_number_codes_2_codes(Codes, _) :-
+	error(type_error(list,Codes)).
+
 
 number_chars(Number, Chars) :-
+	check_number_chars_2_chars(Chars, Number),
 	xcall('com.ugos.jiprolog.extensions.terms.NumberChars2', [Number, Chars]).
+
+check_number_chars_2_chars([Char| Chars], Number) :-
+	var(Char),
+	!,
+	(	var(Number) ->
+		error(instantiation_error)
+	;	true
+	).
+check_number_chars_2_chars([Char| Chars], Number) :-
+	atom(Char),
+	length(Char, 1),
+	% a character
+	!,
+	check_number_chars_2_chars(Chars, Number).
+check_number_chars_2_chars([Char| _], _) :-
+	!,
+	error(type_error(character,Char)).
+check_number_chars_2_chars([], _) :-
+	!.
+check_number_chars_2_chars(Chars, _) :-
+	error(type_error(list,Chars)).
 
 
 atom_number(Atom, Number) :-

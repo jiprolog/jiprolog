@@ -111,7 +111,7 @@ public final class GetByte2 extends JIPXCall
 	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 			}
 			else
-			{ // end_of_stream(no)
+			{ // end_of_stream(not)
 	            if("user_input".equals(m_strStreamHandle))
 	                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 

@@ -47,7 +47,7 @@ public final class PeekChar2 extends JIPXCall
     {
         // get first parameter
         JIPTerm input = params.getNth(1);
-        JIPTerm code = params.getNth(2);
+        JIPTerm ch = params.getNth(2);
 
         // check if input is a variable
         if (input instanceof JIPVariable)
@@ -87,11 +87,15 @@ public final class PeekChar2 extends JIPXCall
             if(ins == null)
             	throw JIPExistenceException.createStreamException(strStreamHandle);
 
-	        if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
+	        if (ch instanceof JIPVariable && ((JIPVariable)ch).isBounded())
 	        {
-                code = ((JIPVariable)code).getValue();
-		        if(!(code instanceof JIPAtom))
-		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, code);
+                ch = ((JIPVariable)ch).getValue();
+		        if(!(ch instanceof JIPAtom))
+		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
+				else if(((JIPAtom)ch).getName().equals("end_of_file"))
+					ch = JIPAtom.create(String.valueOf((char)-1));
+		        else if(((JIPAtom)ch).getName().length() > 1)
+					throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
 	        }
 
 			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
