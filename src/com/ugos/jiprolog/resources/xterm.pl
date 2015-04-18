@@ -55,20 +55,62 @@ copy_term(Term, Copy):-
 name(Atom, CharList):-
     xcall('com.ugos.jiprolog.extensions.terms.Name2', [Atom, CharList]).
 
-%char_code(Atom, Code):-
-%    name(Atom, [Code]).
 
-char_code(Atom, Code) :-
-	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Atom, [Code]]).
+char_code(Char, Code) :-
+	(	atom(Char), \+ length(Char, 1) ->
+		error(type_error(character,Char))
+	;	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Char, [Code]])
+	).
 
-%atom_codes(Atom, Codes):-
-%    name(Atom, Codes).
 
 atom_codes(Atom, Codes) :-
+	check_atom_codes_2_codes(Codes, Atom),
 	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Atom, Codes]).
 
+check_atom_codes_2_codes([Code| Codes], Atom) :-
+	var(Code),
+	!,
+	(	var(Atom) ->
+		error(instantiation_error)
+	;	true
+	).
+check_atom_codes_2_codes([Code| Codes], Atom) :-
+	integer(Code),
+	!,
+	check_atom_codes_2_codes(Codes, Atom).
+check_atom_codes_2_codes([Code| _], _) :-
+	!,
+	error(type_error(integer,Code)).
+check_atom_codes_2_codes([], _) :-
+	!.
+check_atom_codes_2_codes(Codes, _) :-
+	error(type_error(list,Codes)).
+
+
 atom_chars(Atom, Chars) :-
+	check_atom_chars_2_chars(Chars, Atom),
 	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
+
+check_atom_chars_2_chars([Char| Chars], Atom) :-
+	var(Char),
+	!,
+	(	var(Atom) ->
+		error(instantiation_error)
+	;	true
+	).
+check_atom_chars_2_chars([Char| Chars], Atom) :-
+	atom(Char),
+	length(Char, 1),
+	% a character
+	!,
+	check_atom_chars_2_chars(Chars, Atom).
+check_atom_chars_2_chars([Char| _], _) :-
+	!,
+	error(type_error(character,Char)).
+check_atom_chars_2_chars([], _) :-
+	!.
+check_atom_chars_2_chars(Chars, _) :-
+	error(type_error(list,Chars)).
 
 
 number_codes(Number, Codes) :-
