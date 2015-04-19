@@ -385,13 +385,13 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     head = ((ConsCell)((Functor)head).getParams().getTail()).getHead();
                 }
 
-
                 String strPredDef;
                 String name;
                 PrologObject arity;
                 // head deve essere instanza di funtore /2 del tipo name/arity
                 if(head instanceof Functor && ((Functor)head).getName().equals("//2"))
                 {
+
                     ConsCell params = ((Functor )head).getParams();
                     PrologObject h = params.getHead();
                     if(h instanceof Variable)
@@ -440,14 +440,15 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head);
                 }
 
-
                 if(isSystem(strPredDef))
                 	throw new JIPPermissionException("modify", "static_procedure", head);
 
-//                if(!isDynamic(strPredDef))
-//                	throw new JIPPermissionException("modify", "static_procedure", head);
+				final String strDef = strModuleName + ":" + strPredDef;
 
-                m_clauseTable.remove(strModuleName + ":" + strPredDef);
+                if(m_clauseTable.containsKey(strDef) && !isDynamic(strPredDef))
+                	throw new JIPPermissionException("modify", "static_procedure", head);
+
+                m_clauseTable.remove(strDef);
 
                 pred = ((ConsCell)pred).getTail();
             }
