@@ -59,6 +59,8 @@ name(Atom, CharList):-
 char_code(Char, Code) :-
 	(	atom(Char), \+ length(Char, 1) ->
 		error(type_error(character,Char))
+	;	nonvar(Code), \+ integer(Code) ->
+		error(type_error(integer,Code))
 	;	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Char, [Code]])
 	).
 
