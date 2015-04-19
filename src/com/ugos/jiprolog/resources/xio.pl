@@ -545,7 +545,7 @@ close_(Handle):-
     told(Handle1).
 
 
-at_end_of_stream:-
+at_end_of_stream :-
     current_input(Handle),
 	stream_property(Handle, end_of_stream(EOS)), !,
 	(	EOS == at
@@ -553,31 +553,23 @@ at_end_of_stream:-
 	),
 	!.
 
-at_end_of_stream(Handle):-
+at_end_of_stream(Handle) :-
 	var(Handle),
 	error(instantiation_error).
 
-at_end_of_stream(Handle):-
+at_end_of_stream(Handle) :-
 	\+ atom(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
-at_end_of_stream(Handle):-
-    check_handle(Handle, Handle1),
-    (   \+ current_stream(Handle1) ->
-        error(existence_error(stream,Handle))
-    ;   stream_property(Handle1, output) ->
-		fail
-	;	% input stream
-		stream_property(Handle1, end_of_stream(E)),
-        (   E = at
-        ;   E = past
-        ) ->
-		true
-	;	stream_property(Handle1, type(text)) ->
-		peek_char(Handle1, end_of_file)
-	;	% stream_property(Handle1, type(binary))
-        peek_byte(Handle1, -1)
-    ).
+at_end_of_stream(Handle) :-
+	check_handle(Handle, Handle1),
+	(	current_stream(Handle1) ->
+		stream_property(Handle1, end_of_stream(EOS)),
+		(	EOS == at
+		;	EOS == past
+		), !
+	;	error(existence_error(stream,Handle))
+	).
 
 
 current_output(Handle):-
@@ -732,38 +724,41 @@ make_directory(Dir):-
     xcall('com.ugos.jiprolog.extensions.io.MakeDirectory1', [Dir]).
 
 
-
 % stream properties
 
-
-stream_property(Handle, position(line(Line))):-
+stream_property(Handle, position(line(Line))) :-
 	current_stream(Handle),
 	xcall('com.ugos.jiprolog.extensions.io.StreamPosition3', [Handle, _P, Line]).
 
-%stream_property(Handle, end_of_stream(X)):-
-%	current_stream(Handle),
-%	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, end_of_stream(X0)]),
-%	(	X0 == no,
-%		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, input]),
-%		\+ xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, eof_action(reset)]),
-%		peek_byte(Handle, -1) ->
-%		xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, end_of_stream(at)]),
-%		X = at
-%	;	X = X0
-%	).
-
-%stream_property(Handle, end_of_stream(X)):-
-%	current_stream(Handle),
-%	xcall('com.ugos.jiprolog.extensions.io.EOF2', [Handle, X]).
-
-stream_property(Handle, Prop):-
+stream_property(Handle, end_of_stream(EOS)) :-
 	current_stream(Handle),
-	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]).
+	(	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, eof_action(reset)]) ->
+		EOS = (not)
+	;	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, output]) ->
+		EOS = (not)
+	;	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, end_of_stream(at)]) ->
+		EOS = at
+	;	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, end_of_stream(past)]) ->
+		EOS = past
+	;	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, type(text)]),
+		xcall('com.ugos.jiprolog.extensions.io.PeekChar2', [Handle, end_of_file]) ->
+		EOS = at
+	;	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, type(binary)]),
+		xcall('com.ugos.jiprolog.extensions.io.PeekByte2', [Handle, -1]) ->
+		EOS = at
+	;	EOS = (not)
+	).
 
-stream_property(Handle, _):-
+stream_property(Handle, Prop) :-
+	current_stream(Handle),
+	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]),
+	Prop \= end_of_stream(_).
+
+stream_property(Handle, _) :-
 	nonvar(Handle),
 	\+ current_stream(Handle),
 	error(domain_error(stream,Handle)).
+
 
 set_stream_property(Handle, Prop):-
     xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [set, Handle, Prop]).
@@ -772,6 +767,7 @@ set_stream_properties(Handle, []):-!.
 set_stream_properties(Handle, [Prop|Rest]):-
 	set_stream_property(Handle, Prop),
     set_stream_properties(Handle, Rest).
+
 
 % check for aliases
 check_handle(Alias, Handle):-
