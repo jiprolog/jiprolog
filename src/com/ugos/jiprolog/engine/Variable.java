@@ -36,7 +36,7 @@ final class Variable extends PrologObject//Serializable
     private PrologObject m_object;
     private long m_address;
 
-    Variable parent;
+//    Variable parent;
 
     private int cyclic = -1;
 
@@ -83,18 +83,18 @@ final class Variable extends PrologObject//Serializable
         return var;
     }
 
-    public final Variable root()
-    {
-        Variable parent = this;
-
-        while(parent.parent != null)
-        {
-        	parent = parent.parent;
-        }
-
-        System.out.println("root " + parent + " " + parent.getName());
-        return parent;
-    }
+//    public final Variable root()
+//    {
+//        Variable parent = this;
+//
+//        while(parent.parent != null)
+//        {
+//        	parent = parent.parent;
+//        }
+//
+//        System.out.println("root " + parent + " " + parent.getName());
+//        return parent;
+//    }
 
     public final String getName()
     {
@@ -213,7 +213,7 @@ final class Variable extends PrologObject//Serializable
                         if(objVar != var)
                         {
                             var.m_object = obj;
-                            ((Variable)obj).parent = this;
+//                            ((Variable)obj).parent = this;
                         }
                     }
                 }
@@ -245,12 +245,14 @@ final class Variable extends PrologObject//Serializable
                     return true;
                 else
                 {
-                	System.out.println("lessThen");
+//                	System.out.println("lessThen");
 //                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
 //                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
-                	return root().m_address < ((Variable)obj).root().m_address;
+//                	return root().m_address < ((Variable)obj).root().m_address;
 //                	return root().toString().compareTo(((Variable)obj).root().toString()) < 0;
-//                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;
+                	return lastVariable().m_address < ((Variable)obj).lastVariable().m_address;
+
+                	//                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;
                     //return m_nAddress < ((Variable)obj).m_nAddress;
 //                    return getAddress() < ((Variable)obj).getAddress();
 //                	return hashCode() < ((Variable)obj).hashCode();
