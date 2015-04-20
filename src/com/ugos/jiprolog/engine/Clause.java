@@ -166,33 +166,7 @@ class Clause extends ConsCell
 			if(!(rhs instanceof ConsCell))
             	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
 
-			// check rhs
-			PrologObject head = ((ConsCell)rhs).m_head;
-			PrologObject tail = ((ConsCell)rhs).m_tail;
-
-			if(head instanceof Expression)
-				throw new JIPTypeException(JIPTypeException.CALLABLE, head);
-//			else if(head instanceof PString)
-//			throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-//			else if(head instanceof Variable)
-//				((ConsCell)rhs).m_head = new Functor("call/1", new ConsCell(head, null));
-
-			while(tail != null)
-	        {
-				if(!(tail instanceof ConsCell))
-					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-
-				head = ((ConsCell)tail).m_head;
-
-				if(head instanceof Expression)
-					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-//				else if(head instanceof PString)
-//					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-//				else if(head instanceof Variable)
-//					((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
-
-				tail = ((ConsCell)tail).m_tail;
-	        }
+			checkForCallable((ConsCell)rhs);
 
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
@@ -269,5 +243,48 @@ class Clause extends ConsCell
 //        System.out.println("module: " + clause.getModuleName() );
 //
         return clause;
+    }
+
+    private static void checkForCallable(ConsCell rhs)
+    {
+    	// check rhs
+		PrologObject head = ((ConsCell)rhs).m_head;
+		PrologObject tail = ((ConsCell)rhs).m_tail;
+
+		if(head instanceof Expression)
+		{
+			throw new JIPTypeException(JIPTypeException.CALLABLE, head);
+		}
+		else if(head instanceof ConsCell && !(head instanceof List) && !(head instanceof Functor))
+		{
+			checkForCallable((ConsCell)head);
+		}
+//    	else if(head instanceof PString)
+//    		throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+//    	else if(head instanceof Variable)
+//    		((ConsCell)rhs).m_head = new Functor("call/1", new ConsCell(head, null));
+
+		while(tail != null)
+        {
+			if(!(tail instanceof ConsCell))
+				throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+
+			head = ((ConsCell)tail).m_head;
+
+			if(head instanceof Expression)
+			{
+				throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+			}
+			else if(head instanceof ConsCell && !(head instanceof List) && !(head instanceof Functor))
+			{
+				checkForCallable((ConsCell)head);
+			}
+//    		else if(head instanceof PString)
+//    			throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+//    		else if(head instanceof Variable)
+//    			((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
+
+			tail = ((ConsCell)tail).m_tail;
+        }
     }
 }
