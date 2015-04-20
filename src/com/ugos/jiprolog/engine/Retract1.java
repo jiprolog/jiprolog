@@ -32,7 +32,6 @@ final class Retract1 extends BuiltIn
 
     public final boolean unify(final Hashtable varsTbl)
     {
-//      System.out.println("retract");
         Clause clause = Clause.getClause(getParam(1));
         if(clause.getModuleName().equals(GlobalDB.USER_MODULE))
            clause.setModuleName(getWAM().m_curNode.m_strModule);
@@ -49,6 +48,7 @@ final class Retract1 extends BuiltIn
 	            m_bEnd = true;
 	            return false;
 	        }
+
 
 	        return clause.unify(retractedClause, varsTbl);
         }
@@ -77,18 +77,15 @@ final class Retract1 extends BuiltIn
 	        Clause currentClause = null;
 	        while(en.hasMoreElements() && !bFound)
 	        {
-	            currentClause = ((Clause)en.nextElement());//.getHead();
+	            currentClause = ((Clause)en.nextElement());
 
 	            if(clause.getTail() == null)
-	            {
-	                // si tratta solo di funtore
-	                bFound = functor.unifiable(currentClause.getHead());
-	            }
-	            else
-	            {
-	                // si tratta di clausola
-	                bFound = clause.unifiable(currentClause);
-	            }
+	            	clause.m_tail = new ConsCell(Atom.createAtom("true"),  null);
+
+            	if(currentClause.getTail() == null)
+            		currentClause.m_tail = new ConsCell(Atom.createAtom("true"),  null);
+
+            	bFound = clause.unifiable(currentClause);
 	        }
 
 	        if (bFound)
@@ -101,8 +98,6 @@ final class Retract1 extends BuiltIn
 	            return false;
 	        }
         }
-
-
     }
 
     public final boolean hasMoreChoicePoints()
