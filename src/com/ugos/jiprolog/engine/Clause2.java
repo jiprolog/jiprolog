@@ -49,9 +49,8 @@ final class Clause2 extends BuiltIn
             // Search in DB
             final GlobalDB gdb = getJIPEngine().getGlobalDB();
 
-            if(gdb.isSystem((Functor)head))
+            if(gdb.isSystem((Functor)head) || gdb.isUser((Functor)head) && !gdb.isDynamic(((Functor)head).getName()))
                 throw new JIPPermissionException("access", "private_procedure", ((Functor)head).getPredicateIndicator());
-
 
             final JIPClausesDatabase db =
                 gdb.search((Functor)head, clause.getModuleName());

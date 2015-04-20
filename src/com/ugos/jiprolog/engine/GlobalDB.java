@@ -455,15 +455,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, head);
                 }
 
-                if(isSystem(strPredDef))
+                if(isSystem(strPredDef) || isUser(strPredDef) && !isDynamic(strPredDef))
                 	throw new JIPPermissionException("modify", "static_procedure", head);
 
-				final String strDef = strModuleName + ":" + strPredDef;
-
-                if(m_clauseTable.containsKey(strDef) && !isDynamic(strPredDef))
-                	throw new JIPPermissionException("modify", "static_procedure", head);
-
-                m_clauseTable.remove(strDef);
+                m_clauseTable.remove(strModuleName + ":" + strPredDef);
 
                 pred = ((ConsCell)pred).getTail();
             }

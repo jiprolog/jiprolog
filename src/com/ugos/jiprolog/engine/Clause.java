@@ -177,6 +177,9 @@ class Clause extends ConsCell
             if(!(lhs instanceof Functor))
             	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
 
+			if(!(rhs instanceof ConsCell))
+            	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+	
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
         else if(func.getName().equals("-->/2"))
