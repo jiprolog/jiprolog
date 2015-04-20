@@ -221,13 +221,12 @@ class Clause extends ConsCell
             s_translateParams.setHead(func);
             ((ConsCell)s_translateParams.getTail()).setHead(vTranslated);
 
-//            System.out.println("s_translateQuery " + s_translateQuery);
             WAM wam = new WAM(s_engine);
 
             if(wam.query(new ConsCell(s_translateQuery, null)))
             {
                 wam.closeQuery();
-    //              System.out.println("vPredList " + vPredList);
+
                 // estrae la collection di clausole
                 translated = BuiltIn.getRealTerm(vTranslated);
 
@@ -241,7 +240,6 @@ class Clause extends ConsCell
             else
             {
                 throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
-                //throw new JIPRuntimeException("unable to translate clause!!!!");
             }
         }
         else if(func.getName().equals(":/2"))
@@ -256,16 +254,12 @@ class Clause extends ConsCell
                 lhs = new Functor(((Atom)lhs).getName() + "/0", null);
             }
 
-            //lhs = new Functor(strModuleName + ":" + ((Functor)lhs).getName(), ((Functor)lhs).getParams());
-
             clause = new Clause(strModuleName, (Functor)lhs, null);
 
         }
         else
         {
             // solo funtore in modulo user
-            //func = new Functor(strModuleName + ":" + ((Functor)func).getName(), ((Functor)func).getParams());
-
             clause = new Clause(strModuleName, func, null);
 
         }
