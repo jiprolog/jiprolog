@@ -339,39 +339,10 @@ subsumes_term(General, Specific) :-
 
 '$subsumes'(General, Specific) :-
 	term_variables(Specific, Vars1),
-	General = Specific,
+	unify_with_occurs_check(General, Specific),
 	term_variables(Vars1, Vars2),
 	Vars1 == Vars2.
 
-/*
-subsumes_term(General, Specific) :-
-	term_variables(Specific, Vars),
-	subsumes_term(General, Specific, Vars).
-
-subsumes_term(General, Specific, Vars) :-
-	var(General),
-	!,
-	(	var_member_chk(General, Vars) ->
-		General == Specific
-	;	\+ General \= Specific
-	).
-
-subsumes_term(General, Specific, Vars) :-
-	nonvar(Specific),
-	functor(General, Functor, Arity),
-	functor(Specific, Functor, Arity),
-	subsumes_term(Arity, General, Specific, Vars).
-
-subsumes_term(0, _, _, _) :-
-	!.
-
-subsumes_term(N, General, Specific, Vars) :-
-	arg(N, General,  GenArg),
-	arg(N, Specific, SpeArg),
-	subsumes_term(GenArg, SpeArg, Vars),
-	M is N-1, !,
-	subsumes_term(M, General, Specific, Vars).
-*/
 
 var_member_chk(Var, [Head| Tail]) :-
 	(	Var == Head ->
