@@ -179,6 +179,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         return false;
     }
 
+    public final boolean isUser(final String strPredName)
+    {
+        return m_clauseTable.containsKey(USER_MODULE + ":" + strPredName);
+    }
+
     final void dynamic(final String strPredName)
     {
         int nPos = strPredName.lastIndexOf('/');
