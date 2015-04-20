@@ -171,7 +171,7 @@ class Clause extends ConsCell
 			PrologObject tail = ((ConsCell)rhs).m_tail;
 
 			if(head instanceof Expression)
-				throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+				throw new JIPTypeException(JIPTypeException.CALLABLE, head);
 //			else if(head instanceof PString)
 //			throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
 //			else if(head instanceof Variable)
@@ -188,8 +188,8 @@ class Clause extends ConsCell
 					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
 //				else if(head instanceof PString)
 //					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-				else if(head instanceof Variable)
-					((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
+//				else if(head instanceof Variable)
+//					((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
 
 				tail = ((ConsCell)tail).m_tail;
 	        }
