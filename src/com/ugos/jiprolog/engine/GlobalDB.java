@@ -184,6 +184,16 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         return m_clauseTable.containsKey(USER_MODULE + ":" + strPredName);
     }
 
+    final boolean isUser(final Clause clause)
+    {
+        return isUser((Functor)clause.getHead());
+    }
+
+    final boolean isUser(final Functor funct)
+    {
+        return isUser(funct.getName());
+    }
+
     final void dynamic(final String strPredName)
     {
         int nPos = strPredName.lastIndexOf('/');
