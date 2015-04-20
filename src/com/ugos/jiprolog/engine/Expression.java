@@ -805,6 +805,8 @@ final class Expression extends PrologObject //implements Serializable
                 else
                 	return lessThen(((Variable)obj).getObject());
             }
+			else
+				return false;
         }
 
         return true;
