@@ -116,10 +116,6 @@ class Clause extends ConsCell
 
     static final Clause getClause(PrologObject pred, String strModuleName)
     {
-//      System.out.println("getClause");
-//      System.out.println(pred.getClass());
-//      System.out.println(pred);
-
         if(pred instanceof Variable)
             pred = ((Variable)pred).getObject();
 
@@ -134,13 +130,11 @@ class Clause extends ConsCell
 
         if(!(pred instanceof Functor))
         	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
-//            throw new JIPTypeException(1, JIPTypeException.FUNCTOR);
 
         Functor func = (Functor)pred;
 
         Clause clause;
         ConsCell params;
-        //String strModuleName = GlobalDB.USER_MODULE;
 
         if(func.getName().equals(":-/2"))
         {
@@ -157,10 +151,7 @@ class Clause extends ConsCell
             if((lhs instanceof Functor) && ((Functor)lhs).getName().equals(":/2"))
             {
                 strModuleName = ((Atom)((Functor)lhs).getParams().getHead()).getName();
-                //lhs = BuiltIn.getRealTerm((((Functor)lhs).getParams().getTail()));
                 lhs = BuiltIn.getRealTerm(((ConsCell)((Functor)lhs).getParams().getTail()).getHead());
-//                System.out.println("lhs: " + lhs);
-//                System.out.println("lhs: " + lhs.getClass());
             }
 
             if(lhs instanceof Atom)
@@ -168,18 +159,41 @@ class Clause extends ConsCell
                 lhs = new Functor(((Atom)lhs).getName() + "/0", null);
             }
 
-//          if(rhs instanceof List || rhs instanceof Functor || !(rhs instanceof ConsCell))
-//              rhs = new ConsCell(rhs, null);
-
-//            System.out.println("lhs: " + lhs);
-//            System.out.println("rhs: " + rhs);
 
             if(!(lhs instanceof Functor))
             	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
 
 			if(!(rhs instanceof ConsCell))
             	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-	
+
+			// check rhs
+			PrologObject head = ((ConsCell)rhs).m_head;
+			PrologObject tail = ((ConsCell)rhs).m_tail;
+
+			if(head instanceof Expression)
+				throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+//			else if(head instanceof PString)
+//			throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+//			else if(head instanceof Variable)
+//				((ConsCell)rhs).m_head = new Functor("call/1", new ConsCell(head, null));
+
+			while(tail != null)
+	        {
+				if(!(tail instanceof ConsCell))
+					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+
+				head = ((ConsCell)tail).m_head;
+
+				if(head instanceof Expression)
+					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+//				else if(head instanceof PString)
+//					throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
+				else if(head instanceof Variable)
+					((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
+
+				tail = ((ConsCell)tail).m_tail;
+	        }
+
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
         else if(func.getName().equals("-->/2"))
