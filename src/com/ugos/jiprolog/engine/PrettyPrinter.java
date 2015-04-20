@@ -561,7 +561,7 @@ final class PrettyPrinter extends Object
             return var.getName();
         }
         else if(object == null)
-            return "_" + Integer.toString(var.getAddress());// + ":" + Integer.toString(var.hashCode()); /* + var.getName() + "?";*/
+            return "_" + Long.toString(var.getAddress());// + ":" + Integer.toString(var.hashCode()); /* + var.getName() + "?";*/
             //return var.getName()  + " = " + "_" + Integer.toString(var.getAddress());// + ":" + Integer.toString(var.hashCode()); /* + var.getName() + "?";*/
         else
             varTable.put(var.getName(), var);

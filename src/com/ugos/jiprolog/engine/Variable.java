@@ -27,17 +27,23 @@ final class Variable extends PrologObject//Serializable
 {
     final static long serialVersionUID = 300000008L;
 
+    private static long counter = 1;
+
     private static final char ANONYMOUS = '^';
     private static final char SHADOW = '+';
 
     private String       m_strName;
     private PrologObject m_object;
+    private long m_address;
+
+    Variable parent;
 
     private int cyclic = -1;
 
     public Variable(final String strName)
     {
         m_strName = strName;
+        m_address = counter++;
     }
 
     public Variable(final boolean bAnonymous)
@@ -46,6 +52,8 @@ final class Variable extends PrologObject//Serializable
             m_strName = ANONYMOUS + "" + hashCode();//m_nAddress;//m_nID.toString();
         else
             m_strName = SHADOW + "" + hashCode();//m_nAddress;//m_nID.toString();
+
+        m_address = counter++;
     }
 
     public final PrologObject getObject()
@@ -62,10 +70,12 @@ final class Variable extends PrologObject//Serializable
 
     public final Variable lastVariable()
     {
+//    	System.out.println("lastVariable");
         Variable var = this;
         PrologObject obj = m_object;
         while(obj instanceof Variable)
         {
+//        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
             var = (Variable)obj;
             obj = ((Variable)obj).m_object;
         }
@@ -73,14 +83,27 @@ final class Variable extends PrologObject//Serializable
         return var;
     }
 
+    public final Variable root()
+    {
+        Variable parent = this;
+
+        while(parent.parent != null)
+        {
+        	parent = parent.parent;
+        }
+
+        System.out.println("root " + parent + " " + parent.getName());
+        return parent;
+    }
+
     public final String getName()
     {
         return m_strName;
     }
 
-    public final int getAddress()
+    public final long getAddress()
     {
-        return lastVariable().hashCode();//m_nAddress;
+        return lastVariable().m_address;//m_nAddress;
     }
 
     public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
@@ -188,7 +211,10 @@ final class Variable extends PrologObject//Serializable
                         // entrambi unbounded
                         // controllo per evitare assegnazione ciclica
                         if(objVar != var)
+                        {
                             var.m_object = obj;
+                            ((Variable)obj).parent = this;
+                        }
                     }
                 }
                 else
@@ -210,17 +236,26 @@ final class Variable extends PrologObject//Serializable
 
     protected final boolean lessThen(final PrologObject obj)
     {
-        if(isBounded())
-            return getObject().lessThen(obj);
+    	PrologObject val = getObject();
+        if(val != null)
+            return val.lessThen(obj);
         else
             if(obj instanceof Variable)
                 if(((Variable)obj).isBounded())
                     return true;
                 else
-                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;
+                {
+                	System.out.println("lessThen");
+//                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
+//                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
+                	return root().m_address < ((Variable)obj).root().m_address;
+//                	return root().toString().compareTo(((Variable)obj).root().toString()) < 0;
+//                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;
                     //return m_nAddress < ((Variable)obj).m_nAddress;
 //                    return getAddress() < ((Variable)obj).getAddress();
-
+//                	return hashCode() < ((Variable)obj).hashCode();
+//                	return getName().compareTo(((Variable)obj).getName()) < 0;
+                }
         return true;
     }
 
@@ -237,9 +272,10 @@ final class Variable extends PrologObject//Serializable
     @Override
     public boolean termEquals(PrologObject obj)
     {
-    	if(isBounded())
+    	PrologObject val = getObject();
+        if(val != null)
     	{
-    		return lastVariable().m_object.termEquals(obj);
+    		return val.termEquals(obj);
     	}
     	else if(obj instanceof Variable)
         {
