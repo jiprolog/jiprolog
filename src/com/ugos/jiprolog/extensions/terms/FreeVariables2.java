@@ -33,6 +33,21 @@ public class FreeVariables2 extends JIPXCall
     {
         JIPTerm term = input.getNth(1);
 
+        JIPTerm list = input.getNth(2);
+
+        if(list instanceof JIPVariable)
+        {
+        	list = ((JIPVariable)list).getValue();
+        }
+
+    	if(list != null)
+    	{
+        	if(!(list instanceof JIPList))
+        		throw new JIPTypeException(JIPTypeException.LIST, list);
+        	if(!(((JIPCons)list).isClosedOrPartial()))
+        		throw new JIPTypeException(JIPTypeException.LIST, list);
+    	}
+
         Vector<JIPVariable> varsVect = new Vector<JIPVariable>();
 
         addVariables(term, varsVect);
