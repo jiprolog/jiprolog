@@ -7,7 +7,7 @@ final class Findall4 extends BuiltIn
 {
     WAM m_wam;
     PrologObject m_res;
-    List         m_solList;
+    PrologObject m_solList;
 
     public final boolean unify(final Hashtable varsTbl)
     {
@@ -39,7 +39,7 @@ final class Findall4 extends BuiltIn
 
         m_wam = getNewWAM();
 
-        Stack solStack = new Stack();
+        Stack<PrologObject> solStack = new Stack<PrologObject>();
 
         if(m_wam.query(new ConsCell(query, null)))
         {
@@ -50,15 +50,15 @@ final class Findall4 extends BuiltIn
             }
         }
 
-		m_solList = (List)tail;
 
-        while(!solStack.isEmpty())
+        tail = getParam(4);
+
+        m_solList = tail;
+
+		while(!solStack.isEmpty())
         {
             m_solList = new List((PrologObject)solStack.pop(), m_solList);
         }
-
-        if(m_solList == null)
-            m_solList = List.NIL;
 
         m_wam.closeQuery();
 
