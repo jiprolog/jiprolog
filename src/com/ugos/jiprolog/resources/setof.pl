@@ -134,7 +134,9 @@ list_instances(SoFar, Total) :-
 	list_instances(Term, SoFar, Total).
 
 
-list_instances(-, SoFar, Total) :- !,
+list_instances(Term, SoFar, Total) :-
+	Term == (-),
+	!,
 	Total = SoFar.		%   = delayed in case Total was bound
 
 list_instances(Template, SoFar, Total) :-
@@ -158,7 +160,9 @@ list_instances(Key, NVars, OldBag, NewBag) :-
 	list_instances(Term, Key, NVars, OldBag, NewBag).
 
 
-list_instances(-, _, _, AnsBag, AnsBag) :- !.
+list_instances(Term, _, _, AnsBag, AnsBag) :-
+	Term == (-),
+	!.
 list_instances(NewKey-Term, Key, NVars, OldBag, NewBag) :-
 	replace_key_variables(NVars, Key, NewKey), !,
 	list_instances(Key, NVars, [NewKey-Term|OldBag], NewBag).
