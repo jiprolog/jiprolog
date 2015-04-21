@@ -30,11 +30,11 @@ package com.ugos.jiprolog.engine;
 public class JIPCons extends JIPTerm
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     /** Empty cons or nil
      */
     public static final JIPCons NIL = new JIPCons(ConsCell.NIL);
-    
+
     /** Creates a new cons object
      * @param head the head of the cons
      * @param tail the tail the cons
@@ -69,7 +69,7 @@ public class JIPCons extends JIPTerm
         ConsCell cell = ConsCell.append((ConsCell)cons1.getTerm(), (ConsCell)cons2.getTerm());
         return new JIPCons(cell);
     }
-    
+
     /** Returns a new JIPCons object by reversing this JIPCons object
       * @return new JIPCons object by reversing this JIPCons object
       */
@@ -82,7 +82,7 @@ public class JIPCons extends JIPTerm
     {
         super(cons);
     }
-    
+
     /** Returns the head of this JIPCons object
      * @return head of this JIPCons
      * @see com.ugos.jiprolog.engine.JIPTerm
@@ -90,7 +90,7 @@ public class JIPCons extends JIPTerm
     public final JIPTerm getHead()
     {
         final PrologObject head = ((ConsCell)getTerm()).getHead();
-        
+
         if (head == null)
         {
             return null;
@@ -100,7 +100,7 @@ public class JIPCons extends JIPTerm
             return JIPTerm.getJIPTerm(head);
         }
     }
-    
+
     /** Returns the tail of this JIPCons object
      * @return tail of this JIPCons object
      * @see com.ugos.jiprolog.engine.JIPTerm
@@ -108,7 +108,7 @@ public class JIPCons extends JIPTerm
     public final JIPTerm getTail()
     {
         final PrologObject tail = ((ConsCell)getTerm()).getTail();
-        
+
         if (tail == null)
         {
             return null;
@@ -118,7 +118,7 @@ public class JIPCons extends JIPTerm
             return JIPTerm.getJIPTerm(tail);
         }
     }
-    
+
     /** Returns the nth term in this cons. <br>
      * Raises ArrayIndexOutOfBound if the parameter is out of bound
      * @param n index ot the term to extract
@@ -129,19 +129,35 @@ public class JIPCons extends JIPTerm
     {
         return JIPTerm.getJIPTerm(((ConsCell)getTerm()).getTerm(n));
     }
-    
+
     /** Returns true if this cons is nil. <br>
      */
     public final boolean isNIL()
     {
         return getHead() == null;
     }
-    
+
     /** Returns the number of elements in this cons object.<br>
      * @return the number of elements in this cons object.
      */
     public final int getHeight()
     {
         return ((ConsCell)getTerm()).getHeight();
+    }
+
+    /** Returns true if this cons object is a partial cons list.<br>
+     * @return true if this cons object is a partial cons list..
+     */
+    public boolean isPartial()
+    {
+    	return  ((ConsCell)getTerm()).isPartial();
+    }
+
+    /** Returns true if this cons object is a closed or a partial cons list.<br>
+     * @return true if this cons object is a closed or a partial cons list..
+     */
+    public boolean isClosedOrPartial()
+    {
+    	return  ((ConsCell)getTerm()).isClosedOrPartial();
     }
 }
