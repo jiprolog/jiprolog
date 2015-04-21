@@ -88,7 +88,7 @@ setof(Template, Filter, Set) :-
 %   the common case when there are no free variables.
 
 bagof(Template, Generator, Bag) :-
-	free_variables(Generator, Template, [], Vars),
+	free_variables(Generator, Template, [], Vars, 0),
 	Vars \== [],
 	!,
 	Key =.. [.|Vars],
@@ -236,28 +236,28 @@ concordant_subset(More, _,   _,   Clavis, Answer) :-
 %   free_variables(Generator, Template, OldList, NewList)
 %   finds this set, using OldList as an accumulator.
 
-free_variables(Term, Bound, VarList, [Term|VarList]) :-
+free_variables(Term, Bound, VarList, [Term|VarList], _) :-
 	var(Term),
 	term_is_free_of(Bound, Term),
 	list_is_free_of(VarList, Term),
 	!.
-free_variables(Term, Bound, VarList, VarList) :-
+free_variables(Term, Bound, VarList, VarList, _) :-
 	var(Term),
 	!.
-free_variables(Term, Bound, OldList, NewList) :-
+free_variables(Term, Bound, OldList, NewList, 0) :-
 	explicit_binding(Term, Bound, NewTerm, NewBound),
 	!,
-	free_variables(NewTerm, NewBound, OldList, NewList).
-free_variables(Term, Bound, OldList, NewList) :-
+	free_variables(NewTerm, NewBound, OldList, NewList, 1).
+free_variables(Term, Bound, OldList, NewList, _) :-
 	functor(Term, _, N),
-	free_variables(N, Term, Bound, OldList, NewList).
+	free_variables(N, Term, Bound, OldList, NewList, 1).
 
-free_variables(0, Term, Bound, VarList, VarList) :- !.
-free_variables(N, Term, Bound, OldList, NewList) :-
+free_variables(0, Term, Bound, VarList, VarList, Level) :- !.
+free_variables(N, Term, Bound, OldList, NewList, Level) :-
 	arg(N, Term, Argument),
-	free_variables(Argument, Bound, OldList, MidList),
+	free_variables(Argument, Bound, OldList, MidList, Level),
 	M is N-1, !,
-	free_variables(M, Term, Bound, MidList, NewList).
+	free_variables(M, Term, Bound, MidList, NewList, Level).
 
 %   explicit_binding checks for goals known to existentially quantify
 %   one or more variables.  In particular \+ is quite common.
