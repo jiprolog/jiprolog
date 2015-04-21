@@ -32,7 +32,6 @@ public class FreeVariables2 extends JIPXCall
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
         JIPTerm term = input.getNth(1);
-
         JIPTerm list = input.getNth(2);
 
         if(list instanceof JIPVariable)
@@ -44,7 +43,7 @@ public class FreeVariables2 extends JIPXCall
     	{
         	if(!(list instanceof JIPList))
         		throw new JIPTypeException(JIPTypeException.LIST, list);
-        	if(!(((JIPCons)list).isClosedOrPartial()))
+        	if(!(((JIPList)list).isClosedOrPartial()))
         		throw new JIPTypeException(JIPTypeException.LIST, list);
     	}
 
