@@ -64,8 +64,8 @@ findall(Template, Generator, List, SoFar) :-
 
 setof(Template, Filter, Set) :-
 	bagof(Template, Filter, Bag),
-	sort(Bag, Set).
-
+	sort(Bag, Set0),
+	Set = Set0.
 
 
 %   bagof(Template, Generator, Bag)
@@ -203,13 +203,16 @@ concordant_subset([Key-Val|Rest], Clavis, Answer) :-
 %   putting the Val elements into List, and returning the
 %   left-over pairs, if any, as More.
 
-concordant_subset([Key-Val|Rest], Clavis, [Val|List], More) :-
+concordant_subset([Key-Val|Rest], Clavis, List, More) :-
 %	write(key), nl, write(Key), nl,
 %	write(clavis), nl, write(Clavis), nl,
-	Key = Clavis,
-%	write(ok),
+	\+ \+ subsumes_term(Key, Clavis),
+	\+ \+ subsumes_term(Clavis, Key),
 	!,
-	concordant_subset(Rest, Clavis, List, More).
+	Key = Clavis,
+	List = [Val|Rest2],
+%	write(ok),
+	concordant_subset(Rest, Clavis, Rest2, More).
 
 concordant_subset(More, _, [], More).
 %	write(nok).
