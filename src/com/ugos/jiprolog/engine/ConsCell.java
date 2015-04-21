@@ -245,6 +245,32 @@ class ConsCell extends PrologObject //implements Serializable
         }
     }
 
+    static final boolean isClosedOrPartial(final ConsCell cell)
+    {
+        PrologObject tail = cell.getTail();
+        if(tail == null || tail == ConsCell.NIL || tail == List.NIL)
+        {
+            return true;
+        }
+        else if(tail instanceof Variable)
+        {
+        	if(!((Variable)tail).isBounded())
+        		return true;
+        	else
+			try {
+        		return isClosedOrPartial((ConsCell)BuiltIn.getRealTerm(tail));
+			} catch(Exception ex) {
+				return false;
+			}
+        }
+        else
+		try {
+            return isClosedOrPartial((ConsCell)BuiltIn.getRealTerm(tail));
+        } catch(Exception ex) {
+			return false;
+		}
+    }
+
     static final int getHeight(final ConsCell cell, final int nHeight)
     {
         if(cell == null || cell == ConsCell.NIL || cell == List.NIL)
@@ -267,6 +293,11 @@ class ConsCell extends PrologObject //implements Serializable
     public boolean isPartial()
     {
     	return isPartial(this);
+    }
+
+    public boolean isClosedOrPartial()
+    {
+    	return isClosedOrPartial(this);
     }
 
     @Override
