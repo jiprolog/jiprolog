@@ -144,5 +144,20 @@ public class JIPList extends JIPTerm
         return getHead() == null;
     }
 
+    /** Returns true if this cons object is a partial cons list.<br>
+     * @return true if this cons object is a partial cons list..
+     */
+    public boolean isPartial()
+    {
+    	return  ((ConsCell)getTerm()).isPartial();
+    }
+
+    /** Returns true if this cons object is a closed or a partial cons list.<br>
+     * @return true if this cons object is a closed or a partial cons list..
+     */
+    public boolean isClosedOrPartial()
+    {
+    	return  ((ConsCell)getTerm()).isClosedOrPartial();
+    }
 
 }
