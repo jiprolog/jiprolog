@@ -120,6 +120,7 @@ final class BuiltInFactory extends Object
 
         //m_BuiltInTable.put("bagof_with_duplicates/3", new BagOf3());
         m_BuiltInTable.put("findall/3",         new Findall3());
+        m_BuiltInTable.put("findall/4",         new Findall4());
 
         // system
         m_BuiltInTable.put("$op/3",              new Op3());

@@ -49,9 +49,9 @@
 %	save_instances(Template, Generator),
 %	list_instances([], List).
 
-findall(Template, Generator, List, SoFar) :-
-	save_instances(Template, Generator),
-	list_instances(SoFar, List).
+%findall(Template, Generator, List, SoFar) :-
+%	save_instances(Template, Generator),
+%	list_instances(SoFar, List).
 
 
 %   setof(Template, Generator, Set)
