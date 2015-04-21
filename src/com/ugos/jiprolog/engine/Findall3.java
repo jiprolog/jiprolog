@@ -13,9 +13,18 @@ final class Findall3 extends BuiltIn
     {
         PrologObject term  = getParam(1);
         PrologObject query = getRealTerm(getParam(2));
+        PrologObject list  = getRealTerm(getParam(3));
 
         if(query == null)
             throw new JIPParameterUnboundedException(2);
+
+		if(list != null)
+		{
+			if(!(list instanceof List))
+				throw new JIPTypeException(JIPTypeException.LIST, list);
+			if(!(((ConsCell)list).isClosedOrPartial()))
+				throw new JIPTypeException(JIPTypeException.LIST, list);
+		}
 
         m_res = getParam(3);
 
