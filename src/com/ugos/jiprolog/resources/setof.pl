@@ -45,9 +45,9 @@
 %   has a bug (which the Dec-10 bagof and setof predicates share)
 %   which this has not.
 
-findall(Template, Generator, List) :-
-	save_instances(Template, Generator),
-	list_instances([], List).
+%findall(Template, Generator, List) :-
+%	save_instances(Template, Generator),
+%	list_instances([], List).
 
 findall(Template, Generator, List, SoFar) :-
 	save_instances(Template, Generator),

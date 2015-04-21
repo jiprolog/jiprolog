@@ -108,7 +108,6 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("ver/4",   		 	 new Ver4());
         m_BuiltInTable.put("acyclic_term/1", 		 new AcyclicTerm1());
 
-        //m_BuiltInTable.put("call/1",      new Call1());
         m_BuiltInTable.put("call/2",      new CallN());
         m_BuiltInTable.put("call/3",      new CallN());
         m_BuiltInTable.put("call/4",      new CallN());
@@ -120,7 +119,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("call/10",     new CallN());
 
         //m_BuiltInTable.put("bagof_with_duplicates/3", new BagOf3());
-        //m_BuiltInTable.put("findall/3",         new Findall3());
+        m_BuiltInTable.put("findall/3",         new Findall3());
 
         // system
         m_BuiltInTable.put("$op/3",              new Op3());
