@@ -344,7 +344,7 @@ final class PrologParser
 
                                         if(lastLastObj instanceof Operator &&
                                           ((((Operator)lastLastObj).getPrecedence() > ((Operator)lastObj).getPrecedence()) ||
-                                          (((Operator)lastLastObj).getPrecedence() == ((Operator)lastObj).getPrecedence() &&
+                                          (((Operator)lastLastObj).getPrecedence() == ((Operator)lastObj).getPrecedence() && !((Operator)lastObj).isNonAssoc() &&
                                           (!((Operator)lastLastObj).isLeftAssoc() || ((Operator)lastObj).isRightAssoc()))))
                                         {
                                             //tratto lastOP come funtore
@@ -633,7 +633,7 @@ final class PrologParser
                                                     Operator lastOp = (Operator)termStack.peek();
 
                                                     if (curOp.getPrecedence() > lastOp.getPrecedence() ||
-                                                            ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
+                                                            ((curOp.getPrecedence() == lastOp.getPrecedence()) && !lastOp.isNonAssoc() &&
                                                                  (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))
                                                     {
                                                         // (a op2 b) op1
@@ -646,7 +646,7 @@ final class PrologParser
                                                         lastObj = obj;
                                                     }
                                                     else if (curOp.getPrecedence() < lastOp.getPrecedence() ||
-                                                                 ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
+                                                                 ((curOp.getPrecedence() == lastOp.getPrecedence()) && !lastOp.isNonAssoc() &&
                                                                       (!curOp.isLeftAssoc() || lastOp.isRightAssoc())))
                                                     {
                                                         // a op2 (b op1)
@@ -700,7 +700,7 @@ final class PrologParser
                                                         }
                                                     }
                                                     else if ((curOp.getPrecedence() > lastOp.getPrecedence()) ||
-                                                            ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
+                                                            ((curOp.getPrecedence() == lastOp.getPrecedence()) && !lastOp.isNonAssoc() &&
                                                              (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))
                                                     {
                                                         // (a lastOp b) curOp c
@@ -715,7 +715,7 @@ final class PrologParser
 //                                                        System.out.println("remainder " + lastObj);
                                                     }
                                                     else if ((curOp.getPrecedence() < lastOp.getPrecedence()) ||
-                                                                 ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
+                                                                 ((curOp.getPrecedence() == lastOp.getPrecedence()) && !lastOp.isNonAssoc() &&
                                                                       (!curOp.isLeftAssoc() || lastOp.isRightAssoc())))
                                                     {
                                                         termStack.push(lastObj);
@@ -776,7 +776,7 @@ final class PrologParser
                                                         lastOp = lastOp.getPrefix();
 
                                                         if (curOp.getPrecedence() > lastOp.getPrecedence() ||
-                                                            ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
+                                                            ((curOp.getPrecedence() == lastOp.getPrecedence()) && !lastOp.isNonAssoc() &&
                                                             (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))
                                                         {
                                                             //curOp è atomo
@@ -858,7 +858,7 @@ final class PrologParser
                                                             lastLastOp = lastLastOp.getInfix();
 
                                                             if ((curOp.getPrecedence() > lastOp.getPrecedence() ||
-                                                                ((curOp.getPrecedence() == lastOp.getPrecedence()) &&
+                                                                ((curOp.getPrecedence() == lastOp.getPrecedence()) && !lastOp.isNonAssoc() &&
                                                                  (curOp.isLeftAssoc() || !lastOp.isRightAssoc())))  ||
                                                                     ((nState == STATE_ARG_LIST || nState == STATE_SQUARE_BRACKET) && lastOp.getName().equals(",")))
                                                             {
@@ -1022,7 +1022,7 @@ final class PrologParser
                 if ((termStack.size() == 0) ||
                         op.getName().equals(",") ||
                         op.getPrecedence() > ((Operator)obj2).getPrecedence() ||
-                        ((op.getPrecedence() == ((Operator)obj2).getPrecedence()) &&
+                        ((op.getPrecedence() == ((Operator)obj2).getPrecedence()) && !((Operator)obj2).isNonAssoc() &&
                              (op.isLeftAssoc() || !((Operator)obj2).isRightAssoc())))
                 {
 //                    // (a op2 b) op1
