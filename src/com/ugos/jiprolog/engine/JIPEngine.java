@@ -163,11 +163,9 @@ public class JIPEngine implements Serializable
         setEncoding(Charset.defaultCharset().name());
 
         setEnvVariable("char_conversion", "off");
-        setEnvVariable("double_quotes", "atom");
-        setEnvVariable("char_conversion", "off");
+        setEnvVariable("double_quotes", "codes");
         setEnvVariable("back_quotes", "atom");
         setEnvVariable("unknown", "warning");
-        setEnvVariable("back_quotes", "atom");
         setEnvVariable("syntax_error", "error");
         setEnvVariable("os_error", "error");
         setEnvVariable("debug", JIPDebugger.debug ? "on" : "off");
