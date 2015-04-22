@@ -30,7 +30,7 @@ final class Findall3 extends BuiltIn
 
         m_wam = getNewWAM();
 
-        Stack solStack = new Stack();
+        Stack<PrologObject> solStack = new Stack<PrologObject>();
 
         if(m_wam.query(new ConsCell(query, null)))
         {
@@ -53,7 +53,7 @@ final class Findall3 extends BuiltIn
 
         m_wam.closeQuery();
 
-        term.clear();
+//        term.clear();
 
         return m_res.unify(m_solList, varsTbl);
     }

@@ -62,7 +62,7 @@ final class Findall4 extends BuiltIn
 
         m_wam.closeQuery();
 
-        term.clear();
+//        term.clear();
 
         return m_res.unify(m_solList, varsTbl);
     }
