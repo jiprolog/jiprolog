@@ -243,9 +243,49 @@ check_operator_name(Term, Priority, Specifier) :-
     ensure_loaded(File).
 
 '$system':predicate_property(Head, Property):-
-    predicate_properties(Head, Properties),
+    predicate_properties(Head, Properties0),
+	functor(Head, Functor, Arity),
+	meta_predicate_template(Functor, Arity, Properties0, Properties),
     !,
     member(Property, Properties).
+
+meta_predicate_template(Functor, Arity, Properties, [meta_predicate(Template)| Properties]) :-
+	meta_predicate_template(Functor, Arity, Template),
+	!.
+meta_predicate_template(_, _, Properties, Properties).
+
+% control
+meta_predicate_template((\+), 1, \+ 0).
+meta_predicate_template(catch, 3, catch(0,*,0)).
+meta_predicate_template(once, 1, once(0)).
+meta_predicate_template(not(_), not(0)).
+meta_predicate_template(one(_), one(0)).
+meta_predicate_template(ignore(_), ignore(0)).
+meta_predicate_template(forall, 3, forall(0, 0)).
+meta_predicate_template(call, N, Template) :-
+	N > 0,
+	functor(Template, call, N),
+	Closure is N - 1,
+	arg(1, Template, Closure),
+	meta_predicate_call_n_template_args(N, Template).	
+% apply
+meta_predicate_template(checklist, 2, checklist(1,*)).
+meta_predicate_template(maplist, 3, maplist(2,*,*)).
+% all solutions
+meta_predicate_template(bagof, 3, bagof(*,0,*)).
+meta_predicate_template(setof, 3, setof(*,0,*)).
+meta_predicate_template(findall, 3, findall(*,0,*)).
+meta_predicate_template(findall, 4, findall(*,0,*,*)).
+% DCGs
+meta_predicate_template(phrase, 2, phrase(2,*)).
+meta_predicate_template(phrase, 3, phrase(2,*,*)).
+
+meta_predicate_call_n_template_args(1, _) :-
+	!.
+meta_predicate_call_n_template_args(N, Template) :-
+	arg(N, Template, *),
+	N2 is N - 1,
+	meta_predicate_call_n_template_args(N2, Template).
 
 '$system':between(Lower, Upper, Integer) :-
  integer(Lower),
