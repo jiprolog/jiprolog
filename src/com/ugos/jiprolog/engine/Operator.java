@@ -130,6 +130,11 @@ final class Operator
         return (m_strAssoc.charAt(0) == 'y');
     }
 
+    final boolean isNonAssoc()
+    {
+        return m_strAssoc.equals("xf") || m_strAssoc.equals("fx") || m_strAssoc.equals("xfx");
+    }
+
     public final String toString()
     {
         return getName();
