@@ -42,39 +42,40 @@ public class Call1 extends BuiltIn {
 			throw new JIPTypeException(JIPTypeException.CALLABLE, param);
 		}
 
-		if(wam == null)
-		{
-			wam = getNewWAM();
-			if(wam.query(param))
-				return true;
-			else
-			{
-				wam.closeQuery();
-				wam = null;
-			}
-		}
-		else
-		{
-			if(wam.nextSolution())
-				return true;
-			else
-			{
-				wam.closeQuery();
-				wam = null;
-			}
-
-		}
-
-		return false;
-
-//		Functor openSnip = new Functor("<!/0", null);
+//		if(wam == null)
+//		{
+//			wam = getNewWAM();
+//			if(wam.query(param))
+//				return true;
+//			else
+//			{
+//				wam.closeQuery();
+//				wam = null;
+//			}
+//		}
+//		else
+//		{
+//			if(wam.nextSolution())
+//				return true;
+//			else
+//			{
+//				wam.closeQuery();
+//				wam = null;
+//			}
 //
-//		BuiltInPredicate closeSnip = new BuiltInPredicate("!>/0", null);
+//		}
 //
-//        // estrae il nodo corrente
-//        final WAM.Node curNode = getWAM().getCurNode();
+//		return false;
+
+		Functor openSnip = new Functor("<!/0", null);
+
+		BuiltInPredicate closeSnip = new BuiltInPredicate("!>/0", null);
 //
-//       	curNode.m_callList = new ConsCell(curNode.m_callList.m_head, new ConsCell(openSnip, new ConsCell(goal, new ConsCell(closeSnip, curNode.m_callList.m_tail))));
+        // extract the current node
+        final WAM.Node curNode = getWAM().getCurNode();
+//
+        // add the snip and the goal in the call list
+       	curNode.m_callList = new ConsCell(curNode.m_callList.m_head, new ConsCell(openSnip, new ConsCell(param, new ConsCell(closeSnip, curNode.m_callList.m_tail))));
 
 //		BuiltInPredicate softCut = new BuiltInPredicate("$!/0", null);
 //
@@ -87,7 +88,7 @@ public class Call1 extends BuiltIn {
 
 
 //       	System.out.println(curNode.m_callList);
-//		return true;
+		return true;
 	}
 
 	@Override
