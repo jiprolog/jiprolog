@@ -348,7 +348,7 @@ final class Expression extends PrologObject //implements Serializable
                         else
                         {
 //                        	throw new JIPEvaluationException(JIPEvaluationException.undefined);//.create(2, strFunName + " is unknown");
-                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/1")).getPredicateIndicator());
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/1"), null).getPredicateIndicator());
 
                         }
 
@@ -732,7 +732,7 @@ final class Expression extends PrologObject //implements Serializable
                         }
                         else
                         {
-                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2")).getPredicateIndicator());//.create(2, strFunName + " is unknown");
+                            throw new JIPTypeException(JIPTypeException.EVALUABLE, new Functor(Atom.createAtom(strFunName + "/2"), null).getPredicateIndicator());//.create(2, strFunName + " is unknown");
                         }
                         break;
 
