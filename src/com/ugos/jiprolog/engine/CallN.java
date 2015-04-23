@@ -11,18 +11,16 @@ import java.util.Hashtable;
  */
 public class CallN extends BuiltIn {
 
+	WAM wam;
+
 	@Override
 	public boolean unify(Hashtable<Variable, Variable> varsTbl)
 	{
-
-
 		PrologObject closure = getParam(1);
 		ConsCell params = (ConsCell)getParams().getTail();
 
 		if(closure instanceof Variable)
-		{
 			closure = ((Variable)closure).getObject();
-		}
 
 		PrologObject goal;
 
@@ -30,6 +28,10 @@ public class CallN extends BuiltIn {
 		{
 			goal = new Functor((Atom)closure);
 			((Functor)goal).setParams((ConsCell)params);
+
+	        if(BuiltInFactory.isBuiltIn(((Functor)goal).getName()))
+	            goal = new BuiltInPredicate(((Functor)goal));
+
 		}
 		else if(closure instanceof Functor)
 		{
@@ -46,6 +48,9 @@ public class CallN extends BuiltIn {
 			goal1.setParams(newParams);
 
 			goal = goal1;
+
+	        if(BuiltInFactory.isBuiltIn(((Functor)goal).getName()))
+	            goal = new BuiltInPredicate(((Functor)goal));
 		}
 		else if(closure instanceof List)
 		{
@@ -69,15 +74,31 @@ public class CallN extends BuiltIn {
 			throw new JIPTypeException(JIPTypeException.CALLABLE, closure);
 		}
 
-//		boolean succeeds = false;
-//		WAM wam = getNewWAM();
-//		succeeds = wam.query(goal);
+//		if(wam == null)
+//		{
+//			wam = getNewWAM();
+//			if(wam.query(goal))
+//				return true;
+//			else
+//			{
+//				wam.closeQuery();
+//				wam = null;
+//			}
+//		}
+//		else
+//		{
+//			if(wam.nextSolution())
+//				return true;
+//			else
+//			{
+//				wam.closeQuery();
+//				wam = null;
+//			}
 //
-//		wam.closeQuery();
+//		}
 //
-//		return succeeds;
-//        if(BuiltInFactory.isBuiltIn(goal.getName()))
-//            goal = new BuiltInPredicate(goal);
+//		return false;
+
 
         // estrae il nodo corrente
         final WAM.Node curNode = getWAM().getCurNode();
@@ -89,7 +110,7 @@ public class CallN extends BuiltIn {
 
 	@Override
 	public boolean hasMoreChoicePoints() {
-		return false;
+		return wam != null;
 	}
 
 	private final WAM getNewWAM()

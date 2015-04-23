@@ -11,7 +11,7 @@ import java.util.Hashtable;
  */
 public class Call1 extends BuiltIn {
 
-	WAM m_wam;
+	WAM wam;
 
 	@Override
 	public boolean unify(Hashtable<Variable, Variable> varsTbl)
@@ -26,21 +26,46 @@ public class Call1 extends BuiltIn {
 		{
         	throw new JIPParameterUnboundedException();
 		}
-		else if(!(param instanceof Atom || param instanceof ConsCell))
+        else if (param instanceof Atom)
+        {
+        	param = new Functor((Atom)param);
+        	if(BuiltInFactory.isBuiltIn(((Functor)param).getName()))
+        		param = new BuiltInPredicate(((Functor)param));
+        }
+        else if (param instanceof Functor)
+        {
+            if(BuiltInFactory.isBuiltIn(((Functor)param).getName()))
+            	param = new BuiltInPredicate(((Functor)param));
+        }
+		else if(!(param instanceof ConsCell))
 		{
 			throw new JIPTypeException(JIPTypeException.CALLABLE, param);
 		}
 
+		if(wam == null)
+		{
+			wam = getNewWAM();
+			if(wam.query(param))
+				return true;
+			else
+			{
+				wam.closeQuery();
+				wam = null;
+			}
+		}
+		else
+		{
+			if(wam.nextSolution())
+				return true;
+			else
+			{
+				wam.closeQuery();
+				wam = null;
+			}
 
-		boolean succeeds = false;
-		m_wam = getNewWAM();
-		succeeds = m_wam.query(param);
+		}
 
-		m_wam.closeQuery();
-
-		return succeeds;
-
-
+		return false;
 
 //		Functor openSnip = new Functor("<!/0", null);
 //
@@ -68,15 +93,16 @@ public class Call1 extends BuiltIn {
 	@Override
 	public boolean hasMoreChoicePoints()
 	{
-		return m_wam == null;
+		return wam != null;
 	}
 
 	private final WAM getNewWAM()
     {
-        if(getWAM() instanceof WAMTrace)
-            return new WAMTrace((WAMTrace)getWAM());
+		WAM wam = getWAM();
+        if(wam instanceof WAMTrace)
+            return new WAMTrace((WAMTrace)wam);
         else
-            return new WAM(m_jipEngine);
+            return new WAM(wam);
     }
 
 
