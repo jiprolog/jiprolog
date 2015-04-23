@@ -1074,7 +1074,7 @@ final class PrologParser
                 if ((termStack.size() == 0) ||
                         op.getName().equals(",") ||
                         op.getPrecedence() > ((Operator)obj2).getPrecedence() ||
-                        ((op.getPrecedence() == ((Operator)obj2).getPrecedence()) && !((Operator)obj2).isNonAssoc() &&
+                        ((op.getPrecedence() == ((Operator)obj2).getPrecedence()) && /*!((Operator)obj2).isNonAssoc() &&*/
                              (op.isLeftAssoc() || !((Operator)obj2).isRightAssoc())))
                 {
 //                    // (a op2 b) op1
