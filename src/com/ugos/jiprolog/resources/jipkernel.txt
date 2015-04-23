@@ -110,7 +110,7 @@ check_operator_name(Term, Priority, Specifier) :-
 	;	error(type_error(atom, Term))
 	).
 
-'$system':call(X):-'$execute'(X).
+'$system':call(G) :- <!, G, !>.
 
 '$system': \+ G :- call(G), !, fail.
 '$system': \+ G.
@@ -205,9 +205,9 @@ check_operator_name(Term, Priority, Specifier) :-
 
 '$system':halt :- halt(0).
 
-'$system': ;(->(X,Y), _Z) :- X,'$!', Y.
+'$system': ;(->(X,Y), _Z) :- call(X), '$!', Y.
 '$system': ;(->(_X,_Y), Z) :- '$!', Z.
-'$system': ->(X,Y) :- X,'$!', Y.
+'$system': ->(X,Y) :- call(X), '$!', Y.
 
 '$system': ;(X, _) :- X.
 '$system': ;(_, Y) :- Y.
