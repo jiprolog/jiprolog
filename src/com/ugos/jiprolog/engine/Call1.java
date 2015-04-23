@@ -67,15 +67,17 @@ public class Call1 extends BuiltIn {
 //
 //		return false;
 
-		Functor openSnip = new Functor("<!/0", null);
-
-		BuiltInPredicate closeSnip = new BuiltInPredicate("!>/0", null);
+//		Functor openSnip = new Functor("<!/0", null);
+//
+//		BuiltInPredicate closeSnip = new BuiltInPredicate("!>/0", null);
 //
         // extract the current node
         final WAM.Node curNode = getWAM().getCurNode();
 //
         // add the snip and the goal in the call list
-       	curNode.m_callList = new ConsCell(curNode.m_callList.m_head, new ConsCell(openSnip, new ConsCell(param, new ConsCell(closeSnip, curNode.m_callList.m_tail))));
+        curNode.m_callList = new ConsCell(curNode.m_callList.m_head, new ConsCell(param, curNode.m_callList.m_tail));
+//       	curNode.m_callList = new ConsCell(curNode.m_callList.m_head, new ConsCell(openSnip, new ConsCell(param, new ConsCell(closeSnip, curNode.m_callList.m_tail))));
+//       	curNode.m_backtrack = curNode.m_previous.m_previous;
 
 //		BuiltInPredicate softCut = new BuiltInPredicate("$!/0", null);
 //
@@ -94,7 +96,7 @@ public class Call1 extends BuiltIn {
 	@Override
 	public boolean hasMoreChoicePoints()
 	{
-		return wam != null;
+		return true;//wam != null;
 	}
 
 	private final WAM getNewWAM()

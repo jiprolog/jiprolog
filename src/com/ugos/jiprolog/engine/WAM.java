@@ -629,6 +629,9 @@ class WAM
 
             if(term != null)
             {
+//            	term = new BuiltInPredicate("$call/1", new ConsCell(term, null));
+//              curNode.setGoal(new BuiltInPredicate("$call/1", new ConsCell(term, null)));
+
                 curNode.setGoal(term);
             }
             else
