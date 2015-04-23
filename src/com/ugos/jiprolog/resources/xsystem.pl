@@ -22,13 +22,13 @@
 /******************************************************************
  * utility extension package v1.1.0
  ******************************************************************/
-:-module(jipxsystem, [sleep/1, shell/2, shell/1, statistics/0, get_time/1, time/1, time/4, time/5, time/7, time/8,
+:-module(jipxsystem, [sleep/1, shell/2, shell/1, getenv/2, statistics/0, get_time/1, time/1, time/4, time/5, time/7, time/8,
                       convert_time/8, date/3, date/4, ms/2, wait/1]).
 
-:-'$custom_built_in'([sleep/1, shell/2, shell/1, statistics/0, get_time/1, time/1, time/4, time/5, time/7, time/8,
+:-'$custom_built_in'([sleep/1, shell/2, shell/1, getenv/2, statistics/0, get_time/1, time/1, time/4, time/5, time/7, time/8,
                       convert_time/8, date/3, date/4, ms/2, wait/1]).
 
-:-assert(ver(jipxsystem, '3.0.1')).
+:-assert(ver(jipxsystem, '3.0.2')).
 
 sleep(Millis):-
     xcall('com.ugos.jiprolog.extensions.system.Sleep1', [Millis]).
@@ -43,6 +43,15 @@ shell(Command, Status):-
 shell(Command):-
 %	split_command(Command, List),
     shell(Command, 0).
+
+getenv(Variable, Value) :-
+	(	invoke('java.lang.System', getenv('java.lang.String'), [Variable], Value),
+		Value \== [] ->
+		true
+	;	% check if the environment variable value is passed as a property
+		invoke('java.lang.System', getProperty('java.lang.String'), [Variable], Value),
+		Value \== []
+	).
 
 statistics:-
     xcall('com.ugos.jiprolog.extensions.system.Statistics0', []).
