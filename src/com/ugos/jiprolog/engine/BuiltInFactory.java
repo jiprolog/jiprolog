@@ -55,7 +55,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("retractall/1",      new RetractAll1());
         m_BuiltInTable.put("abolish/1",         new Abolish1());
         m_BuiltInTable.put("consult/1",         new Consult1());
-        m_BuiltInTable.put("reconsult/1",         new Consult1());
+        m_BuiltInTable.put("reconsult/1",       new Consult1());
         m_BuiltInTable.put("==/2",              new TermEquals2());
         m_BuiltInTable.put("garbage_collect/0", new GarbageCollect0());
         m_BuiltInTable.put("abort/0",           new Abort0());
@@ -90,7 +90,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("arg/3",             new Arg3());
         m_BuiltInTable.put("=../2",             new Univ2());
         m_BuiltInTable.put("notify/2",          new Notify2());
-        m_BuiltInTable.put("chdir/1",      	new SearchPath1());
+        m_BuiltInTable.put("chdir/1",           new SearchPath1());
         m_BuiltInTable.put("is/2",              new Is2());
         m_BuiltInTable.put(">/2",               new Great2());
         m_BuiltInTable.put("</2",               new Less2());
@@ -103,10 +103,10 @@ final class BuiltInFactory extends Object
 
         m_BuiltInTable.put("copyright/1",        new Copyright1());
         m_BuiltInTable.put("integer_bounds/2",   new IntegerBounds2());
-        m_BuiltInTable.put("env/2",   			 new Env2());
-        m_BuiltInTable.put("set_env/2",   		 new SetEnv2());
-        m_BuiltInTable.put("ver/4",   		 	 new Ver4());
-        m_BuiltInTable.put("acyclic_term/1", 		 new AcyclicTerm1());
+        m_BuiltInTable.put("env/2",              new Env2());
+        m_BuiltInTable.put("set_env/2",          new SetEnv2());
+        m_BuiltInTable.put("ver/4",              new Ver4());
+        m_BuiltInTable.put("acyclic_term/1",     new AcyclicTerm1());
 
         m_BuiltInTable.put("call/1",      new Call1());
         m_BuiltInTable.put("call/2",      new CallN());
@@ -120,20 +120,20 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("call/10",     new CallN());
 
         //m_BuiltInTable.put("bagof_with_duplicates/3", new BagOf3());
-        m_BuiltInTable.put("findall/3",         new Findall3());
-        m_BuiltInTable.put("findall/4",         new Findall4());
+        m_BuiltInTable.put("findall/3",   new Findall3());
+        m_BuiltInTable.put("findall/4",   new Findall4());
 
         // system
-        m_BuiltInTable.put("$op/3",              new Op3());
+        m_BuiltInTable.put("$op/3",       new Op3());
         m_BuiltInTable.put("$current_query_handle/1",      new CurrentQueryHandle1());
 
-        m_BuiltInTable.put("$free/1",       new Free1());
+        m_BuiltInTable.put("$free/1",     new Free1());
         m_BuiltInTable.put("$custom_built_in/1", new Custom1());
-        m_BuiltInTable.put("$!/0", new SoftCut0());
+        m_BuiltInTable.put("$!/0",        new SoftCut0());
 
-        m_BuiltInTable.put("pid/1",      new Pid1());
-        m_BuiltInTable.put("error/1",      new Error1());
-        m_BuiltInTable.put("error/2",      new Error2());
+        m_BuiltInTable.put("pid/1",       new Pid1());
+        m_BuiltInTable.put("error/1",     new Error1());
+        m_BuiltInTable.put("error/2",     new Error2());
 
 
         //m_BuiltInTable.put("wait/1",            new Wait1());
