@@ -35,13 +35,6 @@
 	sublist/3,
 	forall/2,
 	apply/2,
-	call/2,
-	call/3,
-	call/4,
-	call/5,
-	call/6,
-  	call/7,
-  	call/8,
 	ignore/1,
   	setup_call_cleanup/3,
   	call_cleanup/2]).

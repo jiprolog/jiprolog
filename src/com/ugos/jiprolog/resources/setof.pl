@@ -103,9 +103,14 @@ bagof(Template, Generator, Bag) :-
 	Bag = Answer.
 
 bagof(Template, Generator, Bag) :-
-	save_instances(Template, Generator),
-	list_instances([], Bag),
-	Bag \== [].
+	findall(Template, Generator, Bag0),
+	Bag0 \== [],
+	Bag = Bag0.
+
+%bagof(Template, Generator, Bag) :-
+%	save_instances(Template, Generator),
+%	list_instances([], Bag),
+%	Bag \== [].
 
 
 
