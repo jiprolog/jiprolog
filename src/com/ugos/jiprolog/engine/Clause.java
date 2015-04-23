@@ -116,20 +116,24 @@ class Clause extends ConsCell
 
     static final Clause getClause(PrologObject pred, String strModuleName)
     {
-        if(pred instanceof Variable)
-            pred = ((Variable)pred).getObject();
+//    	boolean isSystem = strModuleName.equals("$system");
+//    	if(!isSystem)
+//    	{
+	        if(pred instanceof Variable)
+	            pred = ((Variable)pred).getObject();
 
-        if(pred == null)
-        	throw new JIPParameterUnboundedException();
+	        if(pred == null)
+	        	throw new JIPParameterUnboundedException();
 
-        if(pred instanceof Clause)
-            return (Clause)pred;
+	        if(pred instanceof Clause)
+	            return (Clause)pred;
 
-        if(pred instanceof Atom)
-            pred = new Functor(((Atom)pred).getName() + "/0", null);
+	        if(pred instanceof Atom)
+	            pred = new Functor(((Atom)pred).getName() + "/0", null);
 
-        if(!(pred instanceof Functor))
-        	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
+	        if(!(pred instanceof Functor))
+	        	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
+//    	}
 
         Functor func = (Functor)pred;
 
@@ -159,14 +163,16 @@ class Clause extends ConsCell
                 lhs = new Functor(((Atom)lhs).getName() + "/0", null);
             }
 
+            if(!strModuleName.equals("$system"))
+            {
+	            if(!(lhs instanceof Functor))
+	            	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
 
-            if(!(lhs instanceof Functor))
-            	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
+				if(!(rhs instanceof ConsCell))
+	            	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
 
-			if(!(rhs instanceof ConsCell))
-            	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-
-			checkForCallable((ConsCell)rhs);
+				checkForCallable((ConsCell)rhs);
+        	}
 
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
@@ -261,8 +267,8 @@ class Clause extends ConsCell
 		}
 //    	else if(head instanceof PString)
 //    		throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-//    	else if(head instanceof Variable)
-//    		((ConsCell)rhs).m_head = new Functor("call/1", new ConsCell(head, null));
+    	else if(head instanceof Variable)
+    		((ConsCell)rhs).m_head = new Functor("call/1", new ConsCell(head, null));
 
 		while(tail != null)
         {
