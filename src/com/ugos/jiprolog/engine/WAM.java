@@ -42,7 +42,7 @@ class WAM
     int       m_nBaseCounter;
     boolean   m_bClosed = false;
 
-    private final Stack<String> moduleStack = new Stack<String>();
+    private Stack<String> moduleStack = new Stack<String>();
 
     static final Enumeration s_emptyEnum = new Vector(1).elements();
 
@@ -107,6 +107,8 @@ class WAM
             m_strBaseModule = wam.m_curNode.m_strModule;
         else
             m_strBaseModule = GlobalDB.USER_MODULE;
+
+        moduleStack = wam.moduleStack;
     }
 
     final Node getCurNode()
@@ -389,10 +391,13 @@ class WAM
                     }
                     catch(UndefinedPredicateException ex)
                     {
+                        System.out.println("not found + " + ex.getPredicateName());
+                        System.out.println("module stack  " + moduleStack);
+
                         // invia il warning se il predicato non è definito
                         // e non è dynamic
                         // in questo caso la eneration deve essere vuota
-                        if(!m_globalDB.isDynamic(ex.getPredicateName()))
+                        if(!m_globalDB.isDynamic(((Functor)ex.getCulprit()).getName()))
                         {
                         	String unknown = (String)m_engine.getEnvVariable("unknown");
                         	if(unknown.equals("warning"))
@@ -406,6 +411,7 @@ class WAM
                         	}
 
                         }
+
 
                         curNode.m_ruleEnum = s_emptyEnum;
                     }
@@ -505,7 +511,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-//            ex.printStackTrace();  //DBG
+            ex.printStackTrace();  //DBG
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();

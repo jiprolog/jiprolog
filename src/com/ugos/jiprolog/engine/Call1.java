@@ -28,7 +28,7 @@ public class Call1 extends BuiltIn {
 		}
         else if (param instanceof Atom)
         {
-        	param = new Functor((Atom)param);
+        	param = new Functor((Atom)param, 0);
         	if(BuiltInFactory.isBuiltIn(((Functor)param).getName()))
         		param = new BuiltInPredicate(((Functor)param));
         }

@@ -26,13 +26,14 @@ class Dynamic1 extends Multifile1
     public final boolean unify(final Hashtable varsTbl)
     {
         final Vector predDefVect = getPredDefVect();
-        
+
         final GlobalDB gdb = getJIPEngine().getGlobalDB();
         for(int i = 0; i < predDefVect.size(); i++)
         {
+//        	System.out.println("dynamic " + (String)predDefVect.elementAt(i));
             gdb.dynamic((String)predDefVect.elementAt(i));
         }
-        
+
         return true;
     }
 }

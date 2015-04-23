@@ -201,13 +201,16 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName), jipEngine);
 
         final String strDef = USER_MODULE + ":" + strPredName;
+//        System.out.println("strDef " + strDef);
         JIPClausesDatabase db;
         if(m_clauseTable.containsKey(strDef))
         {
+//        	System.out.println("found " + strDef);
             db = ((JIPClausesDatabase)m_clauseTable.get(strDef));
         }
         else
         {
+//        	System.out.println("not found " + strDef);
             final String strName = strPredName.substring(0, nPos);
             final int nArity = Integer.parseInt(strPredName.substring(nPos + 1));
             db = new DefaultClausesDatabase(strName, nArity);

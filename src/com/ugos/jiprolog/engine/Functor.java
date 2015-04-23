@@ -65,6 +65,16 @@ class Functor extends ConsCell
         m_strFriendlyName = m_strName;
     }
 
+    public Functor(final Atom name, int arity)
+    {
+        super(name, null);
+
+        m_strFriendlyName    = name.getName();
+
+        m_nArity = arity;
+        m_strName = m_strFriendlyName + "/" + arity;
+    }
+
     public PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
         if(getParams() != null)
