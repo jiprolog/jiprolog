@@ -165,9 +165,9 @@ check_operator_name(Term, Priority, Specifier) :-
 
 '$system': @=(X, Y) :- compare(=, X, Y).
 
-'$system': @>=(X, Y) :- (compare(>, X, Y);compare(=, X, Y)), !.
+'$system': @>=(X, Y) :- compare(O, X, Y), (O == (>); O == (=)), !.
 
-'$system': @=<(X, Y) :- (compare(<, X, Y);compare(=, X, Y)), !.
+'$system': @=<(X, Y) :- compare(O, X, Y), (O == (<); O == (=)), !.
 
 '$system': >=(X, Y) :- (X > Y ; X =:= Y), !.
 
