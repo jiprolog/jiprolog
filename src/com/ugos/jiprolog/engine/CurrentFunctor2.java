@@ -58,7 +58,8 @@ final class CurrentFunctor2 extends BuiltIn
                 arity    = Expression.createNumber(db.getArity());
 
                 if(getParam(1).unifiable(funcName) &&
-                   getParam(2).unifiable(arity))
+                   getParam(2).unifiable(arity) &&
+				   !(getJIPEngine().getGlobalDB().isSystem(new Functor(funcName.getName() + "/" + arity, null))))
                 {
                     if(!m_enum.hasMoreElements())
                     {
@@ -90,7 +91,8 @@ final class CurrentFunctor2 extends BuiltIn
                 arity    = Expression.createNumber(Integer.parseInt(strPredDef.substring(nPos + 1)));
 
                 if(getParam(1).unify(funcName, varsTbl) &&
-                   getParam(2).unify(arity, varsTbl))
+                   getParam(2).unify(arity, varsTbl) &&
+				   !(getJIPEngine().getGlobalDB().isSystem(new Functor(funcName.getName() + "/" + arity, null))))
                 {
                     return true;
                 }
