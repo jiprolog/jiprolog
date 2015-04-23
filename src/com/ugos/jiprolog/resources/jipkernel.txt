@@ -110,12 +110,12 @@ check_operator_name(Term, Priority, Specifier) :-
 	;	error(type_error(atom, Term))
 	).
 
-'$system':call(X):-X.
+%'$system':call(X):-X.
 
-'$system': \+ G :- G, !, fail.
+'$system': \+ G :- call(G), !, fail.
 '$system': \+ G.
 
-'$system': not G :- G, !, fail.
+'$system': not G :- call(G), !, fail.
 '$system': not G.
 
 '$system':nonvar(X):- var(X), !, fail.
@@ -267,7 +267,7 @@ meta_predicate_template(call, N, Template) :-
 	functor(Template, call, N),
 	Closure is N - 1,
 	arg(1, Template, Closure),
-	meta_predicate_call_n_template_args(N, Template).	
+	meta_predicate_call_n_template_args(N, Template).
 % apply
 meta_predicate_template(checklist, 2, checklist(1,*)).
 meta_predicate_template(maplist, 3, maplist(2,*,*)).

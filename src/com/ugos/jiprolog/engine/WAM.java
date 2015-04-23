@@ -267,7 +267,7 @@ class WAM
         }
     }
 
-    final void scut()
+    final void softCut()
     {
         if(m_curNode.m_parent != null)
         {
@@ -331,6 +331,10 @@ class WAM
             {
                 if(((BuiltInPredicate)curNode.getGoal()).hasMoreChoicePoints())
                     return curNode;
+            }
+            else if(curNode.m_ruleEnum == null)
+            {
+//            	System.out.println(curNode.getGoal());
             }
             else if(curNode.m_ruleEnum.hasMoreElements())
             {

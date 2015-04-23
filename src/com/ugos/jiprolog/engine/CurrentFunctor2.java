@@ -57,8 +57,8 @@ final class CurrentFunctor2 extends BuiltIn
                 funcName = Atom.createAtom(db.getFunctorName());
                 arity    = Expression.createNumber(db.getArity());
 
-                if(getParam(1).unify(funcName, varsTbl) &&
-                   getParam(2).unify(arity, varsTbl))
+                if(getParam(1).unifiable(funcName) &&
+                   getParam(2).unifiable(arity))
                 {
                     if(!m_enum.hasMoreElements())
                     {
@@ -66,7 +66,10 @@ final class CurrentFunctor2 extends BuiltIn
                         m_bSystem = false;
                     }
 
-                    return true;
+                    return getParam(1).unify(funcName, varsTbl) &&
+                           getParam(2).unify(arity, varsTbl);
+
+//                    return true;
                 }
             }
 

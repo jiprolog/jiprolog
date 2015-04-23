@@ -108,6 +108,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("ver/4",   		 	 new Ver4());
         m_BuiltInTable.put("acyclic_term/1", 		 new AcyclicTerm1());
 
+        m_BuiltInTable.put("call/1",      new Call1());
         m_BuiltInTable.put("call/2",      new CallN());
         m_BuiltInTable.put("call/3",      new CallN());
         m_BuiltInTable.put("call/4",      new CallN());
@@ -128,7 +129,7 @@ final class BuiltInFactory extends Object
 
         m_BuiltInTable.put("$free/1",       new Free1());
         m_BuiltInTable.put("$custom_built_in/1", new Custom1());
-        m_BuiltInTable.put("$!/0", new SCut0());
+        m_BuiltInTable.put("$!/0", new SoftCut0());
 
         m_BuiltInTable.put("pid/1",      new Pid1());
         m_BuiltInTable.put("error/1",      new Error1());

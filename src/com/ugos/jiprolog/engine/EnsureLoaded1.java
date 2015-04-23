@@ -54,7 +54,7 @@ final class EnsureLoaded1 extends BuiltIn
         }
         catch(Exception ex1)
         {
-//                ex1.printStackTrace();
+                ex1.printStackTrace();
             throw new JIPJVMException(ex1);
         }
 

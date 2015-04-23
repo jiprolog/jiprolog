@@ -22,11 +22,11 @@ package com.ugos.jiprolog.engine;
 
 import java.util.*;
 
-final class SCut0 extends BuiltIn
+final class SoftCut0 extends BuiltIn
 {
     public final boolean unify(final Hashtable varsTbl)
     {
-        getWAM().scut();
+        getWAM().softCut();
         
         return true;
     }
