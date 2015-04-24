@@ -483,7 +483,7 @@ final class Expression extends PrologObject //implements Serializable
 
                             return retexp;
                         }
-                        else if (strFunName.equals("pow") || strFunName.equals("**") || strFunName.equals("^"))
+                        else if (strFunName.equals("pow") || strFunName.equals("**"))
                         {
                             if(head == null)
                             	throw new JIPParameterUnboundedException();
@@ -501,6 +501,28 @@ final class Expression extends PrologObject //implements Serializable
 //                            	retexp.floating = !exp1.isInteger() || !exp2.isInteger();
 
                             return retexp;
+                        }
+                        else if (strFunName.equals("^"))
+                        {
+                            if(head == null)
+                            	throw new JIPParameterUnboundedException();
+
+                        	final Expression exp1 = Expression.compute(head);
+                            dVal1 = exp1.m_dValue;
+
+                            final Expression exp2 = Expression.compute(((ConsCell)params.getTail()).getHead());
+                            final double dVal2 = exp2.m_dValue;
+
+                            dblVal =  Math.pow(dVal1, dVal2);
+
+                            retexp = Expression.createNumber(dblVal);
+                            
+							if(dVal2 == -1 && dVal1 != 1)
+								throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            else if(exp2.isInteger())
+                            	return retexp;
+							else
+								return Expression.createDouble(dblVal);
                         }
                         else if (strFunName.equals("min"))
                         {
@@ -520,7 +542,6 @@ final class Expression extends PrologObject //implements Serializable
 
                             if(!retexp.floating && (dblVal > Integer.MAX_VALUE || dblVal < Integer.MIN_VALUE))
                             	throw new JIPEvaluationException("int_overflow");
-
 
                             return retexp;
                         }
@@ -542,7 +563,6 @@ final class Expression extends PrologObject //implements Serializable
 
                             if(!retexp.floating && (dblVal > Integer.MAX_VALUE || dblVal < Integer.MIN_VALUE))
                             	throw new JIPEvaluationException("int_overflow");
-
 
                             return retexp;
                         }
