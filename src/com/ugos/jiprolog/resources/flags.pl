@@ -79,9 +79,6 @@ valid_flag(version).
 valid_flag(prolog_copyright).
 valid_flag(pid).
 valid_flag(encoding).
-% User-defined flags
-valid_flag(Flag) :-
-	user_defined_flag(Flag, _, _).
 
 read_only_flag(Flag) :-
 	prolog_flag(Flag, _).
@@ -98,10 +95,6 @@ valid_flag_value(double_quotes, codes) :- !.
 valid_flag_value(unknown, error) :- !.
 valid_flag_value(unknown, warning) :- !.
 valid_flag_value(unknown, fail) :- !.
-valid_flag_value(Flag, Value) :-
-	user_defined_flag(Flag, _, Type),
-	Test =.. [Type, Value],
-	call(Test).
 
 current_prolog_flag(Flag, Value) :-
 	prolog_flag(Flag, Value).
@@ -116,6 +109,7 @@ current_prolog_flag(Flag, _) :-
 current_prolog_flag(Flag, _) :-
 	nonvar(Flag),
 	\+ valid_flag(Flag),
+	\+ user_defined_flag(Flag, _, _),
 	error(domain_error(prolog_flag,Flag)).
 
 set_prolog_flag(Flag, _) :-
@@ -126,12 +120,18 @@ set_prolog_flag(Flag, _) :-
 	error(type_error(atom,Flag)).
 set_prolog_flag(Flag, _) :-
 	\+ valid_flag(Flag),
+	\+ user_defined_flag(Flag, _, _),
 	error(domain_error(prolog_flag,Flag)).
 set_prolog_flag(Flag, _) :-
-	read_only_flag(Flag),
+	(	read_only_flag(Flag)
+	;	user_defined_flag(Flag, read_only, _)
+	),
 	error(permission_error(modify,flag,Flag)).
 set_prolog_flag(Flag, Value) :-
-	\+ valid_flag_value(Flag, Value),
+	\+ (	valid_flag_value(Flag, Value)
+		;	user_defined_flag(Flag, _, Type),
+			Test =.. [Type, Value], call(Test)
+	),
 	error(domain_error(flag_value,Flag+Value)).
 set_prolog_flag(Flag, Value) :-
 	set_env(Flag, Value).
@@ -153,13 +153,17 @@ create_prolog_flag(_, _, Options) :-
 	error(type_error(list,Options)).
 create_prolog_flag(Flag, _, Options) :-
 	valid_flag(Flag),
-	\+ member(keep(true), Options),
 	error(permission_error(modify,flag,Flag)).
 create_prolog_flag(_, _, Options) :-
 	member(access(Access), Options),
 	Access \== read_write,
 	Access \== read_only,
 	error(domain_error(create_flag_option,access(Access))).
+create_prolog_flag(_, _, Options) :-
+	member(keep(Keep), Options),
+	Keep \== true,
+	Keep \== false,
+	error(domain_error(create_flag_option,keep(Keep))).
 create_prolog_flag(_, _, Options) :-
 	member(type(Type), Options),
 	Type \== boolean,
@@ -168,17 +172,22 @@ create_prolog_flag(_, _, Options) :-
 	Type \== float,
 	Type \== term,
 	error(domain_error(create_flag_option,type(Type))).
-create_prolog_flag(_, _, Options) :-
-	member(keep(Keep), Options),
-	Keep \== true,
-	Keep \== false,
-	error(domain_error(create_flag_option,keep(Keep))).
+create_prolog_flag(Flag, Value, Options) :-
+	member(type(Type), Options),
+	(	Type == term ->
+		\+ ground(Value)
+	;	Type == boolean ->
+		Value \== true,
+		Value \== false
+	;	Test =.. [Type, Value],
+		\+ call(Test)
+	),
+	error(type_error(Type,Value)).
 create_prolog_flag(Flag, _, Options) :-
-	valid_flag(Flag),
+	user_defined_flag(Flag, _, _),
 	member(keep(true), Options),
 	!.
 create_prolog_flag(Flag, Value, Options) :-
-	retractall(user_defined_flag(Flag,_,_)),
 	(	member(access(Access), Options) ->
 		true
 	;	Access = read_write
@@ -188,6 +197,7 @@ create_prolog_flag(Flag, Value, Options) :-
 	;	create_flag_type_from_value(Value, Type)
 	),
 	create_flag_type_test(Type, Test),
+	retractall(user_defined_flag(Flag, _, _)),
 	assertz(user_defined_flag(Flag, Access, Test)),
 	set_env(Flag, Value).
 
