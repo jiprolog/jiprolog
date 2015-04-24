@@ -156,10 +156,10 @@ create_prolog_flag(Flag, _, Options) :-
 	\+ member(keep(true), Options),
 	error(permission_error(modify,flag,Flag)).
 create_prolog_flag(_, _, Options) :-
-	member(acess(Acess), Options),
-	Acess \== read_write,
-	Acess \== read_only,
-	error(domain_error(create_flag_option,acess(Acess))).
+	member(access(Access), Options),
+	Access \== read_write,
+	Access \== read_only,
+	error(domain_error(create_flag_option,access(Access))).
 create_prolog_flag(_, _, Options) :-
 	member(type(Type), Options),
 	Type \== boolean,
@@ -179,16 +179,16 @@ create_prolog_flag(Flag, _, Options) :-
 	!.
 create_prolog_flag(Flag, Value, Options) :-
 	retractall(user_defined_flag(Flag,_,_)),
-	(	member(acess(Acess), Options) ->
+	(	member(access(Access), Options) ->
 		true
-	;	Acess = read_write
+	;	Access = read_write
 	),
 	(	member(type(Type), Options) ->
 		true
 	;	create_flag_type_from_value(Value, Type)
 	),
 	create_flag_type_test(Type, Test),
-	assertz(user_defined_flag(Flag, Acess, Test)),
+	assertz(user_defined_flag(Flag, Access, Test)),
 	set_env(Flag, Value).
 
 create_flag_type_test(term, ground) :- !.
