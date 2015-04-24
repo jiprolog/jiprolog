@@ -39,7 +39,7 @@ final class Clause2 extends BuiltIn
 
         if (m_enum == null)
         {
-            Clause clause = Clause.getClause(getRealTerm(head));
+            Clause clause = Clause.getClause(getRealTerm(head), false);
 
             head = clause.getHead();
 

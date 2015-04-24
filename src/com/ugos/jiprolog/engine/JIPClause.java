@@ -33,12 +33,12 @@ public class JIPClause extends JIPTerm
 
     private JIPClause(final Functor func, final ConsCell body)
     {
-        this(Clause.getClause(new Functor(":-/2", new ConsCell(func, new ConsCell(body, null)))));
+        this(Clause.getClause(new Functor(":-/2", new ConsCell(func, new ConsCell(body, null))), true));
     }
 
     private JIPClause(final Functor func)
     {
-        this(Clause.getClause(func));
+        this(Clause.getClause(func, true));
     }
 
     JIPClause(final Clause clause)
@@ -69,7 +69,7 @@ public class JIPClause extends JIPTerm
      */
     public static final JIPClause create(final JIPTerm term)
     {
-        return new JIPClause(Clause.getClause(term.getRealTerm()));
+        return new JIPClause(Clause.getClause(term.getRealTerm(), true));
     }
 
     /** Returns the predicate in the head of this JIPClause object

@@ -109,31 +109,25 @@ class Clause extends ConsCell
         return clause;
     }
 
-    static final Clause getClause(PrologObject pred)
+    static final Clause getClause(PrologObject pred, boolean enableClauseChecks)
     {
-        return getClause(pred, GlobalDB.USER_MODULE);
+        return getClause(pred, GlobalDB.USER_MODULE, enableClauseChecks);
     }
 
-    static final Clause getClause(PrologObject pred, String strModuleName)
+    static final Clause getClause(PrologObject pred, String strModuleName, boolean enableClauseChecks)
     {
-//    	boolean isSystem = strModuleName.equals("$system");
-//    	if(!isSystem)
-//    	{
-	        if(pred instanceof Variable)
-	            pred = ((Variable)pred).getObject();
+        if(pred instanceof Variable)
+            pred = ((Variable)pred).getObject();
 
-	        if(pred == null)
-	        	throw new JIPParameterUnboundedException();
+        if(pred instanceof Clause)
+            return (Clause)pred;
 
-	        if(pred instanceof Clause)
-	            return (Clause)pred;
-
-	        if(pred instanceof Atom)
-	            pred = new Functor(((Atom)pred).getName() + "/0", null);
-
-	        if(!(pred instanceof Functor))
-	        	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
-//    	}
+        if(pred instanceof Atom)
+            pred = new Functor(((Atom)pred).getName() + "/0", null);
+        else if(pred == null)
+        	throw new JIPParameterUnboundedException();
+        else if(!(pred instanceof Functor))
+        	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
 
         Functor func = (Functor)pred;
 
@@ -148,9 +142,6 @@ class Clause extends ConsCell
             PrologObject lhs = BuiltIn.getRealTerm(params.getHead());
             PrologObject rhs = BuiltIn.getRealTerm(params.getTail());
 
-            if(lhs == null || rhs == null)
-            	throw new JIPParameterUnboundedException();
-
             // verifica se lhs ha la specifica del modulo
             if((lhs instanceof Functor) && ((Functor)lhs).getName().equals(":/2"))
             {
@@ -159,18 +150,16 @@ class Clause extends ConsCell
             }
 
             if(lhs instanceof Atom)
-            {
                 lhs = new Functor(((Atom)lhs).getName() + "/0", null);
-            }
+            else if(lhs == null || rhs == null)
+            	throw new JIPParameterUnboundedException();
+            else if(!(lhs instanceof Functor))
+            	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
+            else if(!(rhs instanceof ConsCell))
+            	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
 
-            if(!strModuleName.equals("$system"))
+            if(enableClauseChecks)
             {
-	            if(!(lhs instanceof Functor))
-	            	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
-
-				if(!(rhs instanceof ConsCell))
-	            	throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-
 				checkForCallable((ConsCell)rhs);
         	}
 
@@ -211,7 +200,7 @@ class Clause extends ConsCell
                 translated = BuiltIn.getRealTerm(vTranslated);
 
                 // chiama getClause e ritorna
-                clause = getClause(translated.copy(false), strModuleName);
+                clause = getClause(translated.copy(false), strModuleName, enableClauseChecks);
 
                 wam.closeQuery();
 

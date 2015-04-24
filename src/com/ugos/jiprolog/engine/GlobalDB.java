@@ -663,7 +663,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	            while ((term = parser.parseNext()) != null)
 	            {
 	                //System.out.println(term);
-	                gdb.assertz(Clause.getClause(term), "__KERNEL__", false);
+	                gdb.assertz(Clause.getClause(term, false), "__KERNEL__", false);
 	            }
 
 	            ins.close();
@@ -681,7 +681,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 		         for(PrologObject term : program)
 		         {
 		             //System.out.println(term);
-		             gdb.assertz(Clause.getClause(term), "__KERNEL__", false);
+		             gdb.assertz(Clause.getClause(term, false), "__KERNEL__", false);
 		         }
         	}
 

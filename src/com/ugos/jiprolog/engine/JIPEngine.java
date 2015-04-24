@@ -171,6 +171,7 @@ public class JIPEngine implements Serializable
         setEnvVariable("debug", JIPDebugger.debug ? "on" : "off");
         setEnvVariable("update_semantics", "logical");
         setEnvVariable("unknown", "warning");
+        setEnvVariable("enable_clause_check", "true");
 
         try
         {
@@ -314,7 +315,7 @@ public class JIPEngine implements Serializable
 //                    System.out.println("strBasePath " + strBasePath);  //DBG
                     strCurSarchPath = getSearchPath();
                     setSearchPath(strBasePath);
-                    Consult1.consult(ins, strPath, this, 0);
+                    Consult1.consult(ins, strPath, this, 0, getEnvVariable("enable_clause_check").equals("true"));
                     setSearchPath(strCurSarchPath);
                 }
                 catch(RuntimeException ex)
@@ -640,7 +641,7 @@ public class JIPEngine implements Serializable
      */
     public final void consultStream(final InputStream ins, final String strStreamName) throws JIPSyntaxErrorException
     {
-        Consult1.consult(ins, strStreamName, this, 0);
+        Consult1.consult(ins, strStreamName, this, 0, getEnvVariable("enable_clause_check").equals("true"));
     }
 
     /** Unconsults/unloads a file. Deletes from the prolog database all clauses previously consulted or loaded with to the specified file.
@@ -751,7 +752,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.asserta(Clause.getClause(term.getTerm()), null, true);
+            m_globalDB.asserta(Clause.getClause(term.getTerm(), getEnvVariable("enable_clause_check").equals("true")), null, true);
         }
     }
 
@@ -764,7 +765,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            final Clause clause = Clause.getClause(term.getTerm());
+            final Clause clause = Clause.getClause(term.getTerm(), getEnvVariable("enable_clause_check").equals("true"));
             final Clause retractedClause = m_globalDB.retract(clause);
 
             if(retractedClause == null)
@@ -784,7 +785,7 @@ public class JIPEngine implements Serializable
     {
         synchronized(m_globalDB)
         {
-            m_globalDB.assertz(Clause.getClause(term.getTerm()), null, true);
+            m_globalDB.assertz(Clause.getClause(term.getTerm(),getEnvVariable("enable_clause_check").equals("true")), null, true);
         }
     }
 

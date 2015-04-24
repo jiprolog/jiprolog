@@ -83,6 +83,8 @@ class Load1 extends Consult1
     {
         try
         {
+        	boolean enableClauseChecks = engine.getEnvVariable("enable_clause_check").equals("true");
+
 //        	JSON Serialization
 //        	ArrayList<PrologObject> program = new ArrayList<PrologObject>();
 //        	MapperHolder.mapper().readerForUpdating(program).readValue(ins);
@@ -103,7 +105,7 @@ class Load1 extends Consult1
             for(PrologObject pred : program)
             {
                 pred = getRealTerm(pred);
-                _assert(pred, engine, strStramName, null, exportTbl, initializationVector, wam);
+                _assert(pred, engine, strStramName, null, exportTbl, initializationVector, wam, enableClauseChecks);
             }
 
             for(PrologObject goal : initializationVector)

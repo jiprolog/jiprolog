@@ -215,45 +215,49 @@ class WAM
     {
         if(m_curNode.m_parent != null)
         {
-            Atom atom = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal()).getHead())).getAtom();
-            // se il parent è ;/2 prendo il parent del parent
-            if(atom == Atom.FSEMICOLON || atom == Atom.FIF || atom == Atom.FSTARIF)
-            //  see §7.8.6.1			see §7.8.7.1
-            {
-
-            	/* *****************************************************
- 	            Questa parte era stata aggiunta per cercare di trattare il transparent cut su if-then-else
- 	            ma è stato un misunderstanding
-
- 			    Functor funct = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal()).getHead()));
-                if(funct.getParams().getHead() == Atom.FIF || funct.getParams().getHead() == Atom.FSTARIF)
-                {
-                    if(m_curNode.m_parent.m_previous != null)
-                    {
-                        m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
-                    }
-                    else
-                    {
-                        m_curNode.m_backtrack = m_rootNode;
-                    }
-                }
-                else
-                {*/
-                	// Il cutparent degli argomenti di ;/2, ->/2 e *-> corrisponde al cutparent dello predicato stesso
-                    //System.out.println("Previous: " + m_curNode.m_parent.m_previous.getGoal());
-                    if(m_curNode.m_parent.m_parent != null)
-                    {
-    //                  System.out.println("Parent parent: " + m_curNode.m_parent.m_parent.getGoal());
-                        if(m_curNode.m_parent.m_parent.m_previous != null)
-                            m_curNode.m_backtrack = m_curNode.m_parent.m_parent.m_previous;
-                        else
-                            m_curNode.m_backtrack = m_rootNode;
-                    }
-                    else
-                        m_curNode.m_backtrack = m_rootNode;
-  //              }
-            }
-            else if(m_curNode.m_parent.m_previous != null)  // cutparent
+        	//////////////////////////
+        	// THE FOLLOWING CODE IS NO MORE NEEDED BECAUSE WE DEFINE ;/2, ->/2 AND *->/2 USING CALL/1
+        	//////////////////////////
+//            Atom atom = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal(), false).getHead())).getAtom();
+//            // se il parent è ;/2 prendo il parent del parent
+//            if(atom == Atom.FSEMICOLON || atom == Atom.FIF || atom == Atom.FSTARIF)
+//            //  see §7.8.6.1			see §7.8.7.1
+//            {
+//
+//            	/* *****************************************************
+// 	            Questa parte era stata aggiunta per cercare di trattare il transparent cut su if-then-else
+// 	            ma è stato un misunderstanding
+//
+// 			    Functor funct = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal()).getHead()));
+//                if(funct.getParams().getHead() == Atom.FIF || funct.getParams().getHead() == Atom.FSTARIF)
+//                {
+//                    if(m_curNode.m_parent.m_previous != null)
+//                    {
+//                        m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
+//                    }
+//                    else
+//                    {
+//                        m_curNode.m_backtrack = m_rootNode;
+//                    }
+//                }
+//                else
+//                {*/
+//                	// Il cutparent degli argomenti di ;/2, ->/2 e *-> corrisponde al cutparent dello predicato stesso
+//                    //System.out.println("Previous: " + m_curNode.m_parent.m_previous.getGoal());
+//                    if(m_curNode.m_parent.m_parent != null)
+//                    {
+//    //                  System.out.println("Parent parent: " + m_curNode.m_parent.m_parent.getGoal());
+//                        if(m_curNode.m_parent.m_parent.m_previous != null)
+//                            m_curNode.m_backtrack = m_curNode.m_parent.m_parent.m_previous;
+//                        else
+//                            m_curNode.m_backtrack = m_rootNode;
+//                    }
+//                    else
+//                        m_curNode.m_backtrack = m_rootNode;
+//  //              }
+//            }
+//            else
+        	if(m_curNode.m_parent.m_previous != null)  // cutparent
             {
                 m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
             }
@@ -391,8 +395,8 @@ class WAM
                     }
                     catch(UndefinedPredicateException ex)
                     {
-                        System.out.println("not found + " + ex.getPredicateName());
-                        System.out.println("module stack  " + moduleStack);
+//                        System.out.println("not found + " + ex.getPredicateName());
+//                        System.out.println("module stack  " + moduleStack);
 
                         // invia il warning se il predicato non è definito
                         // e non è dynamic

@@ -88,6 +88,8 @@ class Consult1 extends BuiltIn
 
     static final void consult(String strPath, JIPEngine engine, int nQueryHandle) throws IOException
     {
+    	boolean enableClauseChecks = engine.getEnvVariable("enable_clause_check").equals("true");
+
         String strOldSearchPath = null;
         try
         {
@@ -114,7 +116,7 @@ class Consult1 extends BuiltIn
             //System.out.println(strFileName[0]);
             strOldSearchPath = engine.getSearchPath();
             engine.setSearchPath(strCurDir[0]);
-            Vector<PrologObject> initializationVector = consult(ins, strFileName[0], engine, nQueryHandle);
+            Vector<PrologObject> initializationVector = consult(ins, strFileName[0], engine, nQueryHandle, enableClauseChecks);
             engine.setSearchPath(strOldSearchPath);
 
             ins.close();
@@ -150,7 +152,7 @@ class Consult1 extends BuiltIn
         }
     }
 
-    static final Vector<PrologObject> consult(InputStream ins, String strStreamName, JIPEngine engine, int nQueryHandle)
+    static final Vector<PrologObject> consult(InputStream ins, String strStreamName, JIPEngine engine, int nQueryHandle, boolean enableClauseChecks)
     {
 //        System.out.println("consult");
 
@@ -184,7 +186,7 @@ class Consult1 extends BuiltIn
                 while ((term = parser.parseNext()) != null)
                 {
                     //System.out.println(term);
-                    _assert(term, engine, strStreamName, pins, exportTbl, initializationVector, wam);
+                    _assert(term, engine, strStreamName, pins, exportTbl, initializationVector, wam, enableClauseChecks);
 
                     Hashtable<String, Variable> singletonVars = parser.getSingletonVariables();
                     //System.out.println(singletonVars);
@@ -265,7 +267,7 @@ class Consult1 extends BuiltIn
         }
     }
 
-    protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable<String, String> exportTbl, Vector<PrologObject> initializationVector, WAM wam)
+    protected final static void _assert(PrologObject pred, JIPEngine engine, String strPath, ParserReader pins, Hashtable<String, String> exportTbl, Vector<PrologObject> initializationVector, WAM wam, boolean enableClauseChecks)
     {
 //        System.out.println("ASSERT");  //DBG
 //        System.out.println(pred);  //DBG
@@ -338,7 +340,7 @@ class Consult1 extends BuiltIn
             }
             else
             {
-                Clause clause = Clause.getClause(pred, strModuleName);
+                Clause clause = Clause.getClause(pred, strModuleName, enableClauseChecks);
                 clause.setFileName(strPath);
                 if(pins != null)
                 {

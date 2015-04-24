@@ -26,7 +26,7 @@ class Assert1 extends BuiltIn
 {
     public boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
-        final Clause clause = Clause.getClause(getParam(1));
+        final Clause clause = Clause.getClause(getParam(1), getJIPEngine().getEnvVariable("enable_clause_check").equals("true"));
 
         if(clause.getModuleName().equals(GlobalDB.USER_MODULE))
             clause.setModuleName(getWAM().m_curNode.m_strModule);
