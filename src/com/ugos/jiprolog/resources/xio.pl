@@ -188,26 +188,26 @@ read(Handle, Term):-
 	).
 
 read_term(Term, Options):-
-	check_options(Options, Options),
+	check_read_term_options(Options, Options),
     current_input(Handle),
     read(Handle, Term),
-    options(Handle, Term, Options).
+    read_term_options(Handle, Term, Options).
 
 read_term(Handle, Term, Options):-
-	check_options(Options, Options),
+	check_read_term_options(Options, Options),
     read(Handle, Term),
-    options(Handle, Term, Options).
+    read_term_options(Handle, Term, Options).
 
 read_clause(Term, Options):-
-	check_options(Options, Options),
+	check_read_term_options(Options, Options),
     current_input(Handle),
     read(Handle, Term),
-    options(Handle, Term, Options).
+    read_term_options(Handle, Term, Options).
 
 read_clause(Handle, Term, Options):-
-	check_options(Options, Options),
+	check_read_term_options(Options, Options),
     read(Handle, Term),
-    options(Handle, Term, Options).
+    read_term_options(Handle, Term, Options).
 
 
 get0(Code):-
@@ -409,15 +409,15 @@ writeln(Handle, Term):-
 
 
 write_term(Term, Options):-
-	check_options(Options, Options),
+	check_write_term_options(Options, Options),
     current_output(Handle),
     write(Handle, Term),
-    options(Handle, Term, Options).
+    write_term_options(Handle, Term, Options).
 
 write_term(Handle, Term, Options):-
-	check_options(Options, Options),
+	check_write_term_options(Options, Options),
     write(Handle, Term),
-    options(Handle, Term, Options).
+    write_term_options(Handle, Term, Options).
 
 
 put(C):-
@@ -813,60 +813,124 @@ char_atom(B, C):-
     xcall('com.ugos.jiprolog.extensions.io.CharAtom2', [B, C]).
 
 
-check_options(Options, _):-
+check_read_term_options(Options, _):-
 	var(Options),
     error(instantiation_error).
 
-check_options([], _) :-
+check_read_term_options([], _) :-
 	!.
 
-check_options([Option| Options], OriginalOptions):-
+check_read_term_options([Option| Options], OriginalOptions):-
 	!,
 	(	var(Option) ->
 		error(instantiation_error)
-	;	check_options(Options, OriginalOptions)
+	;	valid_read_term_option(Option) ->
+		check_read_term_options(Options, OriginalOptions)
+	;	error(domain_error(read_option,Option))
 	).
 
-check_options(_, OriginalOptions):-
+check_read_term_options(_, OriginalOptions):-
 	error(type_error(list,OriginalOptions)).
 
 
-options(_Handle, _Term, V):-
+read_term_options(_Handle, _Term, V):-
 	var(V),
     error(instantiation_error).
 
-options(_Handle, _Term, []):-!.
+read_term_options(_Handle, _Term, []):-!.
 
 
-options(Handle, Term, [Opt|Options]):-
+read_term_options(Handle, Term, [Opt|Options]):-
     check_handle(Handle, Handle1),
-    option(Handle1, Term, Opt),
+    read_term_option(Handle1, Term, Opt),
     !,
-    options(Handle, Term, Options).
+    read_term_options(Handle, Term, Options).
 
-options(Handle, Term, [_Opt|Options]):-
-    options(Handle, Term, Options),
+read_term_options(Handle, Term, [_Opt|Options]):-
+    read_term_options(Handle, Term, Options),
     !.
 
-%option(Handle, Term, quoted(false)).
+% ISO options
+valid_read_term_option(variables(_)).
+valid_read_term_option(variable_names(_)).
+valid_read_term_option(singletons(_)).
+% others
+valid_read_term_option(module(_)).
+valid_read_term_option(syntax_errors(_)).
+%valid_read_term_option(term_position(_)).
+
 %option(Handle, Term, backquoted_string(false)).
 %option(Handle, Term, character_escapes(false)).
-%option(Handle, Term, ignore_ops(true)).
-option(Handle, Module:Term, module(Module)).
-option(Handle, Term, module(user)).
-%option(Handle, Term, numbervars(false)).
-%option(Handle, Term, portray(false)).
-%option(Handle, Term, max_depth(0)).
-option(Handle, Term, variables(X)):-
+read_term_option(Handle, Module:Term, module(Module)).
+read_term_option(Handle, Term, module(user)).
+read_term_option(Handle, Term, variables(X)):-
     free_variables(Term, X),
     !.
-option(Handle, Term, variables([])).
-%option(Handle, Term, variable_names([])).
-%option(Handle, Term, singletons([])).
-option(Handle, Term, syntax_errors('error')).
-%option(Handle, Term, double_quotes(false)).
-%option(Handle, Term, term_position(0)).
-%option(Handle, Term, subterm_positions(_)).
+read_term_option(Handle, Term, variables([])).
+%read_term_option(Handle, Term, variable_names([])).
+%read_term_option(Handle, Term, singletons([])).
+read_term_option(Handle, Term, syntax_errors('error')).
+%read_term_option(Handle, Term, double_quotes(false)).
+%read_term_option(Handle, Term, term_position(0)).
+%read_term_option(Handle, Term, subterm_positions(_)).
+read_term_option(_, _, _).
+
+
+check_write_term_options(Options, _):-
+	var(Options),
+    error(instantiation_error).
+
+check_write_term_options([], _) :-
+	!.
+
+check_write_term_options([Option| Options], OriginalOptions):-
+	!,
+	(	var(Option) ->
+		error(instantiation_error)
+	;	valid_write_term_option(Option) ->
+		check_write_term_options(Options, OriginalOptions)
+	;	error(domain_error(write_option,Option))
+	).
+
+check_write_term_options(_, OriginalOptions):-
+	error(type_error(list,OriginalOptions)).
+
+
+write_term_options(_Handle, _Term, V):-
+	var(V),
+    error(instantiation_error).
+
+write_term_options(_Handle, _Term, []):-!.
+
+
+write_term_options(Handle, Term, [Opt|Options]):-
+    check_handle(Handle, Handle1),
+    write_term_option(Handle1, Term, Opt),
+    !,
+    write_term_options(Handle, Term, Options).
+
+write_term_options(Handle, Term, [_Opt|Options]):-
+    write_term_options(Handle, Term, Options),
+    !.
+
+% ISO options
+valid_write_term_option(quoted(_)).
+valid_write_term_option(ignore_ops(_)).
+valid_write_term_option(numbervars(_)).
+% others
+valid_write_term_option(portray(_)).
+valid_write_term_option(backquoted_string(_)).
+valid_write_term_option(character_escapes(_)).
+valid_write_term_option(max_depth(_)).
+
+%write_term_option(Handle, Term, quoted(false)).
+%write_term_option(Handle, Term, backquoted_string(false)).
+%write_term_option(Handle, Term, character_escapes(false)).
+%write_term_option(Handle, Term, ignore_ops(true)).
+%write_term_option(Handle, Term, numbervars(false)).
+%write_term_option(Handle, Term, portray(false)).
+%write_term_option(Handle, Term, max_depth(0)).
+write_term_option(_, _, _).
 
 
 % user stream properties
