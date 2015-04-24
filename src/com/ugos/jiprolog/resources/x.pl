@@ -3,6 +3,7 @@
 jip_init_modules :-
 	env(debug, 'on'),
 	!,
+	use_module('INTERNAL://com/ugos/jiprolog/resources/flags.pl'),
 	use_module('INTERNAL://com/ugos/jiprolog/resources/list.pl'),
 	use_module('INTERNAL://com/ugos/jiprolog/resources/sys.pl'),
 	use_module('INTERNAL://com/ugos/jiprolog/resources/xsets.pl'),
@@ -17,6 +18,7 @@ jip_init_modules :-
 
 
 jip_init_modules :-
+	use_module('INTERNAL://com/ugos/jiprolog/resources/flags.jip'), %write('flags.jip'), nl,
 	use_module('INTERNAL://com/ugos/jiprolog/resources/list.jip'), %write('list.jip'), nl,
 	use_module('INTERNAL://com/ugos/jiprolog/resources/sys.jip'), %write('sys.jip'), nl,
 	use_module('INTERNAL://com/ugos/jiprolog/resources/xsets.jip'), %write('xsets.jip'), nl,

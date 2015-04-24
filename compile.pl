@@ -3,6 +3,7 @@
 compile:-
 	write('compilation start'), nl,
 	compile('src/com/ugos/jiprolog/resources/jipkernel.txt'),
+	compile('src/com/ugos/jiprolog/resources/flags.pl'),
 	compile('src/com/ugos/jiprolog/resources/list.pl'),
 	compile('src/com/ugos/jiprolog/resources/sys.pl'),
 	compile('src/com/ugos/jiprolog/resources/xsets.pl'),
