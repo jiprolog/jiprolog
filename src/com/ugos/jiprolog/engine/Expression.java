@@ -514,13 +514,11 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             dblVal =  Math.pow(dVal1, dVal2);
-
-                            retexp = Expression.createNumber(dblVal);
                             
 							if(dVal2 == -1 && dVal1 != 1)
 								throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
                             else if(exp2.isInteger())
-                            	return retexp;
+                            	return Expression.createNumber(dblVal);
 							else
 								return Expression.createDouble(dblVal);
                         }
