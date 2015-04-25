@@ -82,8 +82,6 @@ valid_flag(encoding).
 
 read_only_flag(Flag) :-
 	prolog_flag(Flag, _).
-read_only_flag(Flag) :-
-	user_defined_flag(Flag, read_only, _).
 
 valid_flag_value(char_conversion, on) :- !.
 valid_flag_value(char_conversion, off) :- !.
@@ -155,6 +153,12 @@ create_prolog_flag(Flag, _, Options) :-
 	valid_flag(Flag),
 	error(permission_error(modify,flag,Flag)).
 create_prolog_flag(_, _, Options) :-
+	member(Option, Options),
+	Option \= access(_),
+	Option \= keep(_),
+	Option \= type(_),
+	error(domain_error(create_flag_option,Option)).
+create_prolog_flag(_, _, Options) :-
 	member(access(Access), Options),
 	Access \== read_write,
 	Access \== read_only,
@@ -164,25 +168,15 @@ create_prolog_flag(_, _, Options) :-
 	Keep \== true,
 	Keep \== false,
 	error(domain_error(create_flag_option,keep(Keep))).
-create_prolog_flag(_, _, Options) :-
-	member(type(Type), Options),
-	Type \== boolean,
-	Type \== atom,
-	Type \== integer,
-	Type \== float,
-	Type \== term,
-	error(domain_error(create_flag_option,type(Type))).
-create_prolog_flag(Flag, Value, Options) :-
-	member(type(Type), Options),
-	(	Type == term ->
-		\+ ground(Value)
-	;	Type == boolean ->
-		Value \== true,
-		Value \== false
-	;	Test =.. [Type, Value],
-		\+ call(Test)
-	),
-	error(type_error(Type,Value)).
+create_prolog_flag(_, Value, Options) :-
+	member(type(Type0), Options),
+	(	map_user_defined_flag_type(Type0, Type) ->
+		(	call(Type, Value) ->
+			fail
+		;	error(type_error(Type0,Value))
+		)
+	;	error(domain_error(create_flag_option,type(Type0)))
+	).
 create_prolog_flag(Flag, _, Options) :-
 	user_defined_flag(Flag, _, _),
 	member(keep(true), Options),
@@ -192,28 +186,30 @@ create_prolog_flag(Flag, Value, Options) :-
 		true
 	;	Access = read_write
 	),
-	(	member(type(Type), Options) ->
-		true
-	;	create_flag_type_from_value(Value, Type)
+	(	member(type(Type0), Options) ->
+		map_user_defined_flag_type(Type0, Type)
+	;	Value == true ->
+		Type = is_boolean
+	;	Value == false ->
+		Type = is_boolean
+	;	atom(Value) ->
+		Type = atom
+	;	integer(Value) ->
+		Type = integer
+	;	float(Value) ->
+		Type = float
+	;	% catchall
+		Type = ground
 	),
-	create_flag_type_test(Type, Test),
 	retractall(user_defined_flag(Flag, _, _)),
-	assertz(user_defined_flag(Flag, Access, Test)),
+	assertz(user_defined_flag(Flag, Access, Type)),
 	set_env(Flag, Value).
 
-create_flag_type_test(term, ground) :- !.
-create_flag_type_test(boolean, is_boolean) :- !.
-create_flag_type_test(Type, Type).
-
-create_flag_type_from_value(Value, Type) :-
-	(	Value == true -> Type = boolean
-	;	Value == false -> Type = boolean
-	;	atom(Value) -> Type = atom
-	;	integer(Value) -> Type = integer
-	;	float(Value) -> Type = float
-	;	% catchall
-		Type = term
-	).
+map_user_defined_flag_type(boolean, is_boolean).
+map_user_defined_flag_type(atom, atom).
+map_user_defined_flag_type(integer, integer).
+map_user_defined_flag_type(float, float).
+map_user_defined_flag_type(term, ground).
 
 is_boolean(true).
 is_boolean(false).
