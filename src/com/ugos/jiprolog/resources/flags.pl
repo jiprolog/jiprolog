@@ -79,6 +79,7 @@ valid_flag(version).
 valid_flag(prolog_copyright).
 valid_flag(pid).
 valid_flag(encoding).
+valid_flag(enable_clause_check).
 
 read_only_flag(Flag) :-
 	prolog_flag(Flag, _).
@@ -93,6 +94,8 @@ valid_flag_value(double_quotes, codes) :- !.
 valid_flag_value(unknown, error) :- !.
 valid_flag_value(unknown, warning) :- !.
 valid_flag_value(unknown, fail) :- !.
+valid_flag_value(enable_clause_check, true) :- !.
+valid_flag_value(enable_clause_check, false) :- !.
 
 current_prolog_flag(Flag, Value) :-
 	prolog_flag(Flag, Value).
@@ -128,7 +131,7 @@ set_prolog_flag(Flag, _) :-
 set_prolog_flag(Flag, Value) :-
 	\+ (	valid_flag_value(Flag, Value)
 		;	user_defined_flag(Flag, _, Type),
-			Test =.. [Type, Value], call(Test)
+			call(Type, Value)
 	),
 	error(domain_error(flag_value,Flag+Value)).
 set_prolog_flag(Flag, Value) :-
@@ -157,17 +160,17 @@ create_prolog_flag(_, _, Options) :-
 	Option \= access(_),
 	Option \= keep(_),
 	Option \= type(_),
-	error(domain_error(create_flag_option,Option)).
+	error(domain_error(flag_option,Option)).
 create_prolog_flag(_, _, Options) :-
 	member(access(Access), Options),
 	Access \== read_write,
 	Access \== read_only,
-	error(domain_error(create_flag_option,access(Access))).
+	error(domain_error(flag_option,access(Access))).
 create_prolog_flag(_, _, Options) :-
 	member(keep(Keep), Options),
 	Keep \== true,
 	Keep \== false,
-	error(domain_error(create_flag_option,keep(Keep))).
+	error(domain_error(flag_option,keep(Keep))).
 create_prolog_flag(_, Value, Options) :-
 	member(type(Type0), Options),
 	(	map_user_defined_flag_type(Type0, Type) ->
@@ -175,7 +178,7 @@ create_prolog_flag(_, Value, Options) :-
 			fail
 		;	error(type_error(Type0,Value))
 		)
-	;	error(domain_error(create_flag_option,type(Type0)))
+	;	error(domain_error(flag_option,type(Type0)))
 	).
 create_prolog_flag(Flag, _, Options) :-
 	user_defined_flag(Flag, _, _),
