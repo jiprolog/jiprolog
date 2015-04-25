@@ -49,6 +49,11 @@ public class JIPNumber extends JIPTerm
         return new JIPNumber(Expression.createNumber(n));
     }
 
+    public static final JIPNumber create(final long n)
+    {
+        return new JIPNumber(Expression.createNumber(n));
+    }
+
     JIPNumber(Expression exp)
     {
         super(exp);
