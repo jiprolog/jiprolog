@@ -269,12 +269,12 @@ free_variables(N, Term, Bound, OldList, NewList, Level) :-
 
 explicit_binding(\+ Goal,	       Bound, fail,	Bound      ) :- !.
 explicit_binding(not(Goal),	       Bound, fail,	Bound	   ) :- !.
-explicit_binding(Var^Goal,	       Bound, Goal,	Bound+Var) :- !.
+explicit_binding(Term^Goal,	       Bound, Goal,	Bound+Vars) :- !,
+	term_variables(Term, Vars).
 explicit_binding(setof(Var,Goal,Set),  Bound, Goal-Set, Bound+Var) :- !.
 explicit_binding(bagof(Var,Goal,Bag),  Bound, Goal-Bag, Bound+Var) :- !.
 explicit_binding(setof(Var,Goal,Set), Bound, Goal-Set, Bound+Var) :- !.
 explicit_binding(bagof(Var,Goal,Bag), Bound, Goal-Bag, Bound+Var) :- !.
-
 
 term_is_free_of(Term, Var) :-
 	var(Term), !,
