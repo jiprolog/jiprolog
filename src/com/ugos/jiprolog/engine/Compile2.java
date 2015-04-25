@@ -31,12 +31,16 @@ import java.util.*;
 
 //import com.ugos.util.MapperHolder;
 
-final class Compile1 extends Consult1
+final class Compile2 extends Consult1
 {
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
         String strPath = null;
+        String strDestinationFolder = null;
+
         final PrologObject path = getRealTerm(getParam(1));
+        final PrologObject destinationFolder = getRealTerm(getParam(2));
+
 
         if(path instanceof Atom)
         {
@@ -51,12 +55,29 @@ final class Compile1 extends Consult1
             throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
         }
 
-        compile(strPath, getJIPEngine());
+        if(destinationFolder instanceof Atom)
+        {
+        	strDestinationFolder = ((Atom)destinationFolder).getName();
+        }
+        else if(destinationFolder instanceof PString)
+        {
+        	strDestinationFolder = ((PString)destinationFolder).getString();
+        }
+        else if(destinationFolder.unifiable(List.NIL))
+        {
+        	strDestinationFolder = null;
+        }
+        else
+        {
+            throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
+        }
+
+        compile(strPath, strDestinationFolder, getJIPEngine());
 
         return true;
     }
 
-    public static final void compile(String strPath, final JIPEngine engine)
+    public static final void compile(String strPath, String strDestinationFolder, final JIPEngine engine)
     {
         InputStream ins = null;
         InputStream oldins = null;
@@ -70,9 +91,25 @@ final class Compile1 extends Consult1
             strOldInputStreamName = engine.getCurrentInputStreamName();
             engine.setCurrentInputStream(ins, strPath);
 
-//            List predList = null;
-            //ParserInputStream pins = new ParserInputStream(ins);
-            ArrayList<PrologObject> program = new ArrayList<PrologObject>();
+            File outf;
+            if(strDestinationFolder == null)
+            {
+	            final int nPos = strFileName[0].lastIndexOf('.');
+	            strPath = strFileName[0].substring(0, nPos) + ".jip";
+
+	            outf = new File(strPath);
+            }
+            else
+            {
+            	String file = new File(strPath).getName();
+	            final int nPos = file.lastIndexOf('.');
+	            file = file.substring(0, nPos) + ".jip";
+            	outf = new File(strDestinationFolder, file);
+            }
+
+            final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
+
+//            ArrayList<PrologObject> program = new ArrayList<PrologObject>();
             PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins, engine.getEncoding())), engine.getOperatorManager(), strPath);
 
             try
@@ -81,7 +118,9 @@ final class Compile1 extends Consult1
 
                 while ((term = parser.parseNext()) != null)
                 {
-                	program.add(term);
+                    out.writeObject(term);
+
+//                	program.add(term);
                     //System.out.println(term);
 //                    predList = new List(term, predList);
                 }
@@ -101,15 +140,7 @@ final class Compile1 extends Consult1
 
             engine.setCurrentInputStream(ins, strOldInputStreamName);
 
-            final int nPos = strFileName[0].lastIndexOf('.');
-            strPath = strFileName[0].substring(0, nPos) + ".jip";
 
-            final File outf = new File(strPath);
-
-//            MapperHolder.mapper().writeValue(outf, program);
-
-            final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
-            out.writeObject(program);
             out.close();
         }
         catch(FileNotFoundException ex)

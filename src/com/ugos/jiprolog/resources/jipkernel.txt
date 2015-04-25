@@ -242,6 +242,9 @@ check_operator_name(Term, Priority, Specifier) :-
 '$system':include(File):-
     ensure_loaded(File).
 
+'$system':compile(File) :-
+	compile(File, []).
+
 '$system':predicate_property(Head, Property):-
     predicate_properties(Head, Properties0),
 	functor(Head, Functor, Arity),

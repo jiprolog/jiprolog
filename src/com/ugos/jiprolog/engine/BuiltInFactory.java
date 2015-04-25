@@ -61,7 +61,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("abort/0",           new Abort0());
 
         //#ifndef _MIDP
-        m_BuiltInTable.put("compile/1",         new Compile1());
+        m_BuiltInTable.put("compile/2",         new Compile2());
         m_BuiltInTable.put("load_library/1",    new LoadLibrary1());
         m_BuiltInTable.put("load/1",            new Load1());
         m_BuiltInTable.put("extern/3",          new Extern3());

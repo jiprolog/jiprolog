@@ -170,7 +170,6 @@ public class JIPEngine implements Serializable
         setEnvVariable("os_error", "error");
         setEnvVariable("debug", JIPDebugger.debug ? "on" : "off");
         setEnvVariable("update_semantics", "logical");
-        setEnvVariable("unknown", "warning");
         setEnvVariable("enable_clause_check", "true");
 
         try
@@ -681,7 +680,7 @@ public class JIPEngine implements Serializable
         unconsultFile(strStreamName);
     }
 
-    /** Compile the specified file. As result a file with .cpl extension is produced<br>
+    /** Compiles the specified file. As result a file with .jip extension is produced<br>
      * @param strFileName the name of the file to compile. It can refer to: <br>
      * - a file on hard disk (d:\myapp/myfile.pl, file:/user/myapp/myfile.pl)<br>
      * - a path relative to the search path.
@@ -691,8 +690,23 @@ public class JIPEngine implements Serializable
      */
     public final void compileFile(final String strFileName) throws JIPSyntaxErrorException
     {
-        Compile1.compile(strFileName, this);
+        Compile2.compile(strFileName, null, this);
     }
+
+    /** Compiles the specified file. As result a file with .jip extension is produced in the destination folder<br>
+     * @param strFileName the name of the file to compile. It can refer to: <br>
+     * - a file on hard disk (d:\myapp/myfile.pl, file:/user/myapp/myfile.pl)<br>
+     * - a path relative to the search path.
+     * @param strDestinationFolder the destination folder wher the compiled .jip file is saved<br>
+     * @exception com.ugos.jiprolog.engine.JIPSyntaxErrorException, java.io.IOException
+     * @see com.ugos.jiprolog.engine.JIPEngine#loadFile
+     * @see com.ugos.jiprolog.engine.JIPEngine#setSearchPath
+     */
+    public final void compileFile(final String strFileName, final String strDestinationFolder) throws JIPSyntaxErrorException
+    {
+        Compile2.compile(strFileName, strDestinationFolder, this);
+    }
+
     /** Loads a file. The file must contain a valid JIProlog compiled code
      * If in the file there are some no multifile predicates already consulted/loaded in another file the
      * interpreter raises an exception.<br>

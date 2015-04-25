@@ -673,16 +673,30 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	             InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "jipkernel.jip");
 
 		    	 final ObjectInputStream oins = new ObjectInputStream(ins);
-		         ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
+
+		    	 PrologObject obj;
+		    	 try
+		    	 {
+			         while((obj = (PrologObject)oins.readObject()) != null)
+			    	 {
+			        	 gdb.assertz(Clause.getClause(obj, false), "__KERNEL__", false);
+			    	 }
+		    	 }
+		    	 catch(EOFException ex)
+		    	 {
+
+		    	 }
+
+//		         ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
 		         oins.close();
 		         ins.close();
 
 
-		         for(PrologObject term : program)
-		         {
-		             //System.out.println(term);
-		             gdb.assertz(Clause.getClause(term, false), "__KERNEL__", false);
-		         }
+//		         for(PrologObject term : program)
+//		         {
+//		             //System.out.println(term);
+//		             gdb.assertz(Clause.getClause(term, false), "__KERNEL__", false);
+//		         }
         	}
 
 	        gdb.moduleTransparent("\\+/1");

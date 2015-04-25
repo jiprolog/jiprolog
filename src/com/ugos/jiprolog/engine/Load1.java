@@ -89,24 +89,39 @@ class Load1 extends Consult1
 //        	ArrayList<PrologObject> program = new ArrayList<PrologObject>();
 //        	MapperHolder.mapper().readerForUpdating(program).readValue(ins);
 
-            final ObjectInputStream oins = new ObjectInputStream(ins);
-            ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
-            oins.close();
-
-            //System.out.println("load + " + predList.toString(engine));
-
-            engine.getGlobalDB().unconsult(strStramName);
-
             final Vector<PrologObject> initializationVector = new Vector<PrologObject>();
             final Hashtable exportTbl = new Hashtable(10,1);
             exportTbl.put("#module", GlobalDB.USER_MODULE);
+            engine.getGlobalDB().unconsult(strStramName);
+
+            final ObjectInputStream oins = new ObjectInputStream(ins);
             final WAM wam = new WAM(engine);
 
-            for(PrologObject pred : program)
+            try
             {
-                pred = getRealTerm(pred);
-                _assert(pred, engine, strStramName, null, exportTbl, initializationVector, wam, enableClauseChecks);
-            }
+            	PrologObject obj;
+	            while((obj = (PrologObject)oins.readObject()) != null)
+	    		{
+	            	obj = getRealTerm(obj);
+	                _assert(obj, engine, strStramName, null, exportTbl, initializationVector, wam, enableClauseChecks);
+	    		}
+        	}
+		   	catch(EOFException ex)
+		   	{
+
+		   	}
+
+//            ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
+            oins.close();
+
+
+
+
+//            for(PrologObject pred : program)
+//            {
+//                pred = getRealTerm(pred);
+//                _assert(pred, engine, strStramName, null, exportTbl, initializationVector, wam, enableClauseChecks);
+//            }
 
             for(PrologObject goal : initializationVector)
             {
