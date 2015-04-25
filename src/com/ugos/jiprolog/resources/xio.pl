@@ -118,6 +118,10 @@ valid_open_option(reposition(Reposition)) :-
 	(	Reposition == true
 	;	Reposition == false
 	).
+valid_open_option(encoding(Encoding)) :-
+	(	Encoding == 'UTF-8'
+	;	Encoding == 'US-ASCII'
+	).
 
 open_(File, write, Handle):-
     tell(File, Handle).
