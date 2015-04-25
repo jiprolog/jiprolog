@@ -36,7 +36,7 @@ final class Functor3 extends BuiltIn
             if(name == null)
                 throw new JIPParameterUnboundedException(2);
 
-            if(!(name instanceof Expression) && !(name instanceof Atom))
+            if(!(name instanceof Expression) && !(name instanceof Atom) && !(name.unifiable(List.NIL)))
                 throw new JIPTypeException(JIPTypeException.ATOMIC, name);
 
 
