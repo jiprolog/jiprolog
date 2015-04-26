@@ -515,7 +515,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-            ex.printStackTrace();  //DBG
+//            ex.printStackTrace();  //DBG
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
