@@ -428,6 +428,10 @@ class PrologTokenizer
                                     strTerm += Integer.toString(13);
                                     break;
 
+                                case 's':  // \s space
+                                    strTerm += Integer.toString(32);
+                                    break;
+
                                 case 't':  // \t tab
                                     strTerm += Integer.toString(9);
                                     break;
@@ -682,6 +686,10 @@ class PrologTokenizer
 
                                     case 'r':  // \r carriage return
                                         strTerm += (char)(13);
+                                        break;
+
+                                    case 's':  // \s space
+                                        strTerm += (char)(32);
                                         break;
 
                                     case 't':  // \t tab
