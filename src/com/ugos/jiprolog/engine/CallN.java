@@ -26,12 +26,18 @@ public class CallN extends BuiltIn {
 
 		if(closure instanceof Atom)
 		{
-			goal = new Functor((Atom)closure);
-			((Functor)goal).setParams((ConsCell)params);
+			if(((Atom)closure) == Atom.createAtom(","))
+			{
+				goal = (ConsCell)params;
+			}
+			else
+			{
+				goal = new Functor((Atom)closure);
+				((Functor)goal).setParams((ConsCell)params);
 
-	        if(BuiltInFactory.isBuiltIn(((Functor)goal).getName()))
-	            goal = new BuiltInPredicate(((Functor)goal));
-
+				if(BuiltInFactory.isBuiltIn(((Functor)goal).getName()))
+					goal = new BuiltInPredicate(((Functor)goal));
+			}
 		}
 		else if(closure instanceof Functor)
 		{
