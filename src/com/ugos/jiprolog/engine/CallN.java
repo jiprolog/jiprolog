@@ -35,22 +35,31 @@ public class CallN extends BuiltIn {
 		}
 		else if(closure instanceof Functor)
 		{
-			goal = (Functor)closure;
+			Atom functorName = ((Functor)closure).getAtom();
 
-			ConsCell params1 = (ConsCell)((Functor)goal).getParams().copy(true);
+			if(functorName == Atom.createAtom(",/1"))
+			{
+				goal = ConsCell.append(((Functor)closure).getParams(), (ConsCell)params);
+			}
+			else
+			{
+				goal = (Functor)closure;
 
-			Functor goal1 = new Functor(((Functor)goal).getName(), params1);
+				ConsCell params1 = (ConsCell)((Functor)goal).getParams().copy(true);
 
-			goal.unify(goal1, varsTbl);
+				Functor goal1 = new Functor(((Functor)goal).getName(), params1);
 
-			ConsCell newParams = ConsCell.append(params1, (ConsCell)params);
+				goal.unify(goal1, varsTbl);
 
-			goal1.setParams(newParams);
+				ConsCell newParams = ConsCell.append(params1, (ConsCell)params);
 
-			goal = goal1;
+				goal1.setParams(newParams);
 
-	        if(BuiltInFactory.isBuiltIn(((Functor)goal).getName()))
-	            goal = new BuiltInPredicate(((Functor)goal));
+				goal = goal1;
+
+		        if(BuiltInFactory.isBuiltIn(((Functor)goal).getName()))
+		            goal = new BuiltInPredicate(((Functor)goal));
+			}
 		}
 		else if(closure instanceof List)
 		{
