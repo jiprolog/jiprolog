@@ -87,6 +87,10 @@ class List extends ConsCell
         {
             return obj._unify(this, table);
         }
+//        else if(obj instanceof Atom)
+//        {
+//        	return this == List.NIL && obj == Atom.NIL;
+//        }
         else if (obj == null)
         {
             return (m_head == null);

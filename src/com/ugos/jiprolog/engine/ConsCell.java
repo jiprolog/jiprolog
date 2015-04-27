@@ -27,7 +27,7 @@ class ConsCell extends PrologObject //implements Serializable
 {
     final static long serialVersionUID = 300000003L;
 
-    static final ConsCell NIL = new ConsCell(null, null);
+    static final ConsCell NIL = List.NIL;//new ConsCell(null, null);
 
     protected PrologObject m_head;
     protected PrologObject m_tail;
@@ -114,6 +114,10 @@ class ConsCell extends PrologObject //implements Serializable
         {
             return obj._unify(this, table);
         }
+//        else if(obj instanceof Atom)
+//        {
+//        	return this == ConsCell.NIL && obj == Atom.NIL;
+//        }
         else if ((obj == null))
         {
             return (m_head == null);

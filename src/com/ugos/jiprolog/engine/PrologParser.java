@@ -624,6 +624,12 @@ final class PrologParser
                                     //throw syntaxError(tok.m_strToken, null);
                                 }
                             }
+                            else if(tok.m_strToken.equals("[]"))
+                            {
+                            	lastParenthesis = false;
+                            	termStack.push(List.NIL);
+//                            	termStack.push(Atom.createAtom("[]"));
+                            }
                             else if(m_opManager.contains(tok.m_strToken))
                             {
                                 Operator curOp = m_opManager.get(tok.m_strToken);

@@ -81,9 +81,17 @@ permutation([X|Xs], Ys1, [_|Bound]) :-
     select(X, Ys1, Ys).
 
 %   flatten(+List1, ?List2)
-%   call internal flatten/2
-flatten(List, FlatList) :-
-    '$kernel':flatten(List, FlatList).
+flatten([],[]).
+
+flatten([H|T],[H|T2]):-
+	\+ is_list(H),
+    flatten(T,T2).
+
+flatten([H|T],L):-
+	is_list(H),
+    flatten(H,A),
+    flatten(T,B),
+	append(A,B,L).
 
 %   sumlist(+List, -Sum)
 sumlist(Xs, Sum) :-

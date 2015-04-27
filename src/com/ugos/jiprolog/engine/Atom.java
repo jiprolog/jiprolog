@@ -33,6 +33,7 @@ final class Atom extends PrologObject //implements Serializable
     final static Atom FIF        = Atom.createAtom("->/2");
     final static Atom FSTARIF    = Atom.createAtom("*->/2");
     final static Atom FCOLON     = Atom.createAtom(":/2");
+    final static Atom NIL 		 = Atom.createAtom("[]");
 
     private String m_strAtom;
     private int m_nHashValue;
@@ -93,13 +94,13 @@ final class Atom extends PrologObject //implements Serializable
 
             return ((Variable)obj)._unify(this, table);
         }
+        else if (obj == ConsCell.NIL)
+        {
+            return m_strAtom.equals("[]");
+        }
         else
         {
-//            System.out.println("*** Atom not unify : " + this);
-//            if(obj != null)
-//                System.out.println("*** obj.getClass(): " + obj.getClass());
-
-            return false;
+        	return false;
         }
     }
 
