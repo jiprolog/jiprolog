@@ -101,7 +101,7 @@ symdiff(A,B,C) :-
 /* bubble sort */
 bsort(Order,List,Sorted) :-
     append(List1,[I,II|List2],List),
-    order(Order,II,I),
+    call(Order,II,I),
     append(List1,[II,I|List2],Newlist),
     !,
     bsort(Order,Newlist,Sorted).
@@ -118,18 +118,14 @@ qsort(Order,[Head|Rest],Result):-
 qsort(_,[],[]):- !.
 
 split(Order,Marker,[First|Rest],[First|Grtr],Smlr):-
-     order(Order,First,Marker),
+     call(Order,First,Marker),
      split(Order,Marker,Rest,Grtr,Smlr),!.
 
 split(Order,Marker,[First|Rest],Grtr,[First|Smlr]):-
-     order(Order,Marker,First),
+     call(Order,Marker,First),
      split(Order,Marker,Rest,Grtr,Smlr),!.
 
 split(_,_,[],[],[]):- !.
-
-order(Order,A,B) :-
-    O =.. [Order,A,B],
-    O.
 
 
 /* merge sort */
@@ -148,7 +144,7 @@ msort1( N,Rel,L,S,R ):-             % N >= 2
 
 merge2([],S,_,S ):-!.
 merge2([X|L1],[Y|L2],Rel, [X|L] ):-
-    order(Rel, X,Y),
+    call(Rel, X,Y),
     !,
     merge2(L1,[Y|L2],Rel, L ).
 
