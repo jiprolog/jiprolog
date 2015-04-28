@@ -45,7 +45,13 @@ public class CallN extends BuiltIn {
 
 			if(functorName == Atom.createAtom(",/1"))
 			{
-				goal = ConsCell.append(((Functor)closure).getParams(), (ConsCell)params);
+				goal = (Functor)closure;
+
+				ConsCell params1 = (ConsCell)((Functor)closure).getParams().copy(true);
+				
+				((Functor)closure).getParams().unify(params1, varsTbl);
+				
+				goal = ConsCell.append(params1, (ConsCell)params);								
 			}
 			else
 			{
