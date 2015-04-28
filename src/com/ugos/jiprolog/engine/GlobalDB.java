@@ -686,18 +686,18 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 		    	 {
 
 		    	 }
-
-//		         ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
 		         oins.close();
 		         ins.close();
-
-
-//		         for(PrologObject term : program)
-//		         {
-//		             //System.out.println(term);
-//		             gdb.assertz(Clause.getClause(term, false), "__KERNEL__", false);
-//		         }
         	}
+
+        	// ','/2 caluse
+        	Variable x = new Variable("X");
+        	Variable y = new Variable("Y");
+
+        	Functor comma = new Functor(Atom.FCOMMA, new ConsCell(x, new ConsCell(y, null)));
+        	Functor commaWithModule = new Functor(Atom.FCOLON, new ConsCell(Atom.createAtom("$system"), new ConsCell(comma, null)));
+        	Functor clause = new Functor(Atom.createAtom(":-/2"), new ConsCell(commaWithModule, new ConsCell(x, new ConsCell(y, null))));
+        	gdb.assertz(Clause.getClause(clause, false), "__KERNEL__", false);
 
 	        gdb.moduleTransparent("\\+/1");
 	        gdb.moduleTransparent("not/1");

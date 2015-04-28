@@ -243,11 +243,6 @@ class Clause extends ConsCell
 
     private static void checkForCallable(ConsCell rhs)
     {
-//    	| ?- assertz((a :- (X, (Y, (Z))))).
-//    			yes
-//    			| ?- clause(a, B).
-//    			B = (call(_),call(_),call(_))
-//    			yes
     	// check rhs
 		PrologObject head = ((ConsCell)rhs).m_head;
 		PrologObject tail = ((ConsCell)rhs).m_tail;

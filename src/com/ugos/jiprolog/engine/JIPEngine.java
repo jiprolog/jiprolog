@@ -170,7 +170,9 @@ public class JIPEngine implements Serializable
         setEnvVariable("os_error", "error");
         setEnvVariable("debug", JIPDebugger.debug ? "on" : "off");
         setEnvVariable("update_semantics", "logical");
-        setEnvVariable("enable_clause_check", "true");
+
+        setEnvVariable("enable_clause_check", "false");
+
 
         try
         {
@@ -184,6 +186,9 @@ public class JIPEngine implements Serializable
         {
 			e.printStackTrace();
 		}
+
+        setEnvVariable("enable_clause_check", "true");
+
     }
 
     /** Sets the update semantics

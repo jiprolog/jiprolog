@@ -29,6 +29,7 @@ final class Atom extends PrologObject //implements Serializable
 
     static final Hashtable<String, Atom> s_atomTable = new Hashtable<String, Atom>(101);
 
+    final static Atom FCOMMA 	 = Atom.createAtom(",/2");
     final static Atom FSEMICOLON = Atom.createAtom(";/2");
     final static Atom FIF        = Atom.createAtom("->/2");
     final static Atom FSTARIF    = Atom.createAtom("*->/2");
