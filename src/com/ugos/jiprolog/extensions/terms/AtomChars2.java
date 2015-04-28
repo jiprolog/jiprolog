@@ -74,6 +74,12 @@ public class AtomChars2 extends JIPXCall
             {
                 chars = JIPAtom.create("");
             }
+            else if (chars instanceof JIPString)
+            {
+                // check if number of atom
+                String strVal = ((JIPString)chars).getStringValue();
+            	chars = JIPAtom.create(strVal);
+            }
             else if (chars instanceof JIPList)
             {
                 // check if number of atom
