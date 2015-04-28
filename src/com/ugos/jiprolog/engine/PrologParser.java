@@ -762,9 +762,14 @@ final class PrologParser
                                                     {
                                                         //curOp è atomo ,
                                                         //lastOp è operator
-                                                        Atom atom1 = Atom.createAtom(curOp.getName());
-                                                        termStack.push(atom1);
-                                                        lastObj = null;
+                                                    	if(quoted)
+                                                    	{
+                                                          Atom atom1 = Atom.createAtom(curOp.getName());
+                                                          termStack.push(atom1);
+                                                          lastObj = null;
+                                                    	}
+                                                    	else
+                                                    		throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + curOp.getName() + ")");
                                                     }
                                                     else
                                                     {
