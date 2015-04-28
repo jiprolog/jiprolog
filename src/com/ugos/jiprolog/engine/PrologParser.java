@@ -45,6 +45,7 @@ final class PrologParser
     //private ParserInputStream m_lnReader;
     private ParserReader m_lnReader;
     private OperatorManager m_opManager;
+    private JIPEngine m_engine;
     private String m_strFileName;
 
     private String sign = "";
@@ -147,11 +148,12 @@ final class PrologParser
 //        }
 //    }
 
-    PrologParser(final ParserReader reader, final OperatorManager opManager, final String strFileName)
+    PrologParser(final ParserReader reader, final OperatorManager opManager, final JIPEngine engine, final String strFileName)
     {
         m_lnReader = reader;//new LineNumberReader(reader);
         m_tokenizer = new PrologTokenizer(m_lnReader, strFileName);
         m_opManager = opManager;
+        m_engine = engine;
         m_strFileName = strFileName;
     }
 
@@ -256,7 +258,7 @@ final class PrologParser
                             }
                             else
                             {
-                                termStack.push(new PString(strVal, false));
+                                termStack.push(new PString(strVal, false, m_engine));
                             }
 
                             lastParenthesis = false;

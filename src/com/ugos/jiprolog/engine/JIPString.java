@@ -35,17 +35,17 @@ public class JIPString extends JIPTerm
     /** Creates a new JIPString object from a string
       * @param strString JIPString object from a string
       */
-    public static final JIPString create(final String strString, boolean atom)
+    public static final JIPString create(final String strString, boolean atom, JIPEngine engine)
     {
-        return new JIPString(new PString(strString, atom));
+        return new JIPString(new PString(strString, atom, engine));
     }
 
     /** Creates a new JIPString object from a list of characters
       * @param string JIPList object
       */
-    public static final JIPString create(final JIPList string)
+    public static final JIPString create(final JIPList string, JIPEngine engine)
     {
-        return new JIPString(new PString((List)string.getRealTerm()));
+        return new JIPString(new PString((List)string.getRealTerm(), engine));
     }
 
     JIPString(PString str)

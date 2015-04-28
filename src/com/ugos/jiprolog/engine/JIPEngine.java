@@ -134,7 +134,7 @@ public class JIPEngine implements Serializable
         m_eventNotifier  = new EventNotifier(this);
         m_envVarTbl      = new Hashtable<String, Object>(10);
         m_opManager      = new OperatorManager();
-        m_termParser     = new JIPTermParser(m_opManager, Charset.defaultCharset().toString());
+        m_termParser     = new JIPTermParser(m_opManager, this, Charset.defaultCharset().toString());
 
         // avvia il notifier
         m_eventNotifier.setEnabled(true);

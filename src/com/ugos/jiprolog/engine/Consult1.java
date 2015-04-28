@@ -176,7 +176,7 @@ class Consult1 extends BuiltIn
 //                System.out.println(engine.getCurrentEncoding());
 
                 ParserReader pins = new ParserReader(new InputStreamReader(ins, engine.getEncoding()));
-                PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), strStreamName);
+                PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), engine, strStreamName);
 
                 PrologObject term;
                 final Hashtable<String, String> exportTbl = new Hashtable<String, String>(20);

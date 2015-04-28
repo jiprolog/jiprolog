@@ -174,7 +174,7 @@ class Clause extends ConsCell
 
             if(s_translateQuery == null)
             {
-                final PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),"internal");
+                final PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),null,"internal");
                 try
                 {
                     final Functor funct = ((Functor)parser.parseNext());

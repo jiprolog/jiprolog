@@ -33,10 +33,12 @@ public class JIPTermParser
 {
     private OperatorManager m_opManager;
     private String m_encoding;
-    JIPTermParser(OperatorManager opManager, String encoding)
+    private JIPEngine m_engine;
+    JIPTermParser(OperatorManager opManager, JIPEngine engine, String encoding)
     {
         m_opManager = opManager;
         m_encoding = encoding;
+        m_engine = engine;
     }
 
     /** Returns an enumeration of terms contained in the specified input stream.
@@ -69,7 +71,7 @@ public class JIPTermParser
         {
         	final byte[] btTerm = strTerm.getBytes(getEncoding());
             final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
-            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(is, m_encoding)), m_opManager, "user");
+            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(is, m_encoding)), m_opManager, m_engine, "user");
 
             final PrologObject term = parser.parseNext();
 
@@ -89,7 +91,7 @@ public class JIPTermParser
 
         TermEnumerator(final Reader ins, OperatorManager opManager, final String streamName)
         {
-            m_parser = new PrologParser(new ParserReader(ins), opManager, streamName);
+            m_parser = new PrologParser(new ParserReader(ins), opManager, m_engine, streamName);
         }
 
         private JIPTerm parseNextTerm() throws JIPSyntaxErrorException

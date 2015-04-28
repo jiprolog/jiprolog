@@ -37,7 +37,7 @@ final class Chars1 extends BuiltIn
         {
             try
             {
-                new PString((List)term);
+                new PString((List)term, getJIPEngine());
                 return true;
             }
             catch(JIPTypeException ex)

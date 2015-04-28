@@ -28,32 +28,36 @@ final class PString extends List //implements Serializable
     final static long serialVersionUID = 300000007L;
 
     private String m_strString;
+    private transient JIPEngine engine;
     //private int    m_nHashValue;
 
-    public PString(final PrologObject head, final ConsCell tail)
+    public PString(final PrologObject head, final ConsCell tail, JIPEngine engine)
     {
-        this(new List(head, tail));
+        this(new List(head, tail), engine);
+
     }
 
-    // ottimizzazione
-    private PString(final PrologObject head, final ConsCell tail, String string)
-    {
-        super(new List(head, tail));
-        m_strString = string;
-    }
+//    // ottimizzazione
+//    private PString(final PrologObject head, final ConsCell tail, String string)
+//    {
+//        super(new List(head, tail));
+//        m_strString = string;
+//    }
 
-    private PString()
-    {
-        super(List.NIL);
-        m_strString = "";
-    }
+//    private PString()
+//    {
+//        super(List.NIL);
+//        m_strString = "";
+//    }
 
-    public PString(final List string)
+    public PString(final List string, JIPEngine engine)
     {
         super(string);
 
         if(string.isPartial())
         	throw new JIPParameterUnboundedException();
+
+        this.engine = engine;
 
         PrologObject tail = string;
         PrologObject head = ((ConsCell)tail).getHead();
@@ -145,18 +149,20 @@ final class PString extends List //implements Serializable
         }
     }
 
-    public PString(final String strString, boolean atom)
+    public PString(final String strString, boolean atom, JIPEngine engine)
     {
         super(getList(strString, atom));
         m_strString   = strString;
+        this.engine = engine;
     }
 
-    public final PrologObject copy(final Hashtable varTable)
+    @Override
+    public PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
-    	return new PString(this);
-//        return new PString(getString());
+    	return new PString(this, engine);
     }
 
+    @Override
     public final boolean _unify(final PrologObject obj, final Hashtable table)
     {
         if (obj instanceof List)
@@ -188,6 +194,11 @@ final class PString extends List //implements Serializable
     public final String getString()
     {
         return m_strString;
+    }
+
+    public String getDoubleQuotes()
+    {
+    	return (String)engine.getEnvVariable("double_quotes");
     }
 
     protected final boolean lessThen(final PrologObject obj)

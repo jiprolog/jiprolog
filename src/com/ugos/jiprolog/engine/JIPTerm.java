@@ -251,7 +251,9 @@ public class JIPTerm extends Object implements Clearable
 
     static final JIPTerm getJIPTerm(final PrologObject obj)
     {
-        if(obj instanceof List)
+        if(obj instanceof PString)
+            return new JIPString((PString)obj);
+        else if(obj instanceof List)
             return new JIPList((List)obj);
         else if(obj instanceof Atom)
             return new JIPAtom((Atom)obj);
@@ -261,8 +263,6 @@ public class JIPTerm extends Object implements Clearable
             return new JIPFunctor((Functor)obj);
         else if(obj instanceof Variable)
             return new JIPVariable((Variable)obj);
-        else if(obj instanceof PString)
-            return new JIPString((PString)obj);
         if(obj instanceof ConsCell)
             return new JIPCons((ConsCell)obj);
         if(obj instanceof Clause)

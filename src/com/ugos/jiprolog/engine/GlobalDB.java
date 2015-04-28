@@ -657,7 +657,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         		InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "jipkernel.txt");
 
-	            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins)), new OperatorManager(), "jipkernel.txt");
+	            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
 
 	            PrologObject term;
 	            while ((term = parser.parseNext()) != null)
@@ -772,7 +772,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             //System.out.println("ConsCell");
 
-            return new PString(new List(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail())));
+            return new PString(new List(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail())), this.jipEngine);
         }
         else if (term instanceof List)
         {
