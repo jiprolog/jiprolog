@@ -714,6 +714,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	     }
 	     catch(JIPSyntaxErrorException ex)
 	     {
+//	    	 ex.printStackTrace();
 	         gdb.m_bCheckDisabled = false;
 	         throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
 	     }
