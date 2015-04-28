@@ -240,8 +240,14 @@ class Clause extends ConsCell
         return clause;
     }
 
+
     private static void checkForCallable(ConsCell rhs)
     {
+//    	| ?- assertz((a :- (X, (Y, (Z))))).
+//    			yes
+//    			| ?- clause(a, B).
+//    			B = (call(_),call(_),call(_))
+//    			yes
     	// check rhs
 		PrologObject head = ((ConsCell)rhs).m_head;
 		PrologObject tail = ((ConsCell)rhs).m_tail;
@@ -249,6 +255,15 @@ class Clause extends ConsCell
 		if(head instanceof Expression)
 		{
 			throw new JIPTypeException(JIPTypeException.CALLABLE, head);
+		}
+		else if(head instanceof Functor)
+		{
+			Atom name = ((Functor)head).getAtom();
+
+			if(name == Atom.FSEMICOLON || name == Atom.FIF || name == Atom.FSTARIF)
+			{
+				checkForCallable(((Functor)head).getParams());
+			}
 		}
 		else if(head instanceof ConsCell && !(head instanceof List) && !(head instanceof Functor))
 		{
@@ -270,14 +285,23 @@ class Clause extends ConsCell
 			{
 				throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
 			}
+			else if(head instanceof Functor)
+			{
+				Atom name = ((Functor)head).getAtom();
+
+				if(name == Atom.FSEMICOLON || name == Atom.FIF || name == Atom.FSTARIF)
+				{
+					checkForCallable(((Functor)head).getParams());
+				}
+			}
 			else if(head instanceof ConsCell && !(head instanceof List) && !(head instanceof Functor))
 			{
 				checkForCallable((ConsCell)head);
 			}
 //    		else if(head instanceof PString)
 //    			throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
-//    		else if(head instanceof Variable)
-//    			((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
+    		else if(head instanceof Variable)
+    			((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
 
 			tail = ((ConsCell)tail).m_tail;
         }

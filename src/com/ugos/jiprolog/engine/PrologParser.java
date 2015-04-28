@@ -598,7 +598,7 @@ final class PrologParser
                                 {
                                 	if(curOp.getName().equals(",") && !quoted)
                                 	{
-                                		throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "invalid_character(" + curOp.getName() + ")");
+                                		throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + curOp.getName() + ")");
                                 	}
                                 	else if(curOp.getPrefix() != null)
                                     {
