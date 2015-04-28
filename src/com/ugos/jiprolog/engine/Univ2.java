@@ -23,11 +23,10 @@ import java.util.*;
 
 final class Univ2 extends BuiltIn
 {
-    //Name = a, Args = [b,c], arg(1, [Name|Args], X), length(Args, L), functor(F, Name, L),
     public final boolean unify(final Hashtable varsTbl)
     {
-        PrologObject func  = getRealTerm(getParam(1));
-        PrologObject param = getRealTerm(getParam(2));
+        final PrologObject func  = getRealTerm(getParam(1));
+        final PrologObject param = getRealTerm(getParam(2));
 
         PrologObject term   = null;
         PrologObject list   = null;
@@ -57,23 +56,16 @@ final class Univ2 extends BuiltIn
                         params = getRealTerm(params);
                         if(params != null && params != List.NIL && params != ConsCell.NIL)
                         	throw new JIPTypeException(JIPTypeException.ATOM, head);
-//                            return false;
                     }
 
-                    list = head;  // ???
+                    list = head;
                 }
                 else if (head instanceof Atom)
                 {
-//                    System.out.println("Atom " + head);
-                    //String strName;
-//                    System.out.println(head.getClass());
-
                     PrologObject params = ((ConsCell)param).getTail();
-//                    System.out.println("Param " + params);
                     if(params == null)
                     {
                         list = head;
-//                        System.out.println("NULL " + head);
                     }
                     else
                     {
@@ -87,7 +79,6 @@ final class Univ2 extends BuiltIn
                         }
 
                         int nArity = ((List)params).getHeight();
-//                        System.out.println("Arity " + nArity);
                         if(nArity == 0)
                         {
                             list = head;
@@ -98,12 +89,11 @@ final class Univ2 extends BuiltIn
 
 //                          System.out.println("funparams " + funparms);
                             final String strName = ((Atom)head).getName() + "/" + Integer.toString(nArity);
-
-//                            System.out.println("******" + params.getClass() + "******");
-            //                  strName = ((Atom)head).getName() + "/" + Integer.toString(nArity);
                             final Atom name = Atom.createAtom(strName);
                             if(BuiltInFactory.isBuiltIn(strName))
                                 list = new BuiltInPredicate(name, funparms);
+                            else if(name == Atom.FCOMMA)
+                            	list = funparms;
                             else
                                 list = new Functor(name, funparms);
                         }
@@ -122,12 +112,9 @@ final class Univ2 extends BuiltIn
 			    }
 			    else
 			    	throw new JIPTypeException(JIPTypeException.ATOM, head);
-//                else
-//                    throw new JIPParameterUnboundedException(2);
             }
             catch(ClassCastException ex)
             {
-                //System.out.println(ex);
                 ex.printStackTrace();
                 throw new JIPTypeException(JIPTypeException.LIST, param);
             }
