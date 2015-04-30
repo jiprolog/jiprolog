@@ -112,6 +112,9 @@ public final class ReadTerm3 extends JIPXCall
                 {
                 	JIPList singletonVars = ((TermEnumerator)m_termEnum).getSingletonVariables();
 
+                	if(singletonVars == null)
+                		singletonVars = JIPList.NIL;
+
                 	if(!singleton.getParams().getNth(1).unify(singletonVars, varsTbl))
                 	{
                         if(bUserStream)
