@@ -19,33 +19,19 @@
  */
 
 package com.ugos.jiprolog.engine;
-
 import java.util.*;
 
-final class Ground1 extends BuiltIn
+final class TermHash2 extends BuiltIn
 {
-    public final boolean unify(final Hashtable varsTbl)
+    public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
-        return checkVariable(getParam(1));
-    }
-        
-    public static final boolean checkVariable(final PrologObject term)
-    {
-        //System.out.println(term);
-        
-        if(term instanceof ConsCell)
-        {
-            return checkVariable(((ConsCell)term).getHead()) &&
-                   checkVariable(((ConsCell)term).getTail());
-        }
-        else if(term instanceof Variable)
-        {
-            if(((Variable)term).isBounded())
-                return checkVariable(((Variable)term).getObject());
-            else
-                return false;
-        }
-        else
-            return true;
+		PrologObject term = getParam(1);
+		if (!(Ground1.checkVariable(term)))
+	        return true;
+    	else {
+			term = getRealTerm(term);
+			Expression hash = Expression.createNumber(term.toString().hashCode());
+        	return hash.unify((PrologObject)getParam(2), varsTbl);
+		}
     }
 }

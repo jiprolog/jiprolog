@@ -79,7 +79,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("predicate_properties/2", new PredicateProperties2());
         m_BuiltInTable.put("xcall/2",           new XCall2());
 
-
+        m_BuiltInTable.put("term_hash/2",       new TermHash2());
 
         m_BuiltInTable.put("atom/1",            new Atom1());
         m_BuiltInTable.put("chars/1",           new Chars1());
