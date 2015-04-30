@@ -254,7 +254,15 @@ final class PrologParser
 
                             if(strVal.length() == 0)
                             {
-                                termStack.push(List.NIL);
+                            	String double_quotes = (String)m_engine.getEnvVariable("double_quotes");
+                            	if("atom".equals(double_quotes))
+                            	{
+                            		termStack.push(Atom.createAtom(""));
+                            	}
+                            	else
+                            	{
+                            		termStack.push(List.NIL);
+                            	}
                             }
                             else
                             {
@@ -479,14 +487,14 @@ final class PrologParser
                                 PrologObject term = translateTerm(STATE_SQUARE_BRACKET, lnReader);
 
                                 //System.out.println("m_nTokCount " + m_nTokCount);
-                                if(term instanceof List || term  instanceof Functor || term  instanceof Clause || !(term instanceof ConsCell))
+                                if (term == null)
+                                {
+                                    termStack.push(List.NIL);
+                                }
+                                else if(term instanceof List || term  instanceof Functor || term  instanceof Clause || !(term instanceof ConsCell))
                                 {
                                     // atom
                                     termStack.push(new List(new ConsCell(term, null)));
-                                }
-                                else if (term == null)
-                                {
-                                    termStack.push(List.NIL);
                                 }
                                 else
                                 {

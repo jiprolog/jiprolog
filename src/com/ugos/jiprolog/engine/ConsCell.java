@@ -189,7 +189,7 @@ class ConsCell extends PrologObject //implements Serializable
 
     public final boolean isNil()
     {
-        return (m_head == null);
+        return this == List.NIL;
     }
 
     public final void clear()
@@ -219,7 +219,7 @@ class ConsCell extends PrologObject //implements Serializable
     static final ConsCell last(final ConsCell cell)
     {
         PrologObject tail = cell.getTail();
-        if(tail == null || tail == ConsCell.NIL || tail == List.NIL)
+        if(tail == null || tail == ConsCell.NIL)
         {
             return cell;
         }
@@ -232,7 +232,7 @@ class ConsCell extends PrologObject //implements Serializable
     static final boolean isPartial(final ConsCell cell)
     {
     	PrologObject tail = cell.getTail();
-        if(tail == null || tail == ConsCell.NIL || tail == List.NIL)
+        if(tail == null || tail == ConsCell.NIL)
         {
             return false;
         }
@@ -252,7 +252,7 @@ class ConsCell extends PrologObject //implements Serializable
     static final boolean isClosedOrPartial(final ConsCell cell)
     {
         PrologObject tail = cell.getTail();
-        if(tail == null || tail == ConsCell.NIL || tail == List.NIL)
+        if(tail == null || tail == ConsCell.NIL)
         {
             return true; // closed
         }
@@ -271,7 +271,7 @@ class ConsCell extends PrologObject //implements Serializable
 
     static final int getHeight(final ConsCell cell, final int nHeight)
     {
-        if(cell == null || cell == ConsCell.NIL || cell == List.NIL)
+        if(cell == null || cell == ConsCell.NIL)
         {
             return nHeight;
         }
@@ -324,7 +324,7 @@ class ConsCell extends PrologObject //implements Serializable
             if(((Variable)obj).isBounded())
                 return termEquals(((Variable)obj).getObject());
         }
-        else if(obj == null && this.termEquals(ConsCell.NIL))
+        else if(obj == null && this == ConsCell.NIL)
         	return true;
 
 
@@ -363,7 +363,7 @@ class ConsCell extends PrologObject //implements Serializable
 	            }
         	}
         }
-        else if(obj instanceof Atom && this.unifiable(List.NIL))
+        else if(obj instanceof Atom && this == List.NIL)
 		{
         	return true;
 		}

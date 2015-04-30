@@ -122,7 +122,7 @@ final class Atom extends PrologObject //implements Serializable
             return m_strAtom.compareTo( ((Atom)obj).m_strAtom) < 0;
         else if(obj instanceof Variable && ((Variable)obj).isBounded())
             return lessThen(((Variable)obj).getObject());
-        else if(obj.unifiable(List.NIL))
+        else if(obj == List.NIL)
         {
         	return false;
         }
@@ -137,6 +137,8 @@ final class Atom extends PrologObject //implements Serializable
     {
         if(obj instanceof Atom)
             return m_strAtom.equals(((Atom)obj).m_strAtom);
+        else if(obj instanceof List)
+            return m_strAtom.equals("") && obj == List.NIL;
         else if(obj instanceof Variable && ((Variable)obj).isBounded())
             return termEquals(((Variable)obj).getObject());
 
