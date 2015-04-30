@@ -29,7 +29,7 @@ final class Error1 extends BuiltIn
     	PrologObject errorTerm = getRealTerm(getParam(1));
 
     	if(errorTerm == null)
-    		throw new JIPParameterUnboundedException(1);
+    		throw new JIPInstantiationException(1);
 
 
     	JIPRuntimeException exception = new JIPRuntimeException(errorTerm);

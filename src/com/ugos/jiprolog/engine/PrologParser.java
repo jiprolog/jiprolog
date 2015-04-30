@@ -258,7 +258,25 @@ final class PrologParser
                             }
                             else
                             {
-                                termStack.push(new PString(strVal, false, m_engine));
+                            	String double_quotes = (String)m_engine.getEnvVariable("double_quotes");
+                            	if("atom".equals(double_quotes))
+                            	{
+                            		termStack.push(Atom.createAtom(strVal));
+                            	}
+                            	else if("chars".equals(double_quotes))
+                            	{
+                                    termStack.push(new PString(strVal, true));
+
+                            	}
+                            	else if("codes".equals(double_quotes))
+                            	{
+                            		termStack.push(new PString(strVal, false));
+                            	}
+                            	else
+                            	{
+                                    throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "invalid_option(double_quotes(" + double_quotes + "))");
+                            	}
+
                             }
 
                             lastParenthesis = false;

@@ -378,7 +378,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             pred = ((Variable)pred).getObject();
 
         if(pred == null)
-        	throw new JIPParameterUnboundedException();
+        	throw new JIPInstantiationException();
 
         if(pred instanceof Atom)
         	throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, pred);
@@ -416,7 +416,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     	h = ((Variable)h).getObject();
 
                     if(h == null)
-                    	throw new JIPParameterUnboundedException(1);
+                    	throw new JIPInstantiationException(1);
 
                     if(!(h instanceof Atom))
                     	throw new JIPTypeException(JIPTypeException.ATOM, h);
@@ -428,7 +428,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     	t = ((Variable)t).getObject();
 
                     if(t == null)
-                    	throw new JIPParameterUnboundedException();
+                    	throw new JIPInstantiationException();
 
                     if(!(t instanceof ConsCell))
                     {
@@ -441,7 +441,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     	arity = ((Variable)arity).getObject();
 
                     if(arity == null)
-                    	throw new JIPParameterUnboundedException();
+                    	throw new JIPInstantiationException();
 
                     if(!(arity instanceof Expression))
                     	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
@@ -768,12 +768,12 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             return new Functor(((Functor)term).getAtom(), (ConsCell)fixTerm(((Functor)term).getParams()));
         }
-        else if (term instanceof PString)
-        {
-            //System.out.println("ConsCell");
-
-            return new PString(new List(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail())), this.jipEngine);
-        }
+//        else if (term instanceof PString)
+//        {
+//            //System.out.println("ConsCell");
+//
+//            return new PString(new List(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail())), this.jipEngine);
+//        }
         else if (term instanceof List)
         {
             //System.out.println("ConsCell");

@@ -24,7 +24,7 @@ import java.util.Hashtable;
 
 import com.ugos.jiprolog.engine.JIPAtom;
 import com.ugos.jiprolog.engine.JIPCons;
-import com.ugos.jiprolog.engine.JIPParameterUnboundedException;
+import com.ugos.jiprolog.engine.JIPInstantiationException;
 import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPXCall;
 
@@ -36,7 +36,7 @@ public final class EOF2 extends JIPXCall
 
         JIPTerm handle = params.getNth(1).getValue();
         if(handle == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
 
     	String shandle = ((JIPAtom)handle).getName();
 

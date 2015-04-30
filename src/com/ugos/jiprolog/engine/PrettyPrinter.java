@@ -57,10 +57,10 @@ final class PrettyPrinter extends Object
         {
             return printExpression(obj, bQ);
         }
-        else if(obj instanceof PString)
-        {
-            return printPString((PString)obj);
-        }
+//        else if(obj instanceof PString)
+//        {
+//            return printPString((PString)obj);
+//        }
         else if(obj instanceof List)
         {
             return printList(obj, opManager, bQ, varTable);
@@ -375,51 +375,51 @@ final class PrettyPrinter extends Object
             return "[" + printCons(obj, opManager, bQ, varTable) + "]";
         }
     }
-    private static final String printPString(final PString string)
-    {
-    	String double_quotes = string.getDoubleQuotes();
-    	String val = string.getString();
-
-    	if(double_quotes.equals("chars"))
-    	{
-    		char vals[] = new char[val.length()];
-
-    		val.getChars(0, val.length(), vals, 0);
-
-    		String ret = "[";
-    		for(int i = 0; i < vals.length - 1; i++)
-    		{
-
-    			ret += vals[i] + ",";
-    		}
-
-    		ret += vals[vals.length - 1] + "]";
-
-    		return ret;
-    	}
-    	else if(double_quotes.equals("atom"))
-    	{
-    		return val;
-    	}
-    	else
-    	{
-    		char vals[] = new char[val.length()];
-
-    		val.getChars(0, val.length(), vals, 0);
-
-    		String ret = "[";
-    		for(int i = 0; i < vals.length - 1; i++)
-    		{
-
-    			ret += (int)vals[i] + ",";
-    		}
-
-    		ret += (int)vals[vals.length - 1] + "]";
-
-    		return ret;
-    	}
-
-    }
+//    private static final String printPString(final PString string)
+//    {
+//    	String double_quotes = string.getDoubleQuotes();
+//    	String val = string.getString();
+//
+//    	if(double_quotes.equals("chars"))
+//    	{
+//    		char vals[] = new char[val.length()];
+//
+//    		val.getChars(0, val.length(), vals, 0);
+//
+//    		String ret = "[";
+//    		for(int i = 0; i < vals.length - 1; i++)
+//    		{
+//
+//    			ret += vals[i] + ",";
+//    		}
+//
+//    		ret += vals[vals.length - 1] + "]";
+//
+//    		return ret;
+//    	}
+//    	else if(double_quotes.equals("atom"))
+//    	{
+//    		return val;
+//    	}
+//    	else
+//    	{
+//    		char vals[] = new char[val.length()];
+//
+//    		val.getChars(0, val.length(), vals, 0);
+//
+//    		String ret = "[";
+//    		for(int i = 0; i < vals.length - 1; i++)
+//    		{
+//
+//    			ret += (int)vals[i] + ",";
+//    		}
+//
+//    		ret += (int)vals[vals.length - 1] + "]";
+//
+//    		return ret;
+//    	}
+//
+//    }
     private static final String printParams(final ConsCell cons, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
     {
         // Stampa di una lista

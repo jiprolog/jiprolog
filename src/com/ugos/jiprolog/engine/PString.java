@@ -28,14 +28,14 @@ final class PString extends List //implements Serializable
     final static long serialVersionUID = 300000007L;
 
     private String m_strString;
-    private transient JIPEngine engine;
+    private boolean m_chars;
     //private int    m_nHashValue;
 
-    public PString(final PrologObject head, final ConsCell tail, JIPEngine engine)
-    {
-        this(new List(head, tail), engine);
-
-    }
+//    public PString(final PrologObject head, final ConsCell tail, JIPEngine engine)
+//    {
+//        this(new List(head, tail), engine);
+//
+//    }
 
 //    // ottimizzazione
 //    private PString(final PrologObject head, final ConsCell tail, String string)
@@ -44,25 +44,17 @@ final class PString extends List //implements Serializable
 //        m_strString = string;
 //    }
 
-//    private PString()
-//    {
-//        super(List.NIL);
-//        m_strString = "";
-//    }
-
-    public PString(final List string, JIPEngine engine)
+    public PString(final List string, boolean chars)
     {
         super(string);
 
         if(string.isPartial())
-        	throw new JIPParameterUnboundedException();
+        	throw new JIPInstantiationException();
 
-        this.engine = engine;
+        m_chars = chars;
 
         PrologObject tail = string;
         PrologObject head = ((ConsCell)tail).getHead();
-
-//      System.out.println(head);
 
         m_strString = "";
 
@@ -76,12 +68,15 @@ final class PString extends List //implements Serializable
                 }
                 else
                 {
-                	throw new JIPParameterUnboundedException();
+                	throw new JIPInstantiationException();
                 }
             }
 
             if (head instanceof Expression)
             {
+            	if(chars)
+            		throw new JIPRepresentationException("character_code");
+
                 Expression ascii = (Expression)head;
 
                 if (!ascii.isInteger())
@@ -99,6 +94,9 @@ final class PString extends List //implements Serializable
             }
             else if (head instanceof Atom)
             {
+            	if(!chars)
+            		throw new JIPTypeException(JIPTypeException.CHARACTER, head);
+
             	String a = ((Atom)head).getName();
 
             	if(a.length() > 1)
@@ -149,17 +147,23 @@ final class PString extends List //implements Serializable
         }
     }
 
-    public PString(final String strString, boolean atom, JIPEngine engine)
+    public PString(final PString string)
     {
-        super(getList(strString, atom));
+    	super(string);
+    	m_chars = string.m_chars;
+    	m_strString = string.m_strString;
+    }
+
+    public PString(final String strString, boolean chars)
+    {
+        super(getList(strString, chars));
         m_strString   = strString;
-        this.engine = engine;
     }
 
     @Override
     public PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
     {
-    	return new PString(this, engine);
+    	return new PString(this);
     }
 
     @Override
@@ -179,13 +183,13 @@ final class PString extends List //implements Serializable
         }
     }
 
-    private static final List getList(final String string, boolean atom)
+    private static final List getList(final String string, boolean chars)
     {
         List retList = null;
 
         for(int i = string.length() - 1; i >= 0; i--)
         {
-            retList = new List(atom ? Atom.createAtom(string.substring(i, i+1)) : Expression.createNumber(string.charAt(i)), retList);
+            retList = new List(chars ? Atom.createAtom(string.substring(i, i+1)) : Expression.createNumber(string.charAt(i)), retList);
         }
 
         return retList;
@@ -194,11 +198,6 @@ final class PString extends List //implements Serializable
     public final String getString()
     {
         return m_strString;
-    }
-
-    public String getDoubleQuotes()
-    {
-    	return (String)engine.getEnvVariable("double_quotes");
     }
 
     protected final boolean lessThen(final PrologObject obj)

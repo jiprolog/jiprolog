@@ -32,7 +32,7 @@ public final class StreamPosition3 extends JIPXCall
 
         JIPTerm handle = params.getNth(1).getValue();
         if(handle == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
 
     	String shandle = ((JIPAtom)handle).getName();
 

@@ -52,7 +52,7 @@ public class AtomChars2 extends JIPXCall
             }
             else
             {
-                atom = JIPString.create(strAtom, true, getJIPEngine());
+        		atom = JIPString.create(strAtom, true);
             }
         }
         else if (atom instanceof JIPVariable)
@@ -66,7 +66,7 @@ public class AtomChars2 extends JIPXCall
                 }
                 else
                 {
-                    throw new JIPParameterUnboundedException(2);
+                    throw new JIPInstantiationException(2);
                 }
             }
 
@@ -83,7 +83,7 @@ public class AtomChars2 extends JIPXCall
             else if (chars instanceof JIPList)
             {
                 // check if number of atom
-                String strVal = (JIPString.create((JIPList)chars, getJIPEngine()).getStringValue());
+                String strVal = (JIPString.create((JIPList)chars, true).getStringValue());
 
 //                if(strVal.startsWith(" ") || strVal.endsWith(" "))
 //                {
@@ -102,7 +102,7 @@ public class AtomChars2 extends JIPXCall
         else if(atom.unifiable(JIPList.NIL))// ||
 //        		(atom instanceof JIPCons && ((JIPCons)atom).getHead().unifiable(JIPCons.NIL) && ((JIPCons)atom).getTail().unifiable(JIPCons.NIL)))
         {
-        	atom =  JIPString.create("[]", true, getJIPEngine());
+        	atom =  JIPString.create("[]", true);
         }
         else
         {

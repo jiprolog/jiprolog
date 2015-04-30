@@ -34,7 +34,7 @@ final class Functor3 extends BuiltIn
             PrologObject arity = getRealTerm(getParam(3));
 
             if(name == null)
-                throw new JIPParameterUnboundedException(2);
+                throw new JIPInstantiationException(2);
 
             if(!(name instanceof Expression) && !(name instanceof Atom) && !(name.unifiable(List.NIL)))
                 throw new JIPTypeException(JIPTypeException.ATOMIC, name);
@@ -52,7 +52,7 @@ final class Functor3 extends BuiltIn
                 }
 
                 if(arity == null)
-                	throw new JIPParameterUnboundedException(3);
+                	throw new JIPInstantiationException(3);
 
                 if(!(arity instanceof Expression))
                 	throw new JIPTypeException(JIPTypeException.INTEGER, arity);
@@ -105,7 +105,7 @@ final class Functor3 extends BuiltIn
             }
             catch(NullPointerException ex)
             {
-                 throw new JIPParameterUnboundedException();
+                 throw new JIPInstantiationException();
             }
             catch(ClassCastException ex)
             {

@@ -31,9 +31,9 @@ final class Arg3 extends BuiltIn
 
         // instantiation errors come first
         if(place == null)
-            throw new JIPParameterUnboundedException(1);
+            throw new JIPInstantiationException(1);
         if(term == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
         // then type errors
         if(!(place instanceof Expression))
             throw new JIPTypeException(JIPTypeException.INTEGER, place);

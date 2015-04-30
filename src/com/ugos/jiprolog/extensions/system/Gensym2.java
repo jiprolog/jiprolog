@@ -39,7 +39,7 @@ public class Gensym2 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)base).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {

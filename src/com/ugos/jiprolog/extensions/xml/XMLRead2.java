@@ -40,7 +40,7 @@ public class XMLRead2 extends XMLRead1
             // try to extract the term
             if(!((JIPVariable)input).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {

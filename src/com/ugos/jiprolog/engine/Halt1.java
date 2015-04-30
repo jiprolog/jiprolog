@@ -36,7 +36,7 @@ final class Halt1 extends BuiltIn
         }
         else if(exitVal == null)
         {
-            throw new JIPParameterUnboundedException(1);
+            throw new JIPInstantiationException(1);
         }
         else
         {

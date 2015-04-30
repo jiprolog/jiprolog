@@ -125,7 +125,7 @@ class Clause extends ConsCell
         if(pred instanceof Atom)
             pred = new Functor(((Atom)pred).getName() + "/0", null);
         else if(pred == null)
-        	throw new JIPParameterUnboundedException();
+        	throw new JIPInstantiationException();
         else if(!(pred instanceof Functor))
         	throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
 
@@ -152,7 +152,7 @@ class Clause extends ConsCell
             if(lhs instanceof Atom)
                 lhs = new Functor(((Atom)lhs).getName() + "/0", null);
             else if(lhs == null || rhs == null)
-            	throw new JIPParameterUnboundedException();
+            	throw new JIPInstantiationException();
             else if(!(lhs instanceof Functor))
             	throw new JIPTypeException(JIPTypeException.CALLABLE, lhs);
             else if(!(rhs instanceof ConsCell))

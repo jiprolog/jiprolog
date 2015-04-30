@@ -37,7 +37,7 @@ public class Write2 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)input).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {

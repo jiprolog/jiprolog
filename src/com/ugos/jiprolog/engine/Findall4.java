@@ -17,7 +17,7 @@ final class Findall4 extends BuiltIn
         PrologObject tail  = getRealTerm(getParam(4));
 
         if(query == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
 
 		if(list != null)
 		{

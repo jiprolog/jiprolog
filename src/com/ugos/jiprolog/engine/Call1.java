@@ -24,7 +24,7 @@ public class Call1 extends BuiltIn {
 
         if(param == null)
 		{
-        	throw new JIPParameterUnboundedException();
+        	throw new JIPInstantiationException();
 		}
         else if (param instanceof Atom)
         {

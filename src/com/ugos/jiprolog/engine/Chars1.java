@@ -28,8 +28,12 @@ final class Chars1 extends BuiltIn
     {
         final PrologObject term = getRealTerm(getParam(1));
 
-//      System.out.println(term.getClass());
-        if(term instanceof PString)
+        String double_quotes = (String)getJIPEngine().getEnvVariable("double_quotes");
+    	if("atom".equals(double_quotes))
+    	{
+    		return term instanceof Atom;
+    	}
+    	else if(term instanceof PString)
         {
             return true;
         }
@@ -37,7 +41,8 @@ final class Chars1 extends BuiltIn
         {
             try
             {
-                new PString((List)term, getJIPEngine());
+                new PString((List)term, "chars".equals(double_quotes));
+
                 return true;
             }
             catch(JIPTypeException ex)
@@ -45,6 +50,7 @@ final class Chars1 extends BuiltIn
 //              System.out.println(ex);
             }
         }
+
         return false;
     }
 }

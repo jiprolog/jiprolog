@@ -29,7 +29,7 @@ final class PredicateProperties2 extends BuiltIn
     {
         PrologObject parm = getRealTerm(getParam(1));
         if(parm == null)
-            throw new JIPParameterUnboundedException(1);
+            throw new JIPInstantiationException(1);
         else if((parm instanceof Atom))
         {
         	parm = new Functor((Atom)parm);

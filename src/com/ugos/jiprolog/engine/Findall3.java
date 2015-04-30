@@ -16,7 +16,7 @@ final class Findall3 extends BuiltIn
         PrologObject list  = getRealTerm(getParam(3));
 
         if(query == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
 
 		if(list != null)
 		{

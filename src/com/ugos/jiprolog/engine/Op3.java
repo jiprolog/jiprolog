@@ -71,7 +71,7 @@ final class Op3 extends BuiltIn
         }
         catch(NullPointerException ex)
         {
-             throw new JIPParameterUnboundedException();
+             throw new JIPInstantiationException();
         }
         catch(ClassCastException ex)
         {

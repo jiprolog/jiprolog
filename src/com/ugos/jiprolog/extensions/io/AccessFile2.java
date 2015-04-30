@@ -38,7 +38,7 @@ public final class AccessFile2 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)file).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {
@@ -53,7 +53,7 @@ public final class AccessFile2 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)mode).isBounded())
             {
-                throw new JIPParameterUnboundedException(2);
+                throw new JIPInstantiationException(2);
             }
             else
             {

@@ -26,11 +26,22 @@ final class TermHash2 extends BuiltIn
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
 		PrologObject term = getParam(1);
+
 		if (!(Ground1.checkVariable(term)))
 	        return true;
-    	else {
-			term = getRealTerm(term);
-			Expression hash = Expression.createNumber(term.toString().hashCode() & 0xFFFFFFL);
+    	else
+    	{
+    		Expression hash;
+    		PrologObject term1 = getRealTerm(term);
+    		if(term1 == null)
+			{
+    			hash = Expression.createNumber(term.toString().hashCode() & 0x7FFFFFFF);
+			}
+    		else
+    		{
+    			hash = Expression.createNumber(term1.toString().hashCode() & 0x7FFFFFFF);
+    		}
+
         	return hash.unify((PrologObject)getParam(2), varsTbl);
 		}
     }

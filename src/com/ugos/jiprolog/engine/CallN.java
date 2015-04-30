@@ -88,7 +88,7 @@ public class CallN extends BuiltIn {
 		}
         else if(closure == null)
 		{
-        	throw new JIPParameterUnboundedException();
+        	throw new JIPInstantiationException();
 		}
 		else
 		{

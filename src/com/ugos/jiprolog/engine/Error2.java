@@ -30,10 +30,10 @@ final class Error2 extends BuiltIn
     	PrologObject caller = getRealTerm(getParam(2));
 
     	if(errorTerm == null)
-    		throw new JIPParameterUnboundedException(1);
+    		throw new JIPInstantiationException(1);
 
     	if(caller == null)
-    		throw new JIPParameterUnboundedException(2);
+    		throw new JIPInstantiationException(2);
 
     	JIPRuntimeException exception = new JIPRuntimeException(errorTerm);
     	exception.setTerm(caller);

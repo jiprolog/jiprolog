@@ -70,7 +70,7 @@ public class JIPCatch3 extends JIPXCall
 	                // try to extract the term
 	                if(!((JIPVariable)goal).isBounded())
 	                {
-	                    throw new JIPParameterUnboundedException(1);
+	                    throw new JIPInstantiationException(1);
 	                }
 	                else
 	                {
@@ -120,7 +120,7 @@ public class JIPCatch3 extends JIPXCall
                     // try to extract the term
                     if(!((JIPVariable)recoverGoal).isBounded())
                     {
-                        throw new JIPParameterUnboundedException(3);
+                        throw new JIPInstantiationException(3);
                         //throw new JIPRuntimeException(JIPErrors.ERR_UNBOUNDED, JIPErrors.STR_UNBOUNDED, getPredicate());
                     }
                     else

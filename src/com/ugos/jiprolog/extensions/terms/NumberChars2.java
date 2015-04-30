@@ -51,7 +51,7 @@ public class NumberChars2 extends JIPXCall
             else
                 strNumber = Double.toString(((JIPNumber)number).getDoubleValue());
 
-            number = JIPString.create(strNumber, true, getJIPEngine());
+            number = JIPString.create(strNumber, true);
         }
         else if (number instanceof JIPVariable)
         {
@@ -64,7 +64,7 @@ public class NumberChars2 extends JIPXCall
                 }
                 else
                 {
-                    throw new JIPParameterUnboundedException(2);
+                    throw new JIPInstantiationException(2);
                 }
             }
 
@@ -76,7 +76,7 @@ public class NumberChars2 extends JIPXCall
             {
 				try
 				{
-                	String strVal = (JIPString.create((JIPList)chars, getJIPEngine())).getStringValue();
+                	String strVal = (JIPString.create((JIPList)chars, true)).getStringValue();
 
 					// remove leading whitespace
 					strVal = strVal.replaceAll("^\\s+", "");

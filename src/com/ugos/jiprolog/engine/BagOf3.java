@@ -18,7 +18,7 @@ class BagOf3 extends BuiltIn
 
         PrologObject query = getParam(2);
         if(query == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
 
         PrologObject res = getParam(3);
 

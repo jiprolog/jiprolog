@@ -36,7 +36,7 @@ public class Numbervars3 extends JIPXCall
         // check if input is a variable
         if (start == null)
         {
-            throw new JIPParameterUnboundedException(1);
+            throw new JIPInstantiationException(1);
         }
         else if(!(start instanceof JIPNumber))
             throw new JIPTypeException(JIPTypeException.INTEGER, start);

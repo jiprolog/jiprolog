@@ -44,7 +44,7 @@ public class JIPCreateObject3 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)className).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {
@@ -62,7 +62,7 @@ public class JIPCreateObject3 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)paramList ).isBounded())
             {
-                throw new JIPParameterUnboundedException(2);
+                throw new JIPInstantiationException(2);
             }
             else
             {

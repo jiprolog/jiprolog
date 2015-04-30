@@ -34,7 +34,7 @@ final class SetEnv2 extends BuiltIn
         }
 
         if(termKey == null)
-        	throw new JIPParameterUnboundedException(1);
+        	throw new JIPInstantiationException(1);
 
         if(termValue instanceof Variable)
         {
@@ -42,7 +42,7 @@ final class SetEnv2 extends BuiltIn
         }
 
         if(termValue == null)
-        	throw new JIPParameterUnboundedException(2);
+        	throw new JIPInstantiationException(2);
 
         String key = null;
         if(termKey instanceof Atom || termKey instanceof PString)

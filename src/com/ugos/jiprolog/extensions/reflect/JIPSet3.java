@@ -40,7 +40,7 @@ public class JIPSet3 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)handle).isBounded())
             {
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {
@@ -76,7 +76,7 @@ public class JIPSet3 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)val).isBounded())
             {
-                throw new JIPParameterUnboundedException(2);
+                throw new JIPInstantiationException(2);
             }
             else
             {

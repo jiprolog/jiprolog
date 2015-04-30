@@ -36,11 +36,11 @@ public final class StreamProperty3 extends JIPXCall
         // get first parameter
     	op = (JIPAtom)params.getNth(1).getValue();
     	if(op == null)
-            throw new JIPParameterUnboundedException(1);
+            throw new JIPInstantiationException(1);
 
         JIPTerm handle = params.getNth(2).getValue();
         if(handle == null)
-            throw new JIPParameterUnboundedException(2);
+            throw new JIPInstantiationException(2);
 
     	String shandle = ((JIPAtom)handle).getName();
 
@@ -58,7 +58,7 @@ public final class StreamProperty3 extends JIPXCall
         if(op.getName().equals("set"))
         {
         	if(prop1 == null)
-                throw new JIPParameterUnboundedException(3);
+                throw new JIPInstantiationException(3);
 
 
         	if(prop1 instanceof JIPAtom)

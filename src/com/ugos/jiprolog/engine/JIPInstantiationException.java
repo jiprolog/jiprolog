@@ -26,7 +26,7 @@ package com.ugos.jiprolog.engine;
  * Home Page: http://www.ugochirico.com
  * @see com.ugos.jiprolog.engine.JIPRuntimeException
  */
-public class JIPParameterUnboundedException extends JIPRuntimeException
+public class JIPInstantiationException extends JIPRuntimeException
 {
     private int m_nParam = -1;
 
@@ -35,12 +35,12 @@ public class JIPParameterUnboundedException extends JIPRuntimeException
      * @param nParam the index of the bad parameter
      * @see com.ugos.jiprolog.engine.JIPTerm
      */
-    public JIPParameterUnboundedException(final int nParam)
+    public JIPInstantiationException(final int nParam)
     {
         m_nParam = nParam;
     }
 
-    JIPParameterUnboundedException()
+    JIPInstantiationException()
     {
 
     }

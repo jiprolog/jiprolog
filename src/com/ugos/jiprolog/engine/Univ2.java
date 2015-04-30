@@ -34,7 +34,7 @@ final class Univ2 extends BuiltIn
         if (func == null)
         {
             if(param == null)
-                throw new JIPParameterUnboundedException(2);
+                throw new JIPInstantiationException(2);
 
             if(!(param instanceof List))
                 throw new JIPTypeException(JIPTypeException.LIST, param);
@@ -74,7 +74,7 @@ final class Univ2 extends BuiltIn
                         if(((ConsCell)params).isPartial())
                         {
                             // caso X =.. [a|Y].
-							throw new JIPParameterUnboundedException(2);
+							throw new JIPInstantiationException(2);
                         }
 
                         int nArity = ((List)params).getHeight();
@@ -103,7 +103,7 @@ final class Univ2 extends BuiltIn
                 }
                 else if (head == null)
                 {
-                    throw new JIPParameterUnboundedException(2);
+                    throw new JIPInstantiationException(2);
                 }
 			    else if (((List)param).getHeight() == 1)
 			    {

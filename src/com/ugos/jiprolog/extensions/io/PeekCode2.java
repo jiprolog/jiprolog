@@ -56,7 +56,7 @@ public final class PeekCode2 extends JIPXCall
             if(!((JIPVariable)input).isBounded())
             {
 
-                throw new JIPParameterUnboundedException(1);
+                throw new JIPInstantiationException(1);
             }
             else
             {

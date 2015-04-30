@@ -640,7 +640,7 @@ class WAM
             }
             else
             {
-            	throw new JIPParameterUnboundedException();
+            	throw new JIPInstantiationException();
 //                throw JIPRuntimeException.create(23, curNode.getGoal());
             }
         }
