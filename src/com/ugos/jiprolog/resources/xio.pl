@@ -194,23 +194,25 @@ read(Handle, Term):-
 read_term(Term, Options):-
 	check_read_term_options(Options, Options),
     current_input(Handle),
-    read(Handle, Term),
+    read_term(Handle, Term, Options),
     read_term_options(Handle, Term, Options).
 
 read_term(Handle, Term, Options):-
 	check_read_term_options(Options, Options),
-    read(Handle, Term),
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.ReadTerm3', [Handle1, Term, Options]),
     read_term_options(Handle, Term, Options).
 
 read_clause(Term, Options):-
 	check_read_term_options(Options, Options),
     current_input(Handle),
-    read(Handle, Term),
+    read_term(Handle, Term, Options),
     read_term_options(Handle, Term, Options).
 
 read_clause(Handle, Term, Options):-
 	check_read_term_options(Options, Options),
-    read(Handle, Term),
+	check_handle(Handle, Handle1),
+	xcall('com.ugos.jiprolog.extensions.io.ReadTerm3', [Handle1, Term, Options]),
     read_term_options(Handle, Term, Options).
 
 

@@ -133,6 +133,18 @@ class List extends ConsCell
         		return new ConsCell(m_head, ((List)BuiltIn.getRealTerm(m_tail)).getConsCell());
         }
     }
+
+    public int member(PrologObject obj)
+    {
+    	int size = getHeight();
+    	for(int i = 1; i <= size; i++)
+    	{
+    		if(getTerm(i).unifiable(obj))
+    			return i;
+    	}
+
+    	return 0;
+    }
 }
 
 

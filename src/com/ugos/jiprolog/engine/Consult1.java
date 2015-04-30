@@ -165,11 +165,9 @@ class Consult1 extends BuiltIn
             oldins = engine.getCurrentInputStream();
             strOldInputStreamName = engine.getCurrentInputStreamName();
             engine.setCurrentInputStream(ins, strStreamName);
+
             // unconsult the file
             engine.getGlobalDB().unconsult(strStreamName);
-
-            //ParserInputStream pins = new ParserInputStream(ins);
-            //PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), strStreamName);
 
             try
             {

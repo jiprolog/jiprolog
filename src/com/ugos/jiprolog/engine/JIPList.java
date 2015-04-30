@@ -141,7 +141,7 @@ public class JIPList extends JIPTerm
      */
     public final boolean isNIL()
     {
-        return getHead() == null;
+        return getTerm() == List.NIL;
     }
 
     /** Returns true if this cons object is a partial cons list.<br>
@@ -159,5 +159,15 @@ public class JIPList extends JIPTerm
     {
     	return  ((ConsCell)getTerm()).isClosedOrPartial();
     }
+
+    /** Returns the index in the list where the given term is found<br>
+     * It works like member/2
+     * @return the index in the list where the given term is found<br>
+     */
+    public int member(JIPTerm term)
+    {
+    	return ((List)getTerm()).member(term.getTerm());
+    }
+
 
 }

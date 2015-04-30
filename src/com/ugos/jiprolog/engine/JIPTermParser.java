@@ -34,6 +34,8 @@ public class JIPTermParser
     private OperatorManager m_opManager;
     private String m_encoding;
     private JIPEngine m_engine;
+    private Hashtable<String, Variable> m_singletonVars;
+
     JIPTermParser(OperatorManager opManager, JIPEngine engine, String encoding)
     {
         m_opManager = opManager;
@@ -73,6 +75,8 @@ public class JIPTermParser
             final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
             PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(is, m_encoding)), m_opManager, m_engine, "user");
 
+            m_singletonVars = parser.getSingletonVariables();
+
             final PrologObject term = parser.parseNext();
 
             return JIPTerm.getJIPTerm(term);
@@ -83,7 +87,7 @@ public class JIPTermParser
         }
     }
 
-    private class TermEnumerator implements Enumeration<JIPTerm>, StreamPosition
+    public class TermEnumerator implements Enumeration<JIPTerm>, StreamPosition
     {
         private PrologParser m_parser;
 
@@ -126,6 +130,25 @@ public class JIPTermParser
         public int getLineNumber()
         {
         	return m_parser.getLineNumber();
+        }
+
+        public JIPList getSingletonVariables()
+        {
+        	Hashtable<String, Variable> svar = m_parser.getSingletonVariables();
+
+        	JIPList singletonVars = null;
+
+//        	Hashtable<String, JIPVariable> sjvar = new Hashtable<String, JIPVariable>();
+
+        	for(String key : svar.keySet())
+        	{
+        		Variable var = svar.get(key);
+        		singletonVars = singletonVars.create(new JIPVariable(var), singletonVars);
+
+//        		sjvar.put(key, new JIPVariable(var));
+        	}
+
+        	return singletonVars;//.reverse();
         }
     }
 
