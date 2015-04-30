@@ -30,7 +30,7 @@ final class TermHash2 extends BuiltIn
 	        return true;
     	else {
 			term = getRealTerm(term);
-			Expression hash = Expression.createNumber(term.toString().hashCode());
+			Expression hash = Expression.createNumber(term.toString().hashCode() & 0xFFFFFFL);
         	return hash.unify((PrologObject)getParam(2), varsTbl);
 		}
     }
