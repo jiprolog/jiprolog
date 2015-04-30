@@ -22,6 +22,8 @@ package com.ugos.jiprolog.engine;
 import java.io.*;
 import java.util.*;
 
+import com.ugos.io.PushBackInputStream;
+
 /**
  * JIPTermParser parses a prolog stream and create an enumeration of prologprolog terms (atom, functor, list, etc.)
  * @version 3.0
@@ -47,18 +49,18 @@ public class JIPTermParser
      * @param ins the input stream to parse.
      * @param streamName tha name of the stream (i.e. the name of the associated file)
      */
-    public final Enumeration<JIPTerm> parseStream(final InputStream ins, final String streamName)
+    public final Enumeration<JIPTerm> parseStream(final PushBackInputStream ins, final String streamName)
     {
-        return new TermEnumerator(new InputStreamReader(ins), m_opManager, streamName);
+        return new TermEnumerator(ins, m_opManager, streamName);
     }
 
     /** Returns an enumeration of terms contained in the specified input stream.
      * @param ins the input stream to parse.
      * @param streamName tha name of the stream (i.e. the name of the associated file)
      */
-    public final Enumeration<JIPTerm> parseStream(final InputStream ins, final String streamName, final String encoding) throws UnsupportedEncodingException
+    public final Enumeration<JIPTerm> parseStream(final PushBackInputStream ins, final String streamName, final String encoding) throws UnsupportedEncodingException
     {
-        return new TermEnumerator(new InputStreamReader(ins, encoding), m_opManager, streamName);
+        return new TermEnumerator(ins, m_opManager, streamName);
     }
 
     /** Parses the term passed in the parameter and returns a JIPTerm object that wraps the corresponding prolog term.<br>
@@ -73,7 +75,7 @@ public class JIPTermParser
         {
         	final byte[] btTerm = strTerm.getBytes(getEncoding());
             final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
-            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(is, m_encoding)), m_opManager, m_engine, "user");
+            PrologParser parser = new PrologParser(new ParserReader(new PushBackInputStream(is)), m_opManager, m_engine, "user");
 
             m_singletonVars = parser.getSingletonVariables();
 
@@ -93,7 +95,7 @@ public class JIPTermParser
 
         private JIPTerm m_nextTerm = null;
 
-        TermEnumerator(final Reader ins, OperatorManager opManager, final String streamName)
+        TermEnumerator(final PushBackInputStream ins, OperatorManager opManager, final String streamName)
         {
             m_parser = new PrologParser(new ParserReader(ins), opManager, m_engine, streamName);
         }

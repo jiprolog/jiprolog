@@ -21,52 +21,54 @@ package com.ugos.jiprolog.engine;
 
 import java.io.*;
 
+import com.ugos.io.PushBackInputStream;
+
 class ParserReader extends Reader
 {
-    private boolean m_bSkipLF;
-    private int m_nLineNumber;
+//    private boolean m_bSkipLF;
+//    private int m_nLineNumber;
     private int m_nLastChar = -1;
-    private boolean m_bPushedBack;
+//    private boolean m_bPushedBack;
     private boolean m_bEOF;
-    private int m_nRead;
+//    private int m_nRead;
 
-    private Reader m_ins;
+    private PushBackInputStream m_ins;
 
     //private ByteArrayOutputStream m_outs;
 
-    public ParserReader(final Reader ins)
+    public ParserReader(final PushBackInputStream ins)
     {
         m_ins = ins;
 
-        m_nLastChar = -1;
-        m_bPushedBack = false;
-        m_bSkipLF = false;
-        m_nLineNumber = 0;
+//        m_nLastChar = -1;
+//        m_bPushedBack = false;
+//        m_bSkipLF = false;
+//        m_nLineNumber = 0;
         m_bEOF = false;
-        m_nRead = 0;
+//        m_nRead = 0;
     }
 
     public final int getLineNumber()
     {
-        return m_nLineNumber;
+        return m_ins.getLineNumber();
     }
 
     public final int getRead()
     {
-        return m_nRead;
+        return m_ins.getRead();
     }
 
     public final int read() throws IOException
     {
         int c;
-        if(m_bPushedBack)
-        {
-            //System.out.println("Pushed Back " + (char)m_nLastChar);
-            c = m_nLastChar;
-            m_bPushedBack = false;
-        }
-        else
-        {
+//        if(m_bPushedBack)
+//        {
+//            //System.out.println("Pushed Back " + (char)m_nLastChar);
+//            c = m_nLastChar;
+//            m_bPushedBack = false;
+//        }
+//        else
+//        {
             c = m_ins.read();
 //            if (m_bSkipLF)
 //            {
@@ -88,42 +90,58 @@ class ParserReader extends Reader
 //                c = '\n';
 //            }
 
-              switch (c)
-              {
-                  case '\r':
-                      m_bSkipLF = true;
-                      m_nLineNumber++;
-                      break;
-
-                  case '\n':      /* Fall through */
-                      if(m_bSkipLF)
-                          m_bSkipLF = false;
-                      else
-                          m_nLineNumber++;
-                      break;
-
-                  default:
-                      m_bSkipLF = false;
-              }
-
+//              switch (c)
+//              {
+//                  case '\r':
+//                      m_bSkipLF = true;
+//                      m_nLineNumber++;
+//                      break;
+//
+//                  case '\n':      /* Fall through */
+//                      if(m_bSkipLF)
+//                          m_bSkipLF = false;
+//                      else
+//                          m_nLineNumber++;
+//                      break;
+//
+//                  default:
+//                      m_bSkipLF = false;
+//              }
+//
               m_nLastChar = c;
-        }
+//        }
 
         if( c == -1)
             m_bEOF = true;
-        else
-            m_nRead++;
+//        else
+//            m_nRead++;
 
         return c;
     }
 
-    public void pushback()
+    public void unread(int c)
     {
-        if(!m_bPushedBack && !m_bEOF)
-            m_nRead--;
-
-        m_bPushedBack = true;
+    	try {
+			m_ins.unread(c);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
+//    public void pushback()
+//    {
+//    	try {
+//			m_ins.unread(m_nLastChar);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    }
+//        if(!m_bPushedBack && !m_bEOF)
+//            m_nRead--;
+//
+//        m_bPushedBack = true;
+//    }
 
     public boolean eof()
     {

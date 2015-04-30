@@ -23,6 +23,8 @@ package com.ugos.jiprolog.engine;
 import java.util.*;
 import java.io.*;
 
+import com.ugos.io.PushBackInputStream;
+
 final class GlobalDB extends Object// implements Cloneable //Serializable
 {
 	private static final String[] INTERNAL_MODULES = {"jipxlist", "jipsys", "jipxdb", "jipxexception", "jipxio", "jipxreflect", "jipxsets", "jipxsystem", "jipxterms", "jipxxml"};
@@ -657,7 +659,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         		InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "jipkernel.txt");
 
-	            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
+	            PrologParser parser = new PrologParser(new ParserReader(new PushBackInputStream(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
 
 	            PrologObject term;
 	            while ((term = parser.parseNext()) != null)

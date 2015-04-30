@@ -19,26 +19,26 @@
  */
 
 package com.ugos.io;
- 
+
 import java.io.*;
 
-public class PushBackInputStream extends FilterInputStream
+public class PushBackInputStream extends PushbackInputStream// FilterInputStream
 {
     private boolean m_bSkipLF;
     private int m_nLineNumber;
     private int m_nColNumber;
     private int m_nRead;
-    private int m_nLastChar = -1;
-    private boolean m_bPushedBack;
-            
+//    private int m_nLastChar = -1;
+//    private boolean m_bPushedBack;
+
     private ByteArrayOutputStream m_outs;
-    
+
     public PushBackInputStream(final InputStream ins)
     {
         super(ins);
         m_nColNumber = -1;
-        m_nLastChar = -1;
-        m_bPushedBack = false;
+//        m_nLastChar = -1;
+//        m_bPushedBack = false;
         m_bSkipLF = false;
         m_nLineNumber = 0;
         m_nRead = 0;
@@ -48,12 +48,12 @@ public class PushBackInputStream extends FilterInputStream
     {
         return m_nLineNumber;
     }
-    
+
     public final int getColumnNumber()
     {
         return m_nColNumber;
     }
-    
+
     public final int getRead()
     {
         return m_nRead;
@@ -62,14 +62,14 @@ public class PushBackInputStream extends FilterInputStream
     public final int read() throws IOException
     {
         int c;
-        if(m_bPushedBack)
-        {
-//            System.out.println("Pushed Back " + (char)m_nLastChar);
-            c = m_nLastChar;
-            m_bPushedBack = false;
-        }
-        else
-        {
+//        if(m_bPushedBack)
+//        {
+////            System.out.println("Pushed Back " + (char)m_nLastChar);
+//            c = m_nLastChar;
+//            m_bPushedBack = false;
+//        }
+//        else
+//        {
             c = super.read();
             if (m_bSkipLF)
             {
@@ -81,8 +81,8 @@ public class PushBackInputStream extends FilterInputStream
                 }
                 m_bSkipLF = false;
             }
-            
-            
+
+
             switch (c)
             {
                 case '\r':
@@ -93,26 +93,27 @@ public class PushBackInputStream extends FilterInputStream
                     c = '\n';
             }
 
-            m_nLastChar = c;
-        }
-        
+//            m_nLastChar = c;
+//        }
+
         if(c > -1)
         {
             m_nColNumber++;
             m_nRead++;
         }
-        
+
         return c;
     }
-    public void pushback()
-    {
-        if(!m_bPushedBack && m_nLastChar != -1)
-        {
-            m_nColNumber--;
-            m_nRead--;
-        }
 
-        m_bPushedBack = true;
-    }
+//    public void pushback()
+//    {
+//        if(!m_bPushedBack && m_nLastChar != -1)
+//        {
+//            m_nColNumber--;
+//            m_nRead--;
+//        }
+//
+//        m_bPushedBack = true;
+//    }
 }
 

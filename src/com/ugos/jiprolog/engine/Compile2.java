@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
+import com.ugos.io.PushBackInputStream;
+
 //import com.ugos.util.MapperHolder;
 
 final class Compile2 extends Consult1
@@ -110,7 +112,7 @@ final class Compile2 extends Consult1
             final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
 
 //            ArrayList<PrologObject> program = new ArrayList<PrologObject>();
-            PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(ins, engine.getEncoding())), engine.getOperatorManager(), engine, strPath);
+            PrologParser parser = new PrologParser(new ParserReader(new PushBackInputStream(ins)), engine.getOperatorManager(), engine, strPath);
 
             try
             {

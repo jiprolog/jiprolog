@@ -34,7 +34,7 @@ public final class PeekCode2 extends JIPXCall
         try
         {
             int c = ins.read();
-            ins.pushback();
+            ins.unread(c);
             return c;
         }
         catch(IOException ex)

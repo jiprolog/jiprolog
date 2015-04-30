@@ -72,13 +72,11 @@ public class InputStreamInfo extends StreamInfo
     	if(m_stream == null)
     		return false;
 
-    	m_stream.mark(1);
-
     	int i = m_stream.read();
     	if( i == -1 )
     		return true;
 
-    	m_stream.pushback();
+    	m_stream.unread(i);
 
     	return false;
     }

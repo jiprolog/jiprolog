@@ -117,7 +117,7 @@ class PrologTokenizer
             {
                 //System.out.println("EOF");
                 nState = STATE_END;
-                m_lnReader.pushback();
+//                m_lnReader.pushback();
             }
             else
             {
@@ -192,14 +192,14 @@ class PrologTokenizer
                                 //System.out.println("SINGLETON_CHARS EOF");
 
                                 nState = STATE_END;
-                                m_lnReader.pushback();
+//                                m_lnReader.pushback();
                             }
                             else
                             {
                                 if((strTerm + (char)c).equals("!>"))
                                     strTerm += (char)c;//String.valueOf((char)c);
                                 else
-                                    m_lnReader.pushback();
+                                    m_lnReader.unread(c);
                             }
 
                             nTokenType = TOKEN_SINGLETON;
@@ -228,7 +228,7 @@ class PrologTokenizer
                         {
                             nTokenType = TOKEN_ATOM;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
                         }
                         break;
 
@@ -243,7 +243,7 @@ class PrologTokenizer
                         {
                             nTokenType = TOKEN_VARIABLE;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
                         }
                         break;
 
@@ -268,7 +268,8 @@ class PrologTokenizer
                         {
                             nTokenType = TOKEN_SPECIAL_ATOM;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -296,7 +297,8 @@ class PrologTokenizer
                         {
                             //m_lnReader.mark(2);
                             int c = m_lnReader.read();
-                            m_lnReader.pushback();
+                            m_lnReader.unread(c);
+//                            m_lnReader.pushback();
                             if(NUMBER_CHARS.indexOf(c) == -1)
                             {
                                 m_nextToken = new Token();
@@ -349,7 +351,8 @@ class PrologTokenizer
                         {
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -384,7 +387,8 @@ class PrologTokenizer
                         {
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -397,7 +401,8 @@ class PrologTokenizer
                         {
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -460,7 +465,8 @@ class PrologTokenizer
                                     // legge il prossimo byte
                                     d2 = m_lnReader.read();
                                     if(d2 != '\\')  // ISO def
-                                        m_lnReader.pushback();
+                                    	m_lnReader.unread(d2);
+//                                        m_lnReader.pushback();
                                     break;
 
                                 default: // ignora \
@@ -487,7 +493,8 @@ class PrologTokenizer
                             strTerm = "" + Integer.parseInt(strTerm, 2);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -501,7 +508,8 @@ class PrologTokenizer
                             strTerm = "" + Integer.parseInt(strTerm, 8);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -515,7 +523,8 @@ class PrologTokenizer
                             strTerm = "" + Integer.parseInt(strTerm, 16);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
-                            m_lnReader.pushback();
+                            m_lnReader.unread(curChar);
+//                            m_lnReader.pushback();
                         }
                         break;
 
@@ -566,7 +575,8 @@ class PrologTokenizer
 	                            else
 	                            {
 	                                // fine quoted atom
-	                                m_lnReader.pushback();
+	                            	m_lnReader.unread(c);
+//	                                m_lnReader.pushback();
 	                                strTerm += (char)curChar;//String.valueOf((char)curChar);
 	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
 	                                nState = STATE_END;
@@ -589,7 +599,8 @@ class PrologTokenizer
 	                            else
 	                            {
 	                                // fine quoted atom
-	                                m_lnReader.pushback();
+	                            	m_lnReader.unread(c);
+//	                                m_lnReader.pushback();
 	                                strTerm += (char)curChar;//String.valueOf((char)curChar);
 	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
 	                                nState = STATE_END;
@@ -645,7 +656,8 @@ class PrologTokenizer
 
                                 // legge il prossimo byte
                                 if(d1 != '\\')  // ISO def
-                                    m_lnReader.pushback();
+                                	m_lnReader.unread(d1);
+//                                    m_lnReader.pushback();
 
                                 try
                                 {
@@ -720,7 +732,8 @@ class PrologTokenizer
                                         // legge il prossimo byte
                                         d2 = m_lnReader.read();
                                         if(d2 != '\\')  // ISO def
-                                            m_lnReader.pushback();
+                                        	m_lnReader.unread(d2);
+//                                            m_lnReader.pushback();
                                         break;
 
                                     default: // ignora \

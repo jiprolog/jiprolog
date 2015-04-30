@@ -23,6 +23,8 @@ package com.ugos.jiprolog.engine;
 import java.util.Hashtable;
 import java.io.*;
 
+import com.ugos.io.PushBackInputStream;
+
 class Clause extends ConsCell
 {
     final static long serialVersionUID = 300000002L;
@@ -174,7 +176,7 @@ class Clause extends ConsCell
 
             if(s_translateQuery == null)
             {
-                final PrologParser parser = new PrologParser(new ParserReader(new InputStreamReader(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),null,"internal");
+                final PrologParser parser = new PrologParser(new ParserReader(new PushBackInputStream(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),null,"internal");
                 try
                 {
                     final Functor funct = ((Functor)parser.parseNext());

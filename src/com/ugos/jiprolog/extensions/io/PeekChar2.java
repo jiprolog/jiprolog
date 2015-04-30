@@ -34,7 +34,7 @@ public final class PeekChar2 extends JIPXCall
         try
         {
             int c = ins.read();
-            ins.pushback();
+            ins.unread(c);//pushback();
             return c;
         }
         catch(IOException ex)

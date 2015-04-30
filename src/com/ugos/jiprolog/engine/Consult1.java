@@ -23,6 +23,8 @@ package com.ugos.jiprolog.engine;
 import java.io.*;
 import java.util.*;
 
+import com.ugos.io.PushBackInputStream;
+
 class Consult1 extends BuiltIn
 {
     public boolean unify(final Hashtable<Variable, Variable> varsTbl)
@@ -173,7 +175,7 @@ class Consult1 extends BuiltIn
             {
 //                System.out.println(engine.getCurrentEncoding());
 
-                ParserReader pins = new ParserReader(new InputStreamReader(ins, engine.getEncoding()));
+                ParserReader pins = new ParserReader(new PushBackInputStream(ins));
                 PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), engine, strStreamName);
 
                 PrologObject term;

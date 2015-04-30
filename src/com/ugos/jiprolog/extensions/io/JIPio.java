@@ -236,7 +236,7 @@ public final class JIPio
         if(strHandle.equals("user_input"))
         {
             // get the enumeration of terms in the file
-            return termParser.parseStream(engine.getUserInputStream(), "user_input");
+            return termParser.parseStream(new PushBackInputStream(engine.getUserInputStream()), "user_input");
         }
 
         InputStreamInfo sinfo = getInput(strHandle);
@@ -244,7 +244,7 @@ public final class JIPio
         {
             if(sinfo.m_enum == null)
                 // get the enumeration of terms in the file
-                sinfo.m_enum = termParser.parseStream((InputStream)sinfo.m_stream, sinfo.getName());
+                sinfo.m_enum = termParser.parseStream(sinfo.m_stream, sinfo.getName());
 
             return sinfo.m_enum;
         }
