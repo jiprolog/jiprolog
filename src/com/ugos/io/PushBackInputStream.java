@@ -40,7 +40,7 @@ public class PushBackInputStream extends PushbackInputStream// FilterInputStream
 //        m_nLastChar = -1;
 //        m_bPushedBack = false;
         m_bSkipLF = false;
-        m_nLineNumber = 0;
+        m_nLineNumber = 1;
         m_nRead = 0;
     }
 
@@ -105,6 +105,13 @@ public class PushBackInputStream extends PushbackInputStream// FilterInputStream
         return c;
     }
 
+    @Override
+    public void unread(int c) throws IOException
+    {
+    	super.unread(c);
+    	if(c == '\n')
+    		m_nLineNumber--;
+    }
 //    public void pushback()
 //    {
 //        if(!m_bPushedBack && m_nLastChar != -1)
