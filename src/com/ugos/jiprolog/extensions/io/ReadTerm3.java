@@ -93,6 +93,8 @@ public final class ReadTerm3 extends JIPXCall
             getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
         JIPFunctor singleton = null;
+        JIPFunctor variable_names = null;
+//        JIPFunctor variables = null;
 
         JIPList options = (JIPList)params.getNth(3).getValue();
 
@@ -101,6 +103,18 @@ public final class ReadTerm3 extends JIPXCall
 
         if(pos > 0)
         	singleton = (JIPFunctor)options.getNth(pos);
+
+        JIPFunctor vn = JIPFunctor.create("variable_names", JIPCons.create(JIPVariable.create("Vars"), null));
+        pos = options.member(vn);
+
+        if(pos > 0)
+        	variable_names = (JIPFunctor)options.getNth(pos);
+
+//        JIPFunctor va = JIPFunctor.create("variables", JIPCons.create(JIPVariable.create("Vars"), null));
+//        pos = options.member(va);
+//
+//        if(pos > 0)
+//        	variables = (JIPFunctor)options.getNth(pos);
 
         JIPTerm term;
         try
@@ -123,6 +137,61 @@ public final class ReadTerm3 extends JIPXCall
                 		return false;
                 	}
                 }
+
+                if(variable_names != null)
+                {
+                	JIPVariable[] vars = term.getVariables();
+                	JIPList varsName = null;
+
+                	if(vars == null || vars.length == 0)
+                	{
+                		varsName = JIPList.NIL;
+                	}
+                	else
+                	{
+                    	for(JIPVariable var : vars)
+                    	{
+                    		varsName = JIPList.create(JIPFunctor.create("=", JIPCons.create(JIPAtom.create(var.getName()), JIPCons.create(var, null))), varsName);
+                    	}
+                	}
+
+                	varsName = varsName.reverse();
+                	if(!variable_names.getParams().getNth(1).unify(varsName, varsTbl))
+                	{
+                        if(bUserStream)
+                            getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
+
+                		return false;
+                	}
+                }
+
+//                if(variables != null)
+//                {
+//                	JIPVariable[] vars = term.getVariables();
+//                	JIPList vars1 = null;
+//
+//                	if(vars == null || vars.length == 0)
+//                	{
+//                		vars1 = JIPList.NIL;
+//                	}
+//                	else
+//                	{
+//                    	for(JIPVariable var : vars)
+//                    	{
+//                    		vars1 = JIPList.create(var, vars1);
+//                    	}
+//                	}
+//
+//                	if(!variables.getParams().getNth(1).unify(vars1, varsTbl))
+//                	{
+//                        if(bUserStream)
+//                            getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
+//
+//                		return false;
+//                	}
+//
+//                }
+
             }
             else
             {
