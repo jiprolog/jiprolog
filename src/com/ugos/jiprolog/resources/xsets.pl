@@ -36,7 +36,12 @@
       merge_set/2,
       remove_duplicates/2]).
 
-:-assert(ver(jipxsets, '4.0.1')).
+:-'$custom_built_in'([
+      sort/2,
+      keysort/2
+]).
+
+:-assert(ver(jipxsets, '4.0.2')).
 
 %:-use_module('list.jip').
 
