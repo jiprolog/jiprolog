@@ -24,6 +24,7 @@ import java.io.*;
 
 public class PushBackInputStream extends PushbackInputStream// FilterInputStream
 {
+//	int pushBack = -1;
     private boolean m_bSkipLF;
     private int m_nLineNumber;
     private int m_nColNumber;
@@ -31,7 +32,7 @@ public class PushBackInputStream extends PushbackInputStream// FilterInputStream
 //    private int m_nLastChar = -1;
 //    private boolean m_bPushedBack;
 
-    private ByteArrayOutputStream m_outs;
+//    private ByteArrayOutputStream m_outs;
 
     public PushBackInputStream(final InputStream ins)
     {
@@ -39,8 +40,8 @@ public class PushBackInputStream extends PushbackInputStream// FilterInputStream
         m_nColNumber = -1;
 //        m_nLastChar = -1;
 //        m_bPushedBack = false;
-        m_bSkipLF = false;
-        m_nLineNumber = 1;
+//        m_bSkipLF = false;
+        m_nLineNumber = 0;
         m_nRead = 0;
     }
 
@@ -59,17 +60,34 @@ public class PushBackInputStream extends PushbackInputStream// FilterInputStream
         return m_nRead;
     }
 
+//    public int read() throws IOException {
+//        int c = pushBack;
+//
+//        if (c != -1) {
+//            pushBack = -1;
+//        } else {
+//            c = in.read();
+//        }
+//
+//        switch (c) {
+//          case '\r':
+//            pushBack = in.read();
+//            if (pushBack == '\n') {
+//                pushBack = -1;
+//            }
+//          case '\n':
+//            m_nLineNumber++;
+//            m_nColNumber = -1;
+//            return '\n';
+//        }
+//
+//        return c;
+//    }
+
     public final int read() throws IOException
     {
+
         int c;
-//        if(m_bPushedBack)
-//        {
-////            System.out.println("Pushed Back " + (char)m_nLastChar);
-//            c = m_nLastChar;
-//            m_bPushedBack = false;
-//        }
-//        else
-//        {
             c = super.read();
             if (m_bSkipLF)
             {
@@ -92,9 +110,6 @@ public class PushBackInputStream extends PushbackInputStream// FilterInputStream
                     m_nColNumber = -1;
                     c = '\n';
             }
-
-//            m_nLastChar = c;
-//        }
 
         if(c > -1)
         {

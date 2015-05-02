@@ -37,6 +37,7 @@ public final class ReadTerm3 extends JIPXCall
         if(m_bEOF)
             return false;
 
+        int lineBegin;
         if(m_termEnum == null) // First time
         {
             // get first parameter
@@ -94,6 +95,8 @@ public final class ReadTerm3 extends JIPXCall
 
         JIPFunctor singleton = null;
         JIPFunctor variable_names = null;
+        JIPFunctor line_counts = null;
+
 //        JIPFunctor variables = null;
 
         JIPList options = (JIPList)params.getNth(3).getValue();
@@ -110,6 +113,12 @@ public final class ReadTerm3 extends JIPXCall
         if(pos > 0)
         	variable_names = (JIPFunctor)options.getNth(pos);
 
+        JIPFunctor lc = JIPFunctor.create("line_counts", JIPCons.create(JIPVariable.create("Begin"), JIPCons.create(JIPVariable.create("End"), null)));
+        pos = options.member(lc);
+
+        if(pos > 0)
+        	line_counts = (JIPFunctor)options.getNth(pos);
+
 //        JIPFunctor va = JIPFunctor.create("variables", JIPCons.create(JIPVariable.create("Vars"), null));
 //        pos = options.member(va);
 //
@@ -121,6 +130,8 @@ public final class ReadTerm3 extends JIPXCall
         {
             if(m_termEnum.hasMoreElements())
             {
+                lineBegin = ((InputStreamInfo)streamInfo).getLineNumber();
+
                 term = (JIPTerm)m_termEnum.nextElement();
                 if(singleton != null)
                 {
@@ -151,12 +162,28 @@ public final class ReadTerm3 extends JIPXCall
                 	{
                     	for(JIPVariable var : vars)
                     	{
-                    		varsName = JIPList.create(JIPFunctor.create("=", JIPCons.create(JIPAtom.create(var.getName()), JIPCons.create(var, null))), varsName);
+                    		if(!var.isAnonymous())
+                    			varsName = JIPList.create(JIPFunctor.create("=", JIPCons.create(JIPAtom.create(var.getName()), JIPCons.create(var, null))), varsName);
                     	}
                 	}
 
                 	varsName = varsName.reverse();
                 	if(!variable_names.getParams().getNth(1).unify(varsName, varsTbl))
+                	{
+                        if(bUserStream)
+                            getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
+
+                		return false;
+                	}
+                }
+
+                if(line_counts != null)
+                {
+                	int lineEnd = ((InputStreamInfo)streamInfo).getLineNumber();
+
+                	JIPFunctor lc1 = JIPFunctor.create("line_counts", JIPCons.create(JIPNumber.create(lineBegin), JIPCons.create(JIPNumber.create(lineEnd), null)));
+
+                	if(!line_counts.getParams().getNth(1).unify(lc1, varsTbl))
                 	{
                         if(bUserStream)
                             getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());

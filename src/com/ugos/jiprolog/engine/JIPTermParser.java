@@ -145,7 +145,8 @@ public class JIPTermParser
         	for(String key : svar.keySet())
         	{
         		Variable var = svar.get(key);
-        		singletonVars = JIPList.create(JIPFunctor.create("=", JIPCons.create(JIPAtom.create(var.getName()), JIPCons.create(new JIPVariable(var), null))), singletonVars);
+        		if(!var.isAnonymous())
+        			singletonVars = JIPList.create(JIPFunctor.create("=", JIPCons.create(JIPAtom.create(var.getName()), JIPCons.create(new JIPVariable(var), null))), singletonVars);
 
 //        		sjvar.put(key, new JIPVariable(var));
         	}

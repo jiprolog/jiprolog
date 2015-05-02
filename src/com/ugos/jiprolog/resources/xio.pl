@@ -863,6 +863,7 @@ valid_read_term_option(singletons(_)).
 % others
 valid_read_term_option(module(_)).
 valid_read_term_option(syntax_errors(_)).
+valid_read_term_option(line_counts(_,_)).
 %valid_read_term_option(term_position(_)).
 
 %option(Handle, Term, backquoted_string(false)).
