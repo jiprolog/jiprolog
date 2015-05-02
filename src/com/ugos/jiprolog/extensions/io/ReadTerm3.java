@@ -128,10 +128,10 @@ public final class ReadTerm3 extends JIPXCall
         JIPTerm term;
         try
         {
+//        	lineBegin = ((InputStreamInfo)streamInfo).getLineNumber();
+
             if(m_termEnum.hasMoreElements())
             {
-                lineBegin = ((InputStreamInfo)streamInfo).getLineNumber();
-
                 term = (JIPTerm)m_termEnum.nextElement();
                 if(singleton != null)
                 {
@@ -184,7 +184,7 @@ public final class ReadTerm3 extends JIPXCall
                 {
                 	int lineEnd = ((InputStreamInfo)streamInfo).getLineNumber();
 
-                	JIPFunctor lc1 = JIPFunctor.create("line_counts", JIPCons.create(JIPNumber.create(lineBegin), JIPCons.create(JIPNumber.create(lineEnd), null)));
+                	JIPFunctor lc1 = JIPFunctor.create("line_counts", JIPCons.create(JIPNumber.create(term.getLine()), JIPCons.create(JIPNumber.create(lineEnd), null)));
 
                 	if(!line_counts.unify(lc1, varsTbl))
                 	{

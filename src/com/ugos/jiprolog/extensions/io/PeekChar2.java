@@ -29,7 +29,7 @@ public final class PeekChar2 extends JIPXCall
 {
 //    private JIPTerm m_term;
 
-   private final int peekChar(PushBackInputStream ins)
+   private final int peekChar(PushbackLineNumberInputStream ins)
     {
         try
         {
@@ -83,7 +83,7 @@ public final class PeekChar2 extends JIPXCall
 	        if(!(properties.getProperty("type").equals("type(text)")))
 	        	throw new JIPPermissionException("input", "binary_stream", input);
 
-	        PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
+	        PushbackLineNumberInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
             if(ins == null)
             	throw JIPExistenceException.createStreamException(strStreamHandle);
 

@@ -3,11 +3,11 @@ package com.ugos.jiprolog.extensions.io;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import com.ugos.io.PushBackInputStream;
+import com.ugos.io.PushbackLineNumberInputStream;
 
 public class InputStreamInfo extends StreamInfo
 {
-    PushBackInputStream m_stream;
+    PushbackLineNumberInputStream m_stream;
     Enumeration m_enum;
 
 	private static int refCounter = 1;

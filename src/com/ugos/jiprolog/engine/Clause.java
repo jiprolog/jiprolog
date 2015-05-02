@@ -23,7 +23,7 @@ package com.ugos.jiprolog.engine;
 import java.util.Hashtable;
 import java.io.*;
 
-import com.ugos.io.PushBackInputStream;
+import com.ugos.io.PushbackLineNumberInputStream;
 
 class Clause extends ConsCell
 {
@@ -32,8 +32,8 @@ class Clause extends ConsCell
     private String  m_strModuleName;
     private boolean m_bExported = false;
     private String  m_strFileName = null;//"none";
-    private int     m_nPosition = 0;
-    private int     m_nLineNumber = 0;
+//    private int     m_nPosition = 0;
+//    private int     m_nLineNumber = 0;
 
     private static JIPEngine s_engine = null;
     private static Functor s_translateQuery = null;
@@ -70,30 +70,31 @@ class Clause extends ConsCell
         m_strFileName = strFileName;
     }
 
-    final void setPosition(int nPos)
-    {
-        m_nPosition = nPos;
-    }
-
-    final void setLineNumber(int nLineNumber)
-    {
-        m_nLineNumber = nLineNumber;
-    }
+//    final void setPosition(int nPos)
+//    {
+//        m_nPosition = nPos;
+//    }
+//
+//    final void setLineNumber(int nLineNumber)
+//    {
+//        m_nLineNumber = nLineNumber;
+//    }
 
     final String getFileName()
     {
         return m_strFileName;
     }
 
-    final int getPosition()
-    {
-        return m_nPosition;
-    }
-
-    final int getLineNumber()
-    {
-        return m_nLineNumber;
-    }
+//    @Override
+//    public int getPosition()
+//    {
+//        return m_nPosition;
+//    }
+//
+//    final int getLineNumber()
+//    {
+//        return m_nLineNumber;
+//    }
 
     final boolean isExported()
     {
@@ -106,8 +107,8 @@ class Clause extends ConsCell
         final Clause clause = new Clause((ConsCell)super.copy(flat, varTable), m_strModuleName);
         clause.m_bExported = m_bExported;
         clause.m_strFileName = m_strFileName;
-        clause.m_nLineNumber = m_nLineNumber;
-        clause.m_nPosition = m_nPosition;
+//        clause.m_nLineNumber = m_nLineNumber;
+//        clause.m_nPosition = m_nPosition;
         return clause;
     }
 
@@ -176,7 +177,7 @@ class Clause extends ConsCell
 
             if(s_translateQuery == null)
             {
-                final PrologParser parser = new PrologParser(new ParserReader(new PushBackInputStream(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),null,"internal");
+                final PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),null,"internal");
                 try
                 {
                     final Functor funct = ((Functor)parser.parseNext());

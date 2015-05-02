@@ -249,6 +249,20 @@ public class JIPTerm extends Object implements Clearable
     	return false;
     }
 
+    public int getLine() {
+		return m_obj.getLine();
+	}
+
+
+	public int getColumn() {
+		return m_obj.getColumn();
+	}
+
+
+	public int getPosition() {
+		return m_obj.getPosition();
+	}
+
     static final JIPTerm getJIPTerm(final PrologObject obj)
     {
         if(obj instanceof PString)

@@ -29,7 +29,7 @@ public final class PeekCode2 extends JIPXCall
 {
 //    private JIPTerm m_term;
 
-   private final int peekCode(PushBackInputStream ins)
+   private final int peekCode(PushbackLineNumberInputStream ins)
     {
         try
         {
@@ -72,7 +72,7 @@ public final class PeekCode2 extends JIPXCall
             final String strStreamHandle = ((JIPAtom)input).getName();
 
             // Get the stream
-            PushBackInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
+            PushbackLineNumberInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
             if(ins == null)
             {
             	throw JIPExistenceException.createStreamException(strStreamHandle);

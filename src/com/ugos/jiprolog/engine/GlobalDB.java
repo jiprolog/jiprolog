@@ -23,7 +23,7 @@ package com.ugos.jiprolog.engine;
 import java.util.*;
 import java.io.*;
 
-import com.ugos.io.PushBackInputStream;
+import com.ugos.io.PushbackLineNumberInputStream;
 
 final class GlobalDB extends Object// implements Cloneable //Serializable
 {
@@ -659,7 +659,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         		InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "jipkernel.txt");
 
-	            PrologParser parser = new PrologParser(new ParserReader(new PushBackInputStream(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
+	            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
 
 	            PrologObject term;
 	            while ((term = parser.parseNext()) != null)
@@ -722,7 +722,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	     }
 	     catch(NullPointerException ex)
 	     {
-	         //ex.printStackTrace();
+	         ex.printStackTrace();
 	         gdb.m_bCheckDisabled = false;
 	         throw new JIPRuntimeException("JIProlog Kernel is not found. JIPKernel.txt should be in the classpath.");
 	     }
@@ -793,8 +793,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 clause.setExported();
 
             clause.setFileName(((Clause)term).getFileName());
-            clause.setLineNumber(((Clause)term).getLineNumber());
-            clause.setPosition(((Clause)term).getPosition());
+            clause.setPosition(term.getLine(), term.getColumn(), term.getPosition());
+//            clause.setLine(((Clause)term).getLine());
+//            clause.setPosition(((Clause)term).getPosition());
 
             return clause;
         }

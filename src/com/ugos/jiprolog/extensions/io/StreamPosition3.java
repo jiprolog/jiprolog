@@ -18,7 +18,7 @@
 
 package com.ugos.jiprolog.extensions.io;
 
-import com.ugos.io.PushBackInputStream;
+import com.ugos.io.PushbackLineNumberInputStream;
 import com.ugos.jiprolog.engine.*;
 
 import java.io.*;

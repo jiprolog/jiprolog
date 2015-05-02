@@ -532,7 +532,7 @@ class WAM
                 if(cla != null)
                 {
                     ex.m_strFileName = cla.getFileName(); // nel caso di built-in non è valorizzato
-                    ex.m_nLineNumber = cla.getLineNumber();
+                    ex.m_nLineNumber = cla.getLine();
                     ex.m_nPosition = cla.getPosition();
 
                 }
@@ -583,7 +583,7 @@ class WAM
                 if(cla != null)
                 {
                     ex1.m_strFileName = cla.getFileName();
-                    ex1.m_nLineNumber = cla.getLineNumber();
+                    ex1.m_nLineNumber = cla.getLine();
                     ex1.m_nPosition = cla.getPosition();
                 }
             }
@@ -609,7 +609,7 @@ class WAM
                 if(cla != null)
                 {
                     ex.m_strFileName = cla.getFileName();
-                    ex.m_nLineNumber = cla.getLineNumber();
+                    ex.m_nLineNumber = cla.getLine();
                     ex.m_nPosition   = cla.getPosition();
                 }
             }

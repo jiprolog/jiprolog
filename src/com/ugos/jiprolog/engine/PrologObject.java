@@ -31,7 +31,34 @@ abstract class PrologObject implements Clearable, Serializable
 {
     final static long serialVersionUID = 300000001L;
 
-    public final boolean unifiable(final PrologObject obj)
+    private int line;
+    private int column;
+    private int position;
+
+    public void setPosition(int line, int column, int position)
+    {
+    	this.line = line;
+    	this.column = column;
+    	this.position = position;
+    }
+
+
+    public int getLine() {
+		return line;
+	}
+
+
+	public int getColumn() {
+		return column;
+	}
+
+
+	public int getPosition() {
+		return position;
+	}
+
+
+	public final boolean unifiable(final PrologObject obj)
     {
         Hashtable<Variable, Variable> vartbl = new Hashtable<Variable, Variable>(10);
         boolean bUnify = _unify(obj, vartbl);

@@ -19,9 +19,10 @@
  */
 package com.ugos.jiprolog.engine;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
 
-import com.ugos.io.PushBackInputStream;
+import com.ugos.io.PushbackLineNumberInputStream;
 
 class ParserReader extends Reader
 {
@@ -32,11 +33,11 @@ class ParserReader extends Reader
     private boolean m_bEOF;
 //    private int m_nRead;
 
-    private PushBackInputStream m_ins;
+    private PushbackLineNumberInputStream m_ins;
 
     //private ByteArrayOutputStream m_outs;
 
-    public ParserReader(final PushBackInputStream ins)
+    public ParserReader(final PushbackLineNumberInputStream ins)
     {
         m_ins = ins;
 
@@ -51,6 +52,11 @@ class ParserReader extends Reader
     public final int getLineNumber()
     {
         return m_ins.getLineNumber();
+    }
+
+    public final int getColumn()
+    {
+        return m_ins.getColNumber();
     }
 
     public final int getRead()

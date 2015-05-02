@@ -23,7 +23,7 @@ package com.ugos.jiprolog.engine;
 import java.io.*;
 import java.util.*;
 
-import com.ugos.io.PushBackInputStream;
+import com.ugos.io.PushbackLineNumberInputStream;
 
 class Consult1 extends BuiltIn
 {
@@ -175,7 +175,7 @@ class Consult1 extends BuiltIn
             {
 //                System.out.println(engine.getCurrentEncoding());
 
-                ParserReader pins = new ParserReader(new PushBackInputStream(ins));
+                ParserReader pins = new ParserReader(new PushbackLineNumberInputStream(ins));
                 PrologParser parser = new PrologParser(pins, engine.getOperatorManager(), engine, strStreamName);
 
                 PrologObject term;
@@ -346,8 +346,8 @@ class Consult1 extends BuiltIn
                 {
 //                	System.out.println("line number " + pins.getLineNumber());
 
-                    clause.setLineNumber(pins.getLineNumber());
-                    clause.setPosition(pins.getRead());
+//                    clause.setLineNumber(pins.getLineNumber());
+//                    clause.setPosition(pins.getRead());
                 }
 
                 if(exportTbl.containsKey(((Functor)clause.getHead()).getName()))//.getAtom()))

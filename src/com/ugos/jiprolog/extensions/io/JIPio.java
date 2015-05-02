@@ -132,9 +132,9 @@ public final class JIPio
             reader = engine.getUserInputStream();
             InputStreamInfo sinfo = itable.get("user_input");
 
-            reader = new PushBackInputStream(reader);
+            reader = new PushbackLineNumberInputStream(reader);
 
-            sinfo.m_stream = (PushBackInputStream)reader;
+            sinfo.m_stream = (PushbackLineNumberInputStream)reader;
 
             return sinfo.getHandle();
         }
@@ -161,7 +161,7 @@ public final class JIPio
                 reader = new FileInputStream(strPath);
             }
 
-	        reader = new PushBackInputStream(reader);
+	        reader = new PushbackLineNumberInputStream(reader);
 
 	        InputStreamInfo sinfo =
 	        		new InputStreamInfo(strPath,
@@ -169,7 +169,7 @@ public final class JIPio
 	        							"read",
 	        						    "eof_code");
 
-	        sinfo.m_stream = (PushBackInputStream)reader;
+	        sinfo.m_stream = (PushbackLineNumberInputStream)reader;
 
 //	        int n = sinfo.m_stream.read();
 //	        if(n == -1)
@@ -236,7 +236,7 @@ public final class JIPio
         if(strHandle.equals("user_input"))
         {
             // get the enumeration of terms in the file
-            return termParser.parseStream(new PushBackInputStream(engine.getUserInputStream()), "user_input");
+            return termParser.parseStream(new PushbackLineNumberInputStream(engine.getUserInputStream()), "user_input");
         }
 
         InputStreamInfo sinfo = getInput(strHandle);
@@ -252,11 +252,11 @@ public final class JIPio
             return null;
     }
 
-    public final static PushBackInputStream getInputStream(final String strHandle, final JIPEngine engine)
+    public final static PushbackLineNumberInputStream getInputStream(final String strHandle, final JIPEngine engine)
     {
         if(strHandle.equals("user_input"))
         {
-            return new PushBackInputStream(engine.getUserInputStream());
+            return new PushbackLineNumberInputStream(engine.getUserInputStream());
         }
         else if(strHandle.equals("user_output") || strHandle.equals("user_error"))
         {
@@ -265,7 +265,7 @@ public final class JIPio
 
         InputStreamInfo sinfo = getInput(strHandle);
         if(sinfo != null)
-            return (PushBackInputStream)sinfo.m_stream;
+            return (PushbackLineNumberInputStream)sinfo.m_stream;
         else
             return null;
     }

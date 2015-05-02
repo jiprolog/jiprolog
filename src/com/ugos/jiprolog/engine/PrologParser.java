@@ -178,8 +178,13 @@ final class PrologParser
         boolean bWhiteSpace = false;
         boolean lastParenthesis = false;
         boolean quoted = false;
+        boolean started = false;
 
         PrologTokenizer.Token tok = null;
+
+        int line = lnReader.getLineNumber();
+    	int column = lnReader.getColumn();
+    	int position = lnReader.getRead();
 
         try
         {
@@ -189,6 +194,17 @@ final class PrologParser
                 if(tok == null)
                 {
                     break;
+                }
+
+                if(tok.m_nType != PrologTokenizer.TOKEN_WHITESPACE)
+                {
+                	if(!started)
+                	{
+                		line = lnReader.getLineNumber();
+                		column = lnReader.getColumn();
+                		position = lnReader.getRead();
+                		started = true;
+                	}
                 }
 
 //              System.out.println("nextoken " + tok.m_strToken);
@@ -341,6 +357,7 @@ final class PrologParser
 
                                     PrologObject funct = makeFunctor((Atom)lastObj, (ConsCell)term);
                                     termStack.push(funct);
+
                                 }
                                 // termStack.size() == 1  indica che lastObj è il primo termine letto e quindi anche se l'operatore è infix va trattato come atomo
                                 // bWhiteSpace indica il termine precedente è uno white-space
@@ -957,39 +974,24 @@ final class PrologParser
 
                         }
                         break;
-
-//                    case PrologTokenizer.TOKEN_DOT:
-//                        bEnd = true;
-//                        break;
                 }
 
                 if(tok.m_nType == PrologTokenizer.TOKEN_WHITESPACE)
-//              {
-//                  System.out.println("spacebar true");
                     bWhiteSpace = true;
-//              }
                 else
-//              {
                     bWhiteSpace = false;
-//                  System.out.println("spacebar false");
-//              }
             }
 
             if(nState != STATE_NONE)
                 throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_eof");
-                //throw new JIPSyntaxErrorException("Unexpected EOF or '.' found at line " + (m_lnReader.getLineNumber() + 1));
-
-//          System.out.println("qui");
-//          System.out.println(termStack);
 
             PrologObject obj = resolveStack(termStack);
-//            m_nTokCount = nTokCount;
+
+            if(obj != null)
+            	obj.setPosition(line, column, position);
+
             return obj;
 
-//            if(obj == null && tok != null && tok.m_nType == PrologTokenizer.TOKEN_DOT)
-//                return Atom.createAtom(".");
-//            else
-//                return obj;
         }
         catch(IOException ex)
         {
