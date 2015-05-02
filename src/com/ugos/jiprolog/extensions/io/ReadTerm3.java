@@ -186,7 +186,7 @@ public final class ReadTerm3 extends JIPXCall
 
                 	JIPFunctor lc1 = JIPFunctor.create("line_counts", JIPCons.create(JIPNumber.create(lineBegin), JIPCons.create(JIPNumber.create(lineEnd), null)));
 
-                	if(!line_counts.getParams().getNth(1).unify(lc1, varsTbl))
+                	if(!line_counts.unify(lc1, varsTbl))
                 	{
                         if(bUserStream)
                             getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
