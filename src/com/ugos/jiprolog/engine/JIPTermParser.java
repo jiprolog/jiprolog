@@ -150,8 +150,10 @@ public class JIPTermParser
 
 //        		sjvar.put(key, new JIPVariable(var));
         	}
-
-        	return singletonVars;//.reverse();
+        	if(singletonVars == null)
+				return JIPList.NIL;
+        	else
+				return singletonVars;//.reverse();
         }
     }
 

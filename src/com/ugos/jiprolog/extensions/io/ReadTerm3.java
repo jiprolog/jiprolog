@@ -167,7 +167,10 @@ public final class ReadTerm3 extends JIPXCall
                     	}
                 	}
 
-                	varsName = varsName.reverse();
+                	if( varsName == null)
+                        varsName = JIPList.NIL;
+                	else
+						varsName = varsName.reverse();
                 	if(!variable_names.getParams().getNth(1).unify(varsName, varsTbl))
                 	{
                         if(bUserStream)
