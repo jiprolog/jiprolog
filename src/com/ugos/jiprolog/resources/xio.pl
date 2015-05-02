@@ -732,6 +732,11 @@ make_directory(Dir):-
 
 % stream properties
 
+stream_property(Handle, Prop) :-
+	nonvar(Handle),
+	\+ current_stream(Handle),
+	error(domain_error(stream,Handle)).
+
 stream_property(Handle, position(line(Line))) :-
 	current_stream(Handle),
 	xcall('com.ugos.jiprolog.extensions.io.StreamPosition3', [Handle, _P, Line]).
@@ -759,11 +764,6 @@ stream_property(Handle, Prop) :-
 	current_stream(Handle),
 	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]),
 	Prop \= end_of_stream(_).
-
-stream_property(Handle, _) :-
-	nonvar(Handle),
-	\+ current_stream(Handle),
-	error(domain_error(stream,Handle)).
 
 
 set_stream_property(Handle, Prop):-
