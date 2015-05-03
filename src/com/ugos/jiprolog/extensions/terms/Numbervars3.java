@@ -51,7 +51,9 @@ public class Numbervars3 extends JIPXCall
             // try to extract the term
             if(!((JIPVariable)term).isBounded())
             {
-                term.unify(JIPAtom.create("'$VAR'(" + nStart + ")"), varsTbl);
+//                term.unify(JIPAtom.create("'$VAR'(" + nStart + ")"), varsTbl);
+                term.unify(JIPFunctor.create("$VAR", JIPCons.create(JIPNumber.create(nStart), null)), varsTbl);
+
                 return end.unify(JIPNumber.create(nStart + 1), varsTbl);
             }
             else
@@ -67,7 +69,8 @@ public class Numbervars3 extends JIPXCall
         {
             if(!vars[i].isBounded())
             {
-                vars[i].unify(JIPAtom.create("'$VAR'(" + (nCount + nStart) + ")"), varsTbl);
+                vars[i].unify(JIPFunctor.create("$VAR", JIPCons.create(JIPNumber.create(nCount + nStart), null)), varsTbl);
+//                vars[i].unify(JIPAtom.create("'$VAR'(" + (nCount + nStart) + ")"), varsTbl);
                 nCount++;
             }
         }

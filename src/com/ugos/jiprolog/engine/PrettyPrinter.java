@@ -206,20 +206,42 @@ final class PrettyPrinter extends Object
     {
         final Functor funct = (Functor)obj;
 
-        if(opManager != null && opManager.contains(funct.getFriendlyName()))
+        // Estrae il nome
+        final String strFunctor = funct.getFriendlyName();
+
+        if(funct.getAtom().getName().equals("$VAR/1"))
         {
-            final Operator op = opManager.get(funct.getFriendlyName());
+            // Estrae i parametri
+        	String val = print(funct.getParams().getTerm(1), opManager, bQ, varTable);
+        	try
+        	{
+        		int n = Integer.parseInt(val);
+        		int r = n % 26;
+        		int d = n / 26;
+
+        		char c = (char)('A' + r);
+
+        		String varName = c + "" + ((d > 0) ? d : "");
+
+        		return varName;
+        	}
+        	catch(NumberFormatException ex)
+        	{
+
+        	}
+        }
+
+        if(opManager != null && opManager.contains(strFunctor))
+        {
+            final Operator op = opManager.get(strFunctor);
             if((funct.getArity() == 1 && (op.getPrefix() != null || op.getPostfix() != null)) ||
                    (funct.getArity() == 2 && (op.getInfix() != null)))
                 return printOperator(obj, opManager, bQ, varTable);
         }
 
 
-        // Estrae il nome
-        final String strFunctor = funct.getFriendlyName();
-
-        // Estrae i parametri
         ConsCell params = funct.getParams();
+
 
         // Costruisce la stringa
         if(params == null)
