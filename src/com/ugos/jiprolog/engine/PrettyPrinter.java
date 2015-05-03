@@ -209,7 +209,7 @@ final class PrettyPrinter extends Object
         // Estrae il nome
         final String strFunctor = funct.getFriendlyName();
 
-        if(funct.getAtom().getName().equals("$VAR/1"))
+        if(opManager != null && funct.getAtom().getName().equals("$VAR/1"))
         {
             // Estrae i parametri
         	String val = print(funct.getParams().getTerm(1), opManager, bQ, varTable);
