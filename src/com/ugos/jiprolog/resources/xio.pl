@@ -18,31 +18,37 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  **************************/
 
-:-module(jipxio, [see/1, see/2, seen/0, seen/1, seeing/1, seeing/2, read/1, read/2, read_term/2, read_term/3, read_clause/1, read_clause/2, get0/1,
-                  get0/2, get/1, get/2, get_byte/1, get_byte/2, get_code/1, get_code/2, get_char/1, get_char/2, peek_byte/1, peek_byte/2, peek_code/1,
-                  peek_code/2, peek_char/1, peek_char/2, tell/1, tell/2, told/0, told/1, telling/1, telling/2, write/2, writeq/1,
-                  writeq/2, writeln/1, writeln/2, write_canonical/2, write_term/2, write_term/3, put/1, put/2, put_byte/1, put_byte/2, put_code/1,
-                  put_code/2, put_char/1, skip/1, skip/2, put_char/2, nl/1, flush_output/0, flush_output/1, open/3, open/4, close/1,
-                  print/1, print/2, display/1, display/2, close/2, at_end_of_stream/0, at_end_of_stream/1, stream_property/2,
-                  access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, searchpath/1, absolute_file_name/2,
-                  is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
-                  file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
-                  current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
+:-	module(jipxio, [
+	see/1, see/2, seen/0, seen/1, seeing/1, seeing/2, read/1, read/2, read_term/2, read_term/3, read_clause/1, read_clause/2, get0/1,
+	get0/2, get/1, get/2, get_byte/1, get_byte/2, get_code/1, get_code/2, get_char/1, get_char/2, peek_byte/1, peek_byte/2, peek_code/1,
+	peek_code/2, peek_char/1, peek_char/2, tell/1, tell/2, told/0, told/1, telling/1, telling/2, write/2, writeq/1,
+	writeq/2, writeln/1, writeln/2, write_canonical/2, write_term/2, write_term/3, put/1, put/2, put_byte/1, put_byte/2, put_code/1,
+	put_code/2, put_char/1, skip/1, skip/2, put_char/2, nl/1, flush_output/0, flush_output/1, open/3, open/4, close/1,
+	print/1, print/2, display/1, display/2, close/2, at_end_of_stream/0, at_end_of_stream/1, stream_property/2,
+	access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, searchpath/1, absolute_file_name/2,
+	is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
+	file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
+	current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2,
+	stream_position_data/3
+]).
 
-:-'$custom_built_in'([see/1, see/2, seen/0, seen/1, seeing/1, seeing/2, read/1, read/2, read_term/2, read_term/3, read_clause/1, read_clause/2, get0/1,
-                  get0/2, get/1, get/2, get_byte/1, get_byte/2, get_code/1, get_code/2, get_char/1, get_char/2, peek_byte/1, peek_byte/2, peek_code/1,
-                  peek_code/2, peek_char/1, peek_char/2, tell/1, tell/2, told/0, told/1, telling/1, telling/2, write/2, writeq/1,
-                  writeq/2, writeln/1, writeln/2, write_canonical/2, write_term/2, write_term/3, put/1, put/2, put_byte/1, put_byte/2, put_code/1,
-                  put_code/2, put_char/1, skip/1, skip/2, put_char/2, nl/1, flush_output/0, flush_output/1, open/3, open/4, close/1,
-                  print/1, print/2, display/1, display/2, close/2, at_end_of_stream/0, at_end_of_stream/1, stream_property/2,
-                  access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, searchpath/1, absolute_file_name/2,
-                  is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
-                  file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
-                  current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2]).
+:- '$custom_built_in'([
+	see/1, see/2, seen/0, seen/1, seeing/1, seeing/2, read/1, read/2, read_term/2, read_term/3, read_clause/1, read_clause/2, get0/1,
+	get0/2, get/1, get/2, get_byte/1, get_byte/2, get_code/1, get_code/2, get_char/1, get_char/2, peek_byte/1, peek_byte/2, peek_code/1,
+	peek_code/2, peek_char/1, peek_char/2, tell/1, tell/2, told/0, told/1, telling/1, telling/2, write/2, writeq/1,
+	writeq/2, writeln/1, writeln/2, write_canonical/2, write_term/2, write_term/3, put/1, put/2, put_byte/1, put_byte/2, put_code/1,
+	put_code/2, put_char/1, skip/1, skip/2, put_char/2, nl/1, flush_output/0, flush_output/1, open/3, open/4, close/1,
+	print/1, print/2, display/1, display/2, close/2, at_end_of_stream/0, at_end_of_stream/1, stream_property/2,
+	access_file/2, exists_file/1, exists_directory/1, same_file/2, working_directory/2, searchpath/1, absolute_file_name/2,
+	is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
+	file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
+	current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2,
+	stream_position_data/3
+]).
 
-:-assert(ver(jipxio, '4.0.2')).
+:- assert(ver(jipxio, '4.0.3')).
 
-:-op(400, fx, cd).
+:- op(400, fx, cd).
 
 
 open(File, Mode, _, Options):-
@@ -737,9 +743,9 @@ stream_property(Handle, Prop) :-
 	\+ current_stream(Handle),
 	error(domain_error(stream,Handle)).
 
-stream_property(Handle, position(line(Line))) :-
+stream_property(Handle, position(position(CharCount,Line,Column))) :-
 	current_stream(Handle),
-	xcall('com.ugos.jiprolog.extensions.io.StreamPosition3', [Handle, _P, Line]).
+	xcall('com.ugos.jiprolog.extensions.io.StreamPosition4', [Handle, CharCount, Line, Column]).
 
 stream_property(Handle, end_of_stream(EOS)) :-
 	current_stream(Handle),
@@ -764,6 +770,12 @@ stream_property(Handle, Prop) :-
 	current_stream(Handle),
 	xcall('com.ugos.jiprolog.extensions.io.StreamProperty3', [get, Handle, Prop]),
 	Prop \= end_of_stream(_).
+
+
+stream_position_data(char_count, position(CharCount,_,_), CharCount).
+stream_position_data(character_count, position(CharCount,_,_), CharCount).
+stream_position_data(line_count, position(_,LineCount,_), LineCount).
+stream_position_data(line_position, position(_,_,LinePosition), LinePosition).
 
 
 set_stream_property(Handle, Prop):-
