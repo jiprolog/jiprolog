@@ -988,7 +988,7 @@ final class PrologParser
             PrologObject obj = resolveStack(termStack);
 
             if(obj != null)
-            	obj.setPosition(line, column, position);
+            	obj.setPosition(line + 1, column, position);
 
             return obj;
 
