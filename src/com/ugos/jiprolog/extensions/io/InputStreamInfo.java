@@ -59,6 +59,14 @@ public class InputStreamInfo extends StreamInfo
     	return m_stream.getLineNumber();
     }
 
+    public int getColumn()
+    {
+    	if(m_stream == null)
+    		return 0;
+
+    	return m_stream.getColNumber();
+    }
+
     public int getPosition()
     {
     	if(m_stream == null)

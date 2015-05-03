@@ -18,13 +18,18 @@
 
 package com.ugos.jiprolog.extensions.io;
 
-import com.ugos.io.PushbackLineNumberInputStream;
-import com.ugos.jiprolog.engine.*;
+import java.util.Hashtable;
 
-import java.io.*;
-import java.util.*;
+import com.ugos.jiprolog.engine.JIPAtom;
+import com.ugos.jiprolog.engine.JIPCons;
+import com.ugos.jiprolog.engine.JIPExistenceException;
+import com.ugos.jiprolog.engine.JIPFunctor;
+import com.ugos.jiprolog.engine.JIPInstantiationException;
+import com.ugos.jiprolog.engine.JIPNumber;
+import com.ugos.jiprolog.engine.JIPTerm;
+import com.ugos.jiprolog.engine.JIPXCall;
 
-public final class StreamPosition3 extends JIPXCall
+public final class StreamPosition4 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {
@@ -39,12 +44,16 @@ public final class StreamPosition3 extends JIPXCall
        	InputStreamInfo sinfo = itable.get(shandle);
 
        	JIPCons cons;
-       	if(sinfo == null)
-       		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), null)));
+       	if(sinfo != null)
+       		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(sinfo.getPosition()), JIPCons.create(JIPNumber.create(sinfo.getLineNumber()), JIPCons.create(JIPNumber.create(sinfo.getColumn()), null))));
        	else
-       		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(sinfo.getPosition()), JIPCons.create(JIPNumber.create(sinfo.getLineNumber()), null)));
+       		throw JIPExistenceException.createStreamException(JIPAtom.create(shandle));
 
-        return params.unify(cons, varsTbl);
+//   		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), null)));
+
+       	JIPFunctor position = JIPFunctor.create("position", cons);
+
+       	return params.unify(position, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()
