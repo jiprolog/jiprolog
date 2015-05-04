@@ -736,6 +736,10 @@ class PrologTokenizer
 //                                            m_lnReader.pushback();
                                         break;
 
+                                    case '\r':
+                                    case '\n':
+                                        break;
+
                                     default: // ignora \
                                         strTerm += (char)(c);
                                 }
