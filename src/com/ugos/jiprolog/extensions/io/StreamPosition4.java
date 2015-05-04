@@ -47,13 +47,10 @@ public final class StreamPosition4 extends JIPXCall
        	if(sinfo != null)
        		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(sinfo.getPosition()), JIPCons.create(JIPNumber.create(sinfo.getLineNumber()), JIPCons.create(JIPNumber.create(sinfo.getColumn()), null))));
        	else
-       		throw JIPExistenceException.createStreamException(JIPAtom.create(shandle));
+//       	throw JIPExistenceException.createStreamException(JIPAtom.create(shandle));
+   			cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), null))));
 
-//   		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), null)));
-
-       	JIPFunctor position = JIPFunctor.create("position", cons);
-
-       	return params.unify(position, varsTbl);
+       	return params.unify(cons, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()
@@ -61,4 +58,3 @@ public final class StreamPosition4 extends JIPXCall
         return false;
     }
 }
-
