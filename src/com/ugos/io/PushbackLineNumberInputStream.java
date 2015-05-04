@@ -79,7 +79,8 @@ public class PushbackLineNumberInputStream extends FilterInputStream {
             throw new IOException("Push back buffer is full");
         }
 
-        buf[--pos] = (byte)b;
+        if (b != -1)
+            buf[--pos] = (byte)b;
     }
 
     /**
