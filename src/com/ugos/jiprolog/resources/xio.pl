@@ -804,24 +804,34 @@ check_handle(_, _):-
 
 % not supported
 
-seek(_,_,_,_):-
+seek(_, _, _, _) :-
 	error(system_error(not_supported)).
 
-set_stream_position(Handle, _):-
+
+set_stream_position(Handle, _) :-
 	var(Handle),
 	error(instantiation_error).
 
-set_stream_position(_, Position):-
+set_stream_position(_, Position) :-
 	var(Position),
 	error(instantiation_error).
 
-set_stream_position(Handle, _):-
+set_stream_position(Handle, _) :-
+	\+ atom(Handle),
+	error(domain_error(stream_or_alias, Handle)).
+
+set_stream_position(_, Position) :-
+	Position \= position(_,_,_),
+	error(domain_error(stream_position, Position)).
+
+set_stream_position(Handle, _) :-
 	check_handle(Handle, Handle1),
 	current_stream(Handle1),
 	error(permission_error(reposition, stream, Handle)).
 
-set_stream_position(Handle, _):-
+set_stream_position(Handle, _) :-
 	error(existence_error(stream,Handle)).
+
 
 set_stream(Handle, Prop):-
 	check_handle(Handle, Handle1),
