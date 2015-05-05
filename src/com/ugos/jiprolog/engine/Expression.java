@@ -226,12 +226,24 @@ final class Expression extends PrologObject //implements Serializable
 
                             dblVal =  Math.exp(dVal1);
                         }
-                        else if (strFunName.equals("int") || strFunName.equals("integer") || strFunName.equals("round"))
+                        else if (strFunName.equals("int") || strFunName.equals("integer"))
                         {
                         	Expression exp1 = Expression.compute(params.getHead());
                             dVal1 = exp1.m_dValue;
 
                             dblVal =  Math.rint(dVal1);
+
+                            if(dblVal > Integer.MAX_VALUE || dblVal < Integer.MIN_VALUE)
+                            	throw new JIPEvaluationException("int_overflow");
+
+                            return Expression.createNumber(dblVal);
+                        }
+                        else if (strFunName.equals("round"))
+                        {
+                        	Expression exp1 = Expression.compute(params.getHead());
+                            dVal1 = exp1.m_dValue;
+
+                            dblVal =  Math.round(dVal1);
 
                             if(dblVal > Integer.MAX_VALUE || dblVal < Integer.MIN_VALUE)
                             	throw new JIPEvaluationException("int_overflow");
