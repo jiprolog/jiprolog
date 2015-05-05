@@ -36,7 +36,7 @@ final class CurrentFunctor2 extends BuiltIn
         if(paramName != null && !((paramName instanceof Functor) || paramName instanceof Atom))
          throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, new Functor("//2", new ConsCell(paramName, new ConsCell(paramArity, null))));
 
-        if(paramArity != null && !(paramArity instanceof Expression))
+        if(paramArity != null && (!(paramArity instanceof Expression) || Expression.compute(paramArity).getValue() < 0))
             throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, new Functor("//2", new ConsCell(paramName, new ConsCell(paramArity, null))));
 
         if(m_enum == null)
