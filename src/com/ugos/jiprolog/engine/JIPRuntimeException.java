@@ -219,7 +219,7 @@ public class JIPRuntimeException extends RuntimeException
     static
     {
         s_errorTable.put(new Integer(-1), "Unknown Exception");
-        s_errorTable.put(new Integer(0), "Execution aborted by user");
+        s_errorTable.put(new Integer(0), "Execution aborted");
         s_errorTable.put(new Integer(1), "Syntax Error - %1");  // syntax error
         s_errorTable.put(new Integer(2), "Arithmetic Exception: %1");
         s_errorTable.put(new Integer(3), "One of the parameter is not of the expected type: %1");

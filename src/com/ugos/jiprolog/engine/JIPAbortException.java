@@ -39,6 +39,14 @@ public class JIPAbortException extends JIPRuntimeException
      */
     public JIPAbortException()
     {
-        super(createRuntimeException(0, "Aborted by User"));
+
+    }
+
+    /** Gets the error term associated to this exception
+     * @return JIPTerm object associated to this exception
+     */
+    public JIPTerm getTerm()
+    {
+    	return getTerm(Atom.createAtom("execution_aborted"));
     }
 }

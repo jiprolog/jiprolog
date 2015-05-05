@@ -36,12 +36,7 @@ import java.util.Vector;
  * @author Ugo Chirico 2002<br>
  * Home Page: http://www.ugochirico.com
  */
-public class JIPTerm extends Object implements Clearable
-
-//#ifndef _MIDP
-, Serializable, Cloneable
-//#endif
-
+public class JIPTerm extends Object implements Clearable, Serializable, Cloneable
 {
     private final static long serialVersionUID = 300000001L;
 
@@ -82,7 +77,7 @@ public class JIPTerm extends Object implements Clearable
      * @param varTable the hashtable containing the variable that has been bound.
      * @return true if the this object unify with the specified term.
      */
-    public final boolean unify(final JIPTerm term, final Hashtable varTable)
+    public final boolean unify(final JIPTerm term, final Hashtable varsTbl)
     {
         Hashtable varTable1 = new Hashtable(10);
         if(m_obj.unify(term.m_obj, varTable1))
@@ -92,7 +87,7 @@ public class JIPTerm extends Object implements Clearable
             while(en.hasMoreElements())
             {
                 var = ((Variable)en.nextElement());
-                varTable.put(var, new JIPVariable(var));
+                varsTbl.put(var, new JIPVariable(var));
             }
 
             return true;
@@ -249,16 +244,26 @@ public class JIPTerm extends Object implements Clearable
     	return false;
     }
 
+    /**
+     * Gets the line number where the term is in the consulted file or stream
+     * @return the line where this term is
+     */
     public int getLine() {
 		return m_obj.getLine();
 	}
 
-
+    /**
+     * Gets the column where the term is in the line in the consulted file or stream
+     * @return the column where this term is
+     */
 	public int getColumn() {
 		return m_obj.getColumn();
 	}
 
-
+    /**
+     * Gets the position from the beginning of the file where the term is in the consulted file or stream
+     * @return the position where this term is
+     */
 	public int getPosition() {
 		return m_obj.getPosition();
 	}
