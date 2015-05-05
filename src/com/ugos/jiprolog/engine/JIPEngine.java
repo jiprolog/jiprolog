@@ -56,7 +56,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 0;
     public static final int build = 14;
-    public static final int revision = 5;
+    public static final int revision = 6;
 
     private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
 

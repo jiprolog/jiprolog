@@ -327,9 +327,16 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         Functor functor = (Functor)clause.getHead();
 
+        String strPredDef;
+
+        if(functor.getName().equals(":-/2"))
+            strPredDef = Functor.getFunctor(functor.getParams().getHead()).getName();
+		else
+            strPredDef = functor.getName();
+
 //      System.out.println("functor " + functor);  // DBG
 
-        if(isSystem(functor.getName()))
+        if(isSystem(strPredDef) || isUser(strPredDef) && !isDynamic(strPredDef))
         	throw new JIPPermissionException("modify", "static_procedure", functor.getPredicateIndicator());
 //            throw JIPRuntimeException.create(13, functor);
 
@@ -483,7 +490,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         // Estrae il nome del funtore
         PrologObject head = clause.getHead();
 
-        // qui controllare se il funtore è nella export list corrente.
+        // qui controllare se il funtore ï¿½ nella export list corrente.
         // se si controllare se l'eventuale modulo specificato corrisponde a
         // quello di definizione. in tal caso la specifica di modulo va ignorata
         String strFunctName = clause.isExported() ? GlobalDB.USER_MODULE : clause.getModuleName();
@@ -499,7 +506,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         	throw ex;
         }
 
-        // verifica se il predicato è stato già asserted in un altro file
+        // verifica se il predicato ï¿½ stato giï¿½ asserted in un altro file
         if(strFile != null)
         {
             if(m_pred2FileMap.containsKey(strFunctName))
