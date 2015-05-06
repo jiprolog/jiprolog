@@ -72,10 +72,18 @@ public class NumberCodes2 extends JIPXCall
             {
                 throw new JIPSyntaxErrorException("not_a_number");
             }
-            else if (codes instanceof JIPList)
-				try {
-					String strVal = (JIPString.create((JIPList)codes, false)).getStringValue();
+            else
+            {
+            	String strVal;
+            	if (codes instanceof JIPList)
+					strVal = (JIPString.create((JIPList)codes, false)).getStringValue();
+            	else if (codes instanceof JIPString)
+            		strVal = ((JIPString)codes).getStringValue();
+            	else
+                    throw new JIPTypeException(JIPTypeException.LIST, codes);
 
+				try
+				{
 					// remove leading whitespace
 					strVal = strVal.replaceAll("^\\s+", "");
 
@@ -104,17 +112,11 @@ public class NumberCodes2 extends JIPXCall
 	                	else
 	                		codes = JIPNumber.create(d.intValue());
                 	}
-            	} catch (NumberFormatException e) {
+            	}
+				catch (NumberFormatException e) {
 	                throw new JIPSyntaxErrorException("not_a_number");
 				}
-            else
-            {
-                throw new JIPTypeException(JIPTypeException.LIST, codes);
             }
-        }
-        else
-        {
-            throw new JIPTypeException(JIPTypeException.NUMBER, number);
         }
 
         return number.unify(codes, varsTbl);
