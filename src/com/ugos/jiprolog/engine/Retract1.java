@@ -60,12 +60,14 @@ final class Retract1 extends BuiltIn
 
 		        if(globalDB.isSystem(functor.getName()))
 		        	throw new JIPPermissionException("modify", "static_procedure", functor.getPredicateIndicator());
-//		            throw JIPRuntimeException.create(13, functor);
 
 		        db = globalDB.search(functor, clause.getModuleName());
 
 		        if(db == null)
 		            return false;
+
+		        if(!globalDB.isDynamic(functor.getName()))
+		        	throw new JIPPermissionException("modify", "static_procedure", functor.getPredicateIndicator());
 
 		        en = ((DefaultClausesDatabase)db).clauses();
 	        }
@@ -80,10 +82,10 @@ final class Retract1 extends BuiltIn
 	            currentClause = ((Clause)en.nextElement());
 
 	            if(clause.getTail() == null)
-	            	clause.m_tail = new ConsCell(Atom.createAtom("true"),  null);
+	            	clause.m_tail = new ConsCell(Atom.TRUE,  null);
 
             	if(currentClause.getTail() == null)
-            		currentClause.m_tail = new ConsCell(Atom.createAtom("true"),  null);
+            		currentClause.m_tail = new ConsCell(Atom.TRUE,  null);
 
             	bFound = clause.unifiable(currentClause);
 	        }
