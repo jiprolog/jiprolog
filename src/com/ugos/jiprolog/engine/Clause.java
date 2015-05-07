@@ -137,7 +137,7 @@ class Clause extends ConsCell
         Clause clause;
         ConsCell params;
 
-        if(func.getAtom() == Atom.COLONDASH)
+        if(func.getAtom().equals(Atom.COLONDASH))
         {
             // estrae la clausola
             params = func.getParams();
@@ -146,7 +146,7 @@ class Clause extends ConsCell
             PrologObject rhs = BuiltIn.getRealTerm(params.getTail());
 
             // verifica se lhs ha la specifica del modulo
-            if((lhs instanceof Functor) && ((Functor)lhs).getAtom() == Atom.COLON)
+            if((lhs instanceof Functor) && ((Functor)lhs).getAtom().equals(Atom.COLON))
             {
                 strModuleName = ((Atom)((Functor)lhs).getParams().getHead()).getName();
                 lhs = BuiltIn.getRealTerm(((ConsCell)((Functor)lhs).getParams().getTail()).getHead());
@@ -168,7 +168,7 @@ class Clause extends ConsCell
 
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
-        else if(func.getAtom() == Atom.DCG)
+        else if(func.getAtom().equals(Atom.DCG))
         {
             PrologObject translated;
             // chiama il prolog per la translation
@@ -214,7 +214,7 @@ class Clause extends ConsCell
                 throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
             }
         }
-        else if(func.getAtom() == Atom.COLON)
+        else if(func.getAtom().equals(Atom.COLON))
         {
             // solo funtore con specifica di modulo
             // il body è vuoto

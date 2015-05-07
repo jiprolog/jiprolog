@@ -77,7 +77,7 @@ class Multifile1 extends BuiltIn
                 // head deve essere instanza di funtore /2 del tipo name/arity
                 if(head instanceof Functor)
             	{
-                	if (((Functor)head).getAtom() == Atom.SLASHSLASH)
+                	if (((Functor)head).getAtom().equals(Atom.SLASHSLASH))
 	                {
 	                    ConsCell params = ((Functor )head).getParams();
 	                    strPredDef = ((Atom)params.getHead()).getName() + "/" + ((ConsCell)params.getTail()).getHead().toString(getJIPEngine());

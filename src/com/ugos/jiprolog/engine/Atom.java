@@ -25,7 +25,8 @@ import java.util.Hashtable;
 
 final class Atom extends PrologObject //implements Serializable
 {
-    final static long serialVersionUID = 300000001L;
+
+	final static long serialVersionUID = 300000001L;
 
     static final Hashtable<String, Atom> s_atomTable = new Hashtable<String, Atom>(101);
 
@@ -142,12 +143,28 @@ final class Atom extends PrologObject //implements Serializable
     public boolean termEquals(PrologObject obj)
     {
         if(obj instanceof Atom)
-            return this == obj;//m_strAtom.equals(((Atom)obj).m_strAtom);
+            return this.equals(obj);//m_strAtom.equals(((Atom)obj).m_strAtom);
         else if(obj instanceof List)
             return m_strAtom.equals("") && obj == List.NIL;
         else if(obj instanceof Variable && ((Variable)obj).isBounded())
             return termEquals(((Variable)obj).getObject());
 
         return false;
+    }
+
+    @Override
+	public int hashCode() {
+		return m_nHashValue;
+	}
+
+    @Override
+    public boolean equals(Object obj)
+    {
+    	return obj instanceof Atom && this.m_nHashValue == ((Atom)obj).m_nHashValue;//m_strAtom.equals(((Atom)obj).m_strAtom);
+    }
+
+    public boolean equals(Atom atom)
+    {
+    	return this.m_nHashValue == atom.m_nHashValue;//m_strAtom.equals(((Atom)obj).m_strAtom);
     }
 }

@@ -131,7 +131,7 @@ final class Functor3 extends BuiltIn
             }
             else if(func instanceof Functor)
             {
-                if(((Functor)func).getAtom() == Atom.COLON)
+                if(((Functor)func).getAtom().equals(Atom.COLON))
                 {
                     try
                     {

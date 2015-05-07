@@ -661,7 +661,7 @@ class WAM
         else if (term instanceof Functor)
         {
             // controlla se si tratta di :
-            if(((Functor)term).getAtom() == Atom.COLON)
+            if(((Functor)term).getAtom().equals(Atom.COLON))
             {
             	curNode.m_strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
                 term = ((ConsCell)((Functor)term).getParams().getTail()).getHead();

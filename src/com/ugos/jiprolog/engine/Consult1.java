@@ -303,7 +303,7 @@ class Consult1 extends BuiltIn
                         PrologObject head = getRealTerm(exportList.getHead());
                         //System.out.println(head);  //DBG
                         //System.out.println("((Functor)head).getName() " + ((Functor)head).getName());  //DBG
-                        if(head instanceof Functor && ((Functor)head).getAtom() == Atom.SLASHSLASH)
+                        if(head instanceof Functor && ((Functor)head).getAtom().equals(Atom.SLASHSLASH))
                         {
                             ConsCell parms = ((Functor )head).getParams();
                             String strPredDef = ((Atom)parms.getHead()).getName() + "/" + ((ConsCell)parms.getTail()).getHead();

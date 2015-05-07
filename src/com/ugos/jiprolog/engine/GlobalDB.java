@@ -329,7 +329,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         String strPredDef;
 
-        if(functor.getAtom() == Atom.COLONDASH)
+        if(functor.getAtom().equals(Atom.COLONDASH))
             strPredDef = Functor.getFunctor(functor.getParams().getHead()).getName();
 		else
             strPredDef = functor.getName();
@@ -406,7 +406,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     head = ((Variable)head).getObject();
 
                 // controlla se :/2
-                if(head instanceof Functor && ((Functor)head).getAtom() == Atom.COLON)
+                if(head instanceof Functor && ((Functor)head).getAtom().equals(Atom.COLON))
                 {
                     strModuleName = ((Atom)((Functor)head).getParams().getHead()).getName();
                     head = ((ConsCell)((Functor)head).getParams().getTail()).getHead();
@@ -416,7 +416,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 String name;
                 PrologObject arity;
                 // head deve essere instanza di funtore /2 del tipo name/arity
-                if(head instanceof Functor && ((Functor)head).getAtom() == Atom.SLASHSLASH)
+                if(head instanceof Functor && ((Functor)head).getAtom().equals(Atom.SLASHSLASH))
                 {
 
                     ConsCell params = ((Functor )head).getParams();
