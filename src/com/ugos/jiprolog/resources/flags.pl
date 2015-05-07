@@ -80,6 +80,8 @@ valid_flag(prolog_copyright).
 valid_flag(pid).
 valid_flag(encoding).
 valid_flag(enable_clause_check).
+valid_flag(update_semantics).
+
 
 read_only_flag(Flag) :-
 	prolog_flag(Flag, _).
@@ -96,6 +98,8 @@ valid_flag_value(unknown, warning) :- !.
 valid_flag_value(unknown, fail) :- !.
 valid_flag_value(enable_clause_check, true) :- !.
 valid_flag_value(enable_clause_check, false) :- !.
+valid_flag_value(update_semantics, logical) :- !.
+valid_flag_value(update_semantics, immediate) :- !.
 
 current_prolog_flag(Flag, Value) :-
 	prolog_flag(Flag, Value).

@@ -76,7 +76,14 @@ public class NumberChars2 extends JIPXCall
             {
 				try
 				{
-                	String strVal = (JIPString.create((JIPList)chars, true)).getStringValue();
+
+                	String strVal;
+                	if (chars instanceof JIPList)
+    					strVal = (JIPString.create((JIPList)chars, false)).getStringValue();
+                	else if (chars instanceof JIPString)
+                		strVal = ((JIPString)chars).getStringValue();
+                	else
+                        throw new JIPTypeException(JIPTypeException.LIST, chars);
 
 					// remove leading whitespace
 					strVal = strVal.replaceAll("^\\s+", "");

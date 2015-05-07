@@ -52,7 +52,7 @@ public class NumberCodes2 extends JIPXCall
 	                strNumber = Double.toString(((JIPNumber)number).getDoubleValue());
 
 	            number = JIPString.create(strNumber, false);
-	        }
+	    }
         else if (number instanceof JIPVariable)
         {
         	// means number unbounded
@@ -117,6 +117,10 @@ public class NumberCodes2 extends JIPXCall
 	                throw new JIPSyntaxErrorException("not_a_number");
 				}
             }
+        }
+        else
+        {
+            throw new JIPTypeException(JIPTypeException.NUMBER, number);
         }
 
         return number.unify(codes, varsTbl);
