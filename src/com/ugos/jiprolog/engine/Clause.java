@@ -270,7 +270,7 @@ class Clause extends ConsCell
 //    	else if(head instanceof PString)
 //    		throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
     	else if(head instanceof Variable)
-    		((ConsCell)rhs).m_head = new Functor("call/1", new ConsCell(head, null));
+    		((ConsCell)rhs).m_head = new BuiltInPredicate("call/1", new ConsCell(head, null));
 
 		while(tail != null)
         {
@@ -299,7 +299,7 @@ class Clause extends ConsCell
 //    		else if(head instanceof PString)
 //    			throw new JIPTypeException(JIPTypeException.CALLABLE, rhs);
     		else if(head instanceof Variable)
-    			((ConsCell)tail).m_head = new Functor("call/1", new ConsCell(head, null));
+    			((ConsCell)tail).m_head = new BuiltInPredicate("call/1", new ConsCell(head, null));
 
 			tail = ((ConsCell)tail).m_tail;
         }

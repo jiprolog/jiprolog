@@ -392,15 +392,9 @@ class WAM
                     try
                     {
                         curNode.m_ruleEnum = getRules(curNode);
-//                        System.out.println("rule en " + curNode.m_ruleEnum);  // dbg
                     }
                     catch(UndefinedPredicateException ex)
                     {
-//                    	ex.printStackTrace();
-//                    	ex.printPrologStackTrace();
-//                        System.out.println("not found + " + ex.getPredicateName());
-//                        System.out.println("module stack  " + moduleStack);
-
                         // invia il warning se il predicato non è definito
                         // e non è dynamic
                         // in questo caso la eneration deve essere vuota
