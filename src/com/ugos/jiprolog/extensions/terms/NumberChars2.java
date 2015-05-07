@@ -79,7 +79,7 @@ public class NumberChars2 extends JIPXCall
 
                 	String strVal;
                 	if (chars instanceof JIPList)
-    					strVal = (JIPString.create((JIPList)chars, false)).getStringValue();
+    					strVal = (JIPString.create((JIPList)chars, true)).getStringValue();
                 	else if (chars instanceof JIPString)
                 		strVal = ((JIPString)chars).getStringValue();
                 	else
