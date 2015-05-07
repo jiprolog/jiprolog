@@ -48,6 +48,7 @@ class WAM
 
     protected class Node
     {
+        protected ConsCell     m_altBody;
         protected ConsCell     m_callList;
         protected Node         m_parent;
         protected Node         m_previous;
@@ -220,7 +221,7 @@ class WAM
         	//////////////////////////
 //            Atom atom = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal(), false).getHead())).getAtom();
 //            // se il parent è ;/2 prendo il parent del parent
-//            if(atom == Atom.FSEMICOLON || atom == Atom.FIF || atom == Atom.FSTARIF)
+//            if(atom.equals(Atom.FSEMICOLON || atom.equals(Atom.FIF || atom.equals(Atom.FSTARIF)
 //            //  see §7.8.6.1			see §7.8.7.1
 //            {
 //
@@ -229,7 +230,7 @@ class WAM
 // 	            ma è stato un misunderstanding
 //
 // 			    Functor funct = ((Functor)(Clause.getClause(m_curNode.m_parent.getGoal()).getHead()));
-//                if(funct.getParams().getHead() == Atom.FIF || funct.getParams().getHead() == Atom.FSTARIF)
+//                if(funct.getParams().getHead().equals(Atom.FIF || funct.getParams().getHead().equals(Atom.FSTARIF)
 //                {
 //                    if(m_curNode.m_parent.m_previous != null)
 //                    {
@@ -395,6 +396,8 @@ class WAM
                     }
                     catch(UndefinedPredicateException ex)
                     {
+//                    	ex.printStackTrace();
+//                    	ex.printPrologStackTrace();
 //                        System.out.println("not found + " + ex.getPredicateName());
 //                        System.out.println("module stack  " + moduleStack);
 
@@ -448,12 +451,14 @@ class WAM
                     newNode = null;
                     if(clause.getTail() != null) // la clausola ha un body
                     {
-//                      System.out.println("clause.getTail() != null");  // dbg
-//                      System.out.println("clause.getTail() " + clause.getTail());  // dbg
-
-                        // crea un nuovo nodo
+                        // create a new node
                         newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
-                        //parentRule = rule;
+                    }
+                    else if(curNode.m_altBody != null)
+                    {
+                        // create a new node
+                        newNode = new Node(curNode.m_altBody, curNode, curNode, rule.m_strModule);
+                        curNode.m_altBody = null;
                     }
                     else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
                     {

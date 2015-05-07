@@ -148,6 +148,7 @@ class Consult1 extends BuiltIn
         }
         catch(JIPRuntimeException ex)
         {
+        	ex.printStackTrace();
             if(strOldSearchPath != null)
                 engine.setSearchPath(strOldSearchPath);
             throw ex;

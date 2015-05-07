@@ -258,7 +258,7 @@ class Clause extends ConsCell
 		{
 			Atom name = ((Functor)head).getAtom();
 
-			if(name == Atom.SEMICOLON || name == Atom.IF || name == Atom.STARIF)
+			if(name.equals(Atom.SEMICOLON) || name.equals(Atom.IF) || name.equals(Atom.STARIF))
 			{
 				checkForCallable(((Functor)head).getParams());
 			}
@@ -287,7 +287,7 @@ class Clause extends ConsCell
 			{
 				Atom name = ((Functor)head).getAtom();
 
-				if(name == Atom.SEMICOLON || name == Atom.IF || name == Atom.STARIF)
+				if(name.equals(Atom.SEMICOLON) || name.equals(Atom.IF) || name.equals(Atom.STARIF))
 				{
 					checkForCallable(((Functor)head).getParams());
 				}

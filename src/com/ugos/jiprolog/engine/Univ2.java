@@ -91,7 +91,7 @@ final class Univ2 extends BuiltIn
                             final Atom name = Atom.createAtom(strName);
                             if(BuiltInFactory.isBuiltIn(strName))
                                 list = new BuiltInPredicate(name, funparms);
-                            else if(name == Atom.COMMA)
+                            else if(name.equals(Atom.COMMA))
                             	list = funparms;
                             else
                                 list = new Functor(name, funparms);

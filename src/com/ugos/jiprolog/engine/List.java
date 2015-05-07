@@ -89,7 +89,7 @@ class List extends ConsCell
         }
 //        else if(obj instanceof Atom)
 //        {
-//        	return this == List.NIL && obj == Atom.NIL;
+//        	return this == List.NIL && obj.equals(Atom.NIL;
 //        }
         else if (obj == null)
         {

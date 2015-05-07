@@ -26,7 +26,7 @@ public class CallN extends BuiltIn {
 
 		if(closure instanceof Atom)
 		{
-			if(((Atom)closure) == Atom.createAtom(","))
+			if(((Atom)closure).equals(Atom.createAtom(",")))
 			{
 				goal = (ConsCell)params;
 			}
@@ -43,15 +43,15 @@ public class CallN extends BuiltIn {
 		{
 			Atom functorName = ((Functor)closure).getAtom();
 
-			if(functorName == Atom.createAtom(",/1"))
+			if(functorName.equals(Atom.createAtom(",/1")))
 			{
 				goal = (Functor)closure;
 
 				ConsCell params1 = (ConsCell)((Functor)closure).getParams().copy(true);
-				
+
 				((Functor)closure).getParams().unify(params1, varsTbl);
-				
-				goal = ConsCell.append(params1, (ConsCell)params);								
+
+				goal = ConsCell.append(params1, (ConsCell)params);
 			}
 			else
 			{

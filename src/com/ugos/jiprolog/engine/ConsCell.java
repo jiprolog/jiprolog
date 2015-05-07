@@ -116,7 +116,7 @@ class ConsCell extends PrologObject //implements Serializable
         }
 //        else if(obj instanceof Atom)
 //        {
-//        	return this == ConsCell.NIL && obj == Atom.NIL;
+//        	return this == ConsCell.NIL && obj.equals(Atom.NIL;
 //        }
         else if ((obj == null))
         {
