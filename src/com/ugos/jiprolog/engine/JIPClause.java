@@ -33,7 +33,7 @@ public class JIPClause extends JIPTerm
 
     private JIPClause(final Functor func, final ConsCell body)
     {
-        this(Clause.getClause(new Functor(":-/2", new ConsCell(func, new ConsCell(body, null))), true));
+        this(Clause.getClause(new Functor(Atom.COLONDASH, new ConsCell(func, new ConsCell(body, null))), true));
     }
 
     private JIPClause(final Functor func)

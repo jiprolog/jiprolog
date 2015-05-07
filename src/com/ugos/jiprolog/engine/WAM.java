@@ -515,7 +515,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-//            ex.printStackTrace();  //DBG
+            ex.printStackTrace();  //DBG
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
@@ -661,7 +661,7 @@ class WAM
         else if (term instanceof Functor)
         {
             // controlla se si tratta di :
-            if(((Functor)term).getName().equals(":/2"))
+            if(((Functor)term).getAtom() == Atom.COLON)
             {
             	curNode.m_strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
                 term = ((ConsCell)((Functor)term).getParams().getTail()).getHead();

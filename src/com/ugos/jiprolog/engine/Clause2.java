@@ -77,7 +77,7 @@ final class Clause2 extends BuiltIn
 
             body1 = getRealTerm(body1);
             if(body1 == null)
-                body1 = Atom.createAtom("true");
+                body1 = Atom.TRUE;
             else if(body1 instanceof ConsCell && !(body1 instanceof Functor))
                 body1 = ((ConsCell)body1).getHead();
 

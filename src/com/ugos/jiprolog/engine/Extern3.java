@@ -35,7 +35,7 @@ final class Extern3 extends BuiltIn
         PrologObject pred = getRealTerm(getParam(1));
 
         // controlla se identificativo di modulo
-        if(pred instanceof Functor && ((Functor)pred).getName().equals(":/2"))
+        if(pred instanceof Functor && ((Functor)pred).getAtom() == Atom.COLON)
         {
             params = ((Functor )pred).getParams();
             strModuleName = ((Atom)params.getHead()).getName();
@@ -47,7 +47,7 @@ final class Extern3 extends BuiltIn
         }
 
         // head deve essere instanza di funtore /2 del tipo name/arity
-        if(pred instanceof Functor && ((Functor)pred).getName().equals("//2"))
+        if(pred instanceof Functor && ((Functor)pred).getAtom() == Atom.SLASHSLASH)
         {
             params = ((Functor )pred).getParams();
             strFunctName = ((Atom)params.getHead()).getName();

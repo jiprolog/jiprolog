@@ -42,7 +42,7 @@ final class PredicateProperties2 extends BuiltIn
 
 //        if(!funct.getName().equals("//2"))
 //        {
-        	funct = new Functor("/2", new ConsCell(Atom.createAtom(funct.getFriendlyName()), new ConsCell(Expression.createNumber(funct.getArity()), null)));
+        	funct = new Functor(Atom.SLASHSLASH, new ConsCell(Atom.createAtom(funct.getFriendlyName()), new ConsCell(Expression.createNumber(funct.getArity()), null)));
 //        }
 //
 //            throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, parm);

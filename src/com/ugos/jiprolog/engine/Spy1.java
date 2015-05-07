@@ -45,7 +45,7 @@ final class Spy1 extends BuiltIn
         else if(pred instanceof Functor)
         {
             // head deve essere instanza di funtore /2 del tipo name/arity
-            if(pred instanceof Functor && ((Functor)pred).getName().equals("//2"))
+            if(pred instanceof Functor && ((Functor)pred).getAtom() == Atom.SLASHSLASH)
             {
                 ConsCell params = ((Functor )pred).getParams();
                 String strPredDef = ((Atom)params.getHead()).getName() + "/" + ((ConsCell)params.getTail()).getHead();

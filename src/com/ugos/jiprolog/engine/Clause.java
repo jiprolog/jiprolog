@@ -137,7 +137,7 @@ class Clause extends ConsCell
         Clause clause;
         ConsCell params;
 
-        if(func.getName().equals(":-/2"))
+        if(func.getAtom() == Atom.COLONDASH)
         {
             // estrae la clausola
             params = func.getParams();
@@ -146,7 +146,7 @@ class Clause extends ConsCell
             PrologObject rhs = BuiltIn.getRealTerm(params.getTail());
 
             // verifica se lhs ha la specifica del modulo
-            if((lhs instanceof Functor) && ((Functor)lhs).getName().equals(":/2"))
+            if((lhs instanceof Functor) && ((Functor)lhs).getAtom() == Atom.COLON)
             {
                 strModuleName = ((Atom)((Functor)lhs).getParams().getHead()).getName();
                 lhs = BuiltIn.getRealTerm(((ConsCell)((Functor)lhs).getParams().getTail()).getHead());
@@ -168,7 +168,7 @@ class Clause extends ConsCell
 
             clause = new Clause(strModuleName, (Functor)lhs, (ConsCell)rhs);
         }
-        else if(func.getName().equals("-->/2"))
+        else if(func.getAtom() == Atom.DCG)
         {
             PrologObject translated;
             // chiama il prolog per la translation
@@ -182,7 +182,7 @@ class Clause extends ConsCell
                 {
                     final Functor funct = ((Functor)parser.parseNext());
                     s_translateParams = funct.getParams();
-                    s_translateQuery = new Functor(":/2", new ConsCell(Atom.createAtom(GlobalDB.KERNEL_MODULE), new ConsCell(funct, null)));
+                    s_translateQuery = new Functor(Atom.COLON, new ConsCell(Atom.KERNEL, new ConsCell(funct, null)));
                 }
                 catch(JIPSyntaxErrorException ex)
                 {
@@ -214,7 +214,7 @@ class Clause extends ConsCell
                 throw new JIPTypeException(JIPTypeException.CALLABLE, pred);
             }
         }
-        else if(func.getName().equals(":/2"))
+        else if(func.getAtom() == Atom.COLON)
         {
             // solo funtore con specifica di modulo
             // il body è vuoto
@@ -258,7 +258,7 @@ class Clause extends ConsCell
 		{
 			Atom name = ((Functor)head).getAtom();
 
-			if(name == Atom.FSEMICOLON || name == Atom.FIF || name == Atom.FSTARIF)
+			if(name == Atom.SEMICOLON || name == Atom.IF || name == Atom.STARIF)
 			{
 				checkForCallable(((Functor)head).getParams());
 			}
@@ -287,7 +287,7 @@ class Clause extends ConsCell
 			{
 				Atom name = ((Functor)head).getAtom();
 
-				if(name == Atom.FSEMICOLON || name == Atom.FIF || name == Atom.FSTARIF)
+				if(name == Atom.SEMICOLON || name == Atom.IF || name == Atom.STARIF)
 				{
 					checkForCallable(((Functor)head).getParams());
 				}

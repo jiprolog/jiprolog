@@ -187,7 +187,7 @@ class Functor extends ConsCell
             friendlyName = predicateIndicator.substring(0, nPos);
         }
 
-        return new Functor("//2", new ConsCell(Atom.createAtom(friendlyName), new ConsCell(Expression.createNumber(nArity), null)));
+        return new Functor(Atom.SLASHSLASH, new ConsCell(Atom.createAtom(friendlyName), new ConsCell(Expression.createNumber(nArity), null)));
 
     }
 }

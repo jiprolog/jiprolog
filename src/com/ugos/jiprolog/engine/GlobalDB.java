@@ -329,7 +329,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         String strPredDef;
 
-        if(functor.getName().equals(":-/2"))
+        if(functor.getAtom() == Atom.COLONDASH)
             strPredDef = Functor.getFunctor(functor.getParams().getHead()).getName();
 		else
             strPredDef = functor.getName();
@@ -406,7 +406,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     head = ((Variable)head).getObject();
 
                 // controlla se :/2
-                if(head instanceof Functor && ((Functor)head).getName().equals(":/2"))
+                if(head instanceof Functor && ((Functor)head).getAtom() == Atom.COLON)
                 {
                     strModuleName = ((Atom)((Functor)head).getParams().getHead()).getName();
                     head = ((ConsCell)((Functor)head).getParams().getTail()).getHead();
@@ -416,7 +416,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 String name;
                 PrologObject arity;
                 // head deve essere instanza di funtore /2 del tipo name/arity
-                if(head instanceof Functor && ((Functor)head).getName().equals("//2"))
+                if(head instanceof Functor && ((Functor)head).getAtom() == Atom.SLASHSLASH)
                 {
 
                     ConsCell params = ((Functor )head).getParams();
@@ -703,9 +703,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         	Variable x = new Variable("X");
         	Variable y = new Variable("Y");
 
-        	Functor comma = new Functor(Atom.FCOMMA, new ConsCell(x, new ConsCell(y, null)));
-        	Functor commaWithModule = new Functor(Atom.FCOLON, new ConsCell(Atom.createAtom("$system"), new ConsCell(comma, null)));
-        	Functor clause = new Functor(Atom.createAtom(":-/2"), new ConsCell(commaWithModule, new ConsCell(x, new ConsCell(y, null))));
+        	Functor comma = new Functor(Atom.COMMA, new ConsCell(x, new ConsCell(y, null)));
+        	Functor commaWithModule = new Functor(Atom.COLON, new ConsCell(Atom.createAtom("$system"), new ConsCell(comma, null)));
+        	Functor clause = new Functor(Atom.COLONDASH, new ConsCell(commaWithModule, new ConsCell(x, new ConsCell(y, null))));
         	gdb.assertz(Clause.getClause(clause, false), "__KERNEL__", false);
 
 	        gdb.moduleTransparent("\\+/1");
