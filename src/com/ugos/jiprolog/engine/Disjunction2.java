@@ -17,6 +17,7 @@ public class Disjunction2 extends Call1 {
 	private PrologObject m_goal2;
 	private boolean end = false;
 	private boolean ifthenelse = false;
+	private boolean starifthenelse = false;
 
 	@Override
 	public boolean unify(Hashtable<Variable, Variable> varsTbl)
@@ -59,6 +60,11 @@ public class Disjunction2 extends Call1 {
 //				;(->(_X,_Y), Z) :- !, Z.
 				curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(goal, null));
         	}
+        	else if(starifthenelse)
+        	{
+//				;(*->(_X,_Y), Z) :- Z.
+				curNode.m_altBody = new ConsCell(goal, null);
+        	}
         	else
         	{
         		// transparent cut
@@ -68,14 +74,29 @@ public class Disjunction2 extends Call1 {
         else
         {
         	// manage ->(X,Y)
-			if(goal instanceof Functor && ((Functor)goal).getAtom().equals(Atom.IF))
+			if(goal instanceof Functor)
 			{
-				ifthenelse = true;
+				if(((Functor)goal).getAtom().equals(Atom.IF))
+				{
+					ifthenelse = true;
 
-				ConsCell funparams = ((Functor)goal).getParams();
+					ConsCell funparams = ((Functor)goal).getParams();
 
-//				->(X,Y) :- call(X), !, Y.
-				curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(funparams.getTerm(2), null)));
+					// ->(X,Y) :- call(X), !, Y.
+					curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(funparams.getTerm(2), null)));
+				}
+				else if(((Functor)goal).getAtom().equals(Atom.STARIF))
+				{
+					starifthenelse = true;
+
+					// *->(X,Y) :- X, Y.
+					curNode.m_altBody = ((Functor)goal).getParams();
+				}
+				else
+				{
+					// transparent cut
+					curNode.m_callList = new ConsCell(curNode.m_callList.m_head, new ConsCell(goal, curNode.m_callList.m_tail));
+				}
 			}
 			else
 			{

@@ -244,7 +244,7 @@ class Clause extends ConsCell
     }
 
 
-    private static void checkForCallable(ConsCell rhs)
+    public static void checkForCallable(ConsCell rhs)
     {
     	// check rhs
 		PrologObject head = ((ConsCell)rhs).m_head;

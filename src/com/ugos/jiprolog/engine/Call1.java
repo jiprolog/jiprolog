@@ -93,6 +93,8 @@ public class Call1 extends BuiltIn {
 		{
 			// TODO wrapping naked vars
 		   goal = param;
+
+		   Clause.checkForCallable((ConsCell)goal);
 		}
         else if(param == null)
 		{
