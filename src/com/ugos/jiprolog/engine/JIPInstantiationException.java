@@ -28,16 +28,14 @@ package com.ugos.jiprolog.engine;
  */
 public class JIPInstantiationException extends JIPRuntimeException
 {
-    private int m_nParam = -1;
 
     /** Constructor
      * Constructs a new JIPParameterUnboundedException
-     * @param nParam the index of the bad parameter
      * @see com.ugos.jiprolog.engine.JIPTerm
      */
     public JIPInstantiationException(final int nParam)
     {
-        m_nParam = nParam;
+
     }
 
     JIPInstantiationException()

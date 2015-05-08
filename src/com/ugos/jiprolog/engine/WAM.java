@@ -46,7 +46,10 @@ class WAM
 
     static final Enumeration s_emptyEnum = new Vector(1).elements();
 
-    protected class Node
+    Stack<ExceptionListener> exceptionListenerStack = new Stack<ExceptionListener>();
+
+
+	static class Node
     {
         protected ConsCell     m_altBody;
         protected ConsCell     m_callList;
@@ -111,6 +114,10 @@ class WAM
 
         moduleStack = wam.moduleStack;
     }
+
+	void addExceptionListener(ExceptionListener exceptionListener) {
+		this.exceptionListenerStack.push(exceptionListener);
+	}
 
     final Node getCurNode()
     {
@@ -365,7 +372,7 @@ class WAM
         PrologRule  rule = null;
         Clause      clause = null;
         boolean     bUnify;
-        Hashtable   varTbl;
+        Hashtable   varTbl = null;
         Node        newNode = null;
         Node        parentNode;
         int         nCallCount = m_nBaseCounter;
@@ -397,7 +404,7 @@ class WAM
                     {
                         // invia il warning se il predicato non è definito
                         // e non è dynamic
-                        // in questo caso la eneration deve essere vuota
+                        // in questo caso la enumeration deve essere vuota
                         if(!m_globalDB.isDynamic(((Functor)ex.getCulprit()).getName()))
                         {
                         	String unknown = (String)m_engine.getEnvVariable("unknown");
@@ -423,13 +430,33 @@ class WAM
 
                 bUnify = false;
                 varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
-                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
+
+                try
                 {
-                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
-                    clause = rule.m_cons;
-                    // UNIFY
-                    // unifica la testa della clausola con il predicato corrente
-                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
+	                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
+	                {
+	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
+	                    clause = rule.m_cons;
+	                    // UNIFY
+	                    // unifica la testa della clausola con il predicato corrente
+	                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
+	                }
+                }
+                catch(JIPRuntimeException ex)
+                {
+                	if(!exceptionListenerStack.isEmpty())
+                    {
+                		ExceptionListener exceptionListener = exceptionListenerStack.pop();
+                    	if(!exceptionListener.notifyException(ex))
+                    		throw ex;
+
+                    	curNode = m_curNode;
+                    	bUnify = true;
+                    }
+                	else
+                	{
+                		throw ex;
+                	}
                 }
 
                 // verifica la presenza di almeno una clausola
@@ -442,17 +469,16 @@ class WAM
 
                     // FOUND
                     //System.out.println("curNode call list  " + curNode.m_callList);  // dbg
-                    newNode = null;
-                    if(clause.getTail() != null) // la clausola ha un body
-                    {
-                        // create a new node
-                        newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
-                    }
-                    else if(curNode.m_altBody != null)
+                    if(curNode.m_altBody != null)
                     {
                         // create a new node
                         newNode = new Node(curNode.m_altBody, curNode, curNode, rule.m_strModule);
                         curNode.m_altBody = null;
+                    }
+                    else if(clause.getTail() != null) // la clausola ha un body
+                    {
+                        // create a new node
+                        newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
                     }
                     else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
                     {
@@ -464,8 +490,9 @@ class WAM
                     }
                     else  // torna al parent
                     {
+                        newNode = null;
+
                         parentNode = curNode.m_parent;
-                        //System.out.println("parentNode" + parentNode.m_callList);
 
                         while(newNode == null && parentNode != null)
                         {
@@ -515,6 +542,8 @@ class WAM
         {
 //            notifyStop();
             ex.printStackTrace();  //DBG
+
+
 
             if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();

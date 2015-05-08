@@ -25,17 +25,17 @@ import com.ugos.jiprolog.engine.*;
 public class JIPUserException extends JIPRuntimeException
 {
     private JIPTerm m_term;
-    
+
     public JIPUserException(final JIPTerm term)
     {
         super(3000, "User Exception");
         m_term = term;
     }
-    
+
     public JIPTerm getTerm()
     {
         return m_term;
     }
-        
+
 }
 

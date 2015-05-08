@@ -90,7 +90,7 @@ public class Disjunction2 extends Call1 {
 					starifthenelse = true;
 
 					// *->(X,Y) :- X, Y.
-					curNode.m_altBody = ((Functor)goal).getParams();
+					curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), ((Functor)goal).getParams()));
 				}
 				else
 				{

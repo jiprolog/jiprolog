@@ -40,6 +40,8 @@ public class JIPSyntaxErrorException extends JIPRuntimeException
 //        m_strFile = strFileName;
 //        m_nLine = nLineNumber;
         m_strTerm = strTerm;
+
+        //exceptionTerm = new Functor("error/2", new ConsCell(new Functor("syntax_error/1", new ConsCell(Atom.createAtom(m_strTerm), null)), new ConsCell(Atom.createAtom("undefined"), null)));
     }
 
     JIPSyntaxErrorException(final String strFileName, final int nLineNumber, final String strTerm)
