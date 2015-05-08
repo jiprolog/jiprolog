@@ -298,7 +298,7 @@ list_is_free_of([Head|Tail], Var) :-
 list_is_free_of([], _).
 
 
-
+:- dynamic('$bag'/1).
 
 recorda(X) :-
 	asserta('$bag'(X)).
