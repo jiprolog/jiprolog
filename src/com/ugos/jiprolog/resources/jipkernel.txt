@@ -129,7 +129,7 @@ check_operator_name(Term, Priority, Specifier) :-
 %'$system': ;(*->(X,Y), _Z) :- X,Y.
 %'$system': ;(*->(_X,_Y), Z) :- Z.
 
-'$system': *->(X,Y) :- X, Y.
+'$system': *->(X,Y) :- call(X), Y.
 
 '$system': ^(X,Y) :- Y.
 
