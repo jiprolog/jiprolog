@@ -10,12 +10,26 @@
  *
  */
 
+'$system': \+ G :- call(G), !, fail.
+'$system': \+ G.
 
-%'$system':op(X,Y,[]):-!.
-%'$system':op(X,Y,[OP|Rest]):-
-%    !, '$op'(X,Y,OP), op(X,Y,Rest).
-%'$system':op(X,Y,OP):-
-%    '$op'(X,Y,OP).
+'$system': not G :- call(G), !, fail.
+'$system': not G.
+
+%'$system': ;(->(X,Y), _Z) :- call(X), '$!', Y.
+%'$system': ;(->(_X,_Y), Z) :- '$!', Z.
+
+'$system': ->(X,Y) :- call(X), !, Y.
+'$system': *->(X,Y) :- call(X), '$!', Y.
+
+%'$system': ;(X, _) :- X.
+%'$system': ;(_, Y) :- Y.
+%'$system': ;(*->(X,Y), _Z) :- X,Y.
+%'$system': ;(*->(_X,_Y), Z) :- Z.
+
+'$system': ^(X,Y) :- Y.
+
+
 
 % op/3 error checking code contributed by Paulo Moura
 % and based on one of its contributions to XSB
@@ -109,30 +123,6 @@ check_operator_name(Term, Priority, Specifier) :-
 		true
 	;	error(type_error(atom, Term))
 	).
-
-%'$system':call(G) :- '$call'(G).
-
-'$system': \+ G :- call(G), !, fail.
-'$system': \+ G.
-
-'$system': not G :- call(G), !, fail.
-'$system': not G.
-
-%'$system': ;(->(X,Y), _Z) :- call(X), '$!', Y.
-%'$system': ;(->(_X,_Y), Z) :- '$!', Z.
-
-'$system': ->(X,Y) :- call(X), !, Y.
-
-%'$system': ;(X, _) :- X.
-%'$system': ;(_, Y) :- Y.
-
-%'$system': ;(*->(X,Y), _Z) :- X,Y.
-%'$system': ;(*->(_X,_Y), Z) :- Z.
-
-'$system': *->(X,Y) :- call(X), Y.
-
-'$system': ^(X,Y) :- Y.
-
 
 '$system':nonvar(X):- var(X), !, fail.
 '$system':nonvar(X).

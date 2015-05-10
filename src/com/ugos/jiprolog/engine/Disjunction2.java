@@ -73,7 +73,7 @@ public class Disjunction2 extends Call1 {
         }
         else
         {
-        	// manage ->(X,Y)
+        	// manage ->(X,Y) or *->(X,Y)
 			if(goal instanceof Functor)
 			{
 				if(((Functor)goal).getAtom().equals(Atom.IF))
@@ -89,8 +89,10 @@ public class Disjunction2 extends Call1 {
 				{
 					starifthenelse = true;
 
-					// *->(X,Y) :- X, Y.
-					curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), ((Functor)goal).getParams()));
+					ConsCell funparams = ((Functor)goal).getParams();
+
+					// *->(X,Y) :- call(X), '$!', Y.
+					curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("$!/0"), null), new ConsCell(funparams.getTerm(2), null)));
 				}
 				else
 				{
