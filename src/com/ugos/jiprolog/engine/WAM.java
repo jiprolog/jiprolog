@@ -245,7 +245,10 @@ class WAM
         {
         	if(m_curNode.m_parent.m_previous != null)  // cutparent
             {
-                m_curNode.m_previous.m_backtrack = m_curNode.m_parent.m_previous;
+        		if(m_curNode.m_previous.m_previous != null)
+        		{
+        			m_curNode.m_previous.m_previous.m_backtrack = m_curNode.m_parent.m_previous;
+        		}
             }
             else
             {
@@ -255,7 +258,7 @@ class WAM
         else
         {
             // qui si entra solo se il m_curnode è startNode ed è proprio il cut (?)
-            m_curNode.m_backtrack = m_rootNode;
+            m_curNode.m_previous.m_backtrack = m_rootNode;
         }
 
         /*

@@ -20,7 +20,7 @@
 %'$system': ;(->(_X,_Y), Z) :- '$!', Z.
 
 '$system': ->(X,Y) :- call(X), !, Y.
-'$system': *->(X,Y) :- call(X), '$!', Y.
+'$system': *->(X,Y) :- call(X), Y.
 
 %'$system': ;(X, _) :- X.
 %'$system': ;(_, Y) :- Y.
