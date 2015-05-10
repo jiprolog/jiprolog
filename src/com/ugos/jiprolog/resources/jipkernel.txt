@@ -28,8 +28,9 @@
 %'$system': ;(*->(_X,_Y), Z) :- Z.
 
 '$system': ^(X,Y) :- Y.
-
-
+'$system':setup_call_cleanup(X,Y,Z):-
+	once(X),
+	call_cleanup(Y,Z).
 
 % op/3 error checking code contributed by Paulo Moura
 % and based on one of its contributions to XSB

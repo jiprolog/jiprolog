@@ -26,20 +26,17 @@ final class BuiltInFactory extends Object
 {
     static final Hashtable<String, BuiltIn> m_BuiltInTable = new Hashtable<String, BuiltIn>(100);
     private JIPEngine       m_jipEngine   = null;
+
     // Inizializzazione BuiltInTable
     static
     {
-        // 3.0.0-0
         // debugging/tracing
-
-        //#ifndef _MIDP
         m_BuiltInTable.put("trace/0",           new Trace0());
         m_BuiltInTable.put("notrace/0",         new Notrace0());
         m_BuiltInTable.put("spy/1",             new Spy1());
         m_BuiltInTable.put("nospy/1",           new Nospy1());
         m_BuiltInTable.put("nodebug/0",         new Nodebug0());
         m_BuiltInTable.put("debugging/0",       new Debugging0());
-//      #endif
 
         m_BuiltInTable.put("write/1",           new Write1());
         m_BuiltInTable.put("write_canonical/1", new WriteCanonical1());
@@ -60,12 +57,10 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("garbage_collect/0", new GarbageCollect0());
         m_BuiltInTable.put("abort/0",           new Abort0());
 
-        //#ifndef _MIDP
         m_BuiltInTable.put("compile/2",         new Compile2());
         m_BuiltInTable.put("load_library/1",    new LoadLibrary1());
         m_BuiltInTable.put("load/1",            new Load1());
         m_BuiltInTable.put("extern/3",          new Extern3());
-//      #endif
 
         m_BuiltInTable.put("current_op/3",      new CurrentOp3());
         m_BuiltInTable.put("current_atom/1",      new CurrentAtom1());
@@ -119,6 +114,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("call/8",      new CallN());
         m_BuiltInTable.put("call/9",      new CallN());
         m_BuiltInTable.put("call/10",     new CallN());
+        m_BuiltInTable.put("call_cleanup/2",     new CallCleanup2());
 
         //m_BuiltInTable.put("bagof_with_duplicates/3", new BagOf3());
         m_BuiltInTable.put("findall/3",   new Findall3());

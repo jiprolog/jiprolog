@@ -108,14 +108,14 @@ public class Call1 extends BuiltIn {
 		return goal;
 	}
 
-//	private final WAM getNewWAM()
-//    {
-//		WAM wam = getWAM();
-//        if(wam instanceof WAMTrace)
-//            return new WAMTrace((WAMTrace)wam);
-//        else
-//            return new WAM(wam);
-//    }
+	protected final WAM getNewWAM()
+    {
+		WAM wam = getWAM();
+        if(wam instanceof WAMTrace)
+            return new WAMTrace((WAMTrace)wam);
+        else
+            return new WAM(wam);
+    }
 
 
 
