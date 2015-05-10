@@ -265,6 +265,8 @@ meta_predicate_template(call, N, Template) :-
 	Closure is N - 1,
 	arg(1, Template, Closure),
 	meta_predicate_call_n_template_args(N, Template).
+meta_predicate_template(call_cleanup, 2, call_cleanup(0,0)).
+meta_predicate_template(setup_call_cleanup, 3, setup_call_cleanup(0,0,0)).
 % apply
 meta_predicate_template(checklist, 2, checklist(1,*)).
 meta_predicate_template(maplist, 3, maplist(2,*,*)).
