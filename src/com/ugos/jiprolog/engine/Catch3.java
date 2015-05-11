@@ -40,8 +40,10 @@ public class Catch3 extends Call1
 		{
 			public boolean notifyException(JIPRuntimeException ex)
 			{
-				if(catcher.unify(ex.getTerm().getTerm(), varsTbl))
+				if(catcher.unifiable(ex.getTerm().getTerm()))
 				{
+					catcher.unify(ex.getTerm().getTerm().copy(true), varsTbl);
+
 					WAM.Node curNode = wam.m_curNode;
 					while(curNode != thisNode)
             		{
