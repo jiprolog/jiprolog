@@ -20,6 +20,8 @@ public class Catch3 extends Call1
 		final WAM wam = getWAM();
 		final WAM.Node thisNode = wam.m_curNode;
 
+		final PrologObject catcher = getParam(2);
+
 		PrologObject goal;
 
 		try
@@ -28,13 +30,18 @@ public class Catch3 extends Call1
 		}
 		catch(JIPRuntimeException ex)
 		{
-			final PrologObject handler = getGoal(getRealTerm(getParam(3)));
-			thisNode.m_altBody = new ConsCell(handler, null);
-			return true;
-
+			if(catcher.unify(ex.getTerm().getTerm().copy(true), varsTbl))
+			{
+				final PrologObject handler = getGoal(getRealTerm(getParam(3)));
+				thisNode.m_altBody = new ConsCell(handler, null);
+				return true;
+			}
+			else
+			{
+				throw ex;
+			}
 		}
 
-		final PrologObject catcher = getParam(2);
 
 		wam.addExceptionListener(new ExceptionListener()
 		{

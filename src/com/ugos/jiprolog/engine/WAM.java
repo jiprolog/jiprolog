@@ -353,7 +353,7 @@ class WAM
     {
         PrologRule  rule = null;
         Clause      clause = null;
-        boolean     bUnify;
+        boolean     bUnify = false;
         Hashtable   varTbl = null;
         Node        newNode = null;
         Node        parentNode;
@@ -373,48 +373,49 @@ class WAM
 
                 m_curNode = curNode;
 
-                // genera le clausole che unificano
-                // se le clausole sono state già generate siamo in backtracking
-                // altrimenti ne genera di nuove
-                if(curNode.m_ruleEnum == null)
-                {
-                    try
-                    {
-                        curNode.m_ruleEnum = getRules(curNode);
-                    }
-                    catch(UndefinedPredicateException ex)
-                    {
-                        // invia il warning se il predicato non è definito
-                        // e non è dynamic
-                        // in questo caso la enumeration deve essere vuota
-                        if(!m_globalDB.isDynamic(((Functor)ex.getCulprit()).getName()))
-                        {
-                        	String unknown = (String)m_engine.getEnvVariable("unknown");
-                        	if(unknown.equals("warning"))
-                        	{
-	                            ex.m_curNode = curNode;
-	                            m_engine.notifyEvent(JIPEvent.ID_UNDEFPREDICATE, Atom.createAtom(ex.getPredicateName()), hashCode());
-                        	}
-                        	else if(unknown.equals("error"))
-                        	{
-                        		throw JIPExistenceException.createProcedureException(((Functor)ex.getCulprit()).getPredicateIndicator());
-                        	}
-
-                        }
-
-
-                        curNode.m_ruleEnum = s_emptyEnum;
-                    }
-                }
-
-                nCallCount++;
-                curNode.m_nLevel = nCallCount;
-
-                bUnify = false;
-                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
-
                 try
                 {
+	                bUnify = false;
+
+	                // genera le clausole che unificano
+	                // se le clausole sono state già generate siamo in backtracking
+	                // altrimenti ne genera di nuove
+	                if(curNode.m_ruleEnum == null)
+	                {
+	                    try
+	                    {
+	                        curNode.m_ruleEnum = getRules(curNode);
+	                    }
+	                    catch(UndefinedPredicateException ex)
+	                    {
+	                        // invia il warning se il predicato non è definito
+	                        // e non è dynamic
+	                        // in questo caso la enumeration deve essere vuota
+	                        if(!m_globalDB.isDynamic(((Functor)ex.getCulprit()).getName()))
+	                        {
+	                        	String unknown = (String)m_engine.getEnvVariable("unknown");
+	                        	if(unknown.equals("warning"))
+	                        	{
+		                            ex.m_curNode = curNode;
+		                            m_engine.notifyEvent(JIPEvent.ID_UNDEFPREDICATE, Atom.createAtom(ex.getPredicateName()), hashCode());
+	                        	}
+	                        	else if(unknown.equals("error"))
+	                        	{
+	                        		throw JIPExistenceException.createProcedureException(((Functor)ex.getCulprit()).getPredicateIndicator());
+	                        	}
+
+	                        }
+
+
+	                        curNode.m_ruleEnum = s_emptyEnum;
+	                    }
+	                }
+
+	                nCallCount++;
+	                curNode.m_nLevel = nCallCount;
+
+	                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
+
 	                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
 	                {
 	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
@@ -426,16 +427,18 @@ class WAM
                 }
                 catch(JIPRuntimeException ex)
                 {
-                	if(!exceptionListenerStack.isEmpty())
+                	while(!exceptionListenerStack.isEmpty())
                     {
                 		ExceptionListener exceptionListener = exceptionListenerStack.pop();
-                    	if(!exceptionListener.notifyException(ex))
-                    		throw ex;
-
-                    	curNode = m_curNode;
-                    	bUnify = true;
+                    	if(exceptionListener.notifyException(ex))
+                    	{
+	                    	curNode = m_curNode;
+	                    	bUnify = true;
+	                    	break;
+                    	}
                     }
-                	else
+
+                	if(!bUnify)
                 	{
                 		throw ex;
                 	}
@@ -523,11 +526,9 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-            ex.printStackTrace();  //DBG
+//            ex.printStackTrace();  //DBG
 
-
-
-            if(curNode.getGoal() instanceof BuiltInPredicate)
+        	if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
 
             m_curNode = null;
