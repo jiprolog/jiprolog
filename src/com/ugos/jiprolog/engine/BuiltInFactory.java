@@ -135,7 +135,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("catch/3",     new Catch3());
         m_BuiltInTable.put("throw/1",     new Throw1());
         m_BuiltInTable.put("$reh/0",      new RemoveErrorHandler0());
-
+        m_BuiltInTable.put("savecp/1",    new SaveCP1());
 
 //        catch((X = 1, throw(gulp)), E, (write(ok-X), nl)).
         //m_BuiltInTable.put("wait/1",            new Wait1());
