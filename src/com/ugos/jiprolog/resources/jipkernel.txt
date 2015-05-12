@@ -16,9 +16,6 @@
 '$system': not G :- call(G), !, fail.
 '$system': not G.
 
-%'$system': ;(->(X,Y), _Z) :- call(X), '$!', Y.
-%'$system': ;(->(_X,_Y), Z) :- '$!', Z.
-
 '$system': ->(X,Y) :- call(X), !, Y.
 '$system': *->(X,Y) :- call(X), Y.
 
@@ -28,6 +25,25 @@
 %'$system': ;(*->(_X,_Y), Z) :- Z.
 
 '$system': ^(X,Y) :- Y.
+
+%one/1
+'$system':one(X):-X, !.
+
+%once/1
+'$system':once(X):-X, !.
+
+%ignore/1
+'$system':ignore(X):-X.
+'$system':ignore(X):-!.
+
+%apply
+'$system':apply(Term,Args):-
+    Term =.. L1,
+    append(L1,Args,L2),
+    Goal =.. L2,
+    !,
+    Goal.
+
 '$system':setup_call_cleanup(X,Y,Z):-
 	once(X),
 	call_cleanup(Y,Z).

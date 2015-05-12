@@ -28,28 +28,16 @@
 	current_predicate/2,
 	repeat/0,
 	repeat/1,
-	one/1,
-	once/1,
 	checklist/2,
 	maplist/3,
 	sublist/3,
-	forall/2,
-	apply/2,
-	ignore/1]).
-%  	setup_call_cleanup/3,
-%  	call_cleanup/2]).
+	forall/2]).
 
 :- module_transparent
-    one/1,
-    once/1,
     checklist/2,
     maplist/3,
     sublist/3,
-    forall/2,
-    apply/2,
-    ignore/1.
-%  	setup_call_cleanup/3,
-%  	call_cleanup/2.
+    forall/2.
 
 :-'$custom_built_in'([
 	meta_predicate/1,
@@ -60,16 +48,10 @@
 	current_predicate/2,
 	repeat/0,
 	repeat/1,
-  	one/1,
-  	once/1,
   	checklist/2,
   	maplist/3,
   	sublist/3,
-  	forall/2,
-  	apply/2,
-  	ignore/1]).
-%  	setup_call_cleanup/3,
-%  	call_cleanup/2]).
+  	forall/2]).
 
 % Quintus / SWI compatibility
 :-op(1150, fx, meta_predicate).
@@ -119,33 +101,6 @@ repeat(N):-
 repeat.
 repeat:-
     repeat.
-
-%one/1
-one(X):-X, !.
-
-%once/1
-once(X):-X, !.
-
-%ignore/1
-ignore(X):-X.
-ignore(X):-!.
-
-%apply
-apply(Term,Args):-
-    Term =.. L1,
-    append(L1,Args,L2),
-    Goal =.. L2,
-    !,
-    Goal.
-
-%setup_call_cleanup/3
-%setup_call_cleanup(Setup, Goal, Cleanup):-
-%	once((Setup, catch(Goal, _, true))),
-%	once(Cleanup) ; !.
-
-%call_cleanup(Goal, Cleanup):-
-%	setup_call_cleanup(true, Goal, Cleanup).
-
 
 % checklist(+Goal, +List)
 checklist(_G, []).
