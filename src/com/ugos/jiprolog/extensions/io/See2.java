@@ -80,17 +80,17 @@ public final class See2 extends JIPXCall
             }
         }
 
-        String strStreamHandle = null;
+        int streamHandle = 0;
 
         // check if handle is an atom
-        if(handle instanceof JIPAtom)
+        if(handle instanceof JIPNumber)
         {
-            strStreamHandle = ((JIPAtom)handle).getName();
+        	streamHandle = (int)((JIPNumber)handle).getDoubleValue();
         }
 
         try
         {
-            strStreamHandle = JIPio.openInputStream(strFilePath, strStreamHandle, getJIPEngine());
+        	streamHandle = JIPio.openInputStream(strFilePath, streamHandle, getJIPEngine());
         }
         catch(FileNotFoundException ex)
         {
@@ -103,12 +103,12 @@ public final class See2 extends JIPXCall
             throw new JIPRuntimeException(JIPio.ERR_IOEXCEPTION, ex.toString());
         }
 
-        if(strStreamHandle == null)
+        if(streamHandle == 0)
         	throw JIPExistenceException.createStreamException(strFilePath);
 
 
         // unify with the second parameter
-        return params.getNth(2).unify(JIPAtom.create(strStreamHandle), varsTbl);
+        return params.getNth(2).unify(JIPNumber.create(streamHandle), varsTbl);
     }
 
     public boolean hasMoreChoicePoints()

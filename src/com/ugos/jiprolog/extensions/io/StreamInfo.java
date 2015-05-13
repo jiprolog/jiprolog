@@ -6,21 +6,22 @@ import java.util.Properties;
 public class StreamInfo
 {
     private String name;
-    private String handle;
+    private int handle;
 	protected Properties properties = new Properties();
+	static int MAX_VALUE = Integer.MAX_VALUE - 1;
 
 //	public StreamInfo(String name)
 //	{
 //		this(name, "#" + name.hashCode());
 //	}
 
-	public StreamInfo(String name, String handle)
+	public StreamInfo(String name, int handle)
 	{
 		this.name = name;
 		this.handle = handle;
 
-		properties.setProperty("file_name", "file_name('" + name.replace("\\", "/") + "')");
-		properties.setProperty("alias", "alias('" + handle + "')");
+		properties.setProperty("file_name", String.format("file_name('%s')", name.replace("\\", "/")));
+		properties.setProperty("alias", String.format("alias('%d')",handle));
 		properties.setProperty("type", "type(text)");
 		properties.setProperty("end_of_stream", "end_of_stream(not)");
 	}
@@ -30,12 +31,12 @@ public class StreamInfo
 		return name;
 	}
 
-	public String getHandle()
+	public int getHandle()
 	{
 		return handle;
 	}
 
-	public void setHandle(String handle)
+	public void setHandle(int handle)
 	{
 		this.handle = handle;
 	}
@@ -52,7 +53,7 @@ public class StreamInfo
 
 	public void setEndOfStream(String pos)
 	{
-		properties.setProperty("end_of_stream", "end_of_stream(" + pos + ")");
+		properties.setProperty("end_of_stream", String.format("end_of_stream(%d)", pos));
 	}
 
 	public String getEndOfStream()

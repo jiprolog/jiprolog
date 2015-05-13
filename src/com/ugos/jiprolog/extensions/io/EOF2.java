@@ -25,6 +25,7 @@ import java.util.Hashtable;
 import com.ugos.jiprolog.engine.JIPAtom;
 import com.ugos.jiprolog.engine.JIPCons;
 import com.ugos.jiprolog.engine.JIPInstantiationException;
+import com.ugos.jiprolog.engine.JIPNumber;
 import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPXCall;
 
@@ -32,15 +33,15 @@ public final class EOF2 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {
-    	Hashtable<String, InputStreamInfo> itable = JIPio.itable;
+    	Hashtable<Integer, InputStreamInfo> itable = JIPio.itable;
 
         JIPTerm handle = params.getNth(1).getValue();
         if(handle == null)
             throw new JIPInstantiationException(2);
 
-    	String shandle = ((JIPAtom)handle).getName();
+    	int nhandle = (int)((JIPNumber)handle).getDoubleValue();
 
-       	InputStreamInfo sinfo = itable.get(shandle);
+       	InputStreamInfo sinfo = itable.get(nhandle);
 
        	if(sinfo == null)
        		return false;

@@ -23,6 +23,7 @@ import java.util.Hashtable;
 
 import com.ugos.jiprolog.engine.JIPAtom;
 import com.ugos.jiprolog.engine.JIPCons;
+import com.ugos.jiprolog.engine.JIPNumber;
 import com.ugos.jiprolog.engine.JIPXCall;
 
 public final class CurrentStream1 extends JIPXCall
@@ -45,7 +46,7 @@ public final class CurrentStream1 extends JIPXCall
         while(m_ienum.hasMoreElements())
         {
             StreamInfo sinfo = (StreamInfo)m_ienum.nextElement();
-            JIPAtom handle = JIPAtom.create(sinfo.getHandle());
+            JIPNumber handle = JIPNumber.create(sinfo.getHandle());
 
             JIPCons cons = JIPCons.create(handle, null);
 
@@ -56,7 +57,7 @@ public final class CurrentStream1 extends JIPXCall
         while(m_oenum.hasMoreElements())
         {
             StreamInfo sinfo = (StreamInfo)m_oenum.nextElement();
-            JIPAtom handle = JIPAtom.create(sinfo.getHandle());
+            JIPNumber handle = JIPNumber.create(sinfo.getHandle());
 
             JIPCons cons = JIPCons.create(handle, null);
             if(params.unifiable(cons))

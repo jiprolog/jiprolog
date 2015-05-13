@@ -4,38 +4,29 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import com.ugos.io.PushbackLineNumberInputStream;
+import com.ugos.util.StringBuilderEx;
 
 public class InputStreamInfo extends StreamInfo
 {
     PushbackLineNumberInputStream m_stream;
     Enumeration m_enum;
 
+    private static final StringBuilderEx sbMODE = new StringBuilderEx("mode(");
+
 	private static int refCounter = 1;
 
-    public InputStreamInfo(String name, String handle, String mode, String eof_action)
+    public InputStreamInfo(String name, int handle, String mode, String eof_action)
     {
-    	super(name, handle != null ? handle : "in."+ refCounter % Integer.MAX_VALUE);
-    	refCounter++;
+    	super(name, handle != 0 ? handle : refCounter % MAX_VALUE);
+    	refCounter+=2;
     	init(mode, eof_action);
     }
 
-//    public InputStreamInfo(String name, String handle)
-//    {
-//    	super(name, handle);
-//    	init();
-//    }
-
-//    public InputStreamInfo(String name)
-//	{
-//    	super(name);
-//    	init();
-//	}
-
     private void init(String mode, String eof_action)
     {
-    	properties.setProperty("mode", "mode(" + mode + ")");
+    	properties.setProperty("mode", String.format("mode(%s)", mode));
 		properties.setProperty("input", "input");
-		properties.setProperty("eof_action", "eof_action(" + eof_action + ")");
+		properties.setProperty("eof_action", String.format("eof_action(%s)", eof_action));
 //		properties.setProperty("eof_action", "eof_action(eof_code)");
 		properties.setProperty("reposition", "reposition(false)");
 		properties.setProperty("end_of_stream", "end_of_stream(not)");

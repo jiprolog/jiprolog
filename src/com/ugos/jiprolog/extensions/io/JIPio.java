@@ -30,6 +30,9 @@ public final class JIPio
 {
     public static final int    ERR_IOEXCEPTION  = 2000;
 //
+    public static final int USER_INPUT_HANDLE = -1;
+    public static final int USER_OUTPUT_HANDLE = -2;
+    public static final int USER_ERROR_HANDLE = -3;
 //    public static final int    ERR_INVALID_HANDLE = 2001;
 //    public static final String STR_INVALID_HANDLE = "Invalid stream handle";
     /*
@@ -48,44 +51,44 @@ public final class JIPio
 //    public static final int    ERR_USER_STREAM = 2006;
 //    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
-    private static InputStreamInfo user_input = new InputStreamInfo("user_input", "user_input", "read", "reset");
-    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", "user_output", "append");
-    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", "user_error", "append");
+    private static InputStreamInfo user_input = new InputStreamInfo("user_input", USER_INPUT_HANDLE, "read", "reset");
+    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", USER_OUTPUT_HANDLE, "append");
+    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", USER_ERROR_HANDLE, "append");
 
-    public static Hashtable<String, InputStreamInfo> itable = new Hashtable<String, InputStreamInfo>();
-    public static Hashtable<String, OutputStreamInfo> otable = new Hashtable<String, OutputStreamInfo>();
+    public static Hashtable<Integer, InputStreamInfo> itable = new Hashtable<Integer, InputStreamInfo>();
+    public static Hashtable<Integer, OutputStreamInfo> otable = new Hashtable<Integer, OutputStreamInfo>();
 
 
     static
     {
-    	itable.put("user_input", user_input);
-    	otable.put("user_output", user_output);
-    	otable.put("user_error", user_error);
+    	itable.put(user_input.getHandle(), user_input);
+    	otable.put(user_output.getHandle(), user_output);
+    	otable.put(user_error.getHandle(), user_error);
     }
 
     public static void init(JIPEngine engine)
     {
     	try {
-    		openInputStream("user_input", "user_input", engine);
-			openOutputStream("user_output", "user_output", false, engine);
-			openOutputStream("user_error", "user_error", false, engine);
+    		openInputStream("user_input", USER_INPUT_HANDLE, engine);
+			openOutputStream("user_output", USER_OUTPUT_HANDLE, false, engine);
+			openOutputStream("user_error", USER_ERROR_HANDLE, false, engine);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
 
-    public static Enumeration<String> getInputHandles()
+    public static Enumeration<Integer> getInputHandles()
     {
     	return itable.keys();
     }
 
-    public static Enumeration<String> getOutputHandles()
+    public static Enumeration<Integer> getOutputHandles()
     {
     	return otable.keys();
     }
 
-    private static final String put(final OutputStreamInfo obj)
+    private static final int put(final OutputStreamInfo obj)
     {
         // put the new enumeration in the table
         otable.put(obj.getHandle(), obj);
@@ -93,7 +96,7 @@ public final class JIPio
         return obj.getHandle();
     }
 
-    private static final String put(final InputStreamInfo obj)
+    private static final int put(final InputStreamInfo obj)
     {
         // put the new enumeration in the table
         itable.put(obj.getHandle(), obj);
@@ -123,7 +126,7 @@ public final class JIPio
 
     }
 
-    public static final String openInputStream(String strPath, final String strHandle, final JIPEngine engine) throws IOException
+    public static final int openInputStream(String strPath, final int strHandle, final JIPEngine engine) throws IOException
     {
         InputStream reader;
 
@@ -181,7 +184,7 @@ public final class JIPio
         }
     }
 
-    public static final String openOutputStream(String strPath, final String strHandle, boolean bAppend, final JIPEngine engine) throws IOException
+    public static final int openOutputStream(String strPath, final int strHandle, boolean bAppend, final JIPEngine engine) throws IOException
     {
         OutputStream writer;
 
