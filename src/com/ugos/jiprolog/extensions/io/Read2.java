@@ -57,7 +57,7 @@ public final class Read2 extends JIPXCall
             }
 
             // check if input is an Atom
-            if(input instanceof JIPAtom)
+            if(input instanceof JIPNumber)
             {
                 // Gets the handle to the stream
                 m_streamHandle = (int)((JIPNumber)input).getDoubleValue();
@@ -83,7 +83,7 @@ public final class Read2 extends JIPXCall
             }
             else
             {
-                throw new JIPTypeException(JIPTypeException.ATOM, input);
+                throw new JIPDomainException("stream_or_alias", input);
             }
         }
 
