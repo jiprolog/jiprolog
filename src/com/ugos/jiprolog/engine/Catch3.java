@@ -52,7 +52,7 @@ public class Catch3 extends Call1
 					catcher.unify(ex.getTerm().getTerm().copy(true), varsTbl);
 
 					WAM.Node curNode = wam.m_curNode;
-					while(curNode != thisNode)
+					while(curNode != null && curNode != thisNode)
             		{
             			if(curNode.m_varTbl != null)
             			{

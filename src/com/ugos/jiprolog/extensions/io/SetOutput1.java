@@ -58,10 +58,10 @@ public final class SetOutput1 extends JIPXCall
 
 //        String strName = JIPio.getStreamName(strStreamHandle);
 
-        getJIPEngine().setEnvVariable("___currentout___", outs);
-        getJIPEngine().setEnvVariable("___CurrentOutStreamName___", String.valueOf(streamHandle));
+//        getJIPEngine().setEnvVariable("___currentout___", outs);
+//        getJIPEngine().setEnvVariable("___CurrentOutStreamName___", String.valueOf(streamHandle));
 
-//        getJIPEngine().setCurrentOutputStream(outs, streamHandle);
+        getJIPEngine().setCurrentOutputStream(outs, streamHandle);
 
         return true;
     }

@@ -570,7 +570,7 @@ at_end_of_stream(Handle) :-
 	error(instantiation_error).
 
 at_end_of_stream(Handle) :-
-	\+ atom(Handle),
+	\+ integer(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
 at_end_of_stream(Handle) :-
@@ -586,7 +586,7 @@ at_end_of_stream(Handle) :-
 
 current_output(Handle):-
 	nonvar(Handle),
-	(	\+ atom(Handle)
+	(	\+ integer(Handle)
 	;	\+ current_stream(Handle)
 	),
 	error(domain_error(stream,Handle)).
@@ -596,7 +596,7 @@ current_output(Handle):-
 
 current_input(Handle):-
 	nonvar(Handle),
-	(	\+ atom(Handle)
+	(	\+ integer(Handle)
 	;	\+ current_stream(Handle)
 	),
 	error(domain_error(stream,Handle)).
@@ -612,7 +612,7 @@ set_output(Handle):-
 	error(instantiation_error).
 
 set_output(Handle):-
-	\+ atom(Handle),
+	\+ integer(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
 set_output(Handle):-
@@ -631,7 +631,7 @@ set_input(Handle):-
 	error(instantiation_error).
 
 set_input(Handle):-
-	\+ atom(Handle),
+	\+ integer(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
 set_input(Handle):-
@@ -823,7 +823,7 @@ set_stream_position(_, Position) :-
 	error(instantiation_error).
 
 set_stream_position(Handle, _) :-
-	\+ atom(Handle),
+	\+ integer(Handle),
 	error(domain_error(stream_or_alias, Handle)).
 
 set_stream_position(_, Position) :-
