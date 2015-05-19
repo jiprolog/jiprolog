@@ -135,7 +135,7 @@ public final class GetChar2 extends JIPXCall
 			}
         }
         else
-            throw new JIPTypeException(JIPTypeException.NUMBER, params.getNth(2));
+            throw new JIPDomainException("stream_or_alias", input);
     }
 
     public boolean hasMoreChoicePoints()

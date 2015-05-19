@@ -47,7 +47,7 @@ public class PutCode2 extends JIPXCall
         }
 
         if(!(output instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, output);
+            throw new JIPDomainException("stream_or_alias", output);
 
         // check if input is a variable
         if (code instanceof JIPVariable)

@@ -47,7 +47,7 @@ public class PutByte2 extends JIPXCall
         }
 
         if(!(output instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, output);
+            throw new JIPDomainException("stream_or_alias", output);
 
         // check if byte is a variable
         if (b instanceof JIPVariable)

@@ -47,7 +47,7 @@ public final class FlushOutput1 extends JIPXCall
         }
 
         if(!(input instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, input);
+            throw new JIPDomainException("stream_or_alias", input);
 
         int streamHandle = (int)((JIPNumber)input).getDoubleValue();
         OutputStream writer;
