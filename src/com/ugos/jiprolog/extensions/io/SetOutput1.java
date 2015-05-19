@@ -44,21 +44,24 @@ public final class SetOutput1 extends JIPXCall
             }
         }
 
-        if(!(input instanceof JIPAtom))
-            throw new JIPTypeException(JIPTypeException.ATOM, input);
+        if(!(input instanceof JIPNumber))
+            throw new JIPTypeException(JIPTypeException.NUMBER, input);
 
         // Gets the handle to the stream
-        final String strStreamHandle = ((JIPAtom)input).getName();
+        final int streamHandle = (int)((JIPNumber)input).getDoubleValue();
 
         // Get the stream
-        OutputStream outs = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        OutputStream outs = JIPio.getOutputStream(streamHandle, getJIPEngine());
         if(outs == null)
         	return false;
 //            throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);
 
 //        String strName = JIPio.getStreamName(strStreamHandle);
 
-        getJIPEngine().setCurrentOutputStream(outs, strStreamHandle);
+        getJIPEngine().setEnvVariable("___currentout___", outs);
+        getJIPEngine().setEnvVariable("___CurrentOutStreamName___", String.valueOf(streamHandle));
+
+//        getJIPEngine().setCurrentOutputStream(outs, streamHandle);
 
         return true;
     }

@@ -66,16 +66,16 @@ public final class PeekChar2 extends JIPXCall
         }
 
         // check if input is an Atom
-        if(input instanceof JIPAtom)
+        if(input instanceof JIPNumber)
         {
             // Gets the handle to the stream
-            final String strStreamHandle = ((JIPAtom)input).getName();
+            final int streamHandle = (int)((JIPNumber)input).getDoubleValue();
 
             // Get the stream
 
-            StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
+            StreamInfo streamInfo = JIPio.getStreamInfo(streamHandle);
 	        if(streamInfo == null)
-            	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
 			Properties properties = streamInfo.getProperties();
 	        if(!(properties.getProperty("mode").equals("mode(read)")))
@@ -83,9 +83,9 @@ public final class PeekChar2 extends JIPXCall
 	        if(!(properties.getProperty("type").equals("type(text)")))
 	        	throw new JIPPermissionException("input", "binary_stream", input);
 
-	        PushbackLineNumberInputStream ins = JIPio.getInputStream(strStreamHandle, getJIPEngine());
+	        PushbackLineNumberInputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
             if(ins == null)
-            	throw JIPExistenceException.createStreamException(strStreamHandle);
+            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
 	        if (ch instanceof JIPVariable && ((JIPVariable)ch).isBounded())
 	        {
@@ -100,7 +100,7 @@ public final class PeekChar2 extends JIPXCall
 
 			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
 				if(properties.getProperty("eof_action").equals("eof_action(error)"))
-					throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(strStreamHandle));
+					throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
 				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 		            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
 				else // eof_action(reset)
@@ -126,7 +126,7 @@ public final class PeekChar2 extends JIPXCall
 			}
         }
         else
-            throw new JIPTypeException(JIPTypeException.ATOM, params.getNth(2));
+            throw new JIPTypeException(JIPTypeException.NUMBER, params.getNth(2));
     }
 
     public boolean hasMoreChoicePoints()

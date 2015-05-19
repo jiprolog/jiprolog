@@ -51,7 +51,7 @@ final class PredicateProperties2 extends BuiltIn
         	return false;
 
         Clause clause = Clause.getClause(funct.getParams().getHead(), false);
-        String strFunc = clause.getHead().toString(getJIPEngine()) + "/" + ((ConsCell)funct.getParams().getTail()).getHead().toString(getJIPEngine());
+        String strFunc = new StringBuilder(clause.getHead().toString(getJIPEngine())).append('/').append(((ConsCell)funct.getParams().getTail()).getHead().toString(getJIPEngine())).toString();
 
         List propsList = null;
 

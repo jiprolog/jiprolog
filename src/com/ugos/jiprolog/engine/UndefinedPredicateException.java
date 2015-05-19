@@ -22,8 +22,6 @@ package com.ugos.jiprolog.engine;
 
 class UndefinedPredicateException extends JIPExistenceException
 {
-    static final int ID_UNDEF_EXCEPTION = 103;
-
     private String m_strPredDef;
 
     UndefinedPredicateException(final Functor term)

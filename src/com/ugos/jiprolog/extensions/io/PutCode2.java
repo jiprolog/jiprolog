@@ -46,8 +46,8 @@ public class PutCode2 extends JIPXCall
             }
         }
 
-        if(!(output instanceof JIPAtom))
-            throw new JIPTypeException(JIPTypeException.ATOM, output);
+        if(!(output instanceof JIPNumber))
+            throw new JIPTypeException(JIPTypeException.NUMBER, output);
 
         // check if input is a variable
         if (code instanceof JIPVariable)
@@ -67,14 +67,14 @@ public class PutCode2 extends JIPXCall
         if(!(code instanceof JIPNumber))
             throw new JIPTypeException(JIPTypeException.INTEGER, code);
 
-        JIPAtom handle = (JIPAtom)output;
+        JIPNumber handle = (JIPNumber)output;
 
         // Gets the handle to the stream
-        String strStreamHandle = (handle).getName();
+        int streamHandle = (int)handle.getDoubleValue();
 
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(streamHandle);
         if(sinfo == null)
-        	throw JIPExistenceException.createStreamException(strStreamHandle);
+        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
@@ -84,10 +84,10 @@ public class PutCode2 extends JIPXCall
         	throw new JIPPermissionException("output", "binary_stream", output);
 
         // Get the stream
-        OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        OutputStream writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
         if(writer == null)
         {
-        	throw JIPExistenceException.createStreamException(strStreamHandle);
+        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
         }
 
         int nCode = (int)((JIPNumber)code).getDoubleValue();

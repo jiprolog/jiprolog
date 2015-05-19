@@ -24,6 +24,7 @@ import java.util.*;
 import java.io.*;
 
 import com.ugos.io.PushbackLineNumberInputStream;
+import com.ugos.util.StringBuilderEx;
 
 final class GlobalDB extends Object// implements Cloneable //Serializable
 {
@@ -38,10 +39,18 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     private Hashtable<String, String> m_exportedTable;
     private Hashtable<String, Vector<String>> m_file2PredMap;
 
+    private static final String KERNEL_DEBUG = JIPEngine.RESOURCEPATH + "jipkernel.txt";
+    private static final String KERNEL_RELEASE = JIPEngine.RESOURCEPATH + "jipkernel.jip";
 
     static final String SYSTEM_MODULE = "$system";
     static final String USER_MODULE   = "$user";
     static final String KERNEL_MODULE = "$kernel";
+
+    public static final StringBuilderEx sbUSER_MODULE = new StringBuilderEx(USER_MODULE).append(":").setInitial();
+    public static final StringBuilderEx sbSYSTEM_MODULE = new StringBuilderEx(SYSTEM_MODULE).append(":").setInitial();
+    public static final StringBuilderEx sbKERNEL_MODULE = new StringBuilderEx(KERNEL_MODULE).append(":").setInitial();
+
+//    public static final StringBuilderEx defaultStringBuilder = new StringBuilderEx();
 
     boolean m_bCheckDisabled = false;
 
@@ -83,9 +92,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final boolean isMultifile(final String strPredName)
     {
-        if(m_clauseTable.containsKey(USER_MODULE + ":" + strPredName))
+    	String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
+
+        if(m_clauseTable.containsKey(def))
         {
-            return ((JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + strPredName)).isMultifile();
+            return ((JIPClausesDatabase)m_clauseTable.get(def)).isMultifile();
         }
         else if(m_clauseTable.containsKey(strPredName))
         {
@@ -104,11 +115,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(nPos < 0)
             throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName), jipEngine);
 
-        final String strDef = USER_MODULE + ":" + strPredName;
+    	final String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
         JIPClausesDatabase db;
-        if(m_clauseTable.containsKey(strDef))
+        if(m_clauseTable.containsKey(def))
         {
-            db = ((JIPClausesDatabase)m_clauseTable.get(strDef));
+            db = ((JIPClausesDatabase)m_clauseTable.get(def));
         }
         else
         {
@@ -119,7 +130,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
             //db = new DefaultClausesDatabase();
             // Aggiunge il vettore alla tabella
-            m_clauseTable.put(strDef, db);
+            m_clauseTable.put(def, db);
         }
 
         if(db instanceof DefaultClausesDatabase)
@@ -137,9 +148,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         m_moduleTransparentTbl.put(strPredName, strPredName);
 
-        JIPClausesDatabase db = (JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + strPredName);
+        JIPClausesDatabase db = (JIPClausesDatabase)m_clauseTable.get(sbUSER_MODULE.resetToInitialValue().append(strPredName).toString());
         if(db == null)
-            db = (JIPClausesDatabase)m_clauseTable.get(SYSTEM_MODULE + ":" + strPredName);
+            db = (JIPClausesDatabase)m_clauseTable.get(sbSYSTEM_MODULE.resetToInitialValue().append(strPredName).toString());
 
         if(db != null)
             db.setModuleTransparent();
@@ -163,9 +174,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final boolean isModuleTransparent(final String strPredName)
     {
-        if(m_clauseTable.containsKey(USER_MODULE + ":" + strPredName))
+    	final String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
+
+        if(m_clauseTable.containsKey(def))
         {
-            return ((JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + strPredName)).isModuleTransparent();
+            return ((JIPClausesDatabase)m_clauseTable.get(def)).isModuleTransparent();
         }
 
         return false;
@@ -173,9 +186,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     public final boolean isDynamic(final String strPredName)
     {
-        if(m_clauseTable.containsKey(USER_MODULE + ":" + strPredName))
+    	final String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
+
+        if(m_clauseTable.containsKey(def))
         {
-            return ((JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + strPredName)).isDynamic();
+            return ((JIPClausesDatabase)m_clauseTable.get(def)).isDynamic();
         }
 
         return false;
@@ -183,7 +198,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     public final boolean isUser(final String strPredName)
     {
-        return m_clauseTable.containsKey(USER_MODULE + ":" + strPredName);
+        return m_clauseTable.containsKey(sbUSER_MODULE.resetToInitialValue().append(strPredName).toString());
     }
 
     final boolean isUser(final Clause clause)
@@ -202,13 +217,13 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(nPos < 0)
             throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName), jipEngine);
 
-        final String strDef = USER_MODULE + ":" + strPredName;
+        final String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
 //        System.out.println("strDef " + strDef);
         JIPClausesDatabase db;
-        if(m_clauseTable.containsKey(strDef))
+        if(m_clauseTable.containsKey(def))
         {
 //        	System.out.println("found " + strDef);
-            db = ((JIPClausesDatabase)m_clauseTable.get(strDef));
+            db = ((JIPClausesDatabase)m_clauseTable.get(def));
         }
         else
         {
@@ -218,7 +233,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             db = new DefaultClausesDatabase(strName, nArity);
             db.setJIPEngine(jipEngine);
             // Aggiunge il vettore alla tabella
-            m_clauseTable.put(strDef, db);
+            m_clauseTable.put(def, db);
         }
 
         db.setDynamic();
@@ -226,9 +241,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     public final boolean isExternal(final String strPredName)
     {
-        if(m_clauseTable.containsKey(USER_MODULE + ":" + strPredName))
+    	final String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
+
+        if(m_clauseTable.containsKey(def))
         {
-            return ((JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + strPredName)).isExternal();
+            return ((JIPClausesDatabase)m_clauseTable.get(def)).isExternal();
         }
 
         return false;
@@ -240,11 +257,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(nPos < 0)
             throw new JIPTypeException(JIPTypeException.PREDICATE_INDICATOR, Functor.getPredicateIndicator(strPredName));
 
-        final String strDef = USER_MODULE + ":" + strPredName;
+        final String def = sbUSER_MODULE.resetToInitialValue().append(strPredName).toString();
         JIPClausesDatabase db;
-        if(m_clauseTable.containsKey(strDef))
+        if(m_clauseTable.containsKey(def))
         {
-            db = ((JIPClausesDatabase)m_clauseTable.get(strDef));
+            db = ((JIPClausesDatabase)m_clauseTable.get(def));
         }
         else
         {
@@ -253,7 +270,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             db = new DefaultClausesDatabase(strName, nArity);
             db.setJIPEngine(jipEngine);
             // Aggiunge il vettore alla tabella
-            m_clauseTable.put(strDef, db);
+            m_clauseTable.put(def, db);
         }
 
         db.setExternal();
@@ -261,8 +278,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     public final boolean isSystem(final String strName)
     {
-        return  m_clauseTable.containsKey(SYSTEM_MODULE + ":" + strName) ||
-        		m_clauseTable.containsKey(KERNEL_MODULE + ":" + strName) ||
+        return  m_clauseTable.containsKey(sbSYSTEM_MODULE.resetToInitialValue().append(strName).toString()) ||
+        		m_clauseTable.containsKey(sbKERNEL_MODULE.resetToInitialValue().append(strName).toString()) ||
                 BuiltInFactory.isBuiltIn(strName) ||
                 strName.equals(",/2");
     }
@@ -287,7 +304,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     	{
     		for(String module : INTERNAL_MODULES)
     		{
-    			if(m_clauseTable.containsKey(module + ":" + funct))
+    			if(m_clauseTable.containsKey(new StringBuilder(module).append(':').append(funct).toString()))
     				return true;
     		}
     	}
@@ -297,14 +314,15 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final String getFile(final String strName)
     {
+    	String def;
         if(m_pred2FileMap.containsKey(strName))
             return (String)m_pred2FileMap.get(strName);
-        else if(m_pred2FileMap.containsKey(USER_MODULE + ":" + strName))
-            return (String)m_pred2FileMap.get(USER_MODULE + ":" + strName);
-        else if(m_pred2FileMap.containsKey(SYSTEM_MODULE + ":" + strName))
-               return (String)m_pred2FileMap.get(SYSTEM_MODULE + ":" + strName);
-        else if(m_pred2FileMap.containsKey(KERNEL_MODULE + ":" + strName))
-            return (String)m_pred2FileMap.get(KERNEL_MODULE + ":" + strName);
+        else if(m_pred2FileMap.containsKey(def = sbUSER_MODULE.resetToInitialValue().append(strName).toString()))
+            return (String)m_pred2FileMap.get(def);
+        else if(m_pred2FileMap.containsKey(def = sbSYSTEM_MODULE.resetToInitialValue().append(strName).toString()))
+               return (String)m_pred2FileMap.get(def);
+        else if(m_pred2FileMap.containsKey(def = sbKERNEL_MODULE.resetToInitialValue().append(strName).toString()))
+            return (String)m_pred2FileMap.get(def);
         else
             return null;
     }
@@ -395,7 +413,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(!(pred instanceof List))
             pred = new ConsCell(pred, null);
 
-        String strModuleName = USER_MODULE;
+        StringBuilderEx strModuleName = sbUSER_MODULE.resetToInitialValue();
         PrologObject head = pred;
         try
         {
@@ -408,7 +426,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 // controlla se :/2
                 if(head instanceof Functor && ((Functor)head).getAtom().equals(Atom.COLON))
                 {
-                    strModuleName = ((Atom)((Functor)head).getParams().getHead()).getName();
+                    strModuleName = new StringBuilderEx(((Atom)((Functor)head).getParams().getHead()).getName()).append(":");
                     head = ((ConsCell)((Functor)head).getParams().getTail()).getHead();
                 }
 
@@ -459,7 +477,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                     if(valArity < 0)
                     	throw new JIPDomainException("not_less_than_zero", arity);
 
-                    strPredDef = name + "/" + (int)((Expression)arity).getValue();
+                    strPredDef = new StringBuilder(name).append('/').append((int)((Expression)arity).getValue()).toString();
 
                 }
                 else
@@ -470,7 +488,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 if(isSystem(strPredDef) || isUser(strPredDef) && !isDynamic(strPredDef))
                 	throw new JIPPermissionException("modify", "static_procedure", head);
 
-                m_clauseTable.remove(strModuleName + ":" + strPredDef);
+                m_clauseTable.remove(strModuleName.append(strPredDef).toString());
 
                 pred = ((ConsCell)pred).getTail();
             }
@@ -493,11 +511,11 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         // qui controllare se il funtore � nella export list corrente.
         // se si controllare se l'eventuale modulo specificato corrisponde a
         // quello di definizione. in tal caso la specifica di modulo va ignorata
-        String strFunctName = clause.isExported() ? GlobalDB.USER_MODULE : clause.getModuleName();
+        StringBuilder functName = new StringBuilder(clause.isExported() ? USER_MODULE : clause.getModuleName());
 
         if (head instanceof Functor)
         {
-            strFunctName += ":" + ((Functor)head).getName();
+        	functName.append(":").append(((Functor)head).getName());
         }
         else
         {
@@ -505,6 +523,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         	ex.m_engine = jipEngine;
         	throw ex;
         }
+
+        String strFunctName = functName.toString();
 
         // verifica se il predicato � stato gi� asserted in un altro file
         if(strFile != null)
@@ -595,25 +615,25 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     	db.setDynamic();
 
         // qui va inserita con modulo user
-        m_clauseTable.put(strModuleName + ":" + strFuncName, db);
+        m_clauseTable.put(new StringBuilder(strModuleName).append(':').append(strFuncName).toString(), db);
     }
 
     final synchronized JIPClausesDatabase search(final Functor funct, final Stack<String> moduleStack)
     {
     	JIPClausesDatabase db;
 
-    	String moduleFunName = ":" + funct.getName();
+    	StringBuilder moduleFunName = new StringBuilder(":").append(funct.getName());
     	for(String module : moduleStack)
     	{
-    		db = (JIPClausesDatabase)m_clauseTable.get(module + moduleFunName);
+    		db = (JIPClausesDatabase)m_clauseTable.get(new StringBuilder(module).append(moduleFunName).toString());
     		if(db != null)
     			return db;
     	}
 
-        db = (JIPClausesDatabase)m_clauseTable.get(USER_MODULE + moduleFunName);//":" + funct.getName());
+        db = (JIPClausesDatabase)m_clauseTable.get(sbUSER_MODULE.resetToInitialValue().append(funct.getName()).toString());//":" + funct.getName());
         if(db == null)
         {
-        	db = (JIPClausesDatabase)m_clauseTable.get(SYSTEM_MODULE + moduleFunName);//":" + funct.getName());
+        	db = (JIPClausesDatabase)m_clauseTable.get(sbSYSTEM_MODULE.resetToInitialValue().append(funct.getName()).toString());//":" + funct.getName());
         	if(db == null)
         	{
 //        		db = (JIPClausesDatabase)m_clauseTable.get(KERNEL_MODULE + ":" + funct.getName());
@@ -634,20 +654,20 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     {
 //        System.out.println("SearchFor: " + strModule + ":" + funct.getName());  // DBG
 
-        JIPClausesDatabase db = (JIPClausesDatabase)m_clauseTable.get(strModule + ":" + funct.getName());
+        JIPClausesDatabase db = (JIPClausesDatabase)m_clauseTable.get(new StringBuilder(strModule).append(':').append(funct.getName()).toString());
 
         if(db == null)
         {
 //            System.out.println("not found in " + strModule);
 //            System.out.println("search in:" + USER_MODULE );  // DBG);
 
-            db = (JIPClausesDatabase)m_clauseTable.get(USER_MODULE + ":" + funct.getName());
+            db = (JIPClausesDatabase)m_clauseTable.get(sbUSER_MODULE.resetToInitialValue().append(funct.getName()).toString());
             if(db == null)
             {
 //                System.out.println("not found in " + USER_MODULE);
 //                System.out.println("search in:" + SYSTEM_MODULE);  // DBG);
 
-                return (JIPClausesDatabase)m_clauseTable.get(SYSTEM_MODULE + ":" + funct.getName());
+                return (JIPClausesDatabase)m_clauseTable.get(sbSYSTEM_MODULE.resetToInitialValue().append(funct.getName()));
             }
         }
 
@@ -664,7 +684,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         	{
         		System.out.println("GlobalDebug");
 
-        		InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "jipkernel.txt");
+        		InputStream ins = gdb.getClass().getResourceAsStream(KERNEL_DEBUG);
 
 	            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
 
@@ -679,7 +699,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         	}
         	else
         	{
-	             InputStream ins = gdb.getClass().getResourceAsStream(JIPEngine.RESOURCEPATH + "jipkernel.jip");
+	             InputStream ins = gdb.getClass().getResourceAsStream(KERNEL_RELEASE);
 
 		    	 final ObjectInputStream oins = new ObjectInputStream(ins);
 
@@ -723,7 +743,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	     }
 	     catch(JIPSyntaxErrorException ex)
 	     {
-//	    	 ex.printStackTrace();
+	    	 ex.printStackTrace();
 	         gdb.m_bCheckDisabled = false;
 	         throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
 	     }

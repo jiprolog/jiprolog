@@ -59,7 +59,7 @@ final class CurrentFunctor2 extends BuiltIn
 
                 if(getParam(1).unifiable(funcName) &&
                    getParam(2).unifiable(arity) &&
-				   !(getJIPEngine().getGlobalDB().isSystem(new Functor(funcName.getName() + "/" + arity, null))))
+				   !(getJIPEngine().getGlobalDB().isSystem(new Functor(new StringBuilder(funcName.getName()).append("/").append(arity).toString(), null))))
                 {
                     if(!m_enum.hasMoreElements())
                     {
@@ -92,7 +92,7 @@ final class CurrentFunctor2 extends BuiltIn
 
                 if(getParam(1).unify(funcName, varsTbl) &&
                    getParam(2).unify(arity, varsTbl) &&
-				   !(getJIPEngine().getGlobalDB().isSystem(new Functor(funcName.getName() + "/" + arity, null))))
+				   !(getJIPEngine().getGlobalDB().isSystem(new Functor(new StringBuilder(funcName.getName()).append("/").append(arity).toString(), null))))
                 {
                     return true;
                 }

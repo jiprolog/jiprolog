@@ -90,7 +90,7 @@ final class Functor3 extends BuiltIn
                 }
 
                 // generate new functor
-                String strFuncName = ((Atom)name).getName() + "/" + Integer.toString((int)((Expression)arity).getValue());
+                String strFuncName = new StringBuilder(((Atom)name).getName()).append("/").append((int)((Expression)arity).getValue()).toString();
                 // Check if BuiltIn
                 if (BuiltInFactory.isBuiltIn(strFuncName))
                 {

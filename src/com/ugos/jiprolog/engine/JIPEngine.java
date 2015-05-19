@@ -58,7 +58,7 @@ public class JIPEngine implements Serializable
     public static final int build = 15;
     public static final int revision = 1;
 
-    private static final String VERSION = "" + major + "." + minor +"." + build + "." + revision;
+    private static final String VERSION = new StringBuilder().append(major).append(".").append(minor).append(".").append(build).append(".").append(revision).toString();
 
     private static JARClassProvider s_classProvider;
     private static ClassLoader      s_classLoader;
@@ -90,7 +90,7 @@ public class JIPEngine implements Serializable
      */
     public static final String getInfo()
     {
-        return "JIProlog v" + VERSION + " Copyright (c) 1999-2015 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved";
+        return new StringBuilder("JIProlog v").append(VERSION).append(" Copyright (c) 1999-2015 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved").toString();
     }
 
     /** Returns Copyright

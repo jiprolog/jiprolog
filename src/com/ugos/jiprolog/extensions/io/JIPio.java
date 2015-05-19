@@ -105,17 +105,17 @@ public final class JIPio
     }
 
 
-    static final InputStreamInfo getInput(final String handle)
+    static final InputStreamInfo getInput(final int handle)
     {
         return itable.get(handle);
     }
 
-    static final OutputStreamInfo getOutput(final String handle)
+    static final OutputStreamInfo getOutput(final int handle)
     {
         return otable.get(handle);
     }
 
-    private static final void remove(final String handle)
+    private static final void remove(final int handle)
     {
         // get iotable (opened file)
     	if(itable.containsKey(handle))
@@ -126,7 +126,7 @@ public final class JIPio
 
     }
 
-    public static final int openInputStream(String strPath, final int strHandle, final JIPEngine engine) throws IOException
+    public static final int openInputStream(String strPath, final int handle, final JIPEngine engine) throws IOException
     {
         InputStream reader;
 
@@ -168,7 +168,7 @@ public final class JIPio
 
 	        InputStreamInfo sinfo =
 	        		new InputStreamInfo(strPath,
-	        							strHandle,
+	        							handle,
 	        							"read",
 	        						    "eof_code");
 
@@ -184,7 +184,7 @@ public final class JIPio
         }
     }
 
-    public static final int openOutputStream(String strPath, final int strHandle, boolean bAppend, final JIPEngine engine) throws IOException
+    public static final int openOutputStream(String strPath, final int handle, boolean bAppend, final JIPEngine engine) throws IOException
     {
         OutputStream writer;
 
@@ -222,7 +222,7 @@ public final class JIPio
 
 	        OutputStreamInfo sinfo =
 	        		new OutputStreamInfo(strPath,
-	        							 strHandle,
+	        							 handle,
 	        							 bAppend ? "append" : "write");
 
 	        sinfo.m_stream = writer;
@@ -231,18 +231,18 @@ public final class JIPio
         }
     }
 
-    public final static Enumeration getTermEnumeration(final String strHandle, final JIPEngine engine )
+    public final static Enumeration getTermEnumeration(final int handle, final JIPEngine engine )
     {
          // get term parser
         JIPTermParser termParser = engine.getTermParser();
 
-        if(strHandle.equals("user_input"))
+        if(handle == USER_INPUT_HANDLE)
         {
             // get the enumeration of terms in the file
             return termParser.parseStream(new PushbackLineNumberInputStream(engine.getUserInputStream()), "user_input");
         }
 
-        InputStreamInfo sinfo = getInput(strHandle);
+        InputStreamInfo sinfo = getInput(handle);
         if(sinfo != null)
         {
             if(sinfo.m_enum == null)
@@ -255,36 +255,36 @@ public final class JIPio
             return null;
     }
 
-    public final static PushbackLineNumberInputStream getInputStream(final String strHandle, final JIPEngine engine)
+    public final static PushbackLineNumberInputStream getInputStream(final int handle, final JIPEngine engine)
     {
-        if(strHandle.equals("user_input"))
+        if(handle == USER_INPUT_HANDLE)
         {
             return new PushbackLineNumberInputStream(engine.getUserInputStream());
         }
-        else if(strHandle.equals("user_output") || strHandle.equals("user_error"))
+        else if(handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
         {
-        	throw new JIPPermissionException("input", "stream", JIPAtom.create(strHandle));
+        	throw new JIPPermissionException("input", "stream", JIPNumber.create(handle));
         }
 
-        InputStreamInfo sinfo = getInput(strHandle);
+        InputStreamInfo sinfo = getInput(handle);
         if(sinfo != null)
             return (PushbackLineNumberInputStream)sinfo.m_stream;
         else
             return null;
     }
 
-    public static OutputStream getOutputStream(final String strHandle, final JIPEngine engine)
+    public static OutputStream getOutputStream(final int handle, final JIPEngine engine)
     {
-        if(strHandle.equals("user_output") || strHandle.equals("user_error"))
+        if(handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
         {
             return engine.getUserOutputStream();
         }
-        else if(strHandle.equals("user_input"))
+        else if(handle == USER_INPUT_HANDLE)
         {
-        	throw new JIPPermissionException("output", "stream", JIPAtom.create(strHandle));
+        	throw new JIPPermissionException("output", "stream", JIPNumber.create(handle));
         }
 
-        OutputStreamInfo sinfo = getOutput(strHandle);
+        OutputStreamInfo sinfo = getOutput(handle);
 
         if(sinfo != null)
             return (OutputStream)sinfo.m_stream;
@@ -292,7 +292,7 @@ public final class JIPio
             return null;
     }
 
-    public static StreamInfo getStreamInfo(final String handle)
+    public static StreamInfo getStreamInfo(final int handle)
     {
     	StreamInfo sinfo = null;
 
@@ -308,7 +308,7 @@ public final class JIPio
     	return sinfo;
     }
 
-    public static String getStreamName(final String handle)
+    public static String getStreamName(final int handle)
     {
     	StreamInfo sinfo = null;
 
@@ -328,33 +328,33 @@ public final class JIPio
             return null;
     }
 
-    public static void closeInputStream(final String strHandle) throws IOException
+    public static void closeInputStream(final int handle) throws IOException
     {
-        if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
+        if(handle == USER_INPUT_HANDLE || handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
         {
             return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
-        InputStreamInfo sinfo = getInput(strHandle);
+        InputStreamInfo sinfo = getInput(handle);
         if(sinfo != null)
         {
             ((InputStream)sinfo.m_stream).close();
-            remove(strHandle);
+            remove(handle);
         }
     }
 
-    public static void closeOutputStream(final String strHandle) throws IOException
+    public static void closeOutputStream(final int handle) throws IOException
     {
-    	if(strHandle.equals("user_input") || strHandle.equals("user_output") || strHandle.equals("user_error"))
+        if(handle == USER_INPUT_HANDLE || handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
         {
             return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }
 
-        OutputStreamInfo sinfo = getOutput(strHandle);
+        OutputStreamInfo sinfo = getOutput(handle);
         if(sinfo != null)
         {
             ((OutputStream)sinfo.m_stream).close();
-            remove(strHandle);
+            remove(handle);
         }
     }
 

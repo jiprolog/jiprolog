@@ -23,18 +23,23 @@ package com.ugos.jiprolog.engine;
 //import java.io.Serializable;
 import java.util.Hashtable;
 
+import com.ugos.util.StringBuilderEx;
+
 final class Variable extends PrologObject//Serializable
 {
     final static long serialVersionUID = 300000008L;
 
-    private static long counter = 1;
+//    private static long counter = 1;
 
     private static final char ANONYMOUS = '^';
     private static final char SHADOW = '+';
 
+    StringBuilderEx sbANONYMOUS = new StringBuilderEx(ANONYMOUS);
+    StringBuilderEx sbSHADOW = new StringBuilderEx(SHADOW);
+
     private String       m_strName;
     private PrologObject m_object;
-    private long m_address;
+//    private long m_address;
 
 //    Variable parent;
 
@@ -43,17 +48,19 @@ final class Variable extends PrologObject//Serializable
     public Variable(final String strName)
     {
         m_strName = strName;
-        m_address = counter++;
+//        m_address = hashCode();//counter++;
     }
 
     public Variable(final boolean bAnonymous)
     {
-        if (bAnonymous)
-            m_strName = ANONYMOUS + "" + hashCode();//m_nAddress;//m_nID.toString();
-        else
-            m_strName = SHADOW + "" + hashCode();//m_nAddress;//m_nID.toString();
+//    	m_address = hashCode();//counter++;
 
-        m_address = counter++;
+        if (bAnonymous)
+            m_strName = sbANONYMOUS.resetToInitialValue().append(hashCode()).toString();
+        else
+        	m_strName = sbSHADOW.resetToInitialValue().append(hashCode()).toString();
+
+//        m_address = hashCode();//counter++;
     }
 
     public final PrologObject getObject()
@@ -103,7 +110,7 @@ final class Variable extends PrologObject//Serializable
 
     public final long getAddress()
     {
-        return lastVariable().m_address;//m_nAddress;
+        return lastVariable().hashCode();//m_address;//m_nAddress;
     }
 
     public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
@@ -123,9 +130,7 @@ final class Variable extends PrologObject//Serializable
             		varTable.put(var, var);
 
             		PrologObject cobj = var.m_object.copy(flat, varTable);
-
             		varTable.put(var, cobj);
-
 
             		return cobj;
             	}
@@ -136,7 +141,6 @@ final class Variable extends PrologObject//Serializable
                     varTable.put(var, newVar);
 
             		newVar.m_object = var.m_object.copy(flat, varTable);
-
             		return newVar;
             	}
             }
@@ -205,7 +209,9 @@ final class Variable extends PrologObject//Serializable
 //                    System.out.println("*** lastVar: " + var + " - " + objVar);
 
                     if(objVar.m_object != null)  // obj bounded
+                    {
                         var.m_object = objVar.m_object;
+                    }
                     else
                     {
                         // entrambi unbounded
@@ -250,7 +256,8 @@ final class Variable extends PrologObject//Serializable
 //                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
 //                	return root().m_address < ((Variable)obj).root().m_address;
 //                	return root().toString().compareTo(((Variable)obj).root().toString()) < 0;
-                	return lastVariable().m_address < ((Variable)obj).lastVariable().m_address;
+                	return lastVariable().hashCode() < ((Variable)obj).lastVariable().hashCode();
+//                	return lastVariable().m_address < ((Variable)obj).lastVariable().m_address;
 
                 	//                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;
                     //return m_nAddress < ((Variable)obj).m_nAddress;

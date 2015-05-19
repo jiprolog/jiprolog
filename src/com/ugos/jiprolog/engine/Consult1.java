@@ -307,14 +307,14 @@ class Consult1 extends BuiltIn
                         if(head instanceof Functor && ((Functor)head).getAtom().equals(Atom.SLASHSLASH))
                         {
                             ConsCell parms = ((Functor )head).getParams();
-                            String strPredDef = ((Atom)parms.getHead()).getName() + "/" + ((ConsCell)parms.getTail()).getHead();
+                            String strPredDef = new StringBuilder(((Atom)parms.getHead()).getName()).append('/').append(((ConsCell)parms.getTail()).getHead()).toString();
                             //System.out.println("strPredDef " + strPredDef);  //DBG
                             exportTbl.put(strPredDef, strModuleName);
                             globalDB.setExported(strPredDef);
                         }
                         else
                         {
-                            throw JIPRuntimeException.createRuntimeException(47, strPath + "-" + head.toString(engine));
+                            throw JIPRuntimeException.createRuntimeException(47, new StringBuilder(strPath).append("-").append(head.toString(engine)).toString());
                             //throw new JIPTypeException(1, head);
                         }
 
@@ -333,7 +333,7 @@ class Consult1 extends BuiltIn
                     if(!wam.query(funct.getParams()))
                     {
                         wam.closeQuery();
-                        throw JIPRuntimeException.createRuntimeException(27, strPath + "-" + funct.toString(engine));
+                        throw JIPRuntimeException.createRuntimeException(47, new StringBuilder(strPath).append("-").append(funct.toString(engine)).toString());
                     }
 
                     wam.closeQuery();

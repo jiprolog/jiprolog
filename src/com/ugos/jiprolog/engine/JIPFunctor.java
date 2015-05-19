@@ -30,7 +30,7 @@ package com.ugos.jiprolog.engine;
 public class JIPFunctor extends JIPTerm
 {
     private final static long serialVersionUID = 300000001L;
-    
+
     /** Creates a new JIPFunctor object
      * @param strName the name of the functor
      * @param params the list of parameters
@@ -40,19 +40,19 @@ public class JIPFunctor extends JIPTerm
     public static final JIPFunctor create(final String strName, final JIPCons params)
     {
         if(params == null)
-            return new JIPFunctor(new Functor(strName + "/0", null));
+            return new JIPFunctor(new Functor(new StringBuilder(strName).append("/0").toString(), null));
         else
         {
             final ConsCell cons = (ConsCell)params.getTerm();
-            return new JIPFunctor(new Functor(strName + "/" + Integer.toString(cons.getHeight()), cons));
+            return new JIPFunctor(new Functor(new StringBuilder(strName).append('/').append(cons.getHeight()).toString(), cons));
         }
     }
-    
+
     JIPFunctor(Functor func)
     {
         super(func);
     }
-    
+
     /** Returns the name of this JIPfunctor object
       * @return name of this JIPFunctor object
       */
@@ -60,7 +60,7 @@ public class JIPFunctor extends JIPTerm
     {
         return ((Functor)getTerm()).getFriendlyName();
     }
-    
+
     /** Returns the Atom of this JIPfunctor object
      * @return atom of this JIPFunctor object
      */
@@ -83,7 +83,7 @@ public class JIPFunctor extends JIPTerm
     {
         return ((Functor)getTerm()).getName();
     }
-    
+
     /** Returns the list of parameters of this JIPFunctor object
       * @return list of parameters of this JIPFunctor object or null if the functor doesn't have any parameter
       * @see com.ugos.jiprolog.engine.JIPCons
@@ -91,15 +91,15 @@ public class JIPFunctor extends JIPTerm
     public final JIPCons getParams()
     {
         final ConsCell params = ((Functor)getTerm()).getParams();
-        
+
         if(params != null)
             return new JIPCons(params);
         else
             return null;//JIPCons.NIL;
     }
-    
-    
-    
+
+
+
     /** Returns the arity of this JIPFunctor object
      * @return arity of this JIPFunctor object
       */

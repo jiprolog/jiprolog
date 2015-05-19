@@ -55,17 +55,6 @@ class Functor extends ConsCell
         }
     }
 
-//    public Functor(final Atom name)
-//    {
-//        super(name, null);
-//
-//        m_strName    = name.getName();
-//
-//        m_nArity = 0;
-//        m_strFriendlyName = m_strName;
-//    }
-
-//    public Functor(final Atom name, int arity)
     public Functor(final Atom name)
     {
         super(name, null);
@@ -73,7 +62,7 @@ class Functor extends ConsCell
         m_strFriendlyName    = name.getName();
 
         m_nArity = 0;
-        m_strName = m_strFriendlyName + "/0";// + 0;
+        m_strName = new StringBuilder(m_strFriendlyName).append("/0").toString();// + 0;
 
         m_head = Atom.createAtom(m_strName);
     }
@@ -116,7 +105,7 @@ class Functor extends ConsCell
         m_tail = params;
 
         m_nArity = params.getHeight();
-        m_strName = m_strFriendlyName + "/" + m_nArity;
+        m_strName = new StringBuilder(m_strFriendlyName).append('/').append(m_nArity).toString();
         m_head = Atom.createAtom(m_strName);
     }
 

@@ -46,14 +46,13 @@ public final class Seen1 extends JIPXCall
             }
         }
 
-        // check if input is a Number
-        if(input instanceof JIPAtom)
+        if(input instanceof JIPNumber)
         {
             // Gets the handle to the stream
-            String strStreamHandle = ((JIPAtom)input).getName();
+            int streamHandle = (int)((JIPNumber)input).getDoubleValue();
             try
             {
-                JIPio.closeInputStream(strStreamHandle);
+                JIPio.closeInputStream(streamHandle);
             }
             catch(IOException ex)
             {

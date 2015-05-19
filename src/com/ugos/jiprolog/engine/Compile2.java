@@ -97,7 +97,7 @@ final class Compile2 extends Consult1
             if(strDestinationFolder == null)
             {
 	            final int nPos = strFileName[0].lastIndexOf('.');
-	            strPath = strFileName[0].substring(0, nPos) + ".jip";
+	            strPath = new StringBuilder(strFileName[0].substring(0, nPos)).append(".jip").toString();
 
 	            outf = new File(strPath);
             }
@@ -105,7 +105,7 @@ final class Compile2 extends Consult1
             {
             	String file = new File(strPath).getName();
 	            final int nPos = file.lastIndexOf('.');
-	            file = file.substring(0, nPos) + ".jip";
+	            file = new StringBuilder(file.substring(0, nPos)).append(".jip").toString();
             	outf = new File(strDestinationFolder, file);
             }
 

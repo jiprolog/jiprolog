@@ -1186,7 +1186,7 @@ final class PrologParser
         }
         else
         {
-            String strFunctor = funct.getName() + "/0";
+            String strFunctor = new StringBuilder(funct.getName()).append("/0").toString();
 
             if(BuiltInFactory.isBuiltIn(strFunctor))
             {

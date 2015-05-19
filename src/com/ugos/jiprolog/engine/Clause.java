@@ -126,7 +126,7 @@ class Clause extends ConsCell
             return (Clause)pred;
 
         if(pred instanceof Atom)
-            pred = new Functor(((Atom)pred).getName() + "/0", null);
+            pred = new Functor(new StringBuilder(((Atom)pred).getName()).append("/0").toString(), null);
         else if(pred == null)
         	throw new JIPInstantiationException();
         else if(!(pred instanceof Functor))
@@ -153,7 +153,7 @@ class Clause extends ConsCell
             }
 
             if(lhs instanceof Atom)
-                lhs = new Functor(((Atom)lhs).getName() + "/0", null);
+                lhs = new Functor(new StringBuilder(((Atom)lhs).getName()).append("/0").toString(), null);
             else if(lhs == null || rhs == null)
             	throw new JIPInstantiationException();
             else if(!(lhs instanceof Functor))
@@ -223,7 +223,7 @@ class Clause extends ConsCell
 
             if(lhs instanceof Atom)
             {
-                lhs = new Functor(((Atom)lhs).getName() + "/0", null);
+                lhs = new Functor(new StringBuilder(((Atom)lhs).getName()).append("/0").toString(), null);
             }
 
             clause = new Clause(strModuleName, (Functor)lhs, null);

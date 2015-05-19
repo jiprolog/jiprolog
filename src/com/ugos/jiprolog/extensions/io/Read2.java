@@ -28,7 +28,7 @@ public final class Read2 extends JIPXCall
 {
     private Enumeration m_termEnum;
     private boolean     m_bEOF;
-    private String      m_strStreamHandle;
+    private int      	m_streamHandle;
 
     private StreamInfo streamInfo;
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
@@ -60,12 +60,12 @@ public final class Read2 extends JIPXCall
             if(input instanceof JIPAtom)
             {
                 // Gets the handle to the stream
-                m_strStreamHandle = ((JIPAtom)input).getName();
+                m_streamHandle = (int)((JIPNumber)input).getDoubleValue();
 
-                streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
+                streamInfo = JIPio.getStreamInfo(m_streamHandle);
                 if(streamInfo == null)
                 {
-                	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+                	throw JIPExistenceException.createStreamException(JIPNumber.create(m_streamHandle));
                 }
 
                 String mode = streamInfo.getProperties().getProperty("mode");
@@ -75,10 +75,10 @@ public final class Read2 extends JIPXCall
                 	throw new JIPPermissionException("input", "binary_stream", input);
 
                 // Get the stream
-                m_termEnum = JIPio.getTermEnumeration(m_strStreamHandle, getJIPEngine());
+                m_termEnum = JIPio.getTermEnumeration(m_streamHandle, getJIPEngine());
                 if(m_termEnum == null)
                 {
-                	throw JIPExistenceException.createSourceSynkException(JIPAtom.create(m_strStreamHandle));
+                	throw JIPExistenceException.createSourceSynkException(JIPNumber.create(m_streamHandle));
                 }
             }
             else
@@ -88,7 +88,7 @@ public final class Read2 extends JIPXCall
         }
 
         boolean bUserStream;
-        if(bUserStream = "user_input".equals(m_strStreamHandle))
+        if(bUserStream = "user_input".equals(m_streamHandle))
             getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
         JIPTerm term;

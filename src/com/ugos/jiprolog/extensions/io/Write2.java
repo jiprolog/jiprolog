@@ -46,18 +46,18 @@ public class Write2 extends JIPXCall
             }
         }
 
-        if(!(input instanceof JIPAtom))
+        if(!(input instanceof JIPNumber))
             throw new JIPTypeException(JIPTypeException.ATOM, input);
 
-        JIPAtom handle = (JIPAtom)input;
+        JIPNumber handle = (JIPNumber)input;
 
         // Gets the handle to the stream
-        String strStreamHandle = (handle).getName();
+        int streamHandle = (int)handle.getDoubleValue();
 
         // Get the stream
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(strStreamHandle);
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(streamHandle);
         if(sinfo == null)
-        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
@@ -66,10 +66,10 @@ public class Write2 extends JIPXCall
         	throw new JIPPermissionException("output", "binary_stream", input);
 
 
-        OutputStream writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        OutputStream writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
         if(writer == null)
         {
-        	throw JIPExistenceException.createStreamException(strStreamHandle);
+        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 //        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
         }
 

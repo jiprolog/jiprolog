@@ -260,27 +260,6 @@ class WAM
             // qui si entra solo se il m_curnode è startNode ed è proprio il cut (?)
             m_curNode.m_previous.m_backtrack = m_rootNode;
         }
-
-        /*
-    	if(m_curNode.m_previous != null)
-    	{
-	        if(m_curNode.m_previous.m_parent != null)
-	        {
-	            if(m_curNode.m_previous.m_parent.m_previous != null)  // cutparent
-	            {
-	                m_curNode.m_previous.m_backtrack = m_curNode.m_previous.m_parent.m_previous;
-	            }
-	            else
-	            {
-	                m_curNode.m_previous.m_backtrack = m_rootNode;
-	            }
-	        }
-	        else
-	        {
-	            // qui si entra solo se il m_curnode è startNode ed è proprio il cut (?)
-	            m_curNode.m_previous.m_backtrack = m_rootNode;
-	        }
-    	}*/
     }
 
     Node backtrack(Node curNode)
@@ -363,13 +342,13 @@ class WAM
         {
             while(curNode != null)
             {
-                // servea a terminare l'esecuzione in seguito alla close
-                // trovare un metodo migliore
-                if(m_startNode == null)
-                {
-//                    System.out.println("m_startNode == null");
-                	throw new JIPAbortException();
-                }
+//                // servea a terminare l'esecuzione in seguito alla close
+//                // trovare un metodo migliore
+//                if(m_startNode == null)
+//                {
+////                    System.out.println("m_startNode == null");
+//                	throw new JIPAbortException();
+//                }
 
                 m_curNode = curNode;
 
@@ -388,6 +367,9 @@ class WAM
 	                    }
 	                    catch(UndefinedPredicateException ex)
 	                    {
+	                    	ex.printStackTrace();
+	                    	ex.printPrologStackTrace();
+
 	                        // invia il warning se il predicato non è definito
 	                        // e non è dynamic
 	                        // in questo caso la enumeration deve essere vuota
@@ -416,13 +398,23 @@ class WAM
 
 	                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
 
-	                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
+//	                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
+//	                {
+//	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
+//	                    clause = rule.m_cons;
+//	                    // UNIFY
+//	                    // unifica la testa della clausola con il predicato corrente
+//	                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
+//	                }
+
+	                while(curNode.m_ruleEnum.hasMoreElements())
 	                {
 	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
 	                    clause = rule.m_cons;
 	                    // UNIFY
 	                    // unifica la testa della clausola con il predicato corrente
-	                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
+	                    if(bUnify = curNode.getGoal().unify(clause.getHead(), varTbl))
+	                    	break;
 	                }
                 }
                 catch(JIPRuntimeException ex)
@@ -508,6 +500,7 @@ class WAM
                 }
                 else
                 {
+                	System.out.println("fail " + curNode.getGoal());
                     // FAIL
                     // non ci sono clausole unificanti
                     // BACKTRACK

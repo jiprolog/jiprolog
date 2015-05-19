@@ -26,7 +26,7 @@ import java.util.*;
 
 public final class Get02 extends JIPXCall
 {
-    private String m_strStreamHandle;
+    private int streamHandle;
 
     protected final int readNextChar(InputStream ins)
     {
@@ -61,28 +61,28 @@ public final class Get02 extends JIPXCall
         }
 
         // check if input is an Atom
-        if(input instanceof JIPAtom)
+        if(input instanceof JIPNumber)
         {
             // Gets the handle to the stream
-            m_strStreamHandle = ((JIPAtom)input).getName();
+            streamHandle = (int)((JIPNumber)input).getDoubleValue();
 
-            StreamInfo streamInfo = JIPio.getStreamInfo(m_strStreamHandle);
+            StreamInfo streamInfo = JIPio.getStreamInfo(streamHandle);
 	        if(streamInfo == null)
-            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
 	        Properties properties = streamInfo.getProperties();
 	        if(!(properties.getProperty("mode").equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
 
             // Get the stream
-            final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
+            final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
             if(ins == null)
             {
-            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 //            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
             }
 
-            if("user_input".equals(m_strStreamHandle))
+            if("user_input".equals(streamHandle))
                 getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
             JIPTerm term;
@@ -97,13 +97,13 @@ public final class Get02 extends JIPXCall
 
 //                System.out.println("get0 " + c);
 
-            if("user_input".equals(m_strStreamHandle))
+            if("user_input".equals(streamHandle))
                 getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
 
             return params.getNth(2).unify(term, varsTbl);
         }
         else
-            throw new JIPTypeException(JIPTypeException.ATOM, params.getNth(2));
+            throw new JIPTypeException(JIPTypeException.NUMBER, params.getNth(2));
     }
 
     public boolean hasMoreChoicePoints()

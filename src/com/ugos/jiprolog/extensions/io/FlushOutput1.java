@@ -46,15 +46,15 @@ public final class FlushOutput1 extends JIPXCall
             }
         }
 
-        if(!(input instanceof JIPAtom))
-            throw new JIPTypeException(JIPTypeException.ATOM, input);
+        if(!(input instanceof JIPNumber))
+            throw new JIPTypeException(JIPTypeException.NUMBER, input);
 
-        String strStreamHandle = ((JIPAtom)input).getName();
+        int streamHandle = (int)((JIPNumber)input).getDoubleValue();
         OutputStream writer;
 
-    	StreamInfo streamInfo = JIPio.getStreamInfo(strStreamHandle);
+    	StreamInfo streamInfo = JIPio.getStreamInfo(streamHandle);
     	if(streamInfo == null)
-        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
     	Properties props = streamInfo.getProperties();
         if(!(props.getProperty("mode", "").equals("mode(append)")) &&
@@ -62,10 +62,10 @@ public final class FlushOutput1 extends JIPXCall
             throw new JIPPermissionException("output", "stream", input);
 
         // Get the stream
-        writer = JIPio.getOutputStream(strStreamHandle, getJIPEngine());
+        writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
         if(writer == null)
         {
-        	throw JIPExistenceException.createStreamException(JIPAtom.create(strStreamHandle));
+        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
         }
 
         try

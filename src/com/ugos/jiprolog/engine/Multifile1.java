@@ -80,7 +80,7 @@ class Multifile1 extends BuiltIn
                 	if (((Functor)head).getAtom().equals(Atom.SLASHSLASH))
 	                {
 	                    ConsCell params = ((Functor )head).getParams();
-	                    strPredDef = ((Atom)params.getHead()).getName() + "/" + ((ConsCell)params.getTail()).getHead().toString(getJIPEngine());
+	                    strPredDef = new StringBuilder(((Atom)params.getHead()).getName()).append("/").append(((ConsCell)params.getTail()).getHead().toString(getJIPEngine())).toString();
 	                    predDefVect.addElement(strPredDef);
 	                }
 	                else

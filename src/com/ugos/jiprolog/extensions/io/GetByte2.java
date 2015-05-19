@@ -26,7 +26,7 @@ import java.util.*;
 
 public final class GetByte2 extends JIPXCall
 {
-    private String m_strStreamHandle;
+    private int streamHandle;
 
     protected final int readNextChar(InputStream ins)
     {
@@ -62,16 +62,16 @@ public final class GetByte2 extends JIPXCall
         }
 
         // check if input is an Atom
-        if(input instanceof JIPAtom)
+        if(input instanceof JIPNumber)
         {
             // Gets the handle to the stream
-            m_strStreamHandle = ((JIPAtom)input).getName();
+            streamHandle = (int)((JIPNumber)input).getDoubleValue();
 
             // Get the stream
 
-	        StreamInfo sinfo = JIPio.getStreamInfo(m_strStreamHandle);
+	        StreamInfo sinfo = JIPio.getStreamInfo(streamHandle);
 	        if(sinfo == null)
-            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 
 	        Properties properties = sinfo.getProperties();
 	        if(!(properties.getProperty("mode").equals("mode(read)")))
@@ -79,10 +79,10 @@ public final class GetByte2 extends JIPXCall
 	        if(!properties.getProperty("type").equals("type(binary)"))
 	        	throw new JIPPermissionException("input", "text_stream", input);
 
-	        final InputStream ins = JIPio.getInputStream(m_strStreamHandle, getJIPEngine());
+	        final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
             if(ins == null)
             {
-            	throw JIPExistenceException.createStreamException(JIPAtom.create(m_strStreamHandle));
+            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
 //            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
             }
 
@@ -100,7 +100,7 @@ public final class GetByte2 extends JIPXCall
 			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)"))
 			{
 				if(properties.getProperty("eof_action").equals("eof_action(error)"))
-					throw new JIPPermissionException("input", "past_end_of_stream", JIPAtom.create(m_strStreamHandle));
+					throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
 				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 		            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 				else // eof_action(reset)
@@ -112,7 +112,7 @@ public final class GetByte2 extends JIPXCall
 			}
 			else
 			{ // end_of_stream(not)
-	            if("user_input".equals(m_strStreamHandle))
+	            if("user_input".equals(streamHandle))
 	                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
 	            int c = readNextChar(ins);
@@ -124,14 +124,14 @@ public final class GetByte2 extends JIPXCall
 
 				JIPTerm term = JIPNumber.create(c);
 
-	            if("user_input".equals(m_strStreamHandle))
+	            if("user_input".equals(streamHandle))
 	                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
 
 	            return params.getNth(2).unify(term, varsTbl);
 			}
         }
         else
-            throw new JIPTypeException(JIPTypeException.ATOM, params.getNth(2));
+            throw new JIPTypeException(JIPTypeException.NUMBER, params.getNth(2));
     }
 
     public boolean hasMoreChoicePoints()

@@ -101,7 +101,7 @@ final class Extern3 extends BuiltIn
             jipDB.setJIPEngine(getJIPEngine());
             jipDB.setAttributes(strAttributes);
 
-            getJIPEngine().getGlobalDB().addClausesDatabase(jipDB, strModuleName, strFunctName + "/" + Integer.toString(nArity));
+            getJIPEngine().getGlobalDB().addClausesDatabase(jipDB, strModuleName, new StringBuilder(strFunctName).append("/").append(nArity).toString());
         }
         catch(ClassNotFoundException ex)
         {
