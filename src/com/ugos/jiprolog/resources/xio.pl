@@ -791,14 +791,18 @@ set_stream_properties(Handle, [Prop|Rest]):-
 
 
 % check for aliases
-check_handle(user_input, -1).
-check_handle(user_output, -2).
-check_handle(user_error, -4).
 
 check_handle(Alias, Handle):-
-   nonvar(Alias),
-   stream_property(Handle, alias(Alias)),
-   !.
+	nonvar(Alias),
+	(	Alias == user_input ->
+		Handle = -1
+	;	Alias == user_output ->
+		Handle = -2
+	;	Alias == user_error ->
+		Handle = -4
+	;	stream_property(Handle, alias(Alias))
+	),
+	!.
 
 check_handle(Alias, Alias):-
    nonvar(Alias),
