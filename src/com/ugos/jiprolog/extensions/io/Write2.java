@@ -47,7 +47,7 @@ public class Write2 extends JIPXCall
         }
 
         if(!(input instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.ATOM, input);
+            throw new JIPDomainException("stream_or_alias", input);
 
         JIPNumber handle = (JIPNumber)input;
 
