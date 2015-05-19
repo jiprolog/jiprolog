@@ -500,7 +500,7 @@ class WAM
                 }
                 else
                 {
-                	System.out.println("fail " + curNode.getGoal());
+//                	System.out.println("fail " + curNode.getGoal());
                     // FAIL
                     // non ci sono clausole unificanti
                     // BACKTRACK
@@ -519,7 +519,7 @@ class WAM
         catch(JIPRuntimeException ex)
         {
 //            notifyStop();
-//            ex.printStackTrace();  //DBG
+            ex.printStackTrace();  //DBG
 
         	if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
