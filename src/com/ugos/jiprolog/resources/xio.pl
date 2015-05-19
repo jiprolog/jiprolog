@@ -793,7 +793,7 @@ set_stream_properties(Handle, [Prop|Rest]):-
 % check for aliases
 
 check_handle(Alias, Handle):-
-	nonvar(Alias),
+	atom(Alias),
 	(	Alias == user_input ->
 		Handle = -1
 	;	Alias == user_output ->
