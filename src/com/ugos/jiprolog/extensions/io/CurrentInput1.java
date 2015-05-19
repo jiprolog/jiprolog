@@ -28,12 +28,12 @@ public final class CurrentInput1 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         JIPTerm input = params.getNth(1);
-        
-        JIPAtom currentStreamName = JIPAtom.create(getJIPEngine().getCurrentInputStreamName());
-        
+
+        JIPNumber currentStreamName = JIPNumber.create(getJIPEngine().getCurrentInputStreamHandle());
+
         return input.unify(currentStreamName, varsTbl);
     }
-            
+
     public boolean hasMoreChoicePoints()
     {
         return false;

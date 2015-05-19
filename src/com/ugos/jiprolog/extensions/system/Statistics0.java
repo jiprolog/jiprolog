@@ -31,7 +31,7 @@ public class Statistics0 extends JIPXCall
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
         PrintStream outs = new PrintStream(getJIPEngine().getCurrentOutputStream());
-                
+
         outs.println("\nStatistics:");
 
         outs.print("   Total Memory: ");
@@ -39,12 +39,12 @@ public class Statistics0 extends JIPXCall
         outs.print("   Free Memory:  ");
         outs.println(Long.toString(Runtime.getRuntime().freeMemory()));
         outs.print("   Current Output Stream:  ");
-        outs.println(getJIPEngine().getCurrentOutputStreamName());
+        outs.println(getJIPEngine().getCurrentOutputStreamHandle());
         outs.print("   Current Input Stream:   ");
-        outs.println(getJIPEngine().getCurrentInputStreamName() + "\n");
-        
+        outs.println(getJIPEngine().getCurrentInputStreamHandle() + "\n");
+
         outs.flush();
-        
+
         return true;
     }
 

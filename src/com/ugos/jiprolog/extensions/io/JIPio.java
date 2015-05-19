@@ -30,9 +30,6 @@ public final class JIPio
 {
     public static final int    ERR_IOEXCEPTION  = 2000;
 //
-    public static final int USER_INPUT_HANDLE = -1;
-    public static final int USER_OUTPUT_HANDLE = -2;
-    public static final int USER_ERROR_HANDLE = -3;
 //    public static final int    ERR_INVALID_HANDLE = 2001;
 //    public static final String STR_INVALID_HANDLE = "Invalid stream handle";
     /*
@@ -51,9 +48,9 @@ public final class JIPio
 //    public static final int    ERR_USER_STREAM = 2006;
 //    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
-    private static InputStreamInfo user_input = new InputStreamInfo("user_input", USER_INPUT_HANDLE, "read", "reset");
-    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", USER_OUTPUT_HANDLE, "append");
-    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", USER_ERROR_HANDLE, "append");
+    private static InputStreamInfo user_input = new InputStreamInfo("user_input", JIPEngine.USER_INPUT_HANDLE, "read", "reset");
+    private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", JIPEngine.USER_OUTPUT_HANDLE, "append");
+    private static OutputStreamInfo user_error = new OutputStreamInfo("user_error", JIPEngine.USER_ERROR_HANDLE, "append");
 
     public static Hashtable<Integer, InputStreamInfo> itable = new Hashtable<Integer, InputStreamInfo>();
     public static Hashtable<Integer, OutputStreamInfo> otable = new Hashtable<Integer, OutputStreamInfo>();
@@ -69,9 +66,9 @@ public final class JIPio
     public static void init(JIPEngine engine)
     {
     	try {
-    		openInputStream("user_input", USER_INPUT_HANDLE, engine);
-			openOutputStream("user_output", USER_OUTPUT_HANDLE, false, engine);
-			openOutputStream("user_error", USER_ERROR_HANDLE, false, engine);
+    		openInputStream("user_input", JIPEngine.USER_INPUT_HANDLE, engine);
+			openOutputStream("user_output", JIPEngine.USER_OUTPUT_HANDLE, false, engine);
+			openOutputStream("user_error", JIPEngine.USER_ERROR_HANDLE, false, engine);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -133,7 +130,7 @@ public final class JIPio
         if(strPath.equals("user_input"))
         {
             reader = engine.getUserInputStream();
-            InputStreamInfo sinfo = itable.get("user_input");
+            InputStreamInfo sinfo = itable.get(JIPEngine.USER_INPUT_HANDLE);
 
             reader = new PushbackLineNumberInputStream(reader);
 
@@ -192,7 +189,7 @@ public final class JIPio
         {
             writer = engine.getUserOutputStream();
 
-            OutputStreamInfo sinfo = otable.get(strPath);
+            OutputStreamInfo sinfo = otable.get(JIPEngine.USER_OUTPUT_HANDLE);
 
             sinfo.m_stream = writer;
 
@@ -236,7 +233,7 @@ public final class JIPio
          // get term parser
         JIPTermParser termParser = engine.getTermParser();
 
-        if(handle == USER_INPUT_HANDLE)
+        if(handle == JIPEngine.USER_INPUT_HANDLE)
         {
             // get the enumeration of terms in the file
             return termParser.parseStream(new PushbackLineNumberInputStream(engine.getUserInputStream()), "user_input");
@@ -257,11 +254,11 @@ public final class JIPio
 
     public final static PushbackLineNumberInputStream getInputStream(final int handle, final JIPEngine engine)
     {
-        if(handle == USER_INPUT_HANDLE)
+        if(handle == JIPEngine.USER_INPUT_HANDLE)
         {
             return new PushbackLineNumberInputStream(engine.getUserInputStream());
         }
-        else if(handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
+        else if(handle == JIPEngine.USER_OUTPUT_HANDLE || handle == JIPEngine.USER_ERROR_HANDLE)
         {
         	throw new JIPPermissionException("input", "stream", JIPNumber.create(handle));
         }
@@ -275,11 +272,11 @@ public final class JIPio
 
     public static OutputStream getOutputStream(final int handle, final JIPEngine engine)
     {
-        if(handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
+        if(handle == JIPEngine.USER_OUTPUT_HANDLE || handle == JIPEngine.USER_ERROR_HANDLE)
         {
             return engine.getUserOutputStream();
         }
-        else if(handle == USER_INPUT_HANDLE)
+        else if(handle == JIPEngine.USER_INPUT_HANDLE)
         {
         	throw new JIPPermissionException("output", "stream", JIPNumber.create(handle));
         }
@@ -330,9 +327,9 @@ public final class JIPio
 
     public static void closeInputStream(final int handle) throws IOException
     {
-        if(handle == USER_INPUT_HANDLE || handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
+        if(handle == JIPEngine.USER_INPUT_HANDLE || handle == JIPEngine.USER_OUTPUT_HANDLE || handle == JIPEngine.USER_ERROR_HANDLE)
         {
-            return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
+            return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_JIPEngine.USER_STREAM);
         }
 
         InputStreamInfo sinfo = getInput(handle);
@@ -345,7 +342,7 @@ public final class JIPio
 
     public static void closeOutputStream(final int handle) throws IOException
     {
-        if(handle == USER_INPUT_HANDLE || handle == USER_OUTPUT_HANDLE || handle == USER_ERROR_HANDLE)
+        if(handle == JIPEngine.USER_INPUT_HANDLE || handle == JIPEngine.USER_OUTPUT_HANDLE || handle == JIPEngine.USER_ERROR_HANDLE)
         {
             return;//throw new JIPRuntimeException(ERR_USER_STREAM, STR_USER_STREAM);
         }

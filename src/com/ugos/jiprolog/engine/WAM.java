@@ -367,8 +367,8 @@ class WAM
 	                    }
 	                    catch(UndefinedPredicateException ex)
 	                    {
-	                    	ex.printStackTrace();
-	                    	ex.printPrologStackTrace();
+//	                    	ex.printStackTrace();
+//	                    	ex.printPrologStackTrace();
 
 	                        // invia il warning se il predicato non è definito
 	                        // e non è dynamic
@@ -419,6 +419,8 @@ class WAM
                 }
                 catch(JIPRuntimeException ex)
                 {
+                	ex.printStackTrace();
+
                 	while(!exceptionListenerStack.isEmpty())
                     {
                 		ExceptionListener exceptionListener = exceptionListenerStack.pop();

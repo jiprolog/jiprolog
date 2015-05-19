@@ -83,15 +83,15 @@ final class Compile2 extends Consult1
     {
         InputStream ins = null;
         InputStream oldins = null;
-        String strOldInputStreamName = null;
+        int oldInputStreamName = 0;
         try
         {
             String strFileName[] = new String[1];
             String strCurDir[] = new String[1];
             ins = StreamManager.getStreamManager().getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
             oldins = engine.getCurrentInputStream();
-            strOldInputStreamName = engine.getCurrentInputStreamName();
-            engine.setCurrentInputStream(ins, strPath);
+            oldInputStreamName = engine.getCurrentInputStreamHandle();
+            engine.setCurrentInputStream(ins, strPath.hashCode());
 
             File outf;
             if(strDestinationFolder == null)
@@ -133,14 +133,15 @@ final class Compile2 extends Consult1
             }
             catch(IOException ex)
             {
-                engine.setCurrentInputStream(oldins, strOldInputStreamName);
+            	ex.printStackTrace();
+                engine.setCurrentInputStream(oldins, oldInputStreamName);
                 throw new JIPJVMException(ex);
                 //throw new JIPRuntimeException("Unable to consult " + strStreamName + ": " + ex.toString());
             }
 
             ins.close();
 
-            engine.setCurrentInputStream(ins, strOldInputStreamName);
+            engine.setCurrentInputStream(ins, oldInputStreamName);
 
 
             out.close();
@@ -155,14 +156,14 @@ final class Compile2 extends Consult1
             catch(IOException ex1){};
 
             if(oldins != null)
-                engine.setCurrentInputStream(oldins, strOldInputStreamName);
+                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             throw JIPExistenceException.createSourceSynkException(Atom.createAtom(strPath));
         }
         catch(IOException ex)
         {
             if(oldins != null)
-                engine.setCurrentInputStream(oldins, strOldInputStreamName);
+                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             try
             {
@@ -176,7 +177,7 @@ final class Compile2 extends Consult1
         catch(SecurityException ex)
         {
             if(oldins != null)
-                engine.setCurrentInputStream(oldins, strOldInputStreamName);
+                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             try
             {
@@ -191,7 +192,7 @@ final class Compile2 extends Consult1
         {
 
             if(oldins != null)
-                engine.setCurrentInputStream(oldins, strOldInputStreamName);
+                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             ex.m_strFileName = strPath;
 

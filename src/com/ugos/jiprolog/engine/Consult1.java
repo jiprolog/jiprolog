@@ -159,15 +159,15 @@ class Consult1 extends BuiltIn
     {
 //        System.out.println("consult");
 
-        String strOldInputStreamName = null;
+        int strOldInputStreamName = 0;
         InputStream oldins = null;
         try
         {
         	Vector<PrologObject> initializationVector = new Vector<PrologObject>();
 
             oldins = engine.getCurrentInputStream();
-            strOldInputStreamName = engine.getCurrentInputStreamName();
-            engine.setCurrentInputStream(ins, strStreamName);
+            strOldInputStreamName = engine.getCurrentInputStreamHandle();
+            engine.setCurrentInputStream(ins, strStreamName.hashCode());
 
             // unconsult the file
             engine.getGlobalDB().unconsult(strStreamName);

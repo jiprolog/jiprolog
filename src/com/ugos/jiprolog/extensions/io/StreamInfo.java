@@ -53,7 +53,7 @@ public class StreamInfo
 
 	public void setEndOfStream(String pos)
 	{
-		properties.setProperty("end_of_stream", String.format("end_of_stream(%d)", pos));
+		properties.setProperty("end_of_stream", String.format("end_of_stream(%s)", pos));
 	}
 
 	public String getEndOfStream()

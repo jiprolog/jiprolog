@@ -82,7 +82,7 @@ public final class Get02 extends JIPXCall
 //            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
             }
 
-            if("user_input".equals(streamHandle))
+            if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
                 getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
             JIPTerm term;
@@ -97,7 +97,7 @@ public final class Get02 extends JIPXCall
 
 //                System.out.println("get0 " + c);
 
-            if("user_input".equals(streamHandle))
+            if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
                 getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
 
             return params.getNth(2).unify(term, varsTbl);

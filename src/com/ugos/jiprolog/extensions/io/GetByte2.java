@@ -112,7 +112,7 @@ public final class GetByte2 extends JIPXCall
 			}
 			else
 			{ // end_of_stream(not)
-	            if("user_input".equals(streamHandle))
+				if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
 	                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
 	            int c = readNextChar(ins);
@@ -124,7 +124,7 @@ public final class GetByte2 extends JIPXCall
 
 				JIPTerm term = JIPNumber.create(c);
 
-	            if("user_input".equals(streamHandle))
+				if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
 	                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
 
 	            return params.getNth(2).unify(term, varsTbl);

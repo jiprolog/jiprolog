@@ -58,6 +58,10 @@ public class JIPEngine implements Serializable
     public static final int build = 15;
     public static final int revision = 1;
 
+    public static final int USER_INPUT_HANDLE = -1;
+    public static final int USER_OUTPUT_HANDLE = -2;
+    public static final int USER_ERROR_HANDLE = -4;
+
     private static final String VERSION = new StringBuilder().append(major).append(".").append(minor).append(".").append(build).append(".").append(revision).toString();
 
     private static JARClassProvider s_classProvider;
@@ -455,12 +459,12 @@ public class JIPEngine implements Serializable
         if(outs == null)
         {
             removeEnvVariable("___userout___");
-            setCurrentOutputStream(null, "user_output");
+            setCurrentOutputStream(null, USER_OUTPUT_HANDLE);
         }
         else
         {
             setEnvVariable("___userout___", outs);
-            setCurrentOutputStream(outs, "user_output");
+            setCurrentOutputStream(outs, USER_OUTPUT_HANDLE);
         }
     }
 
@@ -482,12 +486,12 @@ public class JIPEngine implements Serializable
         if(ins == null)
         {
             removeEnvVariable("___userin___");
-            setCurrentInputStream(null, "user_input");
+            setCurrentInputStream(null, USER_INPUT_HANDLE);
         }
         else
         {
             setEnvVariable("___userin___", ins);
-            setCurrentInputStream(ins, "user_input");
+            setCurrentInputStream(ins, USER_INPUT_HANDLE);
         }
     }
 
@@ -511,9 +515,10 @@ public class JIPEngine implements Serializable
 
     /** Sets current OutputStream
      * @param outs the current output stream to set
+     * @param streamHandle the stream handle
      * @see com.ugos.jiprolog.engine.JIPEngine#getUserOutputStream
      */
-    public final void setCurrentOutputStream(final OutputStream outs, String strStreamName)
+    public final void setCurrentOutputStream(final OutputStream outs, int streamHandle)
     {
         if(outs == null)
         {
@@ -523,7 +528,7 @@ public class JIPEngine implements Serializable
         else
         {
             setEnvVariable("___currentout___", outs);
-            setEnvVariable("___CurrentOutStreamName___", strStreamName);
+            setEnvVariable("___CurrentOutStreamName___", streamHandle);
         }
     }
 
@@ -532,17 +537,17 @@ public class JIPEngine implements Serializable
      * @param strStreamName the name of the input stream
      * @see com.ugos.jiprolog.engine.JIPEngine#getUserInputStream
      */
-    public final void setCurrentInputStream(final InputStream ins, String strStreamName)
+    public final void setCurrentInputStream(final InputStream ins, int streamHandle)
     {
         if(ins == null)
         {
             removeEnvVariable("___currentin___");
-            removeEnvVariable("___CurrentInStreamName___");
+            removeEnvVariable("___CurrentInStreamHandle___");
         }
         else
         {
             setEnvVariable("___currentin___", ins);
-            setEnvVariable("___CurrentInStreamName___", strStreamName);
+            setEnvVariable("___CurrentInStreamHandle___", streamHandle);
         }
     }
 
@@ -556,19 +561,19 @@ public class JIPEngine implements Serializable
     }
 
     /** Gets current InputStream Name
-     * @return The current input stream name.
+     * @return The current input stream handle.
      */
-    public final String getCurrentInputStreamName()
+    public final int getCurrentInputStreamHandle()
     {
-        return (String)getEnvVariable("___CurrentInStreamName___");
+        return (Integer)getEnvVariable("___CurrentInStreamHandle___");
     }
 
     /** Gets current OutputStream Name
      * @return The current output stream name.
      */
-    public final String getCurrentOutputStreamName()
+    public final int getCurrentOutputStreamHandle()
     {
-        return (String)getEnvVariable("___CurrentOutStreamName___");
+        return (Integer)getEnvVariable("___CurrentOutStreamName___");
     }
 
     /** Gets current encoding

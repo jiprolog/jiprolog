@@ -41,12 +41,10 @@ public class XMLRead1 extends JIPXCall
             if(((JIPVariable)term).isBounded())
                 term = ((JIPVariable)term).getValue();
 
-        if("user_input".equals(getJIPEngine().getCurrentInputStreamName()))
-            throw new JIPRuntimeException(4001, "User input stream cannot be parsed by DOM parsers");
 
         //System.out.println(getJIPEngine().getCurrentInputStreamName());
         //m_xmlDoc = createXMLTerm(new InputStreamReader(getJIPEngine().getCurrentInputStream()));
-        JIPTerm xmlDoc = createXMLTerm(getJIPEngine().getCurrentInputStreamName());
+        JIPTerm xmlDoc = createXMLTerm(String.valueOf(getJIPEngine().getCurrentInputStreamHandle()));
 
         return term.unify(xmlDoc, varsTbl);
     }

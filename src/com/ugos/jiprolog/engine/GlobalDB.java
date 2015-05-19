@@ -736,29 +736,30 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
 	        gdb.m_bCheckDisabled = false;
 	     }
-	     catch(IOException ex)
-	     {
-	         gdb.m_bCheckDisabled = false;
-	         throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
-	     }
-	     catch(JIPSyntaxErrorException ex)
+	     catch(Exception ex)
 	     {
 	    	 ex.printStackTrace();
 	         gdb.m_bCheckDisabled = false;
 	         throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
 	     }
-	     catch(NullPointerException ex)
-	     {
-	         ex.printStackTrace();
-	         gdb.m_bCheckDisabled = false;
-	         throw new JIPRuntimeException("JIProlog Kernel is not found. JIPKernel.txt should be in the classpath.");
-	     }
-		catch (ClassNotFoundException e)
-		{
-			 //ex.printStackTrace();
-	         gdb.m_bCheckDisabled = false;
-	         throw new JIPRuntimeException("Unable to load Kernel: " + e.toString());
-		}
+//	     catch(JIPSyntaxErrorException ex)
+//	     {
+//	    	 ex.printStackTrace();
+//	         gdb.m_bCheckDisabled = false;
+//	         throw new JIPRuntimeException("Unable to load Kernel: " + ex.toString());
+//	     }
+//	     catch(NullPointerException ex)
+//	     {
+//	         ex.printStackTrace();
+//	         gdb.m_bCheckDisabled = false;
+//	         throw new JIPRuntimeException("JIProlog Kernel is not found. JIPKernel.txt should be in the classpath.");
+//	     }
+//		catch (ClassNotFoundException e)
+//		{
+//			 e.printStackTrace();
+//	         gdb.m_bCheckDisabled = false;
+//	         throw new JIPRuntimeException("Unable to load Kernel: " + e.toString());
+//		}
     }
 
 //    final Vector listing()
