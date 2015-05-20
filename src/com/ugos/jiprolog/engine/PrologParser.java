@@ -1153,6 +1153,9 @@ final class PrologParser
             obj = termStack.pop();
         }
 
+        if(!(obj instanceof PrologObject))
+        	throw new JIPSyntaxErrorException(m_strFileName, (m_lnReader.getLineNumber() + 1), "unexpected_term(" + obj.toString() + ")");
+
         return (PrologObject)obj;
     }
 

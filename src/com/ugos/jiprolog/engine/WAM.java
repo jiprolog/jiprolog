@@ -385,9 +385,7 @@ class WAM
 	                        	{
 	                        		throw JIPExistenceException.createProcedureException(((Functor)ex.getCulprit()).getPredicateIndicator());
 	                        	}
-
 	                        }
-
 
 	                        curNode.m_ruleEnum = s_emptyEnum;
 	                    }
@@ -419,7 +417,7 @@ class WAM
                 }
                 catch(JIPRuntimeException ex)
                 {
-                	ex.printStackTrace();
+//                	ex.printStackTrace();
 
                 	while(!exceptionListenerStack.isEmpty())
                     {
@@ -448,16 +446,16 @@ class WAM
 
                     // FOUND
                     //System.out.println("curNode call list  " + curNode.m_callList);  // dbg
-                    if(curNode.m_altBody != null)
+                    if(clause.getTail() != null) // la clausola ha un body
+                    {
+                        // create a new node
+                        newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
+                    }
+                    else if(curNode.m_altBody != null)
                     {
                         // create a new node
                         newNode = new Node(curNode.m_altBody, curNode, curNode, rule.m_strModule);
                         curNode.m_altBody = null;
-                    }
-                    else if(clause.getTail() != null) // la clausola ha un body
-                    {
-                        // create a new node
-                        newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
                     }
                     else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
                     {
@@ -520,8 +518,7 @@ class WAM
         }
         catch(JIPRuntimeException ex)
         {
-//            notifyStop();
-            ex.printStackTrace();  //DBG
+//            ex.printStackTrace();  //DBG
 
         	if(curNode.getGoal() instanceof BuiltInPredicate)
             	((BuiltInPredicate)curNode.getGoal()).deinit();
@@ -540,7 +537,6 @@ class WAM
                     ex.m_strFileName = cla.getFileName(); // nel caso di built-in non è valorizzato
                     ex.m_nLineNumber = cla.getLine();
                     ex.m_nPosition = cla.getPosition();
-
                 }
             }
             throw ex;
