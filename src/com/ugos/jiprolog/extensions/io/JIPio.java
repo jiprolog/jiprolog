@@ -286,6 +286,15 @@ public final class JIPio
             return null;
     }
 
+    public static void setStreamAlias(StreamInfo sinfo, String alias)
+    {
+//    	System.out.println("set alias " + alias);
+
+        iotable.remove(sinfo.getAlias());
+		sinfo.getProperties().setProperty("alias", String.format("alias(%s)",alias));
+        iotable.put(alias, sinfo);
+    }
+
     public static StreamInfo getStreamInfo(JIPTerm streamOrAlias)
     {
     	StreamInfo sinfo = null;
@@ -312,7 +321,7 @@ public final class JIPio
     	return sinfo;
     }
 
-    public static StreamInfo getStreamInfo(final int handle)
+    private static StreamInfo getStreamInfo(final int handle)
     {
     	StreamInfo sinfo = null;
 
@@ -350,7 +359,15 @@ public final class JIPio
 
     public static int getStreamHandle(final String alias)
     {
-    	StreamInfo sinfo = null;
+//    	for(StreamInfo sinfo : iotable.values())
+//    	{
+//    		if(alias.equals(sinfo.getAlias()))
+//    			return sinfo.getHandle();
+//    	}
+    	StreamInfo sinfo;
+
+//    	System.out.println(alias);
+//    	System.out.println(iotable);
 
     	if(iotable.containsKey(alias))
     	{

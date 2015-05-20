@@ -417,7 +417,7 @@ class WAM
                 }
                 catch(JIPRuntimeException ex)
                 {
-//                	ex.printStackTrace();
+                	ex.printStackTrace();
 
                 	while(!exceptionListenerStack.isEmpty())
                     {

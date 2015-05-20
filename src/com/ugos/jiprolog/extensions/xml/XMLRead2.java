@@ -49,20 +49,9 @@ public class XMLRead2 extends XMLRead1
             }
         }
 
-        // check if input is a Number
-        if(!(input instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, input);
-
-        // Gets the handle to the stream
-        final int streamHandle = (int)((JIPNumber)input).getDoubleValue();
-
         // Get the stream
-        String strStream = JIPio.getStreamName(streamHandle);
-
-        if(strStream == null)
-        {
-        	throw new JIPDomainException("stream_or_alias", JIPNumber.create(streamHandle));
-        }
+        StreamInfo sinfo = JIPio.getStreamInfo(input);
+        String strStream = sinfo.getName();
 
         JIPTerm xmlDoc = createXMLTerm(strStream);
 

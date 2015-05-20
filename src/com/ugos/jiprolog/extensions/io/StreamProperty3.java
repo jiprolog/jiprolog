@@ -55,7 +55,6 @@ public final class StreamProperty3 extends JIPXCall
         	if(prop1 == null)
                 throw new JIPInstantiationException(3);
 
-
         	if(prop1 instanceof JIPAtom)
         	{
         		streamInfo.getProperties().setProperty(((JIPAtom)prop1).getName(),"");
@@ -65,10 +64,11 @@ public final class StreamProperty3 extends JIPXCall
         	else if(prop1 instanceof JIPFunctor)
         	{
         		String key = ((JIPFunctor)prop1).getName();
-//        		System.out.println("set key " + key);
-//            	System.out.println("sterm " + prop1.toString());
 
-        		streamInfo.getProperties().setProperty(key, prop1.toString());
+        		if(key.equals("alias"))
+        			JIPio.setStreamAlias(streamInfo, ((JIPFunctor)prop1).getParams().getNth(1).toString());
+        		else
+            		streamInfo.getProperties().setProperty(key, prop1.toString());
         	}
         	else
                 throw new JIPTypeException(JIPTypeException.COMPOUND, prop1);

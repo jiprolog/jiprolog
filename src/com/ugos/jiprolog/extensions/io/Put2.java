@@ -46,9 +46,6 @@ public class Put2 extends JIPXCall
             }
         }
 
-        if(!(input instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, input);
-
         // check if input is a variable
         if (c instanceof JIPVariable)
         {

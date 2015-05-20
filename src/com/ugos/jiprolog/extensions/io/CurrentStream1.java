@@ -23,7 +23,9 @@ import java.util.Hashtable;
 
 import com.ugos.jiprolog.engine.JIPAtom;
 import com.ugos.jiprolog.engine.JIPCons;
+import com.ugos.jiprolog.engine.JIPDomainException;
 import com.ugos.jiprolog.engine.JIPNumber;
+import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPXCall;
 
 public final class CurrentStream1 extends JIPXCall
@@ -33,6 +35,8 @@ public final class CurrentStream1 extends JIPXCall
 
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {
+    	JIPTerm handle = params.getNth(1).getValue();
+
         if(m_ienum == null)
         {
             m_ienum = JIPio.itable.elements();
@@ -43,12 +47,28 @@ public final class CurrentStream1 extends JIPXCall
             m_oenum = JIPio.otable.elements();
         }
 
+        JIPTerm stream;
+
+
         while(m_ienum.hasMoreElements())
         {
             StreamInfo sinfo = (StreamInfo)m_ienum.nextElement();
-            JIPNumber handle = JIPNumber.create(sinfo.getHandle());
 
-            JIPCons cons = JIPCons.create(handle, null);
+            if(handle instanceof JIPAtom)
+            {
+            	stream = JIPAtom.create(sinfo.getAlias());
+            }
+            else if(handle == null || handle instanceof JIPNumber)
+            {
+            	stream = JIPNumber.create(sinfo.getHandle());
+            }
+            else
+            {
+        		throw new JIPDomainException("stream_or_alias", handle);
+            }
+
+
+            JIPCons cons = JIPCons.create(stream, null);
 
             if(params.unifiable(cons))
             	return params.unify(cons, varsTbl);
@@ -57,9 +77,23 @@ public final class CurrentStream1 extends JIPXCall
         while(m_oenum.hasMoreElements())
         {
             StreamInfo sinfo = (StreamInfo)m_oenum.nextElement();
-            JIPNumber handle = JIPNumber.create(sinfo.getHandle());
 
-            JIPCons cons = JIPCons.create(handle, null);
+            if(handle instanceof JIPAtom)
+            {
+            	stream = JIPAtom.create(sinfo.getAlias());
+            }
+            else if(handle == null || handle instanceof JIPNumber)
+            {
+            	stream = JIPNumber.create(sinfo.getHandle());
+            }
+            else
+            {
+        		throw new JIPDomainException("stream_or_alias", handle);
+            }
+
+
+            JIPCons cons = JIPCons.create(stream, null);
+
             if(params.unifiable(cons))
             	return params.unify(cons, varsTbl);
         }
