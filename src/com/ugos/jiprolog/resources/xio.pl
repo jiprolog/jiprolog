@@ -643,7 +643,7 @@ set_input(Handle):-
 		error(existence_error(stream,Handle))
 	;	\+ stream_property(Handle1, mode(read)) ->
 		error(permission_error(input,stream,Handle))
-	;   xcall('com.ugos.jiprolog.extensions.io.SetInput1', [Handle])
+	;   xcall('com.ugos.jiprolog.extensions.io.SetInput1', [Handle1])
 	).
 
 /*******************/
@@ -660,8 +660,9 @@ exists_directory(File):-
     access_file(File, directory).
 
 same_file(File1, File2):-
-    absolute_file_name(File1, File),
-    absolute_file_name(File2, File).
+    absolute_file_name(File1, AFile1),
+    absolute_file_name(File2, AFile2),
+    AFile1 == AFile2.
 
 working_directory(X, Y):-
     chdir(X),
