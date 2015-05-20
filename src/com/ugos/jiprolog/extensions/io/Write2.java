@@ -28,51 +28,35 @@ public class Write2 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
-        JIPTerm input = params.getNth(1);
+        JIPTerm output = params.getNth(1);
         JIPTerm term = params.getNth(2);
 
         // check if input is a variable
-        if (input instanceof JIPVariable)
+        if (output instanceof JIPVariable)
         {
             // try to extract the term
-            if(!((JIPVariable)input).isBounded())
+            if(!((JIPVariable)output).isBounded())
             {
                 throw new JIPInstantiationException(1);
             }
             else
             {
                 //extracts the term
-                input = ((JIPVariable)input).getValue();
+            	output = ((JIPVariable)output).getValue();
             }
         }
 
-        if(!(input instanceof JIPNumber))
-            throw new JIPDomainException("stream_or_alias", input);
-
-        JIPNumber handle = (JIPNumber)input;
-
-        // Gets the handle to the stream
-        int streamHandle = (int)handle.getDoubleValue();
-
         // Get the stream
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(streamHandle);
-        if(sinfo == null)
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(output);
 
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
-        	throw new JIPPermissionException("output", "stream", input);
+        	throw new JIPPermissionException("output", "stream", output);
         if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
-        	throw new JIPPermissionException("output", "binary_stream", input);
+        	throw new JIPPermissionException("output", "binary_stream", output);
 
 
-        OutputStream writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
-        if(writer == null)
-        {
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-//        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
-        }
-
+        OutputStream writer = JIPio.getOutputStream(sinfo.getHandle(), getJIPEngine());
 
         try
         {

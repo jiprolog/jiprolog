@@ -34,8 +34,8 @@ final class Variable extends PrologObject//Serializable
     private static final char ANONYMOUS = '^';
     private static final char SHADOW = '+';
 
-    private static final StringBuilderEx sbANONYMOUS = new StringBuilderEx(ANONYMOUS);
-    private static final StringBuilderEx sbSHADOW = new StringBuilderEx(SHADOW);
+    private static final StringBuilderEx sbANONYMOUS = new StringBuilderEx().append(ANONYMOUS).setInitial();
+    private static final StringBuilderEx sbSHADOW = new StringBuilderEx().append(SHADOW).setInitial();
 
     private String       m_strName;
     private PrologObject m_object;

@@ -44,15 +44,8 @@ public final class Nl1 extends JIPXCall
             }
         }
 
-        if(!(output instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, output);
 
-        // Gets the handle to the stream
-        int streamHandle = (int)((JIPNumber)output).getDoubleValue();
-
-        StreamInfo sinfo = JIPio.getStreamInfo(streamHandle);
-        if(sinfo == null)
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
+        StreamInfo sinfo = JIPio.getStreamInfo(output);
 
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
@@ -61,13 +54,10 @@ public final class Nl1 extends JIPXCall
         	throw new JIPPermissionException("output", "binary_stream", output);
 
 
+        int streamHandle = sinfo.getHandle();
+
         // Get the stream
         OutputStream writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
-        if(writer == null)
-        {
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-        }
-
 
         try
         {

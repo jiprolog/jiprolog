@@ -29,24 +29,6 @@ import com.ugos.jiprolog.engine.*;
 public final class JIPio
 {
     public static final int    ERR_IOEXCEPTION  = 2000;
-//
-//    public static final int    ERR_INVALID_HANDLE = 2001;
-//    public static final String STR_INVALID_HANDLE = "Invalid stream handle";
-    /*
-    public static final int    ERR_FILE_NOT_FOUND = 2002;
-    public static final String STR_FILE_NOT_FOUND = "File not found";
-     */
-//    public static final int    ERR_FILE_NOT_DELETED = 2003;
-//    public static final String STR_FILE_NOT_DELETED = "Unable to delete the file/directory";
-//
-//    public static final int    ERR_FILE_NOT_RENAMED = 2004;
-//    public static final String STR_FILE_NOT_RENAMED = "Unable to rename the file/directory";
-//
-//    public static final int    ERR_DIRECTORY_NOT_CREATED = 2005;
-//    public static final String STR_DIRECTORY_NOT_CREATED = "Unable to create the directory";
-//
-//    public static final int    ERR_USER_STREAM = 2006;
-//    public static final String STR_USER_STREAM = "Operation not permitted on the given stream handle";
 
     private static InputStreamInfo user_input = new InputStreamInfo("user_input", JIPEngine.USER_INPUT_HANDLE, "read", "reset");
     private static OutputStreamInfo user_output = new OutputStreamInfo("user_output", JIPEngine.USER_OUTPUT_HANDLE, "append");
@@ -55,22 +37,34 @@ public final class JIPio
     public static Hashtable<Integer, InputStreamInfo> itable = new Hashtable<Integer, InputStreamInfo>();
     public static Hashtable<Integer, OutputStreamInfo> otable = new Hashtable<Integer, OutputStreamInfo>();
 
+    public static Hashtable<String, StreamInfo> iotable = new Hashtable<String, StreamInfo>();
+
 
     static
     {
+    	user_input.setAlias("user_input");
+    	user_output.setAlias("user_output");
+    	user_error.setAlias("user_error");
+
     	itable.put(user_input.getHandle(), user_input);
     	otable.put(user_output.getHandle(), user_output);
     	otable.put(user_error.getHandle(), user_error);
+
+    	iotable.put(user_input.getAlias(), user_input);
+    	iotable.put(user_output.getAlias(), user_output);
+    	iotable.put(user_error.getAlias(), user_error);
     }
 
     public static void init(JIPEngine engine)
     {
-    	try {
+    	try
+    	{
     		openInputStream("user_input", JIPEngine.USER_INPUT_HANDLE, engine);
 			openOutputStream("user_output", JIPEngine.USER_OUTPUT_HANDLE, false, engine);
 			openOutputStream("user_error", JIPEngine.USER_ERROR_HANDLE, false, engine);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}
+    	catch (IOException e)
+    	{
 			e.printStackTrace();
 		}
     }
@@ -89,6 +83,7 @@ public final class JIPio
     {
         // put the new enumeration in the table
         otable.put(obj.getHandle(), obj);
+        iotable.put(obj.getAlias(), obj);
 
         return obj.getHandle();
     }
@@ -97,6 +92,7 @@ public final class JIPio
     {
         // put the new enumeration in the table
         itable.put(obj.getHandle(), obj);
+        iotable.put(obj.getAlias(), obj);
 
         return obj.getHandle();
     }
@@ -123,7 +119,8 @@ public final class JIPio
 
     }
 
-    public static final int openInputStream(String strPath, final int handle, final JIPEngine engine) throws IOException
+    @SuppressWarnings("resource")
+	public static final int openInputStream(String strPath, final int handle, final JIPEngine engine) throws IOException
     {
         InputStream reader;
 
@@ -289,6 +286,32 @@ public final class JIPio
             return null;
     }
 
+    public static StreamInfo getStreamInfo(JIPTerm streamOrAlias)
+    {
+    	StreamInfo sinfo = null;
+
+    	streamOrAlias = streamOrAlias.getValue();
+    	if(streamOrAlias == null)
+    	{
+    		throw new JIPInstantiationException(1);
+    	}
+    	else if(streamOrAlias instanceof JIPNumber)
+    	{
+    		sinfo = getStreamInfo((int)((JIPNumber)streamOrAlias).getDoubleValue());
+    	}
+    	else if(streamOrAlias instanceof JIPAtom)
+    	{
+    		sinfo = getStreamInfo(getStreamHandle(((JIPAtom)streamOrAlias).getName()));
+    	}
+    	else
+    		throw new JIPDomainException("stream_or_alias", streamOrAlias);
+
+    	if(sinfo == null)
+    		throw JIPExistenceException.createStreamException(streamOrAlias);
+
+    	return sinfo;
+    }
+
     public static StreamInfo getStreamInfo(final int handle)
     {
     	StreamInfo sinfo = null;
@@ -323,6 +346,19 @@ public final class JIPio
             return sinfo.getName();
         else
             return null;
+    }
+
+    public static int getStreamHandle(final String alias)
+    {
+    	StreamInfo sinfo = null;
+
+    	if(iotable.containsKey(alias))
+    	{
+    		sinfo = iotable.get(alias);
+    		return sinfo.getHandle();
+    	}
+
+        return 0;
     }
 
     public static void closeInputStream(final int handle) throws IOException

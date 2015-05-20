@@ -33,15 +33,10 @@ public final class StreamPosition4 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, final Hashtable varsTbl)
     {
-       	Hashtable<Integer, InputStreamInfo> itable = JIPio.itable;
-
         JIPTerm handle = params.getNth(1).getValue();
-        if(handle == null)
-            throw new JIPInstantiationException(2);
 
-    	int nhandle = (int)((JIPNumber)handle).getDoubleValue();
-
-       	InputStreamInfo sinfo = itable.get(nhandle);
+        // Get the stream
+        InputStreamInfo sinfo = (InputStreamInfo)JIPio.getStreamInfo(handle);
 
        	JIPCons cons;
        	if(sinfo != null)

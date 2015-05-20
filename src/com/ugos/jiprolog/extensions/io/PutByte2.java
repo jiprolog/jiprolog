@@ -67,15 +67,8 @@ public class PutByte2 extends JIPXCall
         if(!(b instanceof JIPNumber))
             throw new JIPTypeException(JIPTypeException.BYTE, b);
 
-        JIPNumber   handle = (JIPNumber)output;
-
-        // Gets the handle to the stream
-        int streamHandle = (int)handle.getDoubleValue();
-
         // Get the stream
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(streamHandle);
-        if(sinfo == null)
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(output);
 
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
@@ -84,10 +77,7 @@ public class PutByte2 extends JIPXCall
         	throw new JIPPermissionException("output", "text_stream", output);
 
 
-        OutputStream writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
-        if(writer == null)
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-
+        OutputStream writer = JIPio.getOutputStream(sinfo.getHandle(), getJIPEngine());
 
         int nCode = (int)((JIPNumber)b).getDoubleValue();
         if(nCode < 0 || nCode > 255)

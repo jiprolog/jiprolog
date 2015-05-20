@@ -46,22 +46,16 @@ public final class Seen1 extends JIPXCall
             }
         }
 
-        if(input instanceof JIPNumber)
+        // Get the stream
+        StreamInfo sinfo = JIPio.getStreamInfo(input);
+
+        try
         {
-            // Gets the handle to the stream
-            int streamHandle = (int)((JIPNumber)input).getDoubleValue();
-            try
-            {
-                JIPio.closeInputStream(streamHandle);
-            }
-            catch(IOException ex)
-            {
-                throw new JIPRuntimeException(JIPio.ERR_IOEXCEPTION, ex.getMessage());
-            }
+            JIPio.closeInputStream(sinfo.getHandle());
         }
-        else
+        catch(IOException ex)
         {
-            throw new JIPTypeException(JIPTypeException.ATOM, input);
+            throw new JIPRuntimeException(JIPio.ERR_IOEXCEPTION, ex.getMessage());
         }
 
          return true;

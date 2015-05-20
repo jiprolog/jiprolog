@@ -65,58 +65,43 @@ public final class PeekByte2 extends JIPXCall
             }
         }
 
-        // check if input is an Atom
-        if(input instanceof JIPNumber)
+        // Get the stream
+    	StreamInfo streamInfo = JIPio.getStreamInfo(input);
+
+		Properties properties = streamInfo.getProperties();
+        if(!(properties.getProperty("mode").equals("mode(read)")))
+        	throw new JIPPermissionException("input", "stream", input);
+        if(!(properties.getProperty("type").equals("type(binary)")))
+        	throw new JIPPermissionException("input", "text_stream", input);
+
+        int streamHandle = streamInfo.getHandle();
+
+        PushbackLineNumberInputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
+
+        if (b instanceof JIPVariable && ((JIPVariable)b).isBounded())
         {
-            // Gets the handle to the stream
-            final int streamHandle = (int)((JIPNumber)input).getDoubleValue();
+            b = ((JIPVariable)b).getValue();
+	        if(!(b instanceof JIPNumber))
+	            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
 
-            // Get the stream
-
-        	StreamInfo streamInfo = JIPio.getStreamInfo(streamHandle);
-	        if(streamInfo == null)
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-
-			Properties properties = streamInfo.getProperties();
-	        if(!(properties.getProperty("mode").equals("mode(read)")))
-	        	throw new JIPPermissionException("input", "stream", input);
-	        if(!(properties.getProperty("type").equals("type(binary)")))
-	        	throw new JIPPermissionException("input", "text_stream", input);
-
-	        PushbackLineNumberInputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
-            if(ins == null)
-            {
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-//            	throw new JIPDomainException("stream_or_alias", strStreamHandle);
-            }
-
-	        if (b instanceof JIPVariable && ((JIPVariable)b).isBounded())
-	        {
-                b = ((JIPVariable)b).getValue();
-		        if(!(b instanceof JIPNumber))
-		            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
-
-		        int nCode = (int)((JIPNumber)b).getDoubleValue();
-		        if(nCode < -1 || nCode > 255)
-		            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
-	        }
-
-			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
-				if(properties.getProperty("eof_action").equals("eof_action(error)"))
-					throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
-				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
-		            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
-				else // eof_action(reset)
-					return unify(params, varsTbl);
-			} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
-	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
-			} else { // end_of_stream(no)
-				JIPTerm term = JIPNumber.create(peekByte(ins));
-	            return params.getNth(2).unify(term, varsTbl);
-			}
+	        int nCode = (int)((JIPNumber)b).getDoubleValue();
+	        if(nCode < -1 || nCode > 255)
+	            throw new JIPTypeException(JIPTypeException.IN_BYTE, b);
         }
-        else
-            throw new JIPDomainException("stream_or_alias", input);
+
+		if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
+			if(properties.getProperty("eof_action").equals("eof_action(error)"))
+				throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
+			else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
+	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
+			else // eof_action(reset)
+				return unify(params, varsTbl);
+		} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
+            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
+		} else { // end_of_stream(no)
+			JIPTerm term = JIPNumber.create(peekByte(ins));
+            return params.getNth(2).unify(term, varsTbl);
+		}
     }
 
     public boolean hasMoreChoicePoints()

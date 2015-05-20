@@ -1,6 +1,9 @@
 package com.ugos.jiprolog.extensions.io;
 
 import java.util.Properties;
+import java.util.StringTokenizer;
+
+import com.ugos.jiprolog.engine.JIPTermParser;
 
 
 public class StreamInfo
@@ -29,6 +32,18 @@ public class StreamInfo
 	public String getName()
 	{
 		return name;
+	}
+
+	public String getAlias()
+	{
+		String alias = properties.getProperty("alias");
+		int pos = alias.indexOf('(');
+		return alias.substring(pos+1, alias.lastIndexOf(')'));
+	}
+
+	public void setAlias(String alias)
+	{
+		properties.setProperty("alias", String.format("alias(%s)",alias));
 	}
 
 	public int getHandle()

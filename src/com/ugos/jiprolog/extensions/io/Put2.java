@@ -86,27 +86,16 @@ public class Put2 extends JIPXCall
             throw new JIPTypeException(JIPTypeException.INTEGER, c);
         }
 
-        JIPNumber   handle = (JIPNumber)input;
-
-        // Gets the handle to the stream
-        int streamHandle = (int)handle.getDoubleValue();
         OutputStream writer;
 
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(streamHandle);
-        if(sinfo == null)
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(input);
 
         String mode = sinfo.getProperties().getProperty("mode");
         if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
         	throw new JIPPermissionException("output", "stream", input);
 
         // Get the stream
-        writer = JIPio.getOutputStream(streamHandle, getJIPEngine());
-        if(writer == null)
-        {
-        	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-//        	throw new JIPDomainException("stream_or_alias", strStreamHandle);
-        }
+        writer = JIPio.getOutputStream(sinfo.getHandle(), getJIPEngine());
 
 
         try

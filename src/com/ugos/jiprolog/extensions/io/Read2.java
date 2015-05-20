@@ -56,34 +56,20 @@ public final class Read2 extends JIPXCall
                 }
             }
 
-            // check if input is an Atom
-            if(input instanceof JIPNumber)
+            streamInfo = JIPio.getStreamInfo(input);
+
+            m_streamHandle = streamInfo.getHandle();
+            String mode = streamInfo.getProperties().getProperty("mode");
+            if(!(mode.equals("mode(read)")))
+            	throw new JIPPermissionException("input", "stream", input);
+            if(!streamInfo.getProperties().getProperty("type").equals("type(text)"))
+            	throw new JIPPermissionException("input", "binary_stream", input);
+
+            // Get the stream
+            m_termEnum = JIPio.getTermEnumeration(m_streamHandle, getJIPEngine());
+            if(m_termEnum == null)
             {
-                // Gets the handle to the stream
-                m_streamHandle = (int)((JIPNumber)input).getDoubleValue();
-
-                streamInfo = JIPio.getStreamInfo(m_streamHandle);
-                if(streamInfo == null)
-                {
-                	throw JIPExistenceException.createStreamException(JIPNumber.create(m_streamHandle));
-                }
-
-                String mode = streamInfo.getProperties().getProperty("mode");
-                if(!(mode.equals("mode(read)")))
-                	throw new JIPPermissionException("input", "stream", input);
-                if(!streamInfo.getProperties().getProperty("type").equals("type(text)"))
-                	throw new JIPPermissionException("input", "binary_stream", input);
-
-                // Get the stream
-                m_termEnum = JIPio.getTermEnumeration(m_streamHandle, getJIPEngine());
-                if(m_termEnum == null)
-                {
-                	throw JIPExistenceException.createSourceSynkException(JIPNumber.create(m_streamHandle));
-                }
-            }
-            else
-            {
-                throw new JIPDomainException("stream_or_alias", input);
+            	throw JIPExistenceException.createSourceSynkException(JIPNumber.create(m_streamHandle));
             }
         }
 

@@ -82,7 +82,7 @@ public final class Append2 extends JIPXCall
 
         int streamHandle = 0;
 
-        // check if handle is an atom
+        // check if handle is a number
         if(handle instanceof JIPNumber)
         {
         	streamHandle = (int)((JIPNumber)handle).getDoubleValue();

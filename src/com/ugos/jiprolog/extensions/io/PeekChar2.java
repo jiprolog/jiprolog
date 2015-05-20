@@ -65,23 +65,16 @@ public final class PeekChar2 extends JIPXCall
             }
         }
 
-        // check if input is an Atom
-        if(input instanceof JIPNumber)
-        {
-            // Gets the handle to the stream
-            final int streamHandle = (int)((JIPNumber)input).getDoubleValue();
-
             // Get the stream
-
-            StreamInfo streamInfo = JIPio.getStreamInfo(streamHandle);
-	        if(streamInfo == null)
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
+            StreamInfo streamInfo = JIPio.getStreamInfo(input);
 
 			Properties properties = streamInfo.getProperties();
 	        if(!(properties.getProperty("mode").equals("mode(read)")))
 	        	throw new JIPPermissionException("input", "stream", input);
 	        if(!(properties.getProperty("type").equals("type(text)")))
 	        	throw new JIPPermissionException("input", "binary_stream", input);
+
+	        int streamHandle = streamInfo.getHandle();
 
 	        PushbackLineNumberInputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
             if(ins == null)
@@ -124,9 +117,6 @@ public final class PeekChar2 extends JIPXCall
 
 	            return params.getNth(2).unify(term, varsTbl);
 			}
-        }
-        else
-            throw new JIPDomainException("stream_or_alias", input);
     }
 
     public boolean hasMoreChoicePoints()

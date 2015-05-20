@@ -26,8 +26,6 @@ import java.util.*;
 
 public final class Get02 extends JIPXCall
 {
-    private int streamHandle;
-
     protected final int readNextChar(InputStream ins)
     {
         try
@@ -60,50 +58,33 @@ public final class Get02 extends JIPXCall
             }
         }
 
-        // check if input is an Atom
-        if(input instanceof JIPNumber)
+        StreamInfo streamInfo = JIPio.getStreamInfo(input);
+
+        Properties properties = streamInfo.getProperties();
+        if(!(properties.getProperty("mode").equals("mode(read)")))
+        	throw new JIPPermissionException("input", "stream", input);
+
+        int streamHandle = streamInfo.getHandle();
+
+        // Get the stream
+        final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
+
+        if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+            getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
+
+        JIPTerm term;
+        int c = readNextChar(ins);
+        if(c == -1)
         {
-            // Gets the handle to the stream
-            streamHandle = (int)((JIPNumber)input).getDoubleValue();
-
-            StreamInfo streamInfo = JIPio.getStreamInfo(streamHandle);
-	        if(streamInfo == null)
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-
-	        Properties properties = streamInfo.getProperties();
-	        if(!(properties.getProperty("mode").equals("mode(read)")))
-	        	throw new JIPPermissionException("input", "stream", input);
-
-            // Get the stream
-            final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
-            if(ins == null)
-            {
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-//            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
-            }
-
-            if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
-
-            JIPTerm term;
-            int c = readNextChar(ins);
-            if(c == -1)
-            {
-            	streamInfo.setEndOfStream("past");
-            }
-
-//            else
-                term = JIPNumber.create(c);
-
-//                System.out.println("get0 " + c);
-
-            if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
-
-            return params.getNth(2).unify(term, varsTbl);
+        	streamInfo.setEndOfStream("past");
         }
-        else
-            throw new JIPTypeException(JIPTypeException.NUMBER, params.getNth(2));
+
+        term = JIPNumber.create(c);
+
+        if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+            getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
+
+        return params.getNth(2).unify(term, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()

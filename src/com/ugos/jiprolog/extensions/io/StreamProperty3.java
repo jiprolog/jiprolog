@@ -42,12 +42,7 @@ public final class StreamProperty3 extends JIPXCall
         if(handle == null)
             throw new JIPInstantiationException(2);
 
-        if(!(handle instanceof JIPNumber))
-            throw new JIPTypeException(JIPTypeException.NUMBER, handle);
-
-    	int nhandle = (int)((JIPNumber)handle).getDoubleValue();
-
-    	StreamInfo streamInfo = JIPio.getStreamInfo(nhandle);
+    	StreamInfo streamInfo = JIPio.getStreamInfo(handle);
     	if(streamInfo == null)
     		return false;
 

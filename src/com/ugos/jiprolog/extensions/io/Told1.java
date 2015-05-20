@@ -45,25 +45,17 @@ public class Told1 extends JIPXCall
             }
         }
 
-        // check if input is a Number
-        if(input instanceof JIPNumber)
-        {
-            // Gets the handle to the stream
-            int streamHandle = (int)((JIPNumber)input).getDoubleValue();
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(input);
+
 
             try
             {
-                JIPio.closeOutputStream(streamHandle);
+                JIPio.closeOutputStream(sinfo.getHandle());
             }
             catch(IOException ex)
             {
                 throw new JIPRuntimeException(JIPio.ERR_IOEXCEPTION, ex.getMessage());
             }
-        }
-        else
-        {
-            throw new JIPTypeException(JIPTypeException.ATOM, input);
-        }
 
         return true;
     }

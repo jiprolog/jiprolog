@@ -58,17 +58,8 @@ public final class ReadTerm3 extends JIPXCall
                 }
             }
 
-            // check if input is an Atom
-            if(input instanceof JIPNumber)
-            {
-                // Gets the handle to the stream
-                m_streamHandle = (int)((JIPNumber)input).getDoubleValue();
-
-                streamInfo = JIPio.getStreamInfo(m_streamHandle);
-                if(streamInfo == null)
-                {
-                	throw JIPExistenceException.createStreamException(JIPNumber.create(m_streamHandle));
-                }
+                streamInfo = JIPio.getStreamInfo(input);
+                m_streamHandle = streamInfo.getHandle();
 
                 String mode = streamInfo.getProperties().getProperty("mode");
                 if(!(mode.equals("mode(read)")))
@@ -82,11 +73,6 @@ public final class ReadTerm3 extends JIPXCall
                 {
                 	throw JIPExistenceException.createSourceSynkException(JIPNumber.create(m_streamHandle));
                 }
-            }
-            else
-            {
-                throw new JIPTypeException(JIPTypeException.ATOM, input);
-            }
         }
 
         boolean bUserStream;

@@ -61,81 +61,64 @@ public final class GetChar2 extends JIPXCall
             }
         }
 
-        // check if input is an Atom
-        if(input instanceof JIPNumber)
+        // Get the stream
+        StreamInfo sinfo = JIPio.getStreamInfo(input);
+
+        Properties properties = sinfo.getProperties();
+        if(!(properties.getProperty("mode").equals("mode(read)")))
+        	throw new JIPPermissionException("input", "stream", input);
+        if(!properties.getProperty("type").equals("type(text)"))
+        	throw new JIPPermissionException("input", "binary_stream", input);
+
+        final InputStream ins = JIPio.getInputStream(streamHandle = sinfo.getHandle(), getJIPEngine());
+
+        if (ch instanceof JIPVariable && ((JIPVariable)ch).isBounded())
         {
-            // Gets the handle to the stream
-            streamHandle = (int)((JIPNumber)input).getDoubleValue();
-
-            // Get the stream
-
-            StreamInfo sinfo = JIPio.getStreamInfo(streamHandle);
-	        if(sinfo == null)
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-
-	        Properties properties = sinfo.getProperties();
-	        if(!(properties.getProperty("mode").equals("mode(read)")))
-	        	throw new JIPPermissionException("input", "stream", input);
-	        if(!properties.getProperty("type").equals("type(text)"))
-	        	throw new JIPPermissionException("input", "binary_stream", input);
-
-	        final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
-            if(ins == null)
-            {
-            	throw JIPExistenceException.createStreamException(JIPNumber.create(streamHandle));
-//            	throw new JIPDomainException("stream_or_alias", m_strStreamHandle);
-            }
-
-	        if (ch instanceof JIPVariable && ((JIPVariable)ch).isBounded())
-	        {
-                ch = ((JIPVariable)ch).getValue();
-		        if(!(ch instanceof JIPAtom))
-		            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
-				else if(((JIPAtom)ch).getName().equals("end_of_file"))
-					ch = JIPAtom.create(String.valueOf((char)-1));
-		        else if(((JIPAtom)ch).getName().length() > 1)
-					throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
-	        }
-
-			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)"))
-			{
-				if(properties.getProperty("eof_action").equals("eof_action(error)"))
-					throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
-				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
-		            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
-				else // eof_action(reset)
-					return unify(params, varsTbl);
-			}
-			else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)"))
-			{
-				sinfo.setEndOfStream("past");
-	            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
-			}
-			else
-			{ // end_of_stream(no)
-				if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-	                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
-
-	            int c = readNextChar(ins);
-	            if(c == -1)
-	            {
-	            	sinfo.setEndOfStream("past");
-	            	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
-	            }
-	            else if(c == 0)
-	            	 throw new JIPRepresentationException("character");
-
-
-	            JIPTerm term = JIPAtom.create(String.valueOf((char)c));
-
-            	if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-	                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
-
-	            return params.getNth(2).unify(term, varsTbl);
-			}
+            ch = ((JIPVariable)ch).getValue();
+	        if(!(ch instanceof JIPAtom))
+	            throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
+			else if(((JIPAtom)ch).getName().equals("end_of_file"))
+				ch = JIPAtom.create(String.valueOf((char)-1));
+	        else if(((JIPAtom)ch).getName().length() > 1)
+				throw new JIPTypeException(JIPTypeException.IN_CHARACTER, ch);
         }
-        else
-            throw new JIPDomainException("stream_or_alias", input);
+
+		if(properties.getProperty("end_of_stream").equals("end_of_stream(past)"))
+		{
+			if(properties.getProperty("eof_action").equals("eof_action(error)"))
+				throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
+			else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
+	            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
+			else // eof_action(reset)
+				return unify(params, varsTbl);
+		}
+		else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)"))
+		{
+			sinfo.setEndOfStream("past");
+            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
+		}
+		else
+		{ // end_of_stream(no)
+			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
+
+            int c = readNextChar(ins);
+            if(c == -1)
+            {
+            	sinfo.setEndOfStream("past");
+            	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
+            }
+            else if(c == 0)
+            	 throw new JIPRepresentationException("character");
+
+
+            JIPTerm term = JIPAtom.create(String.valueOf((char)c));
+
+        	if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
+
+            return params.getNth(2).unify(term, varsTbl);
+        }
     }
 
     public boolean hasMoreChoicePoints()
