@@ -58,12 +58,12 @@ public class Disjunction2 extends Call1 {
         	if(ifthenelse)
         	{
 //				;(->(_X,_Y), Z) :- !, Z.
-				curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(goal, null));
+				curNode.m_injectedBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(goal, null));
         	}
         	else if(starifthenelse)
         	{
 //				;(*->(_X,_Y), Z) :- Z.
-				curNode.m_altBody = new ConsCell(goal, null);
+				curNode.m_injectedBody = new ConsCell(goal, null);
         	}
         	else
         	{
@@ -83,7 +83,7 @@ public class Disjunction2 extends Call1 {
 					ConsCell funparams = ((Functor)goal).getParams();
 
 					// ->(X,Y) :- call(X), !, Y.
-					curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(funparams.getTerm(2), null)));
+					curNode.m_injectedBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("!/0"), null), new ConsCell(funparams.getTerm(2), null)));
 				}
 				else if(((Functor)goal).getAtom().equals(Atom.STARIF))
 				{
@@ -92,7 +92,7 @@ public class Disjunction2 extends Call1 {
 					ConsCell funparams = ((Functor)goal).getParams();
 
 					// *->(X,Y) :- call(X), '$!', Y.
-					curNode.m_altBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("$!/0"), null), new ConsCell(funparams.getTerm(2), null)));
+					curNode.m_injectedBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("$!/0"), null), new ConsCell(funparams.getTerm(2), null)));
 				}
 				else
 				{

@@ -33,7 +33,7 @@ public class Catch3 extends Call1
 			if(catcher.unify(ex.getTerm().getTerm().copy(true), varsTbl))
 			{
 				final PrologObject handler = getGoal(getRealTerm(getParam(3)));
-				thisNode.m_altBody = new ConsCell(handler, null);
+				thisNode.m_injectedBody = new ConsCell(handler, null);
 				return true;
 			}
 			else
@@ -69,7 +69,7 @@ public class Catch3 extends Call1
 
 					final PrologObject handler = getGoal(getRealTerm(getParam(3)));
 
-					thisNode.m_altBody = new ConsCell(handler, null);
+					thisNode.m_injectedBody = new ConsCell(handler, null);
 
 					return true;
 				}
@@ -103,7 +103,7 @@ public class Catch3 extends Call1
 //			}
 		});
 
-		thisNode.m_altBody = new ConsCell(goal, new ConsCell(new BuiltInPredicate("$reh/0", null), null));
+		thisNode.m_injectedBody = new ConsCell(goal, new ConsCell(new BuiltInPredicate("$reh/0", null), null));
 
 		return true;
 

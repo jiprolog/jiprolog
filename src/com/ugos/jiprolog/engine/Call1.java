@@ -28,7 +28,7 @@ public class Call1 extends BuiltIn {
 
         final WAM.Node curNode = getWAM().getCurNode();
 
-        curNode.m_altBody = new ConsCell(goal, null);
+        curNode.m_injectedBody = new ConsCell(goal, null);
 
 		return true;
 
