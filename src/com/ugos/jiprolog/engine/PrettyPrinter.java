@@ -20,42 +20,45 @@
 
 package com.ugos.jiprolog.engine;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
-
-import com.ugos.util.*;
+import com.ugos.util.ValueEncoder;
 
 final class PrettyPrinter extends Object
 {
-    //private static OperatorManager s_opManager = new OperatorManager();
-
     private static final char[] ESCAPE = {'a', 'b', 't', 'n', 'v', 'f', 'r'};
     private static String Q_CHARS = "\\()[].,`{}\"";
 
     public static final String printTerm(final PrologObject obj, final OperatorManager opManager, final boolean bQ)
     {
     	Hashtable<String, Variable> varTable = new Hashtable<String, Variable>();
-
     	return print(obj, opManager, bQ, varTable);
     }
 
     private static final String print(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
     {
+    	StringBuilder sb = new StringBuilder();
+    	print(obj, opManager, bQ, varTable, sb);
+
+        return sb.toString();
+    }
+
+    private static final void print(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
+    {
         if (obj instanceof Atom)
         {
-            return printAtom(obj, opManager, bQ);
+            printAtom(obj, opManager, bQ, sb);
         }
         else if(obj instanceof Functor)
         {
-            return printFunctor(obj, opManager,bQ, varTable);
+            printFunctor(obj, opManager,bQ, varTable, sb);
         }
         else if(obj instanceof Clause)
         {
-            return printClause(obj, opManager, bQ, varTable);
+            printClause(obj, opManager, bQ, varTable, sb);
         }
         else if(obj instanceof Expression)
         {
-            return printExpression(obj, bQ);
+            printExpression(obj, bQ, sb);
         }
 //        else if(obj instanceof PString)
 //        {
@@ -63,15 +66,15 @@ final class PrettyPrinter extends Object
 //        }
         else if(obj instanceof List)
         {
-            return printList(obj, opManager, bQ, varTable);
+            printList(obj, opManager, bQ, varTable, sb);
         }
         else if(obj instanceof ConsCell)
         {
-            return printCons(obj, opManager,bQ, varTable);
+            printCons(obj, opManager,bQ, varTable, sb);
         }
         else if(obj instanceof Variable)
         {
-            return printVariable(obj, opManager, bQ, varTable);
+            printVariable(obj, opManager, bQ, varTable, sb);
         }
         else
         {
@@ -79,32 +82,39 @@ final class PrettyPrinter extends Object
         }
     }
 
-    private static final String printAtom(final PrologObject obj, final OperatorManager opManager, final boolean bQ)
+    private static final void printAtom(final PrologObject obj, final OperatorManager opManager, final boolean bQ, StringBuilder sb)
     {
-        return printAtomString(((Atom)obj).getName(), opManager,bQ);
+        printAtomString(((Atom)obj).getName(), opManager,bQ, sb);
     }
 
-    private static final String printAtomString(final String strAtom, final OperatorManager opManager, final boolean bQ)
+    private static final void printAtomString(final String strAtom, final OperatorManager opManager, final boolean bQ, StringBuilder sb)
     {
         if(opManager == null || bQ)  // canonical
         {
             if(strAtom.length() == 0)
-                return "''";
+            {
+            	sb.append("''");
+            	return;
+            }
 
             if(strAtom.equals("{}"))
-                return "{}";
+            {
+            	sb.append("{}");
+            	return;
+            }
 
             if(strAtom.equals("[]"))
-                return "[] ";
+            {
+            	sb.append("[]");
+            	return;
+            }
+
+            StringBuilder sbAtom = new StringBuilder();
 
             boolean bQuoted = false;
 
             if(Q_CHARS.indexOf(strAtom) > -1)
                 bQuoted = true;
-//                return "'" + strAtom + "'";
-
-
-            String strRet = "";
 
             // se comincia con una maiuscola occorre l'apice
             if(PrologTokenizer.UPPERCASE_CHARS.indexOf(strAtom.charAt(0)) > -1)
@@ -129,18 +139,13 @@ final class PrettyPrinter extends Object
                 switch(strAtom.charAt(i))
                 {
                     case '\'':
-                        strRet+= "\\'";
+                    	sbAtom.append("\\'");
                         bQuoted = true;
                         break;
 
                     case '\\':
                         bSpecialFound = true;
-
-//                        if(bSimpleFound)
-                            strRet+= "\\\\";
-//                        else
-//                        	strRet += "\\";
-
+                        sbAtom.append("\\\\");
                         bQuoted = true;
                         break;
 
@@ -151,35 +156,30 @@ final class PrettyPrinter extends Object
                            (c < 58 && c > 47))
                         {
                             bSimpleFound = true;
-                            strRet+= c;
+                            sbAtom.append(c);
                         }
                         else if(PrologTokenizer.SINGLETON_CHARS.indexOf(c) > -1)
                         {
                             bSingletonFound = true;
-                            strRet+= c;
+                            sbAtom.append(c);
                         }
                         else if(c <= 13 && c >= 7)
                         {
                             bQuoted = true;
-                            strRet+= "\\" + ESCAPE[c - 7];;
+                            sbAtom.append('\\').append(ESCAPE[c - 7]);
                         }
                         else if(c < ' ')
                         {
                             bQuoted = true;
-                            strRet+= "\\x" + ValueEncoder.byteToHexString((byte)c);
-                            Integer.toString(c);
+                            sbAtom.append("\\x").append(ValueEncoder.byteToHexString((byte)c));
                             //strRet+= "~" + (char)(c + '@');
                         }
                         else
                         {
                             bSpecialFound = true;
-                            strRet+= c;
+                            sbAtom.append(c);
                         }
                 }
-
-//	            System.out.println("" + bSimpleFound + " " + bSingletonFound + " " + bSpecialFound);
-
-//	            System.out.println("Quoted " + bQuoted);
             }
 
             bQuoted = bQuoted ||
@@ -189,20 +189,23 @@ final class PrettyPrinter extends Object
 
             if(bQuoted)
             {
-                return "'" + strRet + "'";
+            	sb.append('\'').append(sbAtom).append('\'');
+
+//                return "'" + strRet + "'";
             }
             else
             {
-                return strRet;
+                sb.append(sbAtom);
             }
         }
         else
         {
-            return strAtom;
+        	sb.append(strAtom);
+//            return strAtom;
         }
     }
 
-    private static final String printFunctor(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printFunctor(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         final Functor funct = (Functor)obj;
 
@@ -221,9 +224,9 @@ final class PrettyPrinter extends Object
 
         		char c = (char)('A' + r);
 
-        		String varName = c + "" + ((d > 0) ? d : "");
+        		sb.append(c).append(((d > 0) ? d : ""));
 
-        		return varName;
+        		return;
         	}
         	catch(NumberFormatException ex)
         	{
@@ -236,17 +239,19 @@ final class PrettyPrinter extends Object
             final Operator op = opManager.get(strFunctor);
             if((funct.getArity() == 1 && (op.getPrefix() != null || op.getPostfix() != null)) ||
                    (funct.getArity() == 2 && (op.getInfix() != null)))
-                return printOperator(obj, opManager, bQ, varTable);
+            {
+                printOperator(obj, opManager, bQ, varTable, sb);
+                return;
+            }
         }
 
 
         ConsCell params = funct.getParams();
 
-
         // Costruisce la stringa
         if(params == null)
         {
-            return printAtomString(strFunctor, opManager, bQ);//;
+            printAtomString(strFunctor, opManager, bQ, sb);
         }
         else
         {
@@ -257,19 +262,31 @@ final class PrettyPrinter extends Object
                 {
                     ConsCell par = ((Functor)params.getHead()).getParams();
                     if(par != null && par != ConsCell.NIL)
-                        return "{}(" + printParams(par, opManager, bQ, varTable) + ")";
+                    {
+                    	sb.append("{}(");
+                    	printParams(par, opManager, bQ, varTable, sb);
+                    	sb.append(')');
+                    	return;
+                    }
                     else
-                        return "{}";
+                    {
+                    	sb.append("{}");
+                    	return;
+                    }
                 }
             }
 
-            String strParams = printParams(params, opManager, bQ, varTable);
+            printAtomString(strFunctor, opManager, bQ, sb);
 
-            return printAtomString(strFunctor, opManager, bQ) + "(" + strParams + ")";
+            sb.append('(');
+
+            printParams(params, opManager, bQ, varTable, sb);
+
+            sb.append(')');
         }
     }
 
-    private static final String printOperator(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printOperator(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         final Functor oper = (Functor)obj;
 
@@ -279,122 +296,108 @@ final class PrettyPrinter extends Object
         // Estrae i parametri
         final ConsCell params = oper.getParams();
         if(params == null)
-            return printAtomString(strOper, opManager, bQ);;
+        {
+            printAtomString(strOper, opManager, bQ, sb);
+            return;
+        }
 
         int nArity = params.getHeight();
 
         final Operator op = opManager.get(strOper);
 
         PrologObject head = params.getHead();
-        String strFirst;
-//        if(head instanceof List || head instanceof Functor || !(head instanceof ConsCell))
-//        {
-            strFirst = print(head, opManager,bQ, varTable);
-//        }
-//        else
-//        {
-//            strFirst = printCons(head);
-//        }
 
         if (nArity == 1 && op.getPrefix() != null)
         {
-            return printAtomString(strOper, opManager, bQ) + " " + strFirst;
+            printAtomString(strOper, opManager, bQ, sb);
+            sb.append(' ');
+            print(head, opManager,bQ, varTable, sb);
         }
         else if (nArity == 1 && op.getPostfix() != null)
         {
-            return strFirst + " " + printAtomString(strOper, opManager, bQ);
+        	print(head, opManager,bQ, varTable, sb);
+        	sb.append(' ');
+        	printAtomString(strOper, opManager, bQ, sb);
         }
         else //if (op.isInfix())
         {
-            String strSecond;
             PrologObject tail = BuiltIn.getRealTerm(params.getTail());
+
+        	print(head, opManager,bQ, varTable, sb);  // first
+
+        	sb.append(' ');
+
+        	printAtomString(strOper, opManager, bQ, sb);
+
+        	sb.append(' ');
 
             //System.out.println(tail.getClass());
             if(tail instanceof List || tail instanceof Functor || !(tail instanceof ConsCell))
             {
-                //System.out.println("print");
-                strSecond = print(tail, opManager, bQ, varTable);
-                //System.out.println(strSecond);
+                print(tail, opManager, bQ, varTable, sb); // second
             }
             else
             {
-                //System.out.println("printCons");
-                strSecond = print(((ConsCell)tail).getHead(), opManager, bQ, varTable);
-                //System.out.println(strSecond);
+                print(((ConsCell)tail).getHead(), opManager, bQ, varTable, sb); // second;
             }
-
-            //if(params.getHead() instanceof ConsCell)
-            //    strFirst = printCons(params.getHead());
-            //else
-//                strFirst = print(params.getHead());
-
-            //if(((ConsCell)params.getTail()).getHead() instanceof ConsCell)
-            //    strSecond = printCons(((ConsCell)params.getTail()).getHead());
-            //else
-
-//                strSecond  = print(((ConsCell)params.getTail()).getHead());
-
-            //return print(params.getHead()) + " " + strOper + " " + print(((ConsCell)params.getTail()).getHead());
-            return strFirst + " " + printAtomString(strOper, opManager, bQ) + " " + strSecond;
         }
     }
 
-    private static final String printClause(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printClause(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         // Estrae il nome
         final PrologObject head = ((Clause)obj).getHead();
         final ConsCell tail = (ConsCell)((Clause)obj).getTail();
 
-        if(tail == null)
-            return print(head, opManager, bQ, varTable) + ".";
-        else
+        print(head, opManager, bQ, varTable, sb);
+        if(tail != null)
         {
-            String strHead = print(head, opManager, bQ, varTable);
-            String strBody = print(tail.getHead(), opManager, bQ, varTable);
-
-//          String strBody = "";
-//          String strHead = print(head);
-//          ConsCell params = tail;
-//
-            //            while (params != null)
-            //            {
-            //                strBody += print(params.getHead());
-            //                params = (ConsCell)params.getTail();
-            //                if(params != null && params != List.NIL && params != ConsCell.NIL)
-            //                    strBody += ", ";
-            //            }
-
-            //String strBody = print(tail);
-
-            return strHead + ":-" + strBody + ".";
+            sb.append(":-");
+            print(tail.getHead(), opManager, bQ, varTable, sb);  // body
         }
+
+        sb.append('.');
     }
 
-    private static final String printExpression(final PrologObject obj, final boolean bQ)
+    private static final void printExpression(final PrologObject obj, final boolean bQ, StringBuilder sb)
     {
         final double dVal = ((Expression)obj).getValue();
         final int nVal = (int)dVal;
 
         if(((Expression)obj).isInteger())
-            return Integer.toString(nVal);
+            sb.append(Integer.toString(nVal));
         else
-            return Double.toString(dVal);
+        	sb.append(Double.toString(dVal));
     }
 
-    private static final String printList(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printList(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         if(opManager == null) // canonical
         {
             if(((List)obj).isNil())
-                return "[]";
+            {
+            	sb.append("[]");
+            }
             else if(((List)obj).getTail() != null)
-                return "'.'(" + print(((List)obj).getHead(), null, bQ, varTable) + "," + print(((List)obj).getTail(), null, bQ, varTable) + ")";
+            {
+            	sb.append("'.'(");
+            	print(((List)obj).getHead(), null, bQ, varTable, sb);
+            	sb.append(",");
+            	print(((List)obj).getTail(), null, bQ, varTable, sb);
+            	sb.append(')');
+            }
             else
-                return "'.'(" + print(((List)obj).getHead(), null, bQ, varTable)+ ",[])";
+            {
+            	sb.append("'.'(");
+                print(((List)obj).getHead(), null, bQ, varTable, sb);
+                sb.append(",[])");
+            }
         }
         else
         {
-            return "[" + printCons(obj, opManager, bQ, varTable) + "]";
+        	sb.append('[');
+        	printCons(obj, opManager, bQ, varTable, sb);
+        	sb.append(']');
         }
     }
 //    private static final String printPString(final PString string)
@@ -442,16 +445,15 @@ final class PrettyPrinter extends Object
 //    	}
 //
 //    }
-    private static final String printParams(final ConsCell cons, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printParams(final ConsCell cons, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         // Stampa di una lista
-        String strParams = "";
         PrologObject term = cons;
         PrologObject head = null;
 
         if(cons.getHead() == null)
         {
-            return "";
+            return;
         }
 
         while (term != null)
@@ -460,7 +462,7 @@ final class PrettyPrinter extends Object
 
             if(head != null)
             {
-                strParams += print(head, opManager, bQ, varTable);
+            	print(head, opManager, bQ, varTable, sb);
 
                 term = ((ConsCell)term).getTail();
 
@@ -469,7 +471,7 @@ final class PrettyPrinter extends Object
                     head = ((ConsCell)term).getHead();
 
                     if(head != null)
-                        strParams += "," ;
+                    	sb.append(',');
                 }
             }
             else
@@ -477,8 +479,6 @@ final class PrettyPrinter extends Object
                 term = null;
             }
         }
-
-        return strParams ;
     }
 //    private static final String printConsCell(final PrologObject obj)
 //    {
@@ -490,17 +490,16 @@ final class PrettyPrinter extends Object
 //            return printCons(obj);
 //    }
 
-    private static final String printCons(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printCons(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         // Stampa di una lista
         final ConsCell cons = (ConsCell)obj;
-        String strConsCell = "";
         PrologObject term = cons;
         PrologObject head = null;
 
         if(cons.getHead() == null)
         {
-            return "";
+            return;
         }
         else if(opManager != null)
         {
@@ -515,9 +514,15 @@ final class PrettyPrinter extends Object
 
 //                    System.out.println(head.getClass());
                     if(head instanceof ConsCell && !(head instanceof Functor) && !(head instanceof List) && !(head instanceof Clause))
-                        strConsCell += "(" + printCons(head, opManager, bQ, varTable) + ")";
+                    {
+                    	sb.append('(');
+                    	printCons(head, opManager, bQ, varTable, sb);
+                    	sb.append(')');
+                    }
                     else
-                        strConsCell += print(head, opManager, bQ, varTable);
+                    {
+                        print(head, opManager, bQ, varTable, sb);
+                    }
 
                     term = ((ConsCell)term).getTail();
 
@@ -528,7 +533,8 @@ final class PrettyPrinter extends Object
 
                         if(term == null)
                         {
-                            strConsCell += "|" + print(var, opManager, bQ, varTable);
+                        	sb.append('|');
+                        	print(var, opManager, bQ, varTable, sb);
                         }
                     }
 
@@ -540,11 +546,12 @@ final class PrettyPrinter extends Object
                             head = BuiltIn.getRealTerm(head);
 
                         if(head != null)
-                            strConsCell += "," ;
+                        	sb.append(',');
                     }
                     else if(term != null)
                     {
-                        strConsCell += "|" + print(term, opManager, bQ, varTable);
+                    	sb.append('|');
+                    	print(term, opManager, bQ, varTable, sb);
                         term = null;
                     }
                 }
@@ -553,14 +560,12 @@ final class PrettyPrinter extends Object
                     term = null;
                 }
             }
-
-            return strConsCell ;
         }
         else
         {
             // Stampa di una lista canonica
 
-            strConsCell = "";
+        	StringBuilder sbHead = new StringBuilder();
 
             head = ((ConsCell)term).getHead();
             if(head instanceof Variable && ((Variable)head).isBounded())
@@ -572,14 +577,7 @@ final class PrettyPrinter extends Object
 
             if(head != null)
             {
-//                if(head instanceof ConsCell && !(head instanceof Functor) && !(head instanceof List) && !(head instanceof Clause))
-//                {
-//                    strConsCell += "','(" + printCons(head, opManager) + ")";
-//                }
-//                else
-//                {
-                    strConsCell += print(head, opManager, bQ, varTable);// + ", ";
-//                }
+            	print(head, opManager, bQ, varTable, sbHead);// + ", ";
             }
 
             if(term instanceof ConsCell)
@@ -591,34 +589,33 @@ final class PrettyPrinter extends Object
 
                 if(head != null)
                 {
-                    return "','(" + strConsCell + "," + print(term, opManager, bQ, varTable) + ")";
+                	sb.append("','(");
+                	sb.append(sbHead);
+                	sb.append(',');
+                	print(term, opManager, bQ, varTable, sb);
+                	sb.append(')');
                 }
                 else
                 {
-                    return strConsCell;
+                    sb.append(sbHead);
                 }
-
-//                if(((ConsCell)term).getTail() == null || ((ConsCell)term).getTail() == ConsCell.NIL)
-//                {
-//                    return "','(" + strConsCell + ", " + print(((ConsCell)term).getHead(), opManager, bQ) + ")";
-//                }
-//                else
-//                {
-//                    return "','(" + strConsCell + ", " + printCons(term, opManager, bQ) + ")";
-//                }
             }
             else if(term != null)
             {
-                return "','(" + strConsCell +  "," + print(term, opManager, bQ, varTable) + ")";
+            	sb.append("','(");
+            	sb.append(sbHead);
+            	sb.append(',');
+            	print(term, opManager, bQ, varTable, sb);
+            	sb.append(')');
             }
             else
             {
-                return strConsCell;
+                sb.append(sbHead);
             }
         }
     }
 
-    private static final String printVariable(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable)
+    private static final void printVariable(final PrologObject obj, final OperatorManager opManager, final boolean bQ, Hashtable<String, Variable> varTable, StringBuilder sb)
     {
         // Stampa di una variabile
         final Variable var = ((Variable)obj).lastVariable();
@@ -628,19 +625,19 @@ final class PrettyPrinter extends Object
         if(var.cyclic() && varTable.containsKey(var.getName()))
 //        if(varTable.containsKey(var.getName()))
         {
-            return var.getName();
+        	sb.append(var.getName());
+        	return;
         }
         else if(object == null)
-            return "_" + Long.toString(var.getAddress());// + ":" + Integer.toString(var.hashCode()); /* + var.getName() + "?";*/
+        {
+        	sb.append('_').append(Long.toString(var.getAddress()));// + ":" + Integer.toString(var.hashCode()); /* + var.getName() + "?";*/
+        	return;
             //return var.getName()  + " = " + "_" + Integer.toString(var.getAddress());// + ":" + Integer.toString(var.hashCode()); /* + var.getName() + "?";*/
+        }
         else
             varTable.put(var.getName(), var);
-            return print(object, opManager, bQ, varTable);
-                //return var.getAddress() + "." + print(var.getObject());
-                //return var.getName() + "=" + print(object, opManager);
 
-//            	return print(object, opManager, true);
-//        }
+        print(object, opManager, bQ, varTable,sb);
     }
 }
 

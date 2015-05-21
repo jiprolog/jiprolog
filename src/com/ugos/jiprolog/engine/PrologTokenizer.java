@@ -92,7 +92,8 @@ class PrologTokenizer
     Token getNextToken() throws IOException, JIPSyntaxErrorException
     {
         // sostituisce il lex
-        String strTerm = "";
+//        String strTerm = "";
+        StringBuilder sbTerm = new StringBuilder();
         int curChar = -1;
         int nState = STATE_NONE;
         int nTokenType = TOKEN_UNKNOWN;
@@ -131,42 +132,42 @@ class PrologTokenizer
                         }
                         else if((curChar == QUOTE_CHAR))
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nState = STATE_QUOTE;
                         }
                         else if((curChar == DOUBLEQUOTE_CHAR))
                         {
-                            strTerm += (char)curChar;
+                            sbTerm.append((char)curChar);
                             nState = STATE_DOUBLEQUOTE;
                         }
                         else if((LOWERCASE_CHARS.indexOf(curChar) > -1))
                         {
                             nState = STATE_ATOM;
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nTokenType = TOKEN_ATOM;
                         }
                         else if((UPPERCASE_CHARS.indexOf(curChar) > -1))
                         {
                             nState = STATE_VARIABLE;
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nTokenType = TOKEN_VARIABLE;
                         }
 //                        else if((SIGN_CHARS.indexOf(curChar) > -1))
 //                        {
 //                            nState = STATE_SIGN;
-//                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+//                            sbTerm.append( (char)curChar;//String.valueOf((char)curChar);
 //                            nTokenType = TOKEN_SIGN;
 //                        }
                         else if((SPECIAL_CHARS.indexOf(curChar) > -1))
                         {
                             nState = STATE_SPECIAL_ATOM;
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nTokenType = TOKEN_SPECIAL_ATOM;
                         }
                         else if((NUMBER_CHARS.indexOf(curChar) > -1))
                         {
                             nState = STATE_NUMBER;
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nTokenType = TOKEN_NUMBER;
                         }
                         else if(curChar <= 0x20) // whitespace char
@@ -175,7 +176,8 @@ class PrologTokenizer
                             //System.out.println("TOKEN_WHITESPACE");
                             nTokenType = TOKEN_WHITESPACE;
                             nState = STATE_END;
-                            strTerm = " ";
+                            sbTerm = new StringBuilder(" ");
+//                            strTerm = " ";
                         }
 //                        else if(curChar < 0x20) // whitespace char
 //                            //if((WHITESPACE_CHARS.indexOf(curChar) > -1))
@@ -184,7 +186,7 @@ class PrologTokenizer
 //                        }
                         else if((SINGLETON_CHARS.indexOf(curChar) > -1))
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
 
                             int c = m_lnReader.read();
                             if(c == -1)
@@ -196,8 +198,9 @@ class PrologTokenizer
                             }
                             else
                             {
-                                if((strTerm + (char)c).equals("!>"))
-                                    strTerm += (char)c;//String.valueOf((char)c);
+                            	if(c == '>' && sbTerm.charAt(sbTerm.length() - 1) == '!')
+//                                if((strTerm + (char)c).equals("!>"))
+                                    sbTerm.append((char)c);//String.valueOf((char)c);
                                 else
                                     m_lnReader.unread(c);
                             }
@@ -222,7 +225,7 @@ class PrologTokenizer
                                (LOWERCASE_CHARS.indexOf(curChar) > -1) ||
                                (NUMBER_CHARS.indexOf(curChar) > -1))
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else
                         {
@@ -237,7 +240,7 @@ class PrologTokenizer
                                (LOWERCASE_CHARS.indexOf(curChar) > -1) ||
                                (NUMBER_CHARS.indexOf(curChar) > -1))
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else
                         {
@@ -248,19 +251,21 @@ class PrologTokenizer
                         break;
 
                     case STATE_SPECIAL_ATOM:
-                        if((strTerm + (char)curChar).equals("<!") || (strTerm + (char)curChar).equals("!>"))
+                    	char lastChar = sbTerm.charAt(sbTerm.length() - 1);
+                    	if((curChar == '!' && lastChar == '<') || (curChar == '>' && lastChar == '!'))
+//                        if((strTerm + (char)curChar).equals("<!") || (strTerm + (char)curChar).equals("!>"))
                     	{
-                        	strTerm += (char)curChar;//String.valueOf((char)c);
+                        	sbTerm.append((char)curChar);//String.valueOf((char)c);
                         	nTokenType = TOKEN_SPECIAL_ATOM;
                             nState = STATE_END;
                     	}
                         else if((SPECIAL_CHARS.indexOf(curChar) > -1))
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
-                            if(strTerm.equals(OPENCOMMENT_CHAR))
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
+                            if(sbTerm.toString().equals(OPENCOMMENT_CHAR))
                             {
                                 nState = STATE_COMMENT;
-                                strTerm = "";
+                                sbTerm = new StringBuilder("");
                                 nTokenType = TOKEN_UNKNOWN;
                             }
                         }
@@ -277,7 +282,7 @@ class PrologTokenizer
 //                    	if((SPECIAL_CHARS.indexOf(curChar) > -1))
 //                        {
 //                    		nState = STATE_SPECIAL_ATOM;
-//                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+//                            sbTerm.append( (char)curChar;//String.valueOf((char)curChar);
 //                            nTokenType = TOKEN_SPECIAL_ATOM;
 //                        }
 //                        else
@@ -291,7 +296,7 @@ class PrologTokenizer
                     case STATE_NUMBER:
                         if(NUMBER_CHARS.indexOf(curChar) > -1)
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else if(curChar == '.')
                         {
@@ -310,39 +315,43 @@ class PrologTokenizer
                             }
                             else
                             {
-                                strTerm += (char)curChar;//String.valueOf((char)curChar);
+                                sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                                 nState = STATE_DECIMAL;
                             }
                         }
                         else if(curChar == 'e' || curChar == 'E')
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nState = STATE_EXPONENT;
                         }
                         else if(curChar == '\'')
                         {
-                            if(strTerm.equals("0"))
+                        	if(sbTerm.charAt(0) == '0')
+//                            if(strTerm.equals("0"))
                                 nState = STATE_ASCII;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
                         }
                         else if(curChar == 'b')
 						{
-                            if(strTerm.equals("0"))
+                        	if(sbTerm.charAt(0) == '0')
+//                            if(strTerm.equals("0"))
                                 nState = STATE_BINARY;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
 						}
                         else if(curChar == 'o')
 						{
-                            if(strTerm.equals("0"))
+                        	if(sbTerm.charAt(0) == '0')
+//                            if(strTerm.equals("0"))
                                 nState = STATE_OCTAL;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
 						}
                         else if(curChar == 'x')
 						{
-                            if(strTerm.equals("0"))
+                        	if(sbTerm.charAt(0) == '0')
+//                            if(strTerm.equals("0"))
                                 nState = STATE_HEXADECIMAL;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
@@ -359,12 +368,12 @@ class PrologTokenizer
                     case STATE_EXPONENT:
                         if(curChar == '+' || curChar == '-')
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nState = STATE_INTEGER;
                         }
                         else if(NUMBER_CHARS.indexOf(curChar) > -1)
                         {
-                        	strTerm += (char)curChar;//String.valueOf((char)curChar);
+                        	sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nState = STATE_INTEGER;
                         }
                         else
@@ -376,11 +385,11 @@ class PrologTokenizer
                     case STATE_DECIMAL:
                         if(NUMBER_CHARS.indexOf(curChar) > -1)
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else if(curChar == 'e' || curChar == 'E')
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nState = STATE_EXPONENT;
                         }
                         else
@@ -395,7 +404,7 @@ class PrologTokenizer
                     case STATE_INTEGER:
                         if(NUMBER_CHARS.indexOf(curChar) > -1)
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else
                         {
@@ -409,40 +418,41 @@ class PrologTokenizer
                     case STATE_ASCII:
                         if(curChar == '\\')
                         {
-                            strTerm = "";
+                        	sbTerm = new StringBuilder();
+//                            strTerm = "";
                             curChar = m_lnReader.read();
                             switch(curChar)
                             {
                                 case 'a':  // \a bell
-                                    strTerm += Integer.toString(7);
+                                    sbTerm.append(Integer.toString(7));
                                     break;
 
                                 case 'b':  // \b backspace
-                                    strTerm += Integer.toString(8);
+                                    sbTerm.append( Integer.toString(8));
                                     break;
 
                                 case 'f':  // \f form feed
-                                    strTerm += Integer.toString(12);
+                                    sbTerm.append( Integer.toString(12));
                                     break;
 
                                 case 'n':  // \n line feed
-                                    strTerm += Integer.toString(10);
+                                    sbTerm.append( Integer.toString(10));
                                     break;
 
                                 case 'r':  // \r carriage return
-                                    strTerm += Integer.toString(13);
+                                    sbTerm.append( Integer.toString(13));
                                     break;
 
                                 case 's':  // \s space
-                                    strTerm += Integer.toString(32);
+                                    sbTerm.append( Integer.toString(32));
                                     break;
 
                                 case 't':  // \t tab
-                                    strTerm += Integer.toString(9);
+                                    sbTerm.append( Integer.toString(9));
                                     break;
 
                                 case 'v':  // \v vtab
-                                    strTerm += Integer.toString(11);
+                                    sbTerm.append( Integer.toString(11));
                                     break;
 
                                 case 'x':  // \xHX
@@ -455,7 +465,7 @@ class PrologTokenizer
                                     try
                                     {
                                         byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
-                                        strTerm += Integer.toString(val[0]);
+                                        sbTerm.append( Integer.toString(val[0]));
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -470,13 +480,14 @@ class PrologTokenizer
                                     break;
 
                                 default: // ignora \
-                                    strTerm += Integer.toString(curChar);
+                                    sbTerm.append( Integer.toString(curChar));
                             }
 
                         }
                         else
                         {
-                            strTerm = Integer.toString(curChar);
+                        	sbTerm = new StringBuilder(Integer.toString(curChar));
+//                            strTerm = Integer.toString(curChar);
                         }
 
                         nTokenType = TOKEN_NUMBER;
@@ -486,11 +497,12 @@ class PrologTokenizer
                     case STATE_BINARY:
                         if(NUMBER_BINARY_CHARS.indexOf(curChar) > -1)
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else
                         {
-                            strTerm = "" + Integer.parseInt(strTerm, 2);
+                        	sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 2));
+//                            strTerm = "" + Integer.parseInt(strTerm, 2);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
                             m_lnReader.unread(curChar);
@@ -501,11 +513,12 @@ class PrologTokenizer
                     case STATE_OCTAL:
                         if(NUMBER_OCTAL_CHARS.indexOf(curChar) > -1)
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                         }
                         else
                         {
-                            strTerm = "" + Integer.parseInt(strTerm, 8);
+                        	sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 8));
+//                            strTerm = "" + Integer.parseInt(strTerm, 8);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
                             m_lnReader.unread(curChar);
@@ -516,11 +529,12 @@ class PrologTokenizer
                     case STATE_HEXADECIMAL:
                         if(NUMBER_HEXADECIMAL_CHARS.indexOf(curChar) > -1)
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
                         }
                         else
                         {
-                            strTerm = "" + Integer.parseInt(strTerm, 16);
+                        	sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 16));
+//                            strTerm = "" + Integer.parseInt(strTerm, 16);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
                             m_lnReader.unread(curChar);
@@ -570,21 +584,21 @@ class PrologTokenizer
 	                            c = m_lnReader.read();
 	                            if(c == DOUBLEQUOTE_CHAR)
 	                            {
-	                                strTerm += "\"";
+	                                sbTerm.append('"');
 	                            }
 	                            else
 	                            {
 	                                // fine quoted atom
 	                            	m_lnReader.unread(c);
 //	                                m_lnReader.pushback();
-	                                strTerm += (char)curChar;//String.valueOf((char)curChar);
+	                                sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
 	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
 	                                nState = STATE_END;
 	                            }
                         	}
                             else
                             {
-                            	strTerm += (char)curChar;
+                            	sbTerm.append( (char)curChar);
                             }
                         }
                         else if(curChar == QUOTE_CHAR)
@@ -594,43 +608,43 @@ class PrologTokenizer
 	                            c = m_lnReader.read();
 	                            if(c == QUOTE_CHAR)
 	                            {
-	                                strTerm += "'";
+	                                sbTerm.append('\'');
 	                            }
 	                            else
 	                            {
 	                                // fine quoted atom
 	                            	m_lnReader.unread(c);
 //	                                m_lnReader.pushback();
-	                                strTerm += (char)curChar;//String.valueOf((char)curChar);
+	                                sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
 	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
 	                                nState = STATE_END;
 	                            }
                         	}
                             else
                             {
-                            	strTerm += (char)curChar;
+                            	sbTerm.append( (char)curChar);
                             }
                         }
                         else if(nState == STATE_QUOTE && (curChar == '\r' || curChar == '\n'))
                         {
-                            throw syntaxError("carriage_return_in_quoted_atom('" + strTerm + "')");
+                            throw syntaxError("carriage_return_in_quoted_atom('" + sbTerm.toString() + "')");
                         }
 //                        else if(curChar == '~')  // edimburgh prolog
 //                        {
 //                            c = m_lnReader.read();
 //                            if(c == '~')
 //                            {
-//                                strTerm += (char)c;//String.valueOf((char)c);
+//                                sbTerm.append( (char)c;//String.valueOf((char)c);
 //                            }
 //                            else if(c == '\'')
 //                            {
 ////                              fine quoted atom
 //                                m_lnReader.pushback();
-//                                //strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                                //sbTerm.append( (char)(c - '@');//String.valueOf((char)c - '@');
 //                            }
 //                            else if(c >= '@')
 //                            {
-//                                strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                                sbTerm.append( (char)(c - '@');//String.valueOf((char)c - '@');
 //                            }
 //
 //                            else
@@ -641,7 +655,7 @@ class PrologTokenizer
                             c = m_lnReader.read();
                             if(c == '\\')
                             {
-                                strTerm += (char)c;//String.valueOf((char)c);
+                                sbTerm.append((char)c);//String.valueOf((char)c);
                             }
                             else if(NUMBER_CHARS.indexOf(c) > -1)
                             {
@@ -664,7 +678,7 @@ class PrologTokenizer
                                 	BigInteger bival = new BigInteger(strNum, 8);
 
                                     byte val = bival.byteValue();// Byte.parseByte(strNum);
-                                    strTerm += (char)val;
+                                    sbTerm.append((char)val);
                                 }
                                 catch(NumberFormatException ex)
                                 {
@@ -677,39 +691,39 @@ class PrologTokenizer
                                 switch(c)
                                 {
                                     case 'a':  // \a bell
-                                        strTerm += (char)(7);
+                                        sbTerm.append( (char)(7));
                                         break;
 
                                     case 'b':  // \b backspace
-                                        strTerm += (char)(8);
+                                        sbTerm.append( (char)(8));
                                         break;
 
                                     case 'c':  // \c empty
-                                        //strTerm += (char)(8);
+                                        //sbTerm.append( (char)(8);
                                         break;
 
                                     case 'f':  // \f form feed
-                                        strTerm += (char)(12);
+                                        sbTerm.append( (char)(12));
                                         break;
 
                                     case 'n':  // \n line feed
-                                        strTerm += (char)(10);
+                                        sbTerm.append( (char)(10));
                                         break;
 
                                     case 'r':  // \r carriage return
-                                        strTerm += (char)(13);
+                                        sbTerm.append( (char)(13));
                                         break;
 
                                     case 's':  // \s space
-                                        strTerm += (char)(32);
+                                        sbTerm.append( (char)(32));
                                         break;
 
                                     case 't':  // \t tab
-                                        strTerm += (char)(9);
+                                        sbTerm.append( (char)(9));
                                         break;
 
                                     case 'v':  // \v vtab
-                                        strTerm += (char)(11);
+                                        sbTerm.append( (char)(11));
                                         break;
 
                                     case 'x':  // \xHX
@@ -722,7 +736,7 @@ class PrologTokenizer
                                         try
                                         {
                                             byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
-                                            strTerm += (char)(val[0]);
+                                            sbTerm.append( (char)(val[0]));
                                         }
                                         catch(NumberFormatException ex)
                                         {
@@ -741,7 +755,7 @@ class PrologTokenizer
                                         break;
 
                                     default: // ignora \
-                                        strTerm += (char)(c);
+                                        sbTerm.append( (char)(c));
                                 }
                             }
 //                            else
@@ -749,14 +763,14 @@ class PrologTokenizer
                         }
                         else
                         {
-                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+                            sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
                         }
                         break;
 
 //                    case STATE_DOUBLEQUOTE:
 //                        if(curChar == DOUBLEQUOTE_CHAR)
 //                        {
-//                            strTerm += (char)curChar;
+//                            sbTerm.append( (char)curChar;
 //                            nTokenType = TOKEN_DBLQUOTE;
 //                            nState = STATE_END;
 //                        }
@@ -769,16 +783,16 @@ class PrologTokenizer
 //                            c = m_lnReader.read();
 //                            if(c == '~')
 //                            {
-//                                strTerm += (char)c;//String.valueOf((char)c);
+//                                sbTerm.append( (char)c;//String.valueOf((char)c);
 //                            }
 //                            else if(c == '"')
 //                            {
 //                                m_lnReader.pushback();
-//                                //strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                                //sbTerm.append( (char)(c - '@');//String.valueOf((char)c - '@');
 //                            }
 //                            else if(c > '@')
 //                            {
-//                                strTerm += (char)(c - '@');//String.valueOf((char)c - '@');
+//                                sbTerm.append( (char)(c - '@');//String.valueOf((char)c - '@');
 //                            }
 //                            else
 //                                throw syntaxError("bad_escape_sequence('~" + (char)c + "')");
@@ -788,38 +802,38 @@ class PrologTokenizer
 //                            c = m_lnReader.read();
 //                            if(c == '\\')
 //                            {
-//                                strTerm += (char)c;//String.valueOf((char)c);
+//                                sbTerm.append( (char)c;//String.valueOf((char)c);
 //                            }
 //                            else if(c >= 'a')
 //                            {
 //                                switch(c)
 //                                {
 //                                    case 'a':  // \a bell
-//                                        strTerm += (char)(7);
+//                                        sbTerm.append( (char)(7);
 //                                        break;
 //
 //                                    case 'b':  // \b backspace
-//                                        strTerm += (char)(8);
+//                                        sbTerm.append( (char)(8);
 //                                        break;
 //
 //                                    case 'f':  // \f form feed
-//                                        strTerm += (char)(12);
+//                                        sbTerm.append( (char)(12);
 //                                        break;
 //
 //                                    case 'n':  // \n line feed
-//                                        strTerm += (char)(10);
+//                                        sbTerm.append( (char)(10);
 //                                        break;
 //
 //                                    case 'r':  // \r carriage return
-//                                        strTerm += (char)(13);
+//                                        sbTerm.append( (char)(13);
 //                                        break;
 //
 //                                    case 't':  // \t tab
-//                                        strTerm += (char)(9);
+//                                        sbTerm.append( (char)(9);
 //                                        break;
 //
 //                                    case 'v':  // \v vtab
-//                                        strTerm += (char)(11);
+//                                        sbTerm.append( (char)(11);
 //                                        break;
 //
 //                                    case 'x':  // \xHX
@@ -832,7 +846,7 @@ class PrologTokenizer
 //                                            String strHexNum = (char)d1 + "" + (char)d2;
 //
 //                                            byte[] val = ValueEncoder.hexStringToBytes(strHexNum);
-//                                            strTerm += (char)(val[0]);
+//                                            sbTerm.append( (char)(val[0]);
 //                                        }
 //                                        catch(NumberFormatException ex)
 //                                        {
@@ -846,24 +860,23 @@ class PrologTokenizer
 //                                        break;
 //
 //                                    default: // ignora \
-//                                        strTerm += (char)(c);
+//                                        sbTerm.append( (char)(c);
 //                                }
 //                            }
 //                        }
 //                        else
 //                        {
-//                            strTerm += (char)curChar;//String.valueOf((char)curChar);
+//                            sbTerm.append( (char)curChar;//String.valueOf((char)curChar);
 //                        }
 //                        break;
                 }
             }
         }
 
-
-        if(!strTerm.equals(""))
+        if(sbTerm.length() > 0)
         {
             Token tok = new Token();
-            tok.m_strToken = strTerm;
+            tok.m_strToken = sbTerm.toString();
             tok.m_nType = nTokenType;
 //            if(strTerm.equals("."))
 //                tok.m_nType = TOKEN_DOT;
