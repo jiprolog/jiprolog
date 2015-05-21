@@ -19,17 +19,12 @@
  */
 
 package com.ugos.jiprolog.engine;
-//import com.ugos.debug.*;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 class WAMTrace extends WAM
 {
     private EventNotifier m_eventNotifier;
-
-    private boolean       m_bSkip = false;
     private Node          m_callToSkip;
-    //private int           m_nInvocationNumber;
     private Node          m_lastExitNode;
     private boolean       m_bNotifyRedo;
 
@@ -37,7 +32,6 @@ class WAMTrace extends WAM
     {
         super(engine);
         m_eventNotifier = engine.getEventNotifier();
-        //m_nInvocationNumber = 0;
         m_bNotifyRedo = true;
     }
 
@@ -45,21 +39,22 @@ class WAMTrace extends WAM
     {
         super(wam);
         m_eventNotifier = wam.m_eventNotifier;
-        //m_nInvocationNumber = wam.m_nInvocationNumber ;
         m_bNotifyRedo = true;
     }
 
+    @Override
     final Node backtrack(Node curNode)
     {
+        Node backtrack;
         while(curNode != null)
         {
-            if(m_bNotifyRedo)
-                notifyRedo(curNode);
+//            if(m_bNotifyRedo)
+//                notifyRedo(curNode);
 
             // risale l'albero saltando i punti di backtracking
             if(curNode.m_backtrack != null)
             {
-                Node backtrack = curNode.m_backtrack;;
+                backtrack = curNode.m_backtrack;
                 do
                 {
                     // Azzera le variabili eventualmente istanziate al livello corrente
@@ -69,30 +64,29 @@ class WAMTrace extends WAM
                     // call precedente
                     curNode = curNode.m_previous;
 
-                    if(m_bNotifyRedo)
-                        notifyRedo(curNode);
+//                    if(m_bNotifyRedo)
+//                        notifyRedo(curNode);
 
-                    //System.out.println("redo2: " + curNode.getGoal());
-
-                    //aggiorna il backtraking
+//                    //aggiorna il backtraking
                     if(curNode.m_backtrack != null)
                     {
                         if(curNode.m_backtrack.m_nLevel < backtrack.m_nLevel)
-                            backtrack = curNode.m_backtrack;
+                        {
+                            backtrack = curNode.m_backtrack;                                                //
+                        }
                     }
                 }
                 while(backtrack != curNode);
             }
 
-            //boolean bMore;
-            // Azzera le variabili eventualmente istanziate al livello corrente
-            // poiché in hasMoreElements viene riprovato il match
+            if(m_bNotifyRedo)
+                notifyRedo(curNode);
+
             curNode.clearVariables();
 
             if(curNode == m_rootNode)
             {
                 // non ho altro backtracking
-//              System.out.println("root node reached");
                 return null;
             }
 
@@ -101,11 +95,18 @@ class WAMTrace extends WAM
                 if(((BuiltInPredicate)curNode.getGoal()).hasMoreChoicePoints())
                     return curNode;
             }
+//            else if(curNode.m_ruleEnum == null)
+//            {
+////            	System.out.println(curNode.getGoal());
+//            }
             else if(curNode.m_ruleEnum.hasMoreElements())
             {
                 // se la prossima regola unificante fallisce nel corpo qui non
                 // è possibile accorgersene (il risultato cioè non è deterministico)
                 // quindi hasMoreElement ritorna true
+                // occorrerebbe eseguire un look-haed per verificare se la prossima
+                // regola unifica
+
                 return curNode;
             }
 
@@ -115,12 +116,13 @@ class WAMTrace extends WAM
         return null;
     }
 
+    @Override
     boolean run(Node curNode)
     {
         PrologRule  rule = null;
-        ConsCell    clause = null;
-        boolean     bUnify;
-        Hashtable   varTbl;
+        Clause      clause = null;
+        boolean     bUnify = false;
+        Hashtable   varTbl = null;
         Node        newNode = null;
         Node        parentNode;
         int         nCallCount = m_nBaseCounter;
@@ -129,68 +131,86 @@ class WAMTrace extends WAM
         {
             while(curNode != null)
             {
-                if(m_startNode == null)
-                	throw new JIPAbortException();
-
                 m_curNode = curNode;
 
-//              System.out.println("goal " + curNode.m_callList.getHead());  // dbg
-//              System.out.println("currentModule " + curNode.m_strModule);  // dbg
-
-                // genera le clausole che unificano
-                // se le clausole sono state già generate siamo in backtracking
-                // altrimenti ne genera di nuove
-                if(curNode.m_ruleEnum == null)
+                try
                 {
-                    try
-                    {
-                        //PrologObject obj = curNode.getGoal();
-//                      System.out.println("Call  " + obj);  // dbg
-//                        System.out.println("Call  " + curNode.getGoal().getClass());  // dbg
-                        curNode.m_ruleEnum = getRules(curNode);
-//                        System.out.println("Call3  " + obj);  // dbg
-//                        System.out.println("Call2  " + curNode.getGoal());  // dbg
-                    }
-                    catch(UndefinedPredicateException ex)
-                    {
-                        // invia il warning se il predicato non è definito
-                        // in questo caso la enumeration deve essere vuota
-                        if(!m_globalDB.isDynamic(ex.getPredicateName()))
-                        {
-                            ex.m_curNode = curNode;
-                            //m_engine.notifyException(ex, hashCode());
-                            m_engine.notifyEvent(JIPEvent.ID_UNDEFPREDICATE, Atom.createAtom(ex.getPredicateName()), hashCode());
-                        }
+	                bUnify = false;
 
-                        curNode.m_ruleEnum = s_emptyEnum;
+	                // genera le clausole che unificano
+	                // se le clausole sono state già generate siamo in backtracking
+	                // altrimenti ne genera di nuove
+	                if(curNode.m_ruleEnum == null)
+	                {
+	                    try
+	                    {
+	                        curNode.m_ruleEnum = getRules(curNode);
+	                    }
+	                    catch(UndefinedPredicateException ex)
+	                    {
+//	                    	ex.printStackTrace();
+//	                    	ex.printPrologStackTrace();
+
+	                        // invia il warning se il predicato non è definito
+	                        // e non è dynamic
+	                        // in questo caso la enumeration deve essere vuota
+	                        if(!m_globalDB.isDynamic(((Functor)ex.getCulprit()).getName()))
+	                        {
+	                        	String unknown = (String)m_engine.getEnvVariable("unknown");
+	                        	if(unknown.equals("warning"))
+	                        	{
+		                            ex.m_curNode = curNode;
+		                            m_engine.notifyEvent(JIPEvent.ID_UNDEFPREDICATE, Atom.createAtom(ex.getPredicateName()), hashCode());
+	                        	}
+	                        	else if(unknown.equals("error"))
+	                        	{
+	                        		throw JIPExistenceException.createProcedureException(((Functor)ex.getCulprit()).getPredicateIndicator());
+	                        	}
+	                        }
+
+	                        curNode.m_ruleEnum = s_emptyEnum;
+	                    }
+	                }
+
+	                nCallCount++;
+	                curNode.m_nLevel = nCallCount;
+
+	                // call
+	                notifyCall(curNode);
+
+	                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
+
+	                while(curNode.m_ruleEnum.hasMoreElements())
+	                {
+	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
+	                    clause = rule.m_cons;
+	                    // UNIFY
+	                    // unifica la testa della clausola con il predicato corrente
+	                    if(bUnify = curNode.getGoal().unify(clause.getHead(), varTbl))
+	                    	break;
+	                }
+                }
+                catch(JIPRuntimeException ex)
+                {
+//                	ex.printStackTrace();
+
+                	while(!exceptionListenerStack.isEmpty())
+                    {
+                		ExceptionListener exceptionListener = exceptionListenerStack.pop();
+                    	if(exceptionListener.notifyException(ex))
+                    	{
+	                    	curNode = m_curNode;
+	                    	bUnify = true;
+	                    	break;
+                    	}
                     }
+
+                	if(!bUnify)
+                	{
+                		throw ex;
+                	}
                 }
 
-                nCallCount++;
-                curNode.m_nLevel = nCallCount;
-
-                // call
-                notifyCall(curNode);
-
-                bUnify = false;
-                varTbl = new Hashtable(5,1); // imposta l'hashtable per le variabili
-                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
-                {
-                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
-                    clause = rule.m_cons;
-//                  System.out.println("Unify " + curNode.getGoal());
-//                  System.out.println("Unify " + clause.getHead() + " " + clause);
-//                  System.out.println("CUnify " + curNode.getGoal().getClass());
-//                  System.out.println("CUnify " + clause.getHead().getClass());
-                    // UNIFY
-                    // unifica la testa della clausola con il predicato corrente
-                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
-//                  System.out.println("bUnify " + bUnify);
-                }
-
-
-
-                // verifica la presenza di almeno una clausola
                 if(bUnify && notifyFound(rule.m_dbCons, curNode))
                 {
                     notifyBound(curNode);
@@ -200,35 +220,45 @@ class WAMTrace extends WAM
 
                     // FOUND
                     //System.out.println("curNode call list  " + curNode.m_callList);  // dbg
-                    newNode = null;
-                    if(clause.getTail() != null)
+                    if(clause.getTail() != null) // the clausole has a body
                     {
-//                      System.out.println("clause.getTail() != null");  // dbg
-//                      System.out.println("clause.getTail() " + clause.getTail());  // dbg
-
-                        // crea un nuovo nodo
+                        // create a new node
                         newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
                     }
-                    else if(curNode.m_callList.getTail() != null)
+                    else if(curNode.m_injectedBody != null)  // the clausole has an injected body
                     {
+                        // create a new node
+                        newNode = new Node(curNode.m_injectedBody, curNode, curNode, rule.m_strModule);
+                        curNode.m_injectedBody = null;
+                    }
+                    else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
+                    {
+                    	if(!moduleStack.isEmpty())
+                    		moduleStack.pop();
+
                         // crea un nuovo nodo
                         newNode = new Node((ConsCell)curNode.m_callList.getTail(), curNode.m_parent, curNode, curNode.m_strModule);
                     }
-                    else
+                    else  // torna al parent
                     {
-                        notifyExit(curNode);
+                    	notifyExit(curNode);
+
+                        newNode = null;
+
                         parentNode = curNode.m_parent;
-                        //System.out.println("parentNode" + parentNode.m_callList);
 
                         while(newNode == null && parentNode != null)
                         {
+                        	if(!moduleStack.isEmpty())
+                        		moduleStack.pop();
+
                             if(((ConsCell)parentNode.m_callList.getTail()) != null)
                             {
                                 newNode = new Node((ConsCell)parentNode.m_callList.getTail(), parentNode.m_parent, curNode, parentNode.m_strModule);
                             }
                             else
                             {
-                                notifyExit(parentNode);
+                            	notifyExit(parentNode);
                                 parentNode = parentNode.m_parent;
                             }
                         }
@@ -239,19 +269,24 @@ class WAMTrace extends WAM
                             m_curNode = null;
                             return true;
                         }
+
+//                        newNode.m_nLevel = m_curNode.m_nLevel + 1;
                     }
 
                     curNode = newNode;
                 }
                 else
                 {
+//                	System.out.println("fail " + curNode.getGoal());
                     // FAIL
                     // non ci sono clausole unificanti
                     // BACKTRACK
-                    notifyFail(curNode);
+                	notifyFail(curNode);
 
+                	if(!moduleStack.isEmpty())
+                		moduleStack.pop();
 
-                    //System.out.println("Fail " + curNode.getGoal());  // dbg
+//                    System.out.println("Fail " + curNode.getGoal());  // dbg
                     curNode.m_ruleEnum = null;
                     curNode.clearVariables();
                     curNode = backtrack(curNode.m_previous);
@@ -260,80 +295,93 @@ class WAMTrace extends WAM
         }
         catch(JIPRuntimeException ex)
         {
-//            notifyStop();
-            //ex.printStackTrace();  //DBG
+//            ex.printStackTrace();  //DBG
+
+        	if(curNode.getGoal() instanceof BuiltInPredicate)
+            	((BuiltInPredicate)curNode.getGoal()).deinit();
 
             m_curNode = null;
             m_startNode = null;
             m_lastNode = null;
             ex.m_curNode = curNode;
+            ex.m_engine = m_engine;
+
             if(rule != null)
             {
                 final Clause cla = ((Clause)rule.m_dbCons);
                 if(cla != null)
                 {
-                    ex.m_strFileName = cla.getFileName();
+                    ex.m_strFileName = cla.getFileName(); // nel caso di built-in non è valorizzato
                     ex.m_nLineNumber = cla.getLine();
                     ex.m_nPosition = cla.getPosition();
-                    ex.m_engine = m_engine;
                 }
             }
             throw ex;
         }
 //        catch(StackOverflowError er)
 //        {
+//
 ////            notifyStop();
-////            er.printStackTrace();   //DBG
+//            //er.printStackTrace();   //DBG
 //
 //            m_curNode = null;
 //            m_lastNode = null;
 //            m_startNode = null;
 //            JIPJVMException ex = new JIPJVMException(er);
+//
 //            ex.m_curNode = curNode;
+//            ex.m_engine = m_engine;
 //            if(rule != null)
 //            {
 //                final Clause cla = ((Clause)rule.m_dbCons);
 //                if(cla != null)
 //                {
-//                    ex.m_strFileName = cla.getFileName();
+//                    ex.m_strFileName = cla.getFileName();  // nel caso di built-in non è valorizzato
 //                    ex.m_nLineNumber = cla.getLineNumber();
 //                    ex.m_nPosition   = cla.getPosition();
-//                    ex.m_engine      = m_engine;
 //                }
 //            }
 //            throw ex;
 //        }
-        catch(ClassCastException ex)
-        {
+//        catch(ClassCastException ex)
+//        {
 //            ex.printStackTrace();
-
-            m_curNode = null;
-            m_lastNode = null;
-            m_startNode = null;
-            JIPRuntimeException ex1 = JIPRuntimeException.createRuntimeException(29);//curNode.getGoal());
-            ex1.m_curNode = curNode;
-            if(rule != null)
-            {
-                final Clause cla = ((Clause)rule.m_dbCons);
-                if(cla != null)
-                {
-                    ex1.m_strFileName = cla.getFileName();
-                    ex1.m_nLineNumber = cla.getLine();
-                    ex1.m_nPosition = cla.getPosition();
-                    ex1.m_engine    = m_engine;
-                }
-            }
-            throw ex1;
-        }
+//
+//            if(curNode.getGoal() instanceof BuiltInPredicate)
+//            	((BuiltInPredicate)curNode.getGoal()).deinit();
+//
+//            m_curNode = null;
+//            m_lastNode = null;
+//            m_startNode = null;
+//            JIPRuntimeException ex1 = JIPRuntimeException.createRuntimeException(29);//curNode.getGoal());
+//            ex1.m_curNode = curNode;
+//            ex1.m_engine = m_engine;
+//            if(rule != null)
+//            {
+//                final Clause cla = ((Clause)rule.m_dbCons);
+//                if(cla != null)
+//                {
+//                    ex1.m_strFileName = cla.getFileName();
+//                    ex1.m_nLineNumber = cla.getLine();
+//                    ex1.m_nPosition = cla.getPosition();
+//                }
+//            }
+//            throw ex1;
+//        }
         catch(Throwable th)
         {
-//            th.printStackTrace();   //DBG
+            th.printStackTrace();   //DBG
+
+            if(curNode.getGoal() instanceof BuiltInPredicate)
+            	((BuiltInPredicate)curNode.getGoal()).deinit();
 
             m_curNode = null;
             m_lastNode = null;
             m_startNode = null;
             JIPJVMException ex = new JIPJVMException(th);
+
             ex.m_curNode = curNode;
+            ex.m_engine = m_engine;
             if(rule != null)
             {
                 final Clause cla = ((Clause)rule.m_dbCons);
@@ -342,7 +390,6 @@ class WAMTrace extends WAM
                     ex.m_strFileName = cla.getFileName();
                     ex.m_nLineNumber = cla.getLine();
                     ex.m_nPosition   = cla.getPosition();
-                    ex.m_engine      = m_engine;
                 }
             }
             throw ex;
@@ -357,6 +404,7 @@ class WAMTrace extends WAM
     }
 
     // run a query
+    @Override
     final boolean query(final PrologObject query)//, final SolutionConsumer consumer)
         throws JIPIsRunningException
     {
@@ -367,19 +415,18 @@ class WAMTrace extends WAM
         return super.query(query);
     }
 
+    @Override
     final boolean nextSolution()
         throws JIPIsRunningException, JIPQueryClosedException
     {
         m_bNotifyRedo = false;
-        //final Node curNode = backtrack((Node)m_lastNode);
         backtrack(m_lastNode);
 
         m_bNotifyRedo = true;
-        //notifyRedo(curNode);
-
         return super.nextSolution();
     }
 
+    @Override
     final boolean hasMoreChoicePoints()
         throws JIPIsRunningException, JIPQueryClosedException
     {
@@ -389,9 +436,6 @@ class WAMTrace extends WAM
 
     final void notifyCall(final Node call)
     {
-        //m_nInvocationNumber++;
-        //call.m_nLevel = m_nInvocationNumber;
-
         m_lastExitNode = null;
 
         if(m_callToSkip != null)
@@ -429,7 +473,6 @@ class WAMTrace extends WAM
 
         if(ev.executionAborted())
         	throw new JIPAbortException();
-//            throw JIPRuntimeException.create(0, null);
 
         return !ev.retryCall();
     }

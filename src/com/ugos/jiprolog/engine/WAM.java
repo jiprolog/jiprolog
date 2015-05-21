@@ -42,7 +42,7 @@ class WAM
     int       m_nBaseCounter;
     boolean   m_bClosed = false;
 
-    private Stack<String> moduleStack = new Stack<String>();
+    Stack<String> moduleStack = new Stack<String>();
 
     static final Enumeration s_emptyEnum = new Vector(1).elements();
 
@@ -51,7 +51,7 @@ class WAM
 
 	static class Node
     {
-        protected ConsCell     m_altBody;
+        protected ConsCell     m_injectedBody;
         protected ConsCell     m_callList;
         protected Node         m_parent;
         protected Node         m_previous;
@@ -307,10 +307,10 @@ class WAM
                 if(((BuiltInPredicate)curNode.getGoal()).hasMoreChoicePoints())
                     return curNode;
             }
-            else if(curNode.m_ruleEnum == null)
-            {
-//            	System.out.println(curNode.getGoal());
-            }
+//            else if(curNode.m_ruleEnum == null)
+//            {
+////            	System.out.println(curNode.getGoal());
+//            }
             else if(curNode.m_ruleEnum.hasMoreElements())
             {
                 // se la prossima regola unificante fallisce nel corpo qui non
@@ -342,14 +342,6 @@ class WAM
         {
             while(curNode != null)
             {
-//                // servea a terminare l'esecuzione in seguito alla close
-//                // trovare un metodo migliore
-//                if(m_startNode == null)
-//                {
-////                    System.out.println("m_startNode == null");
-//                	throw new JIPAbortException();
-//                }
-
                 m_curNode = curNode;
 
                 try
@@ -417,7 +409,7 @@ class WAM
                 }
                 catch(JIPRuntimeException ex)
                 {
-                	ex.printStackTrace();
+//                	ex.printStackTrace();
 
                 	while(!exceptionListenerStack.isEmpty())
                     {
@@ -451,11 +443,11 @@ class WAM
                         // create a new node
                         newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
                     }
-                    else if(curNode.m_altBody != null)
+                    else if(curNode.m_injectedBody != null)
                     {
                         // create a new node
-                        newNode = new Node(curNode.m_altBody, curNode, curNode, rule.m_strModule);
-                        curNode.m_altBody = null;
+                        newNode = new Node(curNode.m_injectedBody, curNode, curNode, rule.m_strModule);
+                        curNode.m_injectedBody = null;
                     }
                     else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
                     {
@@ -566,31 +558,31 @@ class WAM
 //            }
 //            throw ex;
 //        }
-        catch(ClassCastException ex)
-        {
-            ex.printStackTrace();
-
-            if(curNode.getGoal() instanceof BuiltInPredicate)
-            	((BuiltInPredicate)curNode.getGoal()).deinit();
-
-            m_curNode = null;
-            m_lastNode = null;
-            m_startNode = null;
-            JIPRuntimeException ex1 = JIPRuntimeException.createRuntimeException(29);//curNode.getGoal());
-            ex1.m_curNode = curNode;
-            ex1.m_engine = m_engine;
-            if(rule != null)
-            {
-                final Clause cla = ((Clause)rule.m_dbCons);
-                if(cla != null)
-                {
-                    ex1.m_strFileName = cla.getFileName();
-                    ex1.m_nLineNumber = cla.getLine();
-                    ex1.m_nPosition = cla.getPosition();
-                }
-            }
-            throw ex1;
-        }
+//        catch(ClassCastException ex)
+//        {
+//            ex.printStackTrace();
+//
+//            if(curNode.getGoal() instanceof BuiltInPredicate)
+//            	((BuiltInPredicate)curNode.getGoal()).deinit();
+//
+//            m_curNode = null;
+//            m_lastNode = null;
+//            m_startNode = null;
+//            JIPRuntimeException ex1 = JIPRuntimeException.createRuntimeException(29);//curNode.getGoal());
+//            ex1.m_curNode = curNode;
+//            ex1.m_engine = m_engine;
+//            if(rule != null)
+//            {
+//                final Clause cla = ((Clause)rule.m_dbCons);
+//                if(cla != null)
+//                {
+//                    ex1.m_strFileName = cla.getFileName();
+//                    ex1.m_nLineNumber = cla.getLine();
+//                    ex1.m_nPosition = cla.getPosition();
+//                }
+//            }
+//            throw ex1;
+//        }
         catch(Throwable th)
         {
             th.printStackTrace();   //DBG
