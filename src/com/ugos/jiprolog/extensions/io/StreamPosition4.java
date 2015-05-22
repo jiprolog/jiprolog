@@ -20,6 +20,8 @@ package com.ugos.jiprolog.extensions.io;
 
 import java.util.Hashtable;
 
+import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
+
 import com.ugos.jiprolog.engine.JIPAtom;
 import com.ugos.jiprolog.engine.JIPCons;
 import com.ugos.jiprolog.engine.JIPExistenceException;
@@ -36,13 +38,23 @@ public final class StreamPosition4 extends JIPXCall
         JIPTerm handle = params.getNth(1).getValue();
 
         // Get the stream
-        InputStreamInfo sinfo = (InputStreamInfo)JIPio.getStreamInfo(handle);
+        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(handle);
+
+        int position = 0;
+        int linenumber = 0;
+        int column= 0;
+
+        if(sinfo instanceof InputStreamInfo)
+        {
+        	position = ((InputStreamInfo)sinfo).getPosition();
+        	linenumber = ((InputStreamInfo)sinfo).getLineNumber();
+        	column = ((InputStreamInfo)sinfo).getColumn();
+        }
 
        	JIPCons cons;
        	if(sinfo != null)
-       		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(sinfo.getPosition()), JIPCons.create(JIPNumber.create(sinfo.getLineNumber()), JIPCons.create(JIPNumber.create(sinfo.getColumn()), null))));
+       		cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(position), JIPCons.create(JIPNumber.create(linenumber), JIPCons.create(JIPNumber.create(column), null))));
        	else
-//       	throw JIPExistenceException.createStreamException(JIPAtom.create(shandle));
    			cons = JIPCons.create(handle, JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), JIPCons.create(JIPNumber.create(0), null))));
 
        	return params.unify(cons, varsTbl);
