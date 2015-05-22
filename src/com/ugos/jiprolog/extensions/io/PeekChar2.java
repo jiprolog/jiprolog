@@ -110,8 +110,8 @@ public final class PeekChar2 extends JIPXCall
 	            	streamInfo.setEndOfStream("at");
 	            	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
 	            }
-	            else if(c == 0)
-	            	throw new JIPRepresentationException("character");
+//	            else if(c == 0)
+//	            	throw new JIPRepresentationException("character");
 
 				JIPTerm term = JIPAtom.create(String.valueOf((char)c));
 

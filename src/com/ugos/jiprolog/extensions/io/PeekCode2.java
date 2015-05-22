@@ -100,7 +100,8 @@ public final class PeekCode2 extends JIPXCall
             return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 		} else { // end_of_stream(no)
 			int c = peekCode(ins);
-	        if(c == 0 || c < -1 || c > 255)
+//	        if(c == 0 || c < -1 || c > 255)
+	        if(c < -1 || c > 255)
 	        	throw new JIPRepresentationException("character");
 			JIPTerm term = JIPNumber.create(c);
             return params.getNth(2).unify(term, varsTbl);

@@ -108,9 +108,8 @@ public final class GetChar2 extends JIPXCall
             	sinfo.setEndOfStream("past");
             	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
             }
-            else if(c == 0)
-            	 throw new JIPRepresentationException("character");
-
+//            else if(c == 0)
+//            	 throw new JIPRepresentationException("character");
 
             JIPTerm term = JIPAtom.create(String.valueOf((char)c));
 
