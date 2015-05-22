@@ -27,14 +27,14 @@
 '$system': ^(X,Y) :- Y.
 
 %one/1
-'$system':one(X):-X, !.
+'$system':one(X) :- call(X), !.
 
 %once/1
-'$system':once(X):-X, !.
+'$system':once(X) :- call(X), !.
 
 %ignore/1
-'$system':ignore(X):-X.
-'$system':ignore(X):-!.
+'$system':ignore(X) :- call(X).
+'$system':ignore(X) :-!.
 
 %apply
 '$system':apply(Term,Args):-
