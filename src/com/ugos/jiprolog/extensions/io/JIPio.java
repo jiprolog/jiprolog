@@ -295,22 +295,59 @@ public final class JIPio
         iotable.put(alias, sinfo);
     }
 
-    public static StreamInfo getStreamInfo(JIPTerm streamOrAlias)
+    public static void setStreamType(StreamInfo sinfo, String type)
+    {
+     	sinfo.getProperties().setProperty("type", String.format("type(%s)",type));
+     	sinfo.setBinary(type.equals("binary"));
+    }
+
+    public static StreamInfo getInputStreamInfo(JIPTerm streamOrAlias, boolean binary) throws JIPExistenceException, JIPDomainException, JIPInstantiationException
+    {
+    	StreamInfo sinfo = getStreamInfo(streamOrAlias);
+    	if(sinfo instanceof OutputStreamInfo)
+    		throw new JIPPermissionException("input", "stream", sinfo.getAlias());
+
+    	if(binary && !sinfo.isBinary())
+    		throw new JIPPermissionException("input", "text_stream", sinfo.getAlias());
+    	else if(sinfo.isBinary() && !binary)
+    		throw new JIPPermissionException("input", "binary_stream", sinfo.getAlias());
+
+
+    	return sinfo;
+    }
+
+    public static StreamInfo getOutputStreamInfo(JIPTerm streamOrAlias, boolean binary) throws JIPExistenceException, JIPDomainException, JIPInstantiationException
+    {
+    	StreamInfo sinfo = getStreamInfo(streamOrAlias);
+
+    	if(sinfo instanceof InputStreamInfo)
+    		throw new JIPPermissionException("output", "stream", sinfo.getAlias());
+
+    	if(binary && !sinfo.isBinary())
+    		throw new JIPPermissionException("output", "text_stream", sinfo.getAlias());
+    	else if(sinfo.isBinary() && !binary)
+    		throw new JIPPermissionException("output", "binary_stream", sinfo.getAlias());
+
+    	return sinfo;
+
+    }
+
+    public static StreamInfo getStreamInfo(JIPTerm streamOrAlias) throws JIPExistenceException, JIPDomainException, JIPInstantiationException
     {
     	StreamInfo sinfo = null;
 
     	streamOrAlias = streamOrAlias.getValue();
-    	if(streamOrAlias == null)
-    	{
-    		throw new JIPInstantiationException(1);
-    	}
-    	else if(streamOrAlias instanceof JIPNumber)
+    	if(streamOrAlias instanceof JIPNumber)
     	{
     		sinfo = getStreamInfo((int)((JIPNumber)streamOrAlias).getDoubleValue());
     	}
     	else if(streamOrAlias instanceof JIPAtom)
     	{
     		sinfo = getStreamInfo(getStreamHandle(((JIPAtom)streamOrAlias).getName()));
+    	}
+    	else if(streamOrAlias == null)
+    	{
+    		throw new JIPInstantiationException(1);
     	}
     	else
     		throw new JIPDomainException("stream_or_alias", streamOrAlias);

@@ -50,7 +50,8 @@ public class XMLRead2 extends XMLRead1
         }
 
         // Get the stream
-        StreamInfo sinfo = JIPio.getStreamInfo(input);
+        StreamInfo sinfo = JIPio.getInputStreamInfo(input, false);
+
         String strStream = sinfo.getName();
 
         JIPTerm xmlDoc = createXMLTerm(strStream);

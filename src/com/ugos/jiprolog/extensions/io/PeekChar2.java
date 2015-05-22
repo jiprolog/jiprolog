@@ -66,13 +66,13 @@ public final class PeekChar2 extends JIPXCall
         }
 
             // Get the stream
-            StreamInfo streamInfo = JIPio.getStreamInfo(input);
+            StreamInfo streamInfo = JIPio.getInputStreamInfo(input, false);
 
 			Properties properties = streamInfo.getProperties();
-	        if(!(properties.getProperty("mode").equals("mode(read)")))
-	        	throw new JIPPermissionException("input", "stream", input);
-	        if(!(properties.getProperty("type").equals("type(text)")))
-	        	throw new JIPPermissionException("input", "binary_stream", input);
+//	        if(!(properties.getProperty("mode").equals("mode(read)")))
+//	        	throw new JIPPermissionException("input", "stream", streamInfo.getAlias());
+//	        if(!(properties.getProperty("type").equals("type(text)")))
+//	        	throw new JIPPermissionException("input", "binary_stream", streamInfo.getAlias());
 
 	        int streamHandle = streamInfo.getHandle();
 
@@ -93,7 +93,7 @@ public final class PeekChar2 extends JIPXCall
 
 			if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
 				if(properties.getProperty("eof_action").equals("eof_action(error)"))
-					throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
+					throw new JIPPermissionException("input", "past_end_of_stream", streamInfo.getAlias());
 				else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 		            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
 				else // eof_action(reset)

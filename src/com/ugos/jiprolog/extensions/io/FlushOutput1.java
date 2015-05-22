@@ -29,31 +29,31 @@ public final class FlushOutput1 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
-        JIPTerm input = params.getNth(1);
+        JIPTerm output = params.getNth(1);
 
         // check if input is a variable
-        if (input instanceof JIPVariable)
+        if (output instanceof JIPVariable)
         {
             // try to extract the term
-            if(!((JIPVariable)input).isBounded())
+            if(!((JIPVariable)output).isBounded())
             {
                 throw new JIPInstantiationException(1);
             }
             else
             {
                 //extracts the term
-                input = ((JIPVariable)input).getValue();
+                output = ((JIPVariable)output).getValue();
             }
         }
 
         OutputStream writer;
 
-    	StreamInfo streamInfo = JIPio.getStreamInfo(input);
+    	StreamInfo streamInfo = JIPio.getOutputStreamInfo(output, false);
 
-    	Properties props = streamInfo.getProperties();
-        if(!(props.getProperty("mode", "").equals("mode(append)")) &&
-           !(props.getProperty("mode", "").equals("mode(write)")))
-            throw new JIPPermissionException("output", "stream", input);
+//    	Properties props = streamInfo.getProperties();
+//        if(!(props.getProperty("mode", "").equals("mode(append)")) &&
+//           !(props.getProperty("mode", "").equals("mode(write)")))
+//            throw new JIPPermissionException("output", "stream", streamInfo.getAlias());
 
         // Get the stream
         writer = JIPio.getOutputStream(streamInfo.getHandle(), getJIPEngine());

@@ -65,7 +65,7 @@ public final class PeekCode2 extends JIPXCall
             }
         }
 
-    	StreamInfo streamInfo = JIPio.getStreamInfo(input);
+    	StreamInfo streamInfo = JIPio.getInputStreamInfo(input, false);
 
     	int streamHandle = streamInfo.getHandle();
 
@@ -73,10 +73,10 @@ public final class PeekCode2 extends JIPXCall
         PushbackLineNumberInputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
 
 		Properties properties = streamInfo.getProperties();
-        if(!(properties.getProperty("mode").equals("mode(read)")))
-        	throw new JIPPermissionException("input", "stream", input);
-        if(!(properties.getProperty("type").equals("type(text)")))
-        	throw new JIPPermissionException("input", "binary_stream", input);
+//        if(!(properties.getProperty("mode").equals("mode(read)")))
+//        	throw new JIPPermissionException("input", "stream", streamInfo.getAlias());
+//        if(!(properties.getProperty("type").equals("type(text)")))
+//        	throw new JIPPermissionException("input", "binary_stream", streamInfo.getAlias());
 
         if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
         {
@@ -91,7 +91,7 @@ public final class PeekCode2 extends JIPXCall
 
 		if(properties.getProperty("end_of_stream").equals("end_of_stream(past)")) {
 			if(properties.getProperty("eof_action").equals("eof_action(error)"))
-				throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
+				throw new JIPPermissionException("input", "past_end_of_stream", streamInfo.getAlias());
 			else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 			else // eof_action(reset)

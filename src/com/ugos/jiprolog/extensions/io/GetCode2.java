@@ -62,13 +62,13 @@ public final class GetCode2 extends JIPXCall
         }
 
         // Get the stream
-        StreamInfo sinfo = JIPio.getStreamInfo(input);
+        StreamInfo sinfo = JIPio.getInputStreamInfo(input, false);
 
         Properties properties = sinfo.getProperties();
-        if(!(properties.getProperty("mode").equals("mode(read)")))
-        	throw new JIPPermissionException("input", "stream", input);
-        if(!properties.getProperty("type").equals("type(text)"))
-        	throw new JIPPermissionException("input", "binary_stream", input);
+//        if(!(properties.getProperty("mode").equals("mode(read)")))
+//        	throw new JIPPermissionException("input", "stream", sinfo.getAlias());
+//        if(!properties.getProperty("type").equals("type(text)"))
+//        	throw new JIPPermissionException("input", "binary_stream", sinfo.getAlias());
 
         streamHandle = sinfo.getHandle();
 
@@ -88,7 +88,7 @@ public final class GetCode2 extends JIPXCall
 		if(properties.getProperty("end_of_stream").equals("end_of_stream(past)"))
 		{
 			if(properties.getProperty("eof_action").equals("eof_action(error)"))
-				throw new JIPPermissionException("input", "past_end_of_stream", JIPNumber.create(streamHandle));
+				throw new JIPPermissionException("input", "past_end_of_stream", sinfo.getAlias());
 			else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 			else // eof_action(reset)

@@ -12,7 +12,7 @@ public class StreamInfo
     private int handle;
 	protected Properties properties = new Properties();
 	static int MAX_VALUE = Integer.MAX_VALUE - 1;
-
+	private boolean binary;
 //	public StreamInfo(String name)
 //	{
 //		this(name, "#" + name.hashCode());
@@ -27,12 +27,15 @@ public class StreamInfo
 		properties.setProperty("alias", String.format("alias('%d')",handle));
 		properties.setProperty("type", "type(text)");
 		properties.setProperty("end_of_stream", "end_of_stream(not)");
+
+		setBinary(false);
 	}
 
 	public String getName()
 	{
 		return name;
 	}
+
 
 	public String getAlias()
 	{
@@ -74,6 +77,14 @@ public class StreamInfo
 	public String getEndOfStream()
 	{
 		return properties.getProperty("end_of_stream", "no");
+	}
+
+	public boolean isBinary() {
+		return binary;
+	}
+
+	public void setBinary(boolean binary) {
+		this.binary = binary;
 	}
 
 }

@@ -68,13 +68,13 @@ public class PutChar2 extends JIPXCall
             throw new JIPTypeException(JIPTypeException.CHARACTER, c);
 
         // Get the stream
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(output);
+        StreamInfo sinfo = JIPio.getOutputStreamInfo(output, false);
 
-        String mode = sinfo.getProperties().getProperty("mode");
-        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
-        	throw new JIPPermissionException("output", "stream", output);
-        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
-        	throw new JIPPermissionException("output", "binary_stream", output);
+//        String mode = sinfo.getProperties().getProperty("mode");
+//        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
+//        	throw new JIPPermissionException("output", "stream", sinfo.getAlias());
+//        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
+//        	throw new JIPPermissionException("output", "binary_stream", sinfo.getAlias());
 
         OutputStream writer = JIPio.getOutputStream(sinfo.getHandle(), getJIPEngine());
 

@@ -67,6 +67,8 @@ public final class StreamProperty3 extends JIPXCall
 
         		if(key.equals("alias"))
         			JIPio.setStreamAlias(streamInfo, ((JIPFunctor)prop1).getParams().getNth(1).toString());
+        		else if(key.equals("type"))
+        			JIPio.setStreamType(streamInfo, ((JIPFunctor)prop1).getParams().getNth(1).toString());
         		else
             		streamInfo.getProperties().setProperty(key, prop1.toString());
         	}

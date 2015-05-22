@@ -28,32 +28,32 @@ public class Writeq2 extends JIPXCall
 {
     public final boolean unify(final JIPCons params, Hashtable varsTbl)
     {
-        JIPTerm input = params.getNth(1);
+        JIPTerm output = params.getNth(1);
         JIPTerm term = params.getNth(2);
 
         // check if input is a variable
-        if (input instanceof JIPVariable)
+        if (output instanceof JIPVariable)
         {
             // try to extract the term
-            if(!((JIPVariable)input).isBounded())
+            if(!((JIPVariable)output).isBounded())
             {
                 throw new JIPInstantiationException(1);
             }
             else
             {
                 //extracts the term
-                input = ((JIPVariable)input).getValue();
+                output = ((JIPVariable)output).getValue();
             }
         }
 
 
-        StreamInfo sinfo = (StreamInfo)JIPio.getStreamInfo(input);
+        StreamInfo sinfo = JIPio.getOutputStreamInfo(output, false);
 
-        String mode = sinfo.getProperties().getProperty("mode");
-        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
-        	throw new JIPPermissionException("output", "stream", input);
-        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
-        	throw new JIPPermissionException("output", "binary_stream", input);
+//        String mode = sinfo.getProperties().getProperty("mode");
+//        if(!(mode.equals("mode(write)") || mode.equals("mode(append)")))
+//        	throw new JIPPermissionException("output", "stream", sinfo.getAlias());
+//        if(!sinfo.getProperties().getProperty("type").equals("type(text)"))
+//        	throw new JIPPermissionException("output", "binary_stream", sinfo.getAlias());
 
         // Get the stream
         OutputStream writer = JIPio.getOutputStream(sinfo.getHandle(), getJIPEngine());

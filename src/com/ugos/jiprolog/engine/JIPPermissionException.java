@@ -63,6 +63,11 @@ public class JIPPermissionException extends JIPRuntimeException
 		this.culprit = culprit.getTerm();
 	}
 
+	public JIPPermissionException(String operation, String permission, String culprit)
+	{
+		this(operation,permission, JIPAtom.create(culprit));
+	}
+
 	@Override
 	public JIPTerm getTerm()
 	{

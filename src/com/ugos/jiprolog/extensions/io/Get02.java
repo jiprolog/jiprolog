@@ -62,7 +62,7 @@ public final class Get02 extends JIPXCall
 
         Properties properties = streamInfo.getProperties();
         if(!(properties.getProperty("mode").equals("mode(read)")))
-        	throw new JIPPermissionException("input", "stream", input);
+        	throw new JIPPermissionException("input", "stream", streamInfo.getAlias());
 
         int streamHandle = streamInfo.getHandle();
 
