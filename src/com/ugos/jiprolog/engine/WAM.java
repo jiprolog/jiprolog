@@ -388,15 +388,6 @@ class WAM
 
 	                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
 
-//	                while(curNode.m_ruleEnum.hasMoreElements() && !bUnify)
-//	                {
-//	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
-//	                    clause = rule.m_cons;
-//	                    // UNIFY
-//	                    // unifica la testa della clausola con il predicato corrente
-//	                    bUnify = curNode.getGoal().unify(clause.getHead(), varTbl);
-//	                }
-
 	                while(curNode.m_ruleEnum.hasMoreElements())
 	                {
 	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
