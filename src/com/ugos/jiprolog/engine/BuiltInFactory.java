@@ -71,6 +71,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("multifile/1",       new Multifile1());
         m_BuiltInTable.put("module_transparent/1", new ModuleTransparent1());
         m_BuiltInTable.put("dynamic/1",         new Dynamic1());
+        m_BuiltInTable.put("discontiguous/1",   new Discontiguous1());
         m_BuiltInTable.put("predicate_properties/2", new PredicateProperties2());
         m_BuiltInTable.put("xcall/2",           new XCall2());
 

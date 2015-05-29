@@ -96,6 +96,7 @@ final class OperatorManager
         put(1150, "fx",  "multifile");
         put(1150, "fx",  "module_transparent");
         put(1150, "fx", "dynamic");
+        put(1150, "fx", "discontiguous");
         put(400, "yfx", "div");
 
         //put(400, "fx", "cd");
