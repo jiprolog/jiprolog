@@ -361,7 +361,7 @@ class Consult1 extends BuiltIn
                 }
 
 //                  System.out.println("ASSERT: " + clause);  //DBG
-                globalDB.assertz(clause, strPath, false);
+                globalDB.assertzNoCopy(clause, strPath, false);
             }
         }
         catch(ClassCastException ex)

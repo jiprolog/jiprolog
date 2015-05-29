@@ -32,6 +32,8 @@ class Clause extends ConsCell
     private String  m_strModuleName;
     private boolean m_bExported = false;
     private String  m_strFileName = null;//"none";
+//    private boolean m_dynamic = false;
+
 //    private int     m_nPosition = 0;
 //    private int     m_nLineNumber = 0;
 
@@ -304,4 +306,12 @@ class Clause extends ConsCell
 			tail = ((ConsCell)tail).m_tail;
         }
     }
+
+//	public boolean isDynamic() {
+//		return m_dynamic;
+//	}
+//
+//	public void setDynamic(boolean dynamic) {
+//		this.m_dynamic = dynamic;
+//	}
 }

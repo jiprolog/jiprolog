@@ -111,17 +111,7 @@ class Load1 extends Consult1
 
 		   	}
 
-//            ArrayList<PrologObject> program = (ArrayList<PrologObject>)oins.readObject();
             oins.close();
-
-
-
-
-//            for(PrologObject pred : program)
-//            {
-//                pred = getRealTerm(pred);
-//                _assert(pred, engine, strStramName, null, exportTbl, initializationVector, wam, enableClauseChecks);
-//            }
 
             for(PrologObject goal : initializationVector)
             {

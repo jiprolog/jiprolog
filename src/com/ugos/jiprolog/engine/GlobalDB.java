@@ -329,14 +329,17 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
     final void assertz(final Clause clause, String strFile, boolean dynamic)
     {
-   		addPredicate((Clause)fixTerm(clause.copy(true)), false, strFile, dynamic);
-//   		addPredicate((Clause)fixTerm(clause), false, strFile);
+		addClause((Clause)fixTerm(clause.copy(true)), false, strFile, dynamic);
     }
 
     final void asserta(final Clause clause, String strFile, boolean dynamic)
     {
-    	addPredicate((Clause)fixTerm(clause.copy(true)), true, strFile, dynamic);
-//        addPredicate((Clause)fixTerm(clause), true, strFile);
+    	addClause((Clause)fixTerm(clause.copy(true)), true, strFile, dynamic);
+    }
+
+    final void assertzNoCopy(final Clause clause, String strFile, boolean dynamic)
+    {
+		addClause(clause, false, strFile, dynamic);
     }
 
     final Clause retract(Clause clause)
@@ -500,7 +503,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     }
 
     // called by assert
-    private final synchronized void addPredicate(final Clause clause, final boolean bFirst, final String strFile, boolean dynamic)
+    private final synchronized void addClause(final Clause clause, final boolean bFirst, final String strFile, boolean dynamic)
     {
         if(!m_bCheckDisabled && isSystem((Functor)clause.getHead()))
         	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).getPredicateIndicator(), jipEngine);
@@ -539,6 +542,8 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             }
         }
 
+//        clause.setDynamic(dynamic);
+
         JIPClausesDatabase db;
 
         // Verifica l'esistenza del funtore
@@ -572,7 +577,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
         else
         {
-//            System.out.println("new database: " + strFunctName);
             // Crea un nuovo database
             db = new DefaultClausesDatabase(((Functor)head).getFriendlyName(), ((Functor)head).getArity());
             db.setJIPEngine(jipEngine);
@@ -583,7 +587,6 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             // Aggiunge il predicato
             if(!db.addClause(new JIPClause(clause)))
             	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).m_head, jipEngine);
-//                throw JIPRuntimeException.create(10, clause);
 
             // Aggiunge il vettore alla tabella
             m_clauseTable.put(strFunctName, db);
@@ -692,7 +695,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 	            while ((term = parser.parseNext()) != null)
 	            {
 	                //System.out.println(term);
-	                gdb.assertz(Clause.getClause(term, false), "__KERNEL__", false);
+	                gdb.assertzNoCopy(Clause.getClause(term, false), "__KERNEL__", false);
 	            }
 
 	            ins.close();
@@ -708,7 +711,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 		    	 {
 			         while((obj = (PrologObject)oins.readObject()) != null)
 			    	 {
-			        	 gdb.assertz(Clause.getClause(obj, false), "__KERNEL__", false);
+			        	 gdb.assertzNoCopy(Clause.getClause(obj, false), "__KERNEL__", false);
 			    	 }
 		    	 }
 		    	 catch(EOFException ex)
@@ -726,7 +729,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         	Functor comma = new Functor(Atom.COMMA, new ConsCell(x, new ConsCell(y, null)));
         	Functor commaWithModule = new Functor(Atom.COLON, new ConsCell(Atom.createAtom("$system"), new ConsCell(comma, null)));
         	Functor clause = new Functor(Atom.COLONDASH, new ConsCell(commaWithModule, new ConsCell(x, new ConsCell(y, null))));
-        	gdb.assertz(Clause.getClause(clause, false), "__KERNEL__", false);
+        	gdb.assertzNoCopy(Clause.getClause(clause, false), "__KERNEL__", false);
 
 	        gdb.moduleTransparent("\\+/1");
 	        gdb.moduleTransparent("not/1");
@@ -953,5 +956,40 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     	String func = functor.getName();
     	return m_exportedTable.containsKey(func);
     }
+
+//    public void exportDB(OutputStream outs) throws IOException
+//    {
+//    	final ObjectOutputStream out = new ObjectOutputStream(outs);
+//
+//    	Enumeration<String> en = m_clauseTable.keys();
+//    	JIPClausesDatabase db;
+//    	PrologObject term;
+//    	for(String key : m_clauseTable.keySet() )
+//    	{
+//    		db = m_clauseTable.get(key);
+//    		if(!db.isExternal())
+//    		{
+//    			Enumeration clausesEnum = db.clauses();
+//
+//    			while(clausesEnum.hasMoreElements())
+//    			{
+//    				term = ((JIPClause)clausesEnum.nextElement()).getTerm();
+//   	                out.writeObject(term);
+//    			}
+//    		}
+//    	}
+//    }
+//
+//    public void importDB(InputStream ins) throws IOException, ClassNotFoundException
+//    {
+//    	final ObjectInputStream oins = new ObjectInputStream(ins);
+//
+//    	Clause clause;
+//        while((clause = (Clause)oins.readObject()) != null)
+//		{
+//        	addClause(clause, false, clause.getFileName(), clause.isDynamic());
+//		}
+//    }
+
 }
 
