@@ -205,7 +205,7 @@ class Clause extends ConsCell
                 translated = BuiltIn.getRealTerm(vTranslated);
 
                 // chiama getClause e ritorna
-                clause = getClause(translated.copy(false), strModuleName, enableClauseChecks);
+                clause = getClause(translated.copy(false), strModuleName, false);
 
                 wam.closeQuery();
 
