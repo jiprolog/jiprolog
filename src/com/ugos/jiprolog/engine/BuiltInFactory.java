@@ -60,6 +60,7 @@ final class BuiltInFactory extends Object
         m_BuiltInTable.put("compile/2",         new Compile2());
         m_BuiltInTable.put("load_library/1",    new LoadLibrary1());
         m_BuiltInTable.put("load/1",            new Load1());
+        m_BuiltInTable.put("pack/2",            new Pack2());
         m_BuiltInTable.put("extern/3",          new Extern3());
 
         m_BuiltInTable.put("current_op/3",      new CurrentOp3());

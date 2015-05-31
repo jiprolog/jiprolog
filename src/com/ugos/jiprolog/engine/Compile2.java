@@ -33,7 +33,7 @@ import com.ugos.io.PushbackLineNumberInputStream;
 
 //import com.ugos.util.MapperHolder;
 
-final class Compile2 extends Consult1
+final class Compile2 extends BuiltIn
 {
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
@@ -43,36 +43,21 @@ final class Compile2 extends Consult1
         final PrologObject path = getRealTerm(getParam(1));
         final PrologObject destinationFolder = getRealTerm(getParam(2));
 
-
         if(path instanceof Atom)
-        {
             strPath = ((Atom)path).getName();
-        }
         else if(path instanceof PString)
-        {
             strPath = ((PString)path).getString();
-        }
         else
-        {
             throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
-        }
 
         if(destinationFolder instanceof Atom)
-        {
         	strDestinationFolder = ((Atom)destinationFolder).getName();
-        }
         else if(destinationFolder instanceof PString)
-        {
         	strDestinationFolder = ((PString)destinationFolder).getString();
-        }
         else if(destinationFolder.unifiable(List.NIL))
-        {
         	strDestinationFolder = null;
-        }
         else
-        {
             throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, path);
-        }
 
         compile(strPath, strDestinationFolder, getJIPEngine());
 
@@ -82,16 +67,16 @@ final class Compile2 extends Consult1
     public static final void compile(String strPath, String strDestinationFolder, final JIPEngine engine)
     {
         InputStream ins = null;
-        InputStream oldins = null;
-        int oldInputStreamName = 0;
+//        InputStream oldins = null;
+//        int oldInputStreamName = 0;
         try
         {
             String strFileName[] = new String[1];
             String strCurDir[] = new String[1];
             ins = StreamManager.getStreamManager().getInputStream(strPath, engine.getSearchPath(), strFileName, strCurDir);
-            oldins = engine.getCurrentInputStream();
-            oldInputStreamName = engine.getCurrentInputStreamHandle();
-            engine.setCurrentInputStream(ins, strPath.hashCode());
+//            oldins = engine.getCurrentInputStream();
+//            oldInputStreamName = engine.getCurrentInputStreamHandle();
+//            engine.setCurrentInputStream(ins, strPath.hashCode());
 
             File outf;
             if(strDestinationFolder == null)
@@ -121,10 +106,6 @@ final class Compile2 extends Consult1
                 while ((term = parser.parseNext()) != null)
                 {
                     out.writeObject(term);
-
-//                	program.add(term);
-                    //System.out.println(term);
-//                    predList = new List(term, predList);
                 }
 
                 ins.close();
@@ -133,18 +114,19 @@ final class Compile2 extends Consult1
             }
             catch(IOException ex)
             {
+	            ins.close();
+	            out.close();
+
             	ex.printStackTrace();
-                engine.setCurrentInputStream(oldins, oldInputStreamName);
+//                engine.setCurrentInputStream(oldins, oldInputStreamName);
                 throw new JIPJVMException(ex);
-                //throw new JIPRuntimeException("Unable to consult " + strStreamName + ": " + ex.toString());
             }
 
+//          engine.setCurrentInputStream(ins, oldInputStreamName);
+
             ins.close();
-
-            engine.setCurrentInputStream(ins, oldInputStreamName);
-
-
             out.close();
+
         }
         catch(FileNotFoundException ex)
         {
@@ -155,15 +137,15 @@ final class Compile2 extends Consult1
             }
             catch(IOException ex1){};
 
-            if(oldins != null)
-                engine.setCurrentInputStream(oldins, oldInputStreamName);
+//            if(oldins != null)
+//                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             throw JIPExistenceException.createSourceSynkException(Atom.createAtom(strPath));
         }
         catch(IOException ex)
         {
-            if(oldins != null)
-                engine.setCurrentInputStream(oldins, oldInputStreamName);
+//            if(oldins != null)
+//                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             try
             {
@@ -176,8 +158,8 @@ final class Compile2 extends Consult1
         }
         catch(SecurityException ex)
         {
-            if(oldins != null)
-                engine.setCurrentInputStream(oldins, oldInputStreamName);
+//            if(oldins != null)
+//                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             try
             {
@@ -190,9 +172,8 @@ final class Compile2 extends Consult1
         }
         catch(JIPRuntimeException ex)
         {
-
-            if(oldins != null)
-                engine.setCurrentInputStream(oldins, oldInputStreamName);
+//            if(oldins != null)
+//                engine.setCurrentInputStream(oldins, oldInputStreamName);
 
             ex.m_strFileName = strPath;
 
