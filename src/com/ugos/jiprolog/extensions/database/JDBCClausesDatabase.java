@@ -48,7 +48,7 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
     private List<JIPClause> clauseList;
 
 
-    private static Hashtable s_connectionTable = new Hashtable();
+    private static Hashtable<String, Connection> s_connectionTable = new Hashtable<String, Connection>();
 
     public JDBCClausesDatabase()
     {
@@ -57,7 +57,7 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
 
     public final Connection getConnection()
     {
-        return (Connection)s_connectionTable.get(m_strURL);
+        return s_connectionTable.get(m_strURL);
     }
 
     public final String getURL()
@@ -222,7 +222,7 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
 //        }
     }
 
-    public final boolean addClauseAt(int nPos, JIPClause clause)
+    public final boolean addClauseAtFirst(JIPClause clause)
     {
         return false;
     }
@@ -331,7 +331,7 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
             return false;
 
         // Get the matching row
-        JDBCClausesEnumeration en = (JDBCClausesEnumeration)clauses();
+        JDBCClausesEnumeration en = (JDBCClausesEnumeration)clauses(clause.getHead());
         boolean bMatch = false;
         JIPClause nextClause = null;
 
@@ -410,7 +410,7 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
         return true;
     }
 
-    public final Enumeration clauses()
+    public final Enumeration clauses(JIPFunctor functor)
     {
     	Connection connection = getConnection();
     	try

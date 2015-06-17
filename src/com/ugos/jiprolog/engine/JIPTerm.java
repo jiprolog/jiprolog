@@ -20,11 +20,7 @@
 
 package com.ugos.jiprolog.engine;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.io.*;
-//#ifndef _MIDP
-import java.io.Serializable;
 //#endif
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -289,4 +285,10 @@ public class JIPTerm extends Object implements Clearable, Serializable, Cloneabl
 
         throw JIPRuntimeException.createRuntimeException(25, obj.toString());
     }
+
+	@Override
+	public int hashCode() {
+		return getTerm().hashCode();
+	}
+
 }

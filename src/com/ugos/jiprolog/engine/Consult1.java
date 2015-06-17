@@ -330,10 +330,11 @@ class Consult1 extends BuiltIn
                 else  // :-goal
                 {
                     // chiama la wam
+//                	System.out.println(">> " + funct.getParams());
                     if(!wam.query(funct.getParams()))
                     {
                         wam.closeQuery();
-                        throw JIPRuntimeException.createRuntimeException(47, new StringBuilder(strPath).append("-").append(funct.toString(engine)).toString());
+                        throw JIPRuntimeException.createRuntimeException(27, new StringBuilder(strPath).append("-").append(funct.toString(engine)).toString());
                     }
 
                     wam.closeQuery();

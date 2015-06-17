@@ -367,7 +367,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(db == null)
             return null;
 
-        Enumeration en = db.clauses();
+        Enumeration en = db.clauses(functor);
 
         if(!en.hasMoreElements())
             return null;
@@ -563,7 +563,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             if(bFirst)
             {
                 // Aggiunge il predicato
-                if(!db.addClauseAt(0, new JIPClause(clause)))
+                if(!db.addClauseAtFirst(new JIPClause(clause)))
                 	throw new JIPPermissionException("modify", "static_procedure", ((Functor)clause.getHead()).m_head, jipEngine);
 //                    throw JIPRuntimeException.create(10, clause);
             }
@@ -868,7 +868,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             		JIPClausesDatabase db =
             				m_clauseTable.get(strPredName);
 
-            		Enumeration en1 = db.clauses();
+            		Enumeration en1 = db.clauses((Functor)null);
             		Vector<Clause> clausesToRemove = new Vector<Clause>();
 
             		while(en1.hasMoreElements())

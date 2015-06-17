@@ -297,6 +297,20 @@ final class Variable extends PrologObject//Serializable
 
         return false;
     }
+
+//	@Override
+//	public int hashCode() {
+//    	PrologObject val = getObject();
+//        if(val != null)
+//    	{
+//        	return val.hashCode();
+//    	}
+//        else
+//        {
+//        	return super.hashCode();
+//        }
+//    }
+
 /*
     public void finalize() throws Throwable
     {

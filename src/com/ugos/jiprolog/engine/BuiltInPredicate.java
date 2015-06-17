@@ -56,8 +56,6 @@ final class BuiltInPredicate extends Functor
             bpred = new BuiltInPredicate(getName(), (ConsCell)(getParams().copy(true, varTable)));
         }
 
-        //bpred.m_builtIn = m_builtIn;
-
         return bpred;
     }
 
@@ -70,28 +68,12 @@ final class BuiltInPredicate extends Functor
     {
         m_builtIn = null;
     }
-//    public final boolean match(final WAM prolog)
-//    {
-//        //System.out.println("built in match");
-//
-//        return m_builtIn.match(getParams(), prolog);
-//    }
 
     public final boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
     {
         if (m_builtIn != null)
         {
-            //System.out.println("built in bound");
             return m_builtIn.unify(getParams(), table);
-//          if(m_builtIn.unify(getParams(), table))
-//          {
-//              return true;
-//          }
-//          else
-//          {
-//              m_builtIn = null;
-//              return false;
-//          }
         }
         else
         {

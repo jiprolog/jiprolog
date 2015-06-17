@@ -61,7 +61,7 @@ final class Clause2 extends BuiltIn
                 return false;
             }
 
-            m_enum = db.clauses();
+            m_enum = db.clauses((Functor)head);
         }
 
         boolean bFound = false;

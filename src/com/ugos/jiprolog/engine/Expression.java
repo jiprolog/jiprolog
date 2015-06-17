@@ -526,7 +526,7 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             dblVal =  Math.pow(dVal1, dVal2);
-                            
+
 							if(dVal2 == -1 && dVal1 != 1)
 								throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
                             else if(exp2.isInteger())
@@ -859,4 +859,17 @@ final class Expression extends PrologObject //implements Serializable
 
         return false;
     }
+
+	@Override
+	public int hashCode() {
+		return (floating ? new Double(m_dValue).hashCode() : (int)m_dValue);
+	}
+
+    @Override
+    public boolean equals(Object obj)
+    {
+    	return obj instanceof Expression && this.m_dValue == ((Expression)obj).m_dValue && this.floating == ((Expression)obj).floating;//m_strAtom.equals(((Atom)obj).m_strAtom);
+    }
+
+
 }

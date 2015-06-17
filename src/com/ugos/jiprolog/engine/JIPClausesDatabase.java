@@ -40,10 +40,7 @@ public abstract class JIPClausesDatabase extends Object
 {
     private String      m_strFuncName;
     private int         m_nArity;
-    //private String        m_strModuleName;
-
-    //private boolean     m_bModuleTransparent = false;
-    //private boolean     m_bMultifile = false;
+    private int         m_nIndex = 1; // default for first argument indexing
 
     private Hashtable<String, JIPClausesDatabase> m_propTbl;
 
@@ -77,19 +74,35 @@ public abstract class JIPClausesDatabase extends Object
         return m_jip;
     }
 
+    /** Sets the index for argument indexing. By default it is 1 for first argument indexing
+     */
+   public void setIndex(int index)
+   {
+	   if(index < 1 || index > m_nArity)
+		   throw new JIPDomainException("integer", JIPNumber.create(index));
+
+	   this.m_nIndex = index;
+   }
+
+   /** Gets the index for argument indexing. By default it is 1 for first argument indexing
+    */
+   public final int getIndex()
+   {
+	   return this.m_nIndex;
+   }
+
     /** Sets the attributes to pass to the database (i.e. login info, filename, etc.)
       * @param strAttribs the attributes to pass
       */
     public abstract void setAttributes(final String strAttribs);
 
-    /** Adds a clause to the database at the position specified<br>
-      * Note that some databases may not allow to add a clause at a given position.<br>
-      * @param nPos Position of the clause to add
+    /** Adds a clause to the database at the first position<br>
+      * Note that some databases may not allow to add a clause at the first position.<br>
       * @param clause Clause to add
       * @return true if the clause has been added.
       * @see com.ugos.jiprolog.engine.JIPClause
       */
-    public abstract boolean addClauseAt(final int nPos, final JIPClause clause);
+    public abstract boolean addClauseAtFirst(final JIPClause clause);
 
     /** Appends a clause to the database<br>
      * Note that some databases may not allow to append a clause.<br>
@@ -112,7 +125,12 @@ public abstract class JIPClausesDatabase extends Object
      * @see com.ugos.jiprolog.engine.JIPClausesEnumeration
      * @return an enumeration of the clauses contained in this database
      */
-    public abstract Enumeration<JIPClause> clauses();
+    public abstract Enumeration<JIPClause> clauses(JIPFunctor functor);
+
+    final Enumeration<JIPClause> clauses(Functor functor)
+    {
+    	return clauses(new JIPFunctor(functor));
+    }
 
     final void setFunctor(final String strFuncName, final int nArity)
     {

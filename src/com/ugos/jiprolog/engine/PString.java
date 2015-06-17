@@ -218,4 +218,9 @@ final class PString extends List //implements Serializable
 
         return true;
     }
+
+	@Override
+	public int hashCode() {
+		return m_strString.hashCode();
+	}
 }

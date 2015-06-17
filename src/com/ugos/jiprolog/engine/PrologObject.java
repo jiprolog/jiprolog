@@ -128,6 +128,14 @@ abstract class PrologObject implements Clearable, Serializable
         return copy(flat, new Hashtable(10));
     }
 
+    public final PrologObject getRealTerm()
+    {
+        if(this instanceof Variable)
+            return ((Variable)this).getObject();
+
+        return this;
+    }
+
     public abstract void clear();
     public abstract PrologObject copy(boolean flat, Hashtable<Variable, PrologObject> varTable);
     protected abstract boolean lessThen(PrologObject obj);

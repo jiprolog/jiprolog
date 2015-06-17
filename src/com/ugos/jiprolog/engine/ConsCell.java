@@ -396,4 +396,12 @@ class ConsCell extends PrologObject //implements Serializable
             //throw new JIPRuntimeException("ParameterIndexOutOfBounds" + Integer.toString(n));
     }
 
+//	@Override
+//	public int hashCode() {
+//		if(this == NIL)
+//			return Atom.NIL.hashCode();
+//		else
+//			return toString().hashCode();
+//	}
+
 }

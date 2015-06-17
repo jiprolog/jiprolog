@@ -49,7 +49,6 @@ class Functor extends ConsCell
         }
         else
         {
-//          System.out.println(m_strName);
             m_nArity = Integer.parseInt(m_strName.substring(nPos + 1, m_strName.length()));
             m_strFriendlyName = m_strName.substring(0, nPos);
         }
@@ -111,13 +110,8 @@ class Functor extends ConsCell
 
     public boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
     {
-//      System.out.println("*** Functor unify: " + this + " - " + obj);
-        //System.out.println(obj);
-        //System.out.println(obj.getClass());
-
         if (obj instanceof Functor)
         {
-//          System.out.println("*** obj is Functor: ");
             return m_head._unify(((Functor)obj).m_head, table) &&
                   ((m_tail == null) ? (((Functor)obj).m_tail == null) : (m_tail._unify(((Functor)obj).m_tail, table)));
         }
@@ -179,4 +173,10 @@ class Functor extends ConsCell
         return new Functor(Atom.SLASHSLASH, new ConsCell(Atom.createAtom(friendlyName), new ConsCell(Expression.createNumber(nArity), null)));
 
     }
+
+//	@Override
+//	public int hashCode() {
+//		return m_head.hashCode();
+//	}
+
 }

@@ -37,7 +37,7 @@ final class RulesEnumeration extends Object implements Enumeration
         if(db == null)
             throw new UndefinedPredicateException(query);
 
-        m_selProgramEnum  = db.clauses();
+        m_selProgramEnum  = db.clauses(query);
         m_bModuleTranparent = db.isModuleTransparent();
         m_rule = new PrologRule();
         m_rule.m_strModule = moduleStack.peek();

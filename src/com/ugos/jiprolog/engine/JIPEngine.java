@@ -22,6 +22,7 @@
 package com.ugos.jiprolog.engine;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -55,7 +56,7 @@ public class JIPEngine implements Serializable
 
     public static final int major = 4;
     public static final int minor = 0;
-    public static final int build = 18;
+    public static final int build = 19;
     public static final int revision = 1;
 
     public static final int USER_INPUT_HANDLE = -1;
@@ -715,6 +716,29 @@ public class JIPEngine implements Serializable
     public final void compileFile(final String strFileName, final String strDestinationFolder) throws JIPSyntaxErrorException
     {
         Compile2.compile(strFileName, strDestinationFolder, this);
+    }
+
+    /** Compiles and Packs the specified files. As result the destination file with .jip extension is generated.<br>
+     * @param strFileNames the array of file names to compile and pack. Each file can refer to: <br>
+     * - a file on hard disk (d:\myapp/myfile.pl, file:/user/myapp/myfile.pl)<br>
+     * - a path relative to the search path.
+     * @param strDestinationFile the destination file where the packed .jip file is saved<br>
+     * @exception com.ugos.jiprolog.engine.JIPSyntaxErrorException, java.io.IOException
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @see com.ugos.jiprolog.engine.JIPEngine#loadFile
+     * @see com.ugos.jiprolog.engine.JIPEngine#setSearchPath
+     */
+    public final void packFiles(final String[] strFileNames, final String strDestinationFile) throws JIPSyntaxErrorException, FileNotFoundException, IOException
+    {
+    	List fileList = List.NIL;
+
+    	for(String file : strFileNames)
+    	{
+    		fileList = new List(Atom.createAtom(file), fileList);
+    	}
+
+    	Pack2.pack(fileList, strDestinationFile, this);
     }
 
     /** Loads a file. The file must contain a valid JIProlog compiled code

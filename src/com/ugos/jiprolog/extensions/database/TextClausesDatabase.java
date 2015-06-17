@@ -53,7 +53,7 @@ public class TextClausesDatabase extends JIPClausesDatabase
         	m_strSeparator = attrs[1];
     }
 
-    public boolean addClauseAt(int nPos, JIPClause clause)
+    public boolean addClauseAtFirst(JIPClause clause)
     {
         return false;
     }
@@ -114,7 +114,7 @@ public class TextClausesDatabase extends JIPClausesDatabase
         return false;
     }
 
-    public Enumeration clauses()
+    public Enumeration clauses(JIPFunctor functor)
     {
         return new TextClausesEnumeration(this);
     }

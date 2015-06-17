@@ -29,7 +29,7 @@ public class PrologClausesDatabase extends JIPClausesDatabase
 {
     private PrintWriter m_writer;
     private String      m_strFileName;
-    
+
     public PrologClausesDatabase()
     {
         super();
@@ -39,17 +39,17 @@ public class PrologClausesDatabase extends JIPClausesDatabase
     {
         return m_strFileName;
     }
-    
+
     public void setAttributes(String strAttribs)
     {
         m_strFileName = strAttribs;
     }
-    
-    public boolean addClauseAt(int nPos, JIPClause clause)
+
+    public boolean addClauseAtFirst(JIPClause clause)
     {
         return false;
     }
-    
+
     public synchronized boolean addClause(JIPClause clause)
     {
         try
@@ -60,25 +60,25 @@ public class PrologClausesDatabase extends JIPClausesDatabase
         {
             throw new JIPRuntimeException(JIPRuntimeException.ID_USER_EXCEPTION + 1, ex.toString());
         }
-        
-        
+
+
         m_writer.println(clause.getHead().toString() + ".");
         m_writer.flush();
         m_writer.close();
-               
+
         return true;
     }
-    
+
     public boolean removeClause(JIPClause clause)
     {
         return false;
     }
-    
-    public Enumeration clauses()
+
+    public Enumeration clauses(JIPFunctor functor)
     {
         return new PrologClausesEnumeration(this);
     }
-    
+
     public void finalize()
     {
         m_writer.close();
