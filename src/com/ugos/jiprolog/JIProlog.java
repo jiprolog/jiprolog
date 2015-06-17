@@ -82,8 +82,6 @@ public class JIProlog
         {
             showMessage(ex.getMessage());
         }
-
-        System.exit(0);
     }
 
     private static void showMessage(String strMsg)
@@ -102,6 +100,7 @@ public class JIProlog
         System.out.println("\n -debug to run JIProlog in debug mode");
         System.out.println("\n -c <file> to compile a prolog file");
         System.out.println("\n -g <goal> initialization goal");
+        System.out.println("\n -d <path> working directory");
     }
 
     private static void processArgs(String args[]) throws JIPSyntaxErrorException, IOException
