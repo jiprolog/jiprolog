@@ -13,6 +13,8 @@
 #     static final long serialVersionUID;
 #}
 
+-keepattributes SourceFile,LineNumberTable,Signature,*Annotation*
+
 -keepnames class * implements java.io.Serializable
 
 -keepclassmembers class * implements java.io.Serializable {
