@@ -62,7 +62,7 @@ final class Pack2 extends BuiltIn
 
         try
         {
-			compile((List)fileList, strDestinationFile, getJIPEngine());
+			pack((List)fileList, strDestinationFile, getJIPEngine());
 		}
         catch (FileNotFoundException e)
         {
@@ -76,11 +76,14 @@ final class Pack2 extends BuiltIn
         return true;
     }
 
-    public static final void compile(List fileList, String destinationFile, final JIPEngine engine) throws FileNotFoundException, IOException
+    public static final void pack(List fileList, String destinationFile, final JIPEngine engine) throws FileNotFoundException, IOException
     {
         InputStream ins = null;
 
-        final File outf = new File(destinationFile);
+        File outf = new File(destinationFile);
+        if(!outf.isAbsolute())
+        	outf = new File(engine.getSearchPath(), destinationFile);
+
     	final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
 
         String strPath = null;
