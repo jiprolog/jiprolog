@@ -119,6 +119,12 @@ public class TextAtomClausesDatabase extends JIPClausesDatabase
         return new TextAtomClausesEnumeration(this);
     }
 
+	@Override
+	public Enumeration clauses() {
+
+		return clauses(null);
+	}
+
     public void finalize()
     {
         m_writer.close();

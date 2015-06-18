@@ -433,6 +433,11 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
     	return new JDBCClausesEnumeration(this);
     }
 
+	@Override
+	public Enumeration clauses() {
+
+		return clauses(null);
+	}
     public ResultSet getResultSet() throws SQLException
     {
     	if(m_rs == null)
@@ -612,4 +617,6 @@ public class JDBCClausesDatabase extends JIPClausesDatabase
 	public List<JIPClause> getClauses() {
 		return clauseList;
 	}
+
+
 }

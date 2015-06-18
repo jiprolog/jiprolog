@@ -120,12 +120,20 @@ public abstract class JIPClausesDatabase extends Object
      */
     public abstract boolean removeClause(final JIPClause clause);
 
-    /** Returns an enumeration of the clauses contained in this database
+    /** Returns an enumeration of the clauses contained in this database that matches the functor using the argument indexing on the index set by setIndex
+     * @see com.ugos.jiprolog.engine.JIPClausesDatabase#setIndex(int)
      * @see com.ugos.jiprolog.engine.JIPClause
      * @see com.ugos.jiprolog.engine.JIPClausesEnumeration
      * @return an enumeration of the clauses contained in this database
      */
     public abstract Enumeration<JIPClause> clauses(JIPFunctor functor);
+
+    /** Returns an enumeration of the all clauses contained in this database
+     * @see com.ugos.jiprolog.engine.JIPClause
+     * @see com.ugos.jiprolog.engine.JIPClausesEnumeration
+     * @return an enumeration of the clauses contained in this database
+     */
+    public abstract Enumeration<JIPClause> clauses();
 
     final Enumeration<JIPClause> clauses(Functor functor)
     {

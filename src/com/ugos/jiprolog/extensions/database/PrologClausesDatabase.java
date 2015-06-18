@@ -83,4 +83,10 @@ public class PrologClausesDatabase extends JIPClausesDatabase
     {
         m_writer.close();
     }
+
+	@Override
+	public Enumeration clauses() {
+
+		return clauses(null);
+	}
 }
