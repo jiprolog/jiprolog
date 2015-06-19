@@ -14,9 +14,24 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
     private final Vector<Clause> m_clausesConsVector;
     private final Vector<Clause> m_clausesListVector;
 
-    public IndexedDefaultClausesDatabase(final String strFunctName, final int nArity)
+    public IndexedDefaultClausesDatabase(DefaultClausesDatabase db)
     {
-    	super(strFunctName, nArity);
+    	super(db.getFunctorName(), db.getArity(), db.getFullName(), null);
+
+    	if(db.isDynamic())
+    		setDynamic();
+
+    	if(db.isExternal())
+    		setExternal();
+
+    	if(db.isModuleTransparent())
+    		setModuleTransparent();
+
+    	if(db.isMultifile())
+    		setMultifile();
+
+    	setJIPEngine(db.getJIPEngine());
+
         m_clausesVarVector = new Vector<Clause>();
         m_clausesAtomTable = new Hashtable<PrologObject, Vector<Clause>>();
         m_clausesExpressionTable = new Hashtable<PrologObject, Vector<Clause>>();
@@ -25,7 +40,10 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         m_clausesConsVector = new Vector<Clause>();
         m_clausesListVector = new Vector<Clause>();
 
-        m_clausesAtomTable.put(List.NIL, new Vector<Clause>());
+        for(Clause clause : db.m_clausesVector)
+        {
+        	addClause(new JIPClause(clause));
+        }
     }
 
     @Override
@@ -65,7 +83,19 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         else if(key instanceof List)
         {
         	if(key == List.NIL)
-        		m_clausesAtomTable.get(key).add(0, (Clause)clause.getTerm());
+        	{
+        		if(m_clausesAtomTable.containsKey(key))
+        		{
+        			m_clausesAtomTable.get(key).add(0, (Clause)clause.getTerm());
+	        	}
+            	else
+    	        {
+    	        	Vector<Clause> clauseVector = new Vector<Clause>();
+    	        	m_clausesAtomTable.put(key, clauseVector);
+    	        	clauseVector.add((Clause)clause.getTerm());
+    	        	addVariablesToVector(clauseVector);
+    	        }
+        	}
 
         	m_clausesListVector.add(0,(Clause)clause.getTerm());
         }
@@ -153,8 +183,17 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //	        }
         else if(key instanceof List)
         {
-        	if(key == List.NIL)
-        		m_clausesAtomTable.get(key).add((Clause)clause.getTerm());
+    		if(m_clausesAtomTable.containsKey(key))
+    		{
+    			m_clausesAtomTable.get(key).add(0, (Clause)clause.getTerm());
+        	}
+        	else
+	        {
+	        	Vector<Clause> clauseVector = new Vector<Clause>();
+	        	m_clausesAtomTable.put(key, clauseVector);
+	        	addVariablesToVector(clauseVector);
+	        	clauseVector.add((Clause)clause.getTerm());
+	        }
 
         	m_clausesListVector.add((Clause)clause.getTerm());
         }
@@ -312,7 +351,7 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //	    }
         else if(key instanceof List)
         {
-        	if(key == List.NIL)
+        	if(key == List.NIL && m_clausesAtomTable.containsKey(key))
         		removed = m_clausesAtomTable.get(key).removeElement(clause.getTerm());
 
         	removed = m_clausesListVector.removeElement(clause.getTerm());

@@ -27,11 +27,14 @@ import java.util.Vector;
 class DefaultClausesDatabase extends JIPClausesDatabase
 {
     protected final Vector<Clause> m_clausesVector;
-
-    public DefaultClausesDatabase(final String strFunctName, final int nArity)
+    private String m_strFullName;
+    private GlobalDB m_gdb;
+    public DefaultClausesDatabase(final String strFunctName, final int nArity, final String strFullName, GlobalDB gdb)
     {
         setFunctor(strFunctName, nArity);
         m_clausesVector = new Vector<Clause>();
+        m_strFullName = strFullName;
+        m_gdb = gdb;
     }
 
     public void setAttributes(final String strAttribs)
@@ -42,12 +45,18 @@ class DefaultClausesDatabase extends JIPClausesDatabase
     public synchronized boolean addClauseAtFirst(final JIPClause clause)
     {
         m_clausesVector.add(0, (Clause)clause.getTerm());
+        if(getArity() > 0 && m_clausesVector.size() > 2)
+        	m_gdb.makeIndexed(this);
+
         return true;
     }
 
     public synchronized boolean addClause(final JIPClause clause)
     {
         m_clausesVector.add((Clause)clause.getTerm());
+        if(getArity() > 0 && m_clausesVector.size() > 2)
+        	m_gdb.makeIndexed(this);
+
         return true;
     }
 
@@ -71,5 +80,9 @@ class DefaultClausesDatabase extends JIPClausesDatabase
     		return m_clausesVector.elements();
     	else
         	return ((Vector<Clause>)m_clausesVector.clone()).elements();
+	}
+
+	public String getFullName() {
+		return m_strFullName;
 	}
 }
