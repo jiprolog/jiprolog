@@ -516,7 +516,6 @@ class WAMTrace extends WAM
         if(!traceable(call.getGoal()))
             return;
 
-        //JIPTraceEvent ev = notifyTraceEvent(JIPTraceEvent.ID_EXIT, call.m_pred, call.m_parentNode.m_nLevel +  + m_nBaseLevel);
         JIPTraceEvent ev = notifyTraceEvent(JIPTraceEvent.ID_EXIT, call.getGoal(), call.m_nLevel);
 
         waitForUserInput();

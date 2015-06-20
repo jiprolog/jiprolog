@@ -67,17 +67,20 @@ final class Expression extends PrologObject //implements Serializable
         return this;
     }
 
-    public final boolean _unify(final PrologObject obj, final Hashtable table)
+    public final boolean _unify(PrologObject obj, final Hashtable table)
     {
         //System.out.println("Match Expression");
+    	if(obj instanceof Variable)
+        {
+        	if(((Variable)obj).isBounded())
+        		obj = ((Variable)obj).getObject();
+        	else
+        		return ((Variable)obj)._unify(this, table);
+        }
 
         if(obj instanceof Expression)
         {
             return ((Expression)obj).floating == floating && (((Expression)obj).m_dValue == m_dValue);
-        }
-        else if(obj instanceof Variable)
-        {
-            return obj._unify(this, table);
         }
         else
             return false;
@@ -809,8 +812,20 @@ final class Expression extends PrologObject //implements Serializable
         return m_dValue;
     }
 
-    protected final boolean lessThen(final PrologObject obj)
+    protected final boolean lessThen(PrologObject obj)
     {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+            {
+                obj = ((Variable)obj).getObject();
+                if(obj.unifiable(List.NIL))
+                	return true;
+            }
+            else
+            	return false;
+        }
+
         if(obj instanceof Expression)
         {
         	if(floating && !((Expression)obj).floating)
@@ -826,18 +841,18 @@ final class Expression extends PrologObject //implements Serializable
         {
         	return true;
         }
-        else if(obj instanceof Variable)
-        {
-            if(((Variable)obj).isBounded())
-            {
-                if(obj.unifiable(List.NIL))
-                	return true;
-                else
-                	return lessThen(((Variable)obj).getObject());
-            }
-			else
-				return false;
-        }
+//        else if(obj instanceof Variable)
+//        {
+//            if(((Variable)obj).isBounded())
+//            {
+//                if(obj.unifiable(List.NIL))
+//                	return true;
+//                else
+//                	return lessThen(((Variable)obj).getObject());
+//            }
+//			else
+//				return false;
+//        }
 
         return true;
     }
@@ -850,12 +865,18 @@ final class Expression extends PrologObject //implements Serializable
     @Override
     public boolean termEquals(PrologObject obj)
     {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
         if(obj instanceof Expression)
         {
             return m_dValue == ((Expression)obj).m_dValue && floating == ((Expression)obj).floating;
         }
-        else if(obj instanceof Variable && ((Variable)obj).isBounded())
-            return termEquals(((Variable)obj).getObject());
 
         return false;
     }

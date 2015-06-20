@@ -16,7 +16,7 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 
     public IndexedDefaultClausesDatabase(DefaultClausesDatabase db)
     {
-    	super(db.getFunctorName(), db.getArity(), db.getFullName(), null);
+    	super(db.getFunctorName(), db.getArity());
 
     	if(db.isDynamic())
     		setDynamic();

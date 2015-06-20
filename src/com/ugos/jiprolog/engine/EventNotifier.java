@@ -28,21 +28,21 @@ class EventNotifier extends Object implements Runnable
     private final Vector           m_TraceListenerVect = new Vector(1);
     private final Vector           m_eventsVect = new Vector();;
     private JIPEngine              m_jipEngine;
-    
+
     private Thread m_workerThread;
-    
+
     private boolean m_bAvailable;
 //    private boolean m_bEnabled;
-    
+
     EventNotifier(final JIPEngine jipEngine)
     {
         m_jipEngine = jipEngine;
-                       
+
 //        m_workerThread = new Thread(this);
 //        m_workerThread.setDaemon(true);
 //        m_workerThread.start();
     }
-    
+
     //#ifndef _MIDP
     protected final void finalize() throws Throwable
     {
@@ -50,19 +50,19 @@ class EventNotifier extends Object implements Runnable
         m_workerThread = null;
     }
     //#endif
-    
+
     public final synchronized void addEventListener(final JIPEventListener listener)
     {
         if(!m_EventListenerVect.contains(listener))
             m_EventListenerVect.insertElementAt(listener, 0);
     }
-    
+
     public final synchronized void removeEventListener(final JIPEventListener listener)
     {
         if(!m_EventListenerVect.contains(listener))
             m_EventListenerVect.removeElement(listener);
     }
-    
+
     public final synchronized Vector getEventListeners()
     {
         return m_EventListenerVect;
@@ -74,29 +74,27 @@ class EventNotifier extends Object implements Runnable
         if(!m_TraceListenerVect.contains(listener))
             m_TraceListenerVect.insertElementAt(listener, 0);
     }
-    
+
     public final synchronized void removeTraceListener(final JIPTraceListener listener)
     {
         if(!m_TraceListenerVect.contains(listener))
             m_TraceListenerVect.removeElement(listener);
     }
-    
+
     public final synchronized Vector getTraceListeners()
     {
         return m_TraceListenerVect;
     }
 
     //#endif
-    
+
     public final synchronized void setEnabled(final boolean bEnabled)
     {
         if(bEnabled && m_workerThread == null)
         {
             m_workerThread = new Thread(this);
-//          #ifndef _MIDP
-            //m_workerThread.setDaemon(true);
-            //m_workerThread.setName("JIProlog event notifier");
-//          #endif
+            m_workerThread.setDaemon(true);
+            m_workerThread.setName("JIProlog event notifier");
             m_workerThread.start();
         }
         else if(!bEnabled && m_workerThread != null)
@@ -108,37 +106,37 @@ class EventNotifier extends Object implements Runnable
 
         //m_bEnabled = bEnabled;
     }
-    
+
     public final JIPEvent notifyEvent(final int nID, final PrologObject term, final int queryHandle)
     {
         final JIPEvent e = new JIPEvent(nID, term, m_jipEngine, queryHandle);
 //        System.out.println("Notify Event ");
-        
+
         notify(e);
-        
+
 //        System.out.println("Notify Event 2");
-        
+
         return e;
-        
+
     }
-    
+
 //  #ifndef _MIDP
     public final JIPTraceEvent notifyTraceEvent(final int nID, final PrologObject term, int nQueryHandle,  final WAMTrace wam, final int nLevel)
     {
         final JIPTraceEvent e = new JIPTraceEvent(nID, term, m_jipEngine, nQueryHandle, wam, nLevel);
         notify(e);
         return e;
-        
+
     }
     //#endif
-    
+
     public final JIPErrorEvent notifyErrorEvent(final int queryHandle, final JIPRuntimeException err)
     {
         final JIPErrorEvent e = new JIPErrorEvent(m_jipEngine, queryHandle, err);
         notify(e);
         return e;
     }
-    
+
     private final synchronized void notify(final JIPEvent e)
     {
 //        System.out.println("notify " + e.getID());
@@ -151,7 +149,7 @@ class EventNotifier extends Object implements Runnable
             notify();
 //            System.out.println("notify 3");
         }
-        
+
 //        System.out.println("notify 4");
     }
 
@@ -169,14 +167,14 @@ class EventNotifier extends Object implements Runnable
                 //ex.printStackTrace();
             }
         }
-        
+
         if(m_eventsVect.size() > 0)
         {
 	        final JIPEvent e = (JIPEvent)m_eventsVect.elementAt(0);
 	        m_eventsVect.removeElementAt(0);
-	        
+
 	        m_bAvailable = m_eventsVect.size() > 0;
-	        
+
 	        return e;
         }
         else
@@ -184,19 +182,19 @@ class EventNotifier extends Object implements Runnable
             return null;
         }
     }
-    
+
     public final void run()
     {
         while(m_workerThread != null)
         {
             final JIPEvent e = getEvent();
-            
-            if(e == null)  
+
+            if(e == null)
             {
 //                System.out.println("Thead ends");
                 return; // thread ends
             }
-            
+
 //            if(m_bEnabled)
 //            {
                 switch(e.getID())
@@ -211,7 +209,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                    
+
                 case JIPEvent.ID_CLOSE:
                     {
                         JIPEventListener listener;
@@ -222,8 +220,8 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-    
-                    
+
+
                 case JIPEvent.ID_END:
                     {
                         JIPEventListener listener;
@@ -234,7 +232,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                    
+
                 case JIPEvent.ID_SOLUTION:
                     {
                         JIPEventListener listener;
@@ -245,7 +243,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                        
+
                 case JIPEvent.ID_MORE:
                     {
                         JIPEventListener listener;
@@ -256,7 +254,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                         break;
-                        
+
                 case JIPErrorEvent.ID_ERROR:
                     {
                         JIPEventListener listener;
@@ -278,7 +276,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                    
+
                 case JIPTraceEvent.ID_REDO:
                     {
                         JIPTraceListener listener;
@@ -289,7 +287,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                    
+
                 case JIPTraceEvent.ID_FOUND:
                     {
                         JIPTraceListener listener;
@@ -300,7 +298,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                    
+
                 case JIPTraceEvent.ID_BIND:
                     {
                         JIPTraceListener listener;
@@ -311,7 +309,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                    
+
                 case JIPTraceEvent.ID_FAIL:
                     {
                         JIPTraceListener listener;
@@ -322,7 +320,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                        
+
                     case JIPTraceEvent.ID_EXIT:
                     {
                         JIPTraceListener listener;
@@ -333,7 +331,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                        
+
                     case JIPTraceEvent.ID_START:
                     {
                         JIPTraceListener listener;
@@ -344,7 +342,7 @@ class EventNotifier extends Object implements Runnable
                         }
                     }
                     break;
-                        
+
                     case JIPTraceEvent.ID_STOP:
                     {
                         JIPTraceListener listener;
@@ -356,7 +354,7 @@ class EventNotifier extends Object implements Runnable
                     }
                     break;
                 //#endif
-                    
+
                 default:
                     {
                         JIPEventListener listener;
@@ -370,7 +368,7 @@ class EventNotifier extends Object implements Runnable
                 }
 //            }
         }
-        
+
 //        System.out.println("Thread notifier OUT");
     }
  }

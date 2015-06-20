@@ -125,10 +125,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             final String strName = strPredName.substring(0, nPos);
             final int arity = Integer.parseInt(strPredName.substring(nPos + 1));
-//        	if(arity == 0)
-        		db = new DefaultClausesDatabase(strName, arity, def, this);
-//        	else
-//        		db = new IndexedDefaultClausesDatabase(strName, arity);
+        	if(arity == 0)
+        		db = new ZeroArityDefaultClausesDatabase(strName);
+        	else
+        		db = new NotIndexedDefaultClausesDatabase(strName, arity, def, this);
 
             db.setJIPEngine(jipEngine);
 
@@ -136,7 +136,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             m_clauseTable.put(def, db);
         }
 
-        if(db instanceof DefaultClausesDatabase || db instanceof IndexedDefaultClausesDatabase)
+        if(db instanceof DefaultClausesDatabase)
         	db.setMultifile();
         else
         	throw new JIPPermissionException("modify", "extern_procedure", Functor.getPredicateIndicator(strPredName));
@@ -200,7 +200,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         return isUser(funct.getName());
     }
 
-    final void makeIndexed(DefaultClausesDatabase db)
+    final void makeIndexed(NotIndexedDefaultClausesDatabase db)
     {
     	IndexedDefaultClausesDatabase db1 = new IndexedDefaultClausesDatabase(db);
         m_clauseTable.put(db.getFullName(), db1);
@@ -226,10 +226,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
             final String strName = strPredName.substring(0, nPos);
             final int arity = Integer.parseInt(strPredName.substring(nPos + 1));
             // Crea un nuovo database
-//        	if(arity == 0)
-        		db = new DefaultClausesDatabase(strName, arity, def, this);
-//        	else
-//        		db = new IndexedDefaultClausesDatabase(strName, arity);
+            if(arity == 0)
+        		db = new ZeroArityDefaultClausesDatabase(strName);
+        	else
+        		db = new NotIndexedDefaultClausesDatabase(strName, arity, def, this);
 
             db.setJIPEngine(jipEngine);
             // Aggiunge il vettore alla tabella
@@ -267,10 +267,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             final String strName = strPredName.substring(0, nPos);
             final int arity = Integer.parseInt(strPredName.substring(nPos + 1));
-//        	if(arity == 0)
-        		db = new DefaultClausesDatabase(strName, arity, def, this);
-//        	else
-//        		db = new IndexedDefaultClausesDatabase(strName, arity);
+            if(arity == 0)
+        		db = new ZeroArityDefaultClausesDatabase(strName);
+        	else
+        		db = new NotIndexedDefaultClausesDatabase(strName, arity, def, this);
 
             db.setJIPEngine(jipEngine);
             // Aggiunge il vettore alla tabella
@@ -581,10 +581,10 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
         	int arity = ((Functor)head).getArity();
             // Crea un nuovo database
-//        	if(arity == 0)
-        		db = new DefaultClausesDatabase(((Functor)head).getFriendlyName(), arity, strFunctName, this);
-//        	else
-//        		db = new IndexedDefaultClausesDatabase(((Functor)head).getFriendlyName(), arity);
+        	if(arity == 0)
+        		db = new ZeroArityDefaultClausesDatabase(((Functor)head).getFriendlyName());
+        	else
+        		db = new NotIndexedDefaultClausesDatabase(((Functor)head).getFriendlyName(), arity, strFunctName, this);
 
             db.setJIPEngine(jipEngine);
 

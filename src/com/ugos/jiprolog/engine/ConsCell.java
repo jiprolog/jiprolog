@@ -58,8 +58,13 @@ class ConsCell extends PrologObject //implements Serializable
 
     public boolean _unify(PrologObject obj, final Hashtable<Variable, Variable> table)
     {
-//      System.out.println("*** ConsCell unify: " + this + " - " + obj);
-//      System.out.println("*** obj " + obj.getClass());
+    	if(obj instanceof Variable)
+        {
+        	if(((Variable)obj).isBounded())
+        		obj = ((Variable)obj).getObject();
+        	else
+        		return ((Variable)obj)._unify(this, table);
+        }
 
         // if List or Clause or functor then false
         if((obj instanceof Functor) ||
@@ -109,10 +114,6 @@ class ConsCell extends PrologObject //implements Serializable
                 else
                     return (((ConsCell)obj).m_head == null);
             }
-        }
-        else if(obj instanceof Variable)
-        {
-            return obj._unify(this, table);
         }
 //        else if(obj instanceof Atom)
 //        {
@@ -187,6 +188,19 @@ class ConsCell extends PrologObject //implements Serializable
         return cell;
     }
 
+    public static ConsCell last(ConsCell cell) throws IllegalArgumentException
+    {
+        ConsCell tail = ((ConsCell)BuiltIn.getRealTerm(cell.m_tail));
+
+        while (tail != null && tail != ConsCell.NIL)
+        {
+        	cell = tail;
+        	tail = ((ConsCell)BuiltIn.getRealTerm(tail.m_tail));;
+        }
+
+        return cell;
+    }
+
     public final boolean isNil()
     {
         return this == List.NIL;
@@ -216,77 +230,142 @@ class ConsCell extends PrologObject //implements Serializable
         return list1;
     }
 
-    static final ConsCell last(final ConsCell cell)
-    {
-        PrologObject tail = cell.getTail();
-        if(tail == null || tail == ConsCell.NIL)
-        {
-            return cell;
-        }
-        else
-        {
-            return last((ConsCell)BuiltIn.getRealTerm(tail));
-        }
-    }
+//    static final ConsCell last(final ConsCell cell)
+//    {
+//        PrologObject tail = cell.getTail();
+//        if(tail == null || tail == ConsCell.NIL)
+//        {
+//            return cell;
+//        }
+//        else
+//        {
+//            return last((ConsCell)BuiltIn.getRealTerm(tail));
+//        }
+//    }
 
     static final boolean isPartial(final ConsCell cell)
     {
     	PrologObject tail = cell.getTail();
-        if(tail == null || tail == ConsCell.NIL)
-        {
-            return false;
-        }
-        else if(tail instanceof Variable)
-        {
-        	tail = ((Variable)tail).getObject();
-        	if(tail == null) // unbounded
-        		return true;
-        }
 
-    	if(tail instanceof ConsCell)
-    		return isPartial((ConsCell)tail);
-    	else
-			return false;
+	    while (tail != null && tail != ConsCell.NIL)
+	    {
+	    	if(tail instanceof Variable)
+	        {
+	          	tail = ((Variable)tail).getObject();
+	          	if(tail == null) // unbounded --> partial
+	          		return true;
+	        }
+
+	    	if(tail instanceof ConsCell)
+	    		tail = ((ConsCell)tail).m_tail;
+	    	else
+	    		return false;
+	    }
+
+	    return false;
     }
+
+//    static final boolean isPartial(final ConsCell cell)
+//    {
+//    	PrologObject tail = cell.getTail();
+//        if(tail == null || tail == ConsCell.NIL)
+//        {
+//            return false;
+//        }
+//        else if(tail instanceof Variable)
+//        {
+//        	tail = ((Variable)tail).getObject();
+//        	if(tail == null) // unbounded
+//        		return true;
+//        }
+//
+//    	if(tail instanceof ConsCell)
+//    		return isPartial((ConsCell)tail);
+//    	else
+//			return false;
+//    }
 
     static final boolean isClosedOrPartial(final ConsCell cell)
     {
-        PrologObject tail = cell.getTail();
-        if(tail == null || tail == ConsCell.NIL)
-        {
-            return true; // closed
-        }
-        else if(tail instanceof Variable)
-        {
-        	tail = ((Variable)tail).getObject();
-        	if(tail == null) // unbounded
-        		return true;  // partial
-        }
+    	PrologObject tail = cell.getTail();
 
-    	if(tail instanceof ConsCell)
-    		return isClosedOrPartial((ConsCell)tail);
-    	else
-			return false;
+	    while (tail != null && tail != ConsCell.NIL)
+	    {
+	    	if(tail instanceof Variable)
+	        {
+	          	tail = ((Variable)tail).getObject();
+	          	if(tail == null) // unbounded  --> partial
+	          		return true;
+	        }
+
+	    	if(tail instanceof ConsCell)
+	    		tail = ((ConsCell)tail).m_tail;
+	    	else
+	    		return false;
+	    }
+
+	    return true; // closed
     }
 
-    static final int getHeight(final ConsCell cell, final int nHeight)
+//    static final boolean isClosedOrPartial(final ConsCell cell)
+//    {
+//        PrologObject tail = cell.getTail();
+//        if(tail == null || tail == ConsCell.NIL)
+//        {
+//            return true; // closed
+//        }
+//        else if(tail instanceof Variable)
+//        {
+//        	tail = ((Variable)tail).getObject();
+//        	if(tail == null) // unbounded
+//        		return true;  // partial
+//        }
+//
+//    	if(tail instanceof ConsCell)
+//    		return isClosedOrPartial((ConsCell)tail);
+//    	else
+//			return false;
+//    }
+
+    static final int getHeight(final ConsCell cell, int n)
     {
-        if(cell == null || cell == ConsCell.NIL)
+    	int h = 0;
+    	ConsCell tail = cell;//((ConsCell)BuiltIn.getRealTerm(cell.m_tail));
+
+        while (tail != null && tail != ConsCell.NIL)
         {
-            return nHeight;
-        }
-        else
-        {
+        	h++;
         	try
         	{
-        		return getHeight((ConsCell)BuiltIn.getRealTerm(cell.getTail()), nHeight + 1);
+        		tail = ((ConsCell)BuiltIn.getRealTerm(tail.m_tail));
         	}
         	catch(ClassCastException ex)
         	{
-        		return nHeight + 1;
+        		return h;
         	}
         }
+
+        return h;
     }
+
+//    static final int getHeight(final ConsCell cell, final int nHeight)
+//    {
+//        if(cell == null || cell == ConsCell.NIL)
+//        {
+//            return nHeight;
+//        }
+//        else
+//        {
+//        	try
+//        	{
+//        		return getHeight((ConsCell)BuiltIn.getRealTerm(cell.getTail()), nHeight + 1);
+//        	}
+//        	catch(ClassCastException ex)
+//        	{
+//        		return nHeight + 1;
+//        	}
+//        }
+//    }
 
     public boolean isPartial()
     {
@@ -301,6 +380,14 @@ class ConsCell extends PrologObject //implements Serializable
     @Override
     public boolean termEquals(PrologObject obj)
     {
+        if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
         if(obj instanceof ConsCell)
         {
         	int h1 = getHeight();
@@ -319,11 +406,6 @@ class ConsCell extends PrologObject //implements Serializable
 	            }
         	}
         }
-        else if(obj instanceof Variable)
-        {
-            if(((Variable)obj).isBounded())
-                return termEquals(((Variable)obj).getObject());
-        }
         else if(obj == null && this == ConsCell.NIL)
         	return true;
 
@@ -331,8 +413,16 @@ class ConsCell extends PrologObject //implements Serializable
         return false;
     }
 
-    protected boolean lessThen(final PrologObject obj)
+    protected boolean lessThen(PrologObject obj)
     {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
         if(obj instanceof ConsCell)
         {
         	int h1 = getHeight();
@@ -367,9 +457,9 @@ class ConsCell extends PrologObject //implements Serializable
 		{
         	return true;
 		}
-        else if(obj instanceof Variable)
-            if(((Variable)obj).isBounded())
-                return lessThen(((Variable)obj).getObject());
+//        else if(obj instanceof Variable)
+//            if(((Variable)obj).isBounded())
+//                return lessThen(((Variable)obj).getObject());
 
         return false;
     }
@@ -393,7 +483,6 @@ class ConsCell extends PrologObject //implements Serializable
             return param;
         else
             throw new IndexOutOfBoundsException(Integer.toString(n));
-            //throw new JIPRuntimeException("ParameterIndexOutOfBounds" + Integer.toString(n));
     }
 
 //	@Override

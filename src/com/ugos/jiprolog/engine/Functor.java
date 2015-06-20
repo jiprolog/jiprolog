@@ -108,16 +108,20 @@ class Functor extends ConsCell
         m_head = Atom.createAtom(m_strName);
     }
 
-    public boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
+    public boolean _unify(PrologObject obj, final Hashtable<Variable, Variable> table)
     {
+    	if(obj instanceof Variable)
+        {
+        	if(((Variable)obj).isBounded())
+        		obj = ((Variable)obj).getObject();
+        	else
+        		return ((Variable)obj)._unify(this, table);
+        }
+
         if (obj instanceof Functor)
         {
             return m_head._unify(((Functor)obj).m_head, table) &&
                   ((m_tail == null) ? (((Functor)obj).m_tail == null) : (m_tail._unify(((Functor)obj).m_tail, table)));
-        }
-        else if(obj instanceof Variable)
-        {
-            return obj._unify(this, table);
         }
         else
         {

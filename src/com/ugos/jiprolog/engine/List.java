@@ -39,9 +39,16 @@ class List extends ConsCell
         //super(list.getHead(), list.getTail());
     }
 
-    public boolean _unify(final PrologObject obj, final Hashtable table)
+    public boolean _unify(PrologObject obj, final Hashtable table)
     {
-//        System.out.println("*List Match: " + toString() + " - " + obj.toString());
+    	if(obj instanceof Variable)
+        {
+        	if(((Variable)obj).isBounded())
+        		obj = ((Variable)obj).getObject();
+        	else
+        		return ((Variable)obj)._unify(this, table);
+        }
+
         if (obj instanceof List)
         {
 //            System.out.println("*List Match: m_head " + m_head);
@@ -83,10 +90,10 @@ class List extends ConsCell
                 return (((ConsCell)obj).m_head == null);// ||   (((ConsCell)obj).m_head.match1(m_head, table)));
             }
         }
-        else if(obj instanceof Variable)
-        {
-            return obj._unify(this, table);
-        }
+//        else if(obj instanceof Variable)
+//        {
+//            return obj._unify(this, table);
+//        }
 //        else if(obj instanceof Atom)
 //        {
 //        	return this == List.NIL && obj.equals(Atom.NIL;

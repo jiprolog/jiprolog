@@ -24,19 +24,32 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-abstract class DefaultClausesDatabase extends JIPClausesDatabase
+class ZeroArityDefaultClausesDatabase extends JIPClausesDatabase
 {
     protected final Vector<Clause> m_clausesVector;
-
-    public DefaultClausesDatabase(final String strFunctName, final int nArity)
+    public ZeroArityDefaultClausesDatabase(final String strFunctName)
     {
-        setFunctor(strFunctName, nArity);
+        setFunctor(strFunctName, 0);
         m_clausesVector = new Vector<Clause>();
     }
 
     public void setAttributes(final String strAttribs)
     {
         // do nothing
+    }
+
+    public synchronized boolean addClauseAtFirst(final JIPClause clause)
+    {
+        m_clausesVector.add(0, (Clause)clause.getTerm());
+
+        return true;
+    }
+
+    public synchronized boolean addClause(final JIPClause clause)
+    {
+        m_clausesVector.add((Clause)clause.getTerm());
+
+        return true;
     }
 
     public synchronized boolean removeClause(final JIPClause clause)

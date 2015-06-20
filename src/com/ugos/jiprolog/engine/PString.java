@@ -167,16 +167,24 @@ final class PString extends List //implements Serializable
     }
 
     @Override
-    public final boolean _unify(final PrologObject obj, final Hashtable table)
+    public final boolean _unify(PrologObject obj, final Hashtable table)
     {
+    	if(obj instanceof Variable)
+        {
+        	if(((Variable)obj).isBounded())
+        		obj = ((Variable)obj).getObject();
+        	else
+        		return ((Variable)obj)._unify(this, table);
+        }
+
         if (obj instanceof List)
         {
             return super._unify(obj, table);
         }
-        else if(obj instanceof Variable)
-        {
-            return ((Variable)obj)._unify(this, table);
-        }
+//        else if(obj instanceof Variable)
+//        {
+//            return ((Variable)obj)._unify(this, table);
+//        }
         else
         {
             return false;
@@ -200,8 +208,16 @@ final class PString extends List //implements Serializable
         return m_strString;
     }
 
-    protected final boolean lessThen(final PrologObject obj)
+    protected final boolean lessThen(PrologObject obj)
     {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
         if(obj instanceof PString)
             return m_strString.compareTo( ((PString)obj).m_strString) < 0;
         if(obj instanceof List)
@@ -210,11 +226,11 @@ final class PString extends List //implements Serializable
             return false;
         else if(obj instanceof Expression)
             return false;
-        else if(obj instanceof Variable)
-            if(((Variable)obj).isBounded())
-                return lessThen(((Variable)obj).getObject());
-            else
-                return false;
+//        else if(obj instanceof Variable)
+//            if(((Variable)obj).isBounded())
+//                return lessThen(((Variable)obj).getObject());
+//            else
+//                return false;
 
         return true;
     }

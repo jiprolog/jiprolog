@@ -86,21 +86,22 @@ final class Atom extends PrologObject //implements Serializable
         return this;
     }
 
-    public final boolean _unify(final PrologObject obj, final Hashtable<Variable, Variable> table)
+    public final boolean _unify(PrologObject obj, final Hashtable<Variable, Variable> table)
     {
+    	if(obj instanceof Variable)
+        {
+        	if(((Variable)obj).isBounded())
+        		obj = ((Variable)obj).getObject();
+        	else
+        		return ((Variable)obj)._unify(this, table);
+        }
+
         if (obj instanceof Atom)
         {
 //            System.out.println("*** Atom unify: " + this.m_strAtom + " - " + ((Atom)obj).m_strAtom);
 //            System.out.println("*** m_nHashValue: " + m_nHashValue+ " - obj.hashval(): " + ((Atom)obj).m_nHashValue);
 
             return m_nHashValue == ((Atom)obj).m_nHashValue;
-        }
-        else if(obj instanceof Variable)
-        {
-//            System.out.println("*** Atom unify Var: " + this + " - " + obj);
-//            System.out.println("*** m_nHashValue: " + m_nHashValue+ " - obj.hashval(): " + ((Atom)obj).m_nHashValue);
-
-            return ((Variable)obj)._unify(this, table);
         }
         else if (obj == ConsCell.NIL)
         {
@@ -123,16 +124,20 @@ final class Atom extends PrologObject //implements Serializable
     }
 
 //    variable precedes floating point precedes integer precedes atom precedes compound.
-    protected final boolean lessThen(final PrologObject obj)
+    protected final boolean lessThen(PrologObject obj)
     {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
         if(obj instanceof Atom)
             return m_strAtom.compareTo( ((Atom)obj).m_strAtom) < 0;
-        else if(obj instanceof Variable && ((Variable)obj).isBounded())
-            return lessThen(((Variable)obj).getObject());
         else if(obj == List.NIL)
-        {
         	return false;
-        }
         else if(obj instanceof ConsCell)
         	return true;
 
@@ -142,12 +147,18 @@ final class Atom extends PrologObject //implements Serializable
     @Override
     public boolean termEquals(PrologObject obj)
     {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
         if(obj instanceof Atom)
             return this.equals(obj);//m_strAtom.equals(((Atom)obj).m_strAtom);
         else if(obj instanceof List)
             return m_strAtom.equals("") && obj == List.NIL;
-        else if(obj instanceof Variable && ((Variable)obj).isBounded())
-            return termEquals(((Variable)obj).getObject());
 
         return false;
     }
