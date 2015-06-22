@@ -20,13 +20,7 @@ package com.ugos.jiprolog.extensions.io;
 
 import java.util.Hashtable;
 
-import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
-
-import com.ugos.jiprolog.engine.JIPAtom;
 import com.ugos.jiprolog.engine.JIPCons;
-import com.ugos.jiprolog.engine.JIPExistenceException;
-import com.ugos.jiprolog.engine.JIPFunctor;
-import com.ugos.jiprolog.engine.JIPInstantiationException;
 import com.ugos.jiprolog.engine.JIPNumber;
 import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPXCall;

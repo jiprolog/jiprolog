@@ -34,8 +34,7 @@ public class JIPAbortException extends JIPRuntimeException
 	 */
 	private static final long	serialVersionUID	= -6669335200974896775L;
 
-	/** Constructs a new JIPJVMException
-     * @param ex the JVM exception thrown
+	/** Constructs a new JIPAbortException
      */
     public JIPAbortException()
     {

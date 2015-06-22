@@ -535,7 +535,7 @@ public class JIPEngine implements Serializable
 
     /** Sets current InputStream
      * @param ins the current input stream to set
-     * @param strStreamName the name of the input stream
+     * @param streamHandle the handle of the input stream
      * @see com.ugos.jiprolog.engine.JIPEngine#getUserInputStream
      */
     public final void setCurrentInputStream(final InputStream ins, int streamHandle)

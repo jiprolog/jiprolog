@@ -31,6 +31,8 @@ import java.io.*;
  */
 public class JIPRuntimeException extends RuntimeException
 {
+	private static final long serialVersionUID = 3046239634882549653L;
+
 	protected JIPEngine m_engine;
 	protected WAM.Node m_curNode;
 	protected String m_strFileName;
@@ -67,8 +69,7 @@ public class JIPRuntimeException extends RuntimeException
         super(strMsg);
     }
 
-    /** Constructs a new JIPRuntimeException with ISO exception
-     * @param strMsg message associated to this exception
+    /** Constructs an empty JIPRuntimeException
      */
     public JIPRuntimeException()
     {

@@ -70,7 +70,7 @@ public class JIPTerm extends Object implements Clearable, Serializable, Cloneabl
      * this method unifies the terms and varTable will contains
      * the variables that has been bound.
      * @param term term to unify
-     * @param varTable the hashtable containing the variable that has been bound.
+     * @param varsTbl the hashtable containing the variable that has been bound.
      * @return true if the this object unify with the specified term.
      */
     public final boolean unify(final JIPTerm term, final Hashtable varsTbl)

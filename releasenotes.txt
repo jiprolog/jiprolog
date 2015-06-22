@@ -1,7 +1,405 @@
 JIProlog Release Notes
 ------------------------------
+
+4.1.2.3 
+    Fix to GlobalDB for abolish/1, retract/1, retract_all/1 and clause/2 failed tests
+    One more optimization on FAI
+    Some more optimizations on first argument indexing and some
+    tail-recursion optimizations
+
+4.1.2.1 
+	Some improvements in first argument indexing
+    Some more optimizations for first argument indexing
+
+4.1.0.1
+    Fix to proguard configuration
+    Fix to current searchpath
+    Removed System.exit at the end of JIProlog Standalone Interpreter
+    Implemented first argument indexing
+    Added Pack2 to pack one or more .pl files in one .jip compiled file
+    Fix to expand_term/2 and translate/2 in wrapping naked vars
+    Some optimization on asserting a clause in consult/load mode
+    Add support for the discontiguous/1 predicate directive
+    JIProlog, as other systems, can represent the character zero
+    Removed some comments
+    All io predicates optimized to avoid string comparision to check the
+    stream mode and type
+    Fix issue with error handling in the once/1, one/1, and ignore/1 predicates
+    Fix to manage OutputStream correctly
+    WAMTrace updated to the latests changes in the WAM
+    PrologTokenizer optimized by using StringBuilder
+    PrettyPrinter optimized by using StringBuilder
+    Version number updated
+    Fix to streamOrAlias managment in streams identifications
+    Fix to anonimous variable name. Changes to manage streamOrAliases as
+    stream identification.
+    Fix regression in stream or alias type checking in the peek_char/2 and peek_code/2 predicates
+    Fixes to SetInput1
+    Commented the exception stacktrace in the wam and fixed a bug in the
+    parser when an unexpected operator is found
+    Minor performance improvement to the internal check_handle/2 predicate
+    Fix regression in stream or alias type checking in several IO predicates
+    Fix bug in the check_handle/2 internal predicate
+    Fix wrong exception term in write/2
+    Missing update to read/2 for the change to stream handles as integers
+    Fix regression in stream or alias type checking in at_end_of_stream/1, set_input/1, set_output/1, and set_stream_position/2
+    More fixes to manage stream handles as integers
+    All stream handles moved to integer
+    Removed a System.out.println on failing goal
+    Moved StringBuilderEx sbANONYMOUS and sbSHADOW as private class
+    variables
+    Fixes in JIPio package in using numbers instead of atoms for stream
+    handles. Optimization in using StringBuilder for string concatenations
+    Added StringBuilderEx
+    Stream Handles are now integers
+    Added SaveCP1 and savecp/1
+    Fixes to call_cleanup/2 to manage exception. Moved once/1, one/1 apply/2
+    ignore/1 to core (jipkernel.txt)
+    Fixed a typo in goal construction
+    Fix to Catch/3 when the first argument is not a callable
+	
+4.0.18.1
+    Fix to Catch3 when the variables in the exception term are cleared
+    Missed CallCleanup2.java
+    Add meta-predicate templates for the new `call_cleanup/2` and `setup_call_cleanup/3` predicates for use with the `predicate_property/2` predicate
+    Added call_cleanup/2 and setup_call_cleanup/3
+    Final fix to soft-cut
+    Fixes to *->/2
+    Make (*->)/2 condition opaque to cuts
+
+4.0.15.1
+    Some Optimizations in Catch3 and added the new classes needed for
+    catch/3 and throw/1
+    catch/3 and throw/1 moved in the core under engine package and optimized
+    to work on the internal WAM.
+    Merge branch 'master' of https://github.com/jiprolog/jiprolog.git
+    Added naked vars wrapping in call/1 and ;/2, initial implementation of
+    soft-cut *->/2
+    Fix regression in bagof/3 and setof/3 due to missing dynamic declaration for an internal predicate
+    Fix to Clause.java where call/1 is now a BuiltInPredicate.
+    Added Disjunction2
+    new Java implementation of call/1 andd ;/2
+    One more Fix to NumberChars2
+    Optimization on Atom to speed up equality test
+    Fix to Retract1 to raise an exception if the predicate is not dynamic
+    Some optimization in managing knon atoms
+    Fix to NumberCodes2 and NumberChars2 to manage JIPString and the correct
+    error in case the first paramenter is not a number
+    Added JIPString as supported term for list of codes
+    Fix retractall/1 compliance issue
+    Fix to JIPAbortException
+    Fix compliance issue of current_predicate/1 in an error case
+    Make the round/1 arithmetic function compliant
+    Updated revision number
+    Support continuation escape sequences in quoted atoms
+    Fix set_stream_position/2 predicate compliance issue with error condition
+    Fix PushbackLineNumberInputStream.unread() method at end-of-file
+    Fix StreamPosition4 bugs
+    Fix for write_canonical of '$VAR'/1
+    Code cleaning
+    Fixes to numbervars/3 and PrettyPrinter to print '$VAR'/1 variable names
+    updated the versione number
+    Update stream_property/2 for the new representation of stream positions and add a new stream_position_data/3 built-in predicate
+    Move from StreamPosition3 to StreamPosition4
+    Added +1 to line numeber in obj.setPosition
+    Added PushbackLineNumberInputStream
+    Fixes to lineNumber, column and position of a term. line_counts/2 option
+    returns the right values.
+    Fix typo in the unification with the line_counts/2 option
+    Fix read_term/3 properties variable_names/1 and singletons/1 options when a term contains only anonymous variables
+    Merge branch 'master' of https://github.com/jiprolog/jiprolog.git
+    Fixes to singletons/1 and variable_names/1 to avoid anonymous variables.
+    Added line_count/2 option. Partial fix to linenumber to
+    PushBackInputStream
+    Fix bug in stream_property/2 where false domain errors could be generated on backtracking
+    Fix to linenumber
+    Report sort/2 and keysort/2 as built-in predicates
+    Missing fix to singletons/1
+    Fixes to  singletons/1 and added variable_names/1 in options
+    Fix to jiprolog inputstream to manage eof and linenumber
+    Fix to ReadTerm3 when there are no singleton vars
+    Added ReadTerm3
+    Added support for singleton/1 in read_term/2 /3. Added ReadTerm3 with
+    singleton/1 option
+    Added SHA1 class
+    Fixes to parsing of [] and some minor optimizations
+    Partial implementation of TermHash4
+    JIPParameterUnboundedException renamed to JIPInstatiationException,
+    Fixes for double_quotes flag
+    Update term_hash/2 to return hash codes in the interval [0,16777215]
+    Add term_hash/2 built-in predicate
+    Fix to manage instances of JIPString
+    Added double_quotes env var to manage double quoted strings as in ISO
+    specs
+    fix to Univ2 when the head of the list is ','
+    Added ;/2 as system predicate to allow meta-calls
+    Fixes in unbounded variable wrapping in checkForCallable when ;/2, ->/2
+    or *->/2 is in the body of the clause
+    Fixes on backtracking that did not give more solutions
+    fixes to give syntax error on terms like foo([a,,|v]).
+    Fix to avoid from single , (comma) as atom
+    Fix for the call call(',', is(X,0), is(Y,1)). that left X and Y
+    uninstantiated
+    Fix missing case in handling call/N with a ',' atom as first argument
+    Fixes to recognize '[]' as []
+    Fixes special case like call(','(true), true).
+    Comment out the broken definition of the (*->)/2 control construct
+    Minor optimization to sorting predicates
+    Commented the printStackTrace to JIPRuntimeException in the WAM
+    Recognize \s escape sequence as a space in 0' notation and quoted atoms
+    Fix a bagof/3 and setof/3 bug in the processing of existentially qualified variables
+    Add a new JIPNumber.create() method that takes a long to solve a bug in file_attributes/7 where a file size would be returned as a float
+    Fix a bug in functor/3 when the functor is the empty list atom
+    Update open/4 to accept the encoding/1 option when the argument is either 'UTF-8' or 'US-ASCII'
+    Optimization in compilation function that speed up .jip compiling and
+    loading. Added compile/2
+    Add missing data on the new enable_clause_check flag
+    Minor optimization of the create_prolog_flag/3 predicate
+    Fix two missing create_prolog_flag/3 error conditions
+	Fix spelling typo in create_prolog_flag/3 option name
+    Make set_prolog_flag/2 and current_prolog_flag/2 compliant and add new create_prolog_flag/3 built-in predicate following SWI-Prolog specs
+    Minor code cleanup of previous patch
+    Make the (^)/2 arithmetic function compliant
+    Forcing true to enable_clause_check flag
+    Added the flag enableClauseCheck to Clause.getClause and fixes the
+    related classes. This fixes also a rectract/1 bug. Removed in WAM an
+    unneeded peice of code
+    Throw an error on non-valid read and write options
+    Make current_predicate/1 compliant
+    Trials to fix Call/1 and call/1
+    Fixes to regression due to changes in Functor.java
+    Add .gitignore file
+    Stop tracking *.jip files
+    Faster implementation of the @>=/2 and @=</2 built-in predicates
+    Added wrapping to naked variables when not in $system module
+    Using snips to get local cut scope doesn't work for the current definitions of bagof/3 and setof/3
+    Changed by injecting the goal between snip in the call list
+    Changed the call to Functor constructor when param is an Atom
+    Fixes to Functor constructor with Atom param
+    Partial fixes to call/1 and Functor/1
+    Partial fixes to call/1 call/N
+    Add getenv/2 built-in predicate
+    Fixes for error checking
+    Fix alignment typos in the BuiltInFactory.java file
+    fixed the operator parsing that caused a syntax error in xio.pl
+    Fixes to CurrentFunctor2 and current_predicate/1
+    Added Call1 with fixes
+    Renamed SCut0 to SoftCut0
+    Remove export of call/N from the jipsys module as call/N is now native
+    Optimize bagof/3 when there are no free variables
+    Commented out term.clear() and optimized the Stack definition
+    fixes set env variables with codes instead of atom for double_quotes
+    fix to PrologParser for ISO compliances on Operator syntax
+    Fix an operator parsing bug
+    Add Operator.isNonAssoc() method
+    Make predicate_property/2 compliant
+    Fix another bug in bagof/3
+    Fixes to pass all tests
+    Native implementation of findall/4 (work in progress)
+    Make term_variables/2 compliant
+    Added isClosedOrPartial and isPartial to JIPList
+    Added checks on the second argument
+    Added ConsCell.isPartialOrClosed and JIPCons.isPartialOrClosed, optimized
+    isPartial
+    Use instead the native implementation of findall/3
+    Make the Java implementation of findall/3 compliant
+    Add ConsCell.isClosedOrPartial() method
+	Fix another bug in bagof/3 and setof/3
+    Fix bug in bagof/3 and setof/3 when the lists of solutions contain variables
+    new fix to Variable.lessThen when comparing unbounded variables
+    Fix to Variable.lessThen when both are unbounded variables
+    Fix to the bug in retract/1 when retracting a clause like Head :- Body
+    Fix Expression.lessThen() method when comparing a variable with a number
+    Fix acyclic_term/1
+    Fix to body checking for callable
+	Fixed a bug in subsumes_term/3
+	Fix to body checking in Clause. Added a trial for Call1
+	Added check to the body of the Clause
+    Added check for collable in clause body
+    Fix some cases of detecting callable errors and permission errors with static predicates
+    Added isUser for Functor and Clauses
+    fix to isUser
+    Make char_code/2 compliant
+    Make abolish/1 compliant
+    Fix stream_property/2 property end_of_stream/1
+    Fix at_end_of_stream/0-1
+    Fix atom_chars/2 and atom_codes/2 bug when the second argument is or will be instantiated to an empty list
+
+4.0.13.2 
+	fixes to char_code/2, atom_chars/2, and atom_codes/2.
+
+4.0.13.1 
+	fixes to Univ2, GetByte2, GetChar2, PeekChar2, InputStreamInfo, StreamInfo, uncommented ^2
+    Fixes to Arg3, xio.pl and added the prolog flag unknown
+
+4.0.12.7 
+	Fixes to Unification procedure in ConsCell, File Handles generation in JIPio, OutputStreamInfo and InputStreamInfo, error checking in number_chars/2 and number_codes/2
+    Fixes to JIPio to have a unique handle for files
+    Fixes to PeekChar2 and get_byte/2
+    Fixes to GetXxx2, PutXxx2, NL1 and Write2, WriteCanonical2, Read2
+
+4.0.12.3 
+	Fixes to JIPio OutputStream for stream properties and PutByte2
+	Fix to get_xxx/2, put_xxx/2, write/2, nl/2, write_canonical/2, JIPrepresentationException
+    Added Builder configuration for .pl
+    fixes to ConsCell.termEquals, peekByte2, Get02, added GetByte2, GetChar2, PeekChar2, Put2, PutByte2, PutChar2, PutCode2
+    Fixes to JIPio for the bug in read/2
+    Fixes to NumberChar2, NumberCodes2 and Expression. Added a new public constructor to JIPRepresentationException
+    Fixes to NumberChar2, NumberCodes2, Expression and some optimizations to WAM
+    Intermediate commit during fixes
+    Fixes to open/3/4
+    Fixes to: module scope management, PeekByte/2, get_char/2, peek_byte/2, get_code/2, open/4
+    Fixes to PeekByte2 end_of_stream(no)
+    Fixes to IO Stream properties, PeekByte2 and CallN
+    Fixes to Expression and JIPThrow1
+    Changes to arg/3 implemented natively, Fixes to NumberChars2 and NumberCodes2
+    fixes to NumberChar2 and NumberCodes2 to accept hex, octal and binary numbers
+    Added hex, octal and binary notation to numbers in PrologTokenizer
+    Fixes to Expression and JIPNumber to fix AtomCodes2, NumberChars2, NumberCodes2
+    Commit missing xterm.pl
+    Fixes to AtomChar2, AtomCode2, NumberChars2, NumberCodes2, Expression
+    Fixes to Expression to manage NaN and infinity
+    Missing commit
+    Fixes to stream options and open/3/4
+    Fixes to Clause/2 on callable atoms
+    Removed debug prints
+    Added atan2 as math function
+    Fixes to Clause2, Expression on floating point operations, ProlotTokenizer on numbers in E+x notation, OperatorManager
+
+4.0.10.6 
+	Fixes to Expression return value for float math functions, Functor3, FlushOutput1 and between/3
+    Fixes to atom_chars/2,  PString, Expression, PredicateProperty2, atom_numbers/2
+    Fixes to abolish/1, predicate_property/2
+    Fixes to JIPCatch/3 and GlobalDB
+    Fixes to op/3 and atom_chars/2
+    Final fixes to JIPTypeException
+    Starting fixes to JIPTypeException
+    Fixes to: compare/3, retract/1, peek_byte/2, see/2, write/2, write_canonical/2, writeq/2, Clause
+    Fixes to stream properties in InputStreamInfo e OutputStreamInfo
+    Fix to Read2 and several other fixes to xio.pl
+    Fix to: =../2, Variable.lessThen, Variable.termEquals, TypeException, added ConsCell.isPartial to check for partial list
+    Fixed lessThen method
+    Added ATOMIC exception type
+    Fixes to Exceptions
+    Some optimizations
+    Fixes to Exceptions
+    Optimization in Atoms Hashtable
+    Fixes for ISO exception conformance, fix to sub_atom/5
+    Removed the null in the toString of the exception
+    Fix to JIPxxxException moving the culprit to Prolog term, fix to BuiltInPredicate in unify when an exception is raised
+    Fixes in JIPxxxException, numbervars/3 and Functor/3
+    Several Fixes for ISO compliancy
+    Fixes to phrase/2 and phrase/3
+    Fix to phrase/2 /3
+    Fix to DCG rules on managing cut !
+    Fix to DCG translation rules on ->/2
+
+4.0.6.21
+    Some improvements to DCG
+
+4.0.6.20
+    another fix to shell/1 /2
+
+4.0.6.19
+    fix to shell/1 /2
+
+4.0.6.17
+    new implementation for
+    setof/3
+    bagof/3
+    findall/3
+    findall/4    
+    fix to shell/1 /2
+
+4.6.0.15
+    fix on compare/3
+
+4.0.6.14
+    another fix to
+    remove_duplicates/2
+
+4.0.6.13
+    fix to remove_duplicates/2    
+    partial fix to
+    bagof/3
+    setof/3
+    findall/3
+
+4.0.6.9
+    fix to reconsult functionm term comparision
+    Optimization on call/n predicates
+    Changes:
+    Snip
+    [!/0 moved to <!/0
+    !]/0 moved to !>/0
+    Fix to parser when parses list with starting or ending ! like [a, !] or [!, a]
+
+4.6.0.5
+    fix on options handling to
+    read_term/2 /3
+    read_clause/2 /3
+
+4.0.6.2
+    fix to: JIPExistenceException
+    peek_code/2
+    open/4
+
+4.0.6.1
+    Redefined all exception to be ISO Prolog Compliant    
+    Fix to:
+    get_char/1 /2
+    get_code/1 /2
+    peek_char/1 /2
+    peek_code/1 /2
+
+4.0.5.17
+    fix to:
+    get_char/1 /2
+    get_code/1 /2
+    get_byte/1 72
+    get/1 /2
+    get0/1 /2
+    stream_property(Stream, end_of_stream(P))
+
+4.0.5.15
+	fix to PrettyPrint that added a bug in ==/1
+    Fix to:
+    pid/1 to return integer instead of atom
+    write_canonical/1
+    setof/3, bagof/3 when ^/2 existenzial qualifier is used
+    abolish/1
+    rename_file/2
+    Fix to:
+    copy_term/2
+    meta_predicate/1
+    write_canonical/1
+    PrologParser on :-/2 and double quoted strings
+    fix to write_canonical/1
+    fix to -debug option
+    Fix to:
+    atom_char/2
+    atom_concat/3
+    name/2
+    Octal Notation
+    Added command line -n option for nogui
+    Fix to:
+    write_canonical/1
+    arg/3
+    functor/3
+    standard ordering of terms
+    Prolog Parser to read \\123\\ as ASCII char
+    added command line options
+    fix to:
+    integer/1
+    float/1
+    compound/1
+    write_canonical/1
+    standard ordering o of term
+    
+    added pid/1 to get the PID
+
 v4.0.4.4
-Fix to JIPTerm.getVariables() that raised an exception on Expression and PString
+Fix to JIPTerm.getVariables() that raised an exception on Expression
 
 v4.0.4.3
 Fix to curly-bracked terms like {a},
