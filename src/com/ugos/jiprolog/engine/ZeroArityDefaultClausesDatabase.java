@@ -20,57 +20,11 @@
 
 package com.ugos.jiprolog.engine;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
-class ZeroArityDefaultClausesDatabase extends JIPClausesDatabase
+class ZeroArityDefaultClausesDatabase extends DefaultClausesDatabase
 {
-    protected final Vector<Clause> m_clausesVector;
     public ZeroArityDefaultClausesDatabase(final String strFunctName)
     {
-        setFunctor(strFunctName, 0);
-        m_clausesVector = new Vector<Clause>();
+    	super(strFunctName, 0);
     }
-
-    public void setAttributes(final String strAttribs)
-    {
-        // do nothing
-    }
-
-    public synchronized boolean addClauseAtFirst(final JIPClause clause)
-    {
-        m_clausesVector.add(0, (Clause)clause.getTerm());
-
-        return true;
-    }
-
-    public synchronized boolean addClause(final JIPClause clause)
-    {
-        m_clausesVector.add((Clause)clause.getTerm());
-
-        return true;
-    }
-
-    public synchronized boolean removeClause(final JIPClause clause)
-    {
-    	return m_clausesVector.removeElement(clause.getTerm());
-    }
-
-    public synchronized Enumeration clauses(JIPFunctor functor)
-    {
-    	if(!isDynamic() || getJIPEngine().isImmediateUpdateSemantics())
-    		return m_clausesVector.elements();
-    	else
-        	return ((Vector<Clause>)m_clausesVector.clone()).elements();
-    }
-
-	@Override
-	public synchronized Enumeration clauses()
-	{
-		if(!isDynamic() || getJIPEngine().isImmediateUpdateSemantics())
-    		return m_clausesVector.elements();
-    	else
-        	return ((Vector<Clause>)m_clausesVector.clone()).elements();
-	}
 }

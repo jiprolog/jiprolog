@@ -44,12 +44,31 @@ abstract class DefaultClausesDatabase extends JIPClausesDatabase
     	return m_clausesVector.removeElement(clause.getTerm());
     }
 
-    public synchronized Enumeration clauses(JIPFunctor functor)
+    public synchronized boolean addClauseAtFirst(final JIPClause clause)
+    {
+        m_clausesVector.add(0, (Clause)clause.getTerm());
+
+        return true;
+    }
+
+    public synchronized boolean addClause(final JIPClause clause)
+    {
+        m_clausesVector.add((Clause)clause.getTerm());
+
+        return true;
+    }
+
+    synchronized Enumeration clauses(Functor functor)
     {
     	if(!isDynamic() || getJIPEngine().isImmediateUpdateSemantics())
     		return m_clausesVector.elements();
     	else
         	return ((Vector<Clause>)m_clausesVector.clone()).elements();
+    }
+
+    public synchronized Enumeration clauses(JIPFunctor functor)
+    {
+    	return clauses((Functor)functor.getTerm());
     }
 
 	@Override

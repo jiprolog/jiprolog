@@ -54,29 +54,30 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //    	if(m_clausesVector.size()>0)
     }
 
-    public final synchronized boolean addClauseAtFirst(final JIPClause clause)
+    public final synchronized boolean addClauseAtFirst(final JIPClause jipclause)
     {
-        m_clausesVector.add(0, (Clause)clause.getTerm());
+    	Clause clause = (Clause)jipclause.getTerm();
+        m_clausesVector.add(0, clause);
 
-        Functor funct = (Functor)((Clause)clause.getTerm()).getHead();
+        Functor funct = (Functor)clause.getHead();
         PrologObject key = funct.getParams().getTerm(getIndex()).getRealTerm();
 
         if(key == null)
         {
         	// variable
-        	addClauseWithVariable((Clause)clause.getTerm(), true);
+        	addClauseWithVariable(clause, true);
         }
 //	        else if(key instanceof PString)
 //	        {
 //	        	if(m_clausesTable.containsKey(key))
 //		        {
-//		        	m_clausesTable.get(key).add(0, (Clause)clause.getTerm());
+//		        	m_clausesTable.get(key).add(0, clause);
 //		        }
 //	        	else
 //	        	{
 //		        	Vector<Clause> clauseVector = new Vector<Clause>();
 //		        	m_clausesTable.put(key, clauseVector);
-//		        	clauseVector.add((Clause)clause.getTerm());
+//		        	clauseVector.add(clause);
 //		        	addVariablesToVector(clauseVector);
 //	        	}
 //	        }
@@ -86,18 +87,18 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         	{
         		if(m_clausesAtomTable.containsKey(key))
         		{
-        			m_clausesAtomTable.get(key).add(0, (Clause)clause.getTerm());
+        			m_clausesAtomTable.get(key).add(0, clause);
 	        	}
             	else
     	        {
     	        	Vector<Clause> clauseVector = new Vector<Clause>();
     	        	m_clausesAtomTable.put(key, clauseVector);
-    	        	clauseVector.add((Clause)clause.getTerm());
+    	        	clauseVector.add(clause);
     	        	addVariablesToVector(clauseVector);
     	        }
         	}
 
-        	m_clausesListVector.add(0,(Clause)clause.getTerm());
+        	m_clausesListVector.add(0,clause);
         }
         else if(key instanceof Functor)
         {
@@ -105,31 +106,31 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 
         	if(m_clausesFunctorTable.containsKey(atom))
 	        {
-        		m_clausesFunctorTable.get(atom).add(0, (Clause)clause.getTerm());
+        		m_clausesFunctorTable.get(atom).add(0, clause);
 	        }
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesFunctorTable.put(atom, clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        	addVariablesToVector(clauseVector);
 	        }
         }
         else if(key instanceof ConsCell)
         {
-        	m_clausesConsVector.add(0,(Clause)clause.getTerm());
+        	m_clausesConsVector.add(0,clause);
         }
         else if(key instanceof Expression)
         {
         	if(m_clausesExpressionTable.containsKey(key))
 	        {
-	        	m_clausesExpressionTable.get(key).add(0, (Clause)clause.getTerm());
+	        	m_clausesExpressionTable.get(key).add(0, clause);
 	        }
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesExpressionTable.put(key, clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        	addVariablesToVector(clauseVector);
 	        }
         }
@@ -137,13 +138,13 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         {
         	if(m_clausesAtomTable.containsKey(key))
 	        {
-	        	m_clausesAtomTable.get(key).add(0, (Clause)clause.getTerm());
+	        	m_clausesAtomTable.get(key).add(0, clause);
 	        }
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesAtomTable.put(key, clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        	addVariablesToVector(clauseVector);
 	        }
         }
@@ -155,47 +156,49 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         return true;
     }
 
-    public final synchronized boolean addClause(final JIPClause clause)
+    public final synchronized boolean addClause(final JIPClause jipclause)
     {
-        m_clausesVector.add((Clause)clause.getTerm());
+    	Clause clause = (Clause)jipclause.getTerm();
 
-        Functor funct = (Functor)((Clause)clause.getTerm()).getHead();
+        m_clausesVector.add(clause);
+
+        Functor funct = (Functor)(clause).getHead();
         PrologObject key = funct.getParams().getTerm(getIndex()).getRealTerm();
 
         if(key == null)
         {
         	// variable
-        	addClauseWithVariable((Clause)clause.getTerm(), false);
+        	addClauseWithVariable(clause, false);
         }
 //	        else if(key instanceof PString)
 //	        {
 //	        	if(m_clausesTable.containsKey(key))
 //		        {
-//		        	m_clausesTable.get(key).add((Clause)clause.getTerm());
+//		        	m_clausesTable.get(key).add(clause);
 //		        }
 //	        	else
 //	        	{
 //		        	Vector<Clause> clauseVector = new Vector<Clause>();
 //		        	m_clausesTable.put(key, clauseVector);
 //		        	addVariablesToVector(clauseVector);
-//		        	clauseVector.add((Clause)clause.getTerm());
+//		        	clauseVector.add(clause);
 //	        	}
 //	        }
         else if(key instanceof List)
         {
     		if(m_clausesAtomTable.containsKey(key))
     		{
-    			m_clausesAtomTable.get(key).add(0, (Clause)clause.getTerm());
+    			m_clausesAtomTable.get(key).add(0, clause);
         	}
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesAtomTable.put(key, clauseVector);
 	        	addVariablesToVector(clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        }
 
-        	m_clausesListVector.add((Clause)clause.getTerm());
+        	m_clausesListVector.add(clause);
         }
         else if(key instanceof Functor)
         {
@@ -203,46 +206,46 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 
         	if(m_clausesFunctorTable.containsKey(atom))
 	        {
-        		m_clausesFunctorTable.get(atom).add((Clause)clause.getTerm());
+        		m_clausesFunctorTable.get(atom).add(clause);
 	        }
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesFunctorTable.put(atom, clauseVector);
 	        	addVariablesToVector(clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        }
         }
         else if(key instanceof ConsCell)
         {
-        	m_clausesConsVector.add((Clause)clause.getTerm());
+        	m_clausesConsVector.add(clause);
         }
         else if(key instanceof Expression)
         {
         	if(m_clausesExpressionTable.containsKey(key))
 	        {
-	        	m_clausesExpressionTable.get(key).add((Clause)clause.getTerm());
+	        	m_clausesExpressionTable.get(key).add(clause);
 	        }
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesExpressionTable.put(key, clauseVector);
 	        	addVariablesToVector(clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        }
         }
         else if(key instanceof Atom)
         {
         	if(m_clausesAtomTable.containsKey(key))
 	        {
-	        	m_clausesAtomTable.get(key).add((Clause)clause.getTerm());
+	        	m_clausesAtomTable.get(key).add(clause);
 	        }
         	else
 	        {
 	        	Vector<Clause> clauseVector = new Vector<Clause>();
 	        	m_clausesAtomTable.put(key, clauseVector);
 	        	addVariablesToVector(clauseVector);
-	        	clauseVector.add((Clause)clause.getTerm());
+	        	clauseVector.add(clause);
 	        }
         }
         else
@@ -334,17 +337,19 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
     	m_clausesConsVector.removeElement(clause);
     }
 
-    public final synchronized boolean removeClause(final JIPClause clause)
+    public final synchronized boolean removeClause(final JIPClause jipclause)
     {
-    	boolean removed = m_clausesVector.removeElement(clause.getTerm());
+    	Clause clause = (Clause)jipclause.getTerm();
 
-        Functor funct = (Functor)((Clause)clause.getTerm()).getHead();
+    	boolean removed = m_clausesVector.removeElement(clause);
+
+        Functor funct = (Functor)(clause).getHead();
         PrologObject key = funct.getParams().getTerm(getIndex()).getRealTerm();
 
         if(key == null)
         {
         	// variable
-        	removeClauseWithVariable((Clause)clause.getTerm());
+        	removeClauseWithVariable(clause);
         }
 //	    else if(key instanceof PString)
 //	    {
@@ -352,30 +357,30 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         else if(key instanceof List)
         {
         	if(key == List.NIL && m_clausesAtomTable.containsKey(key))
-        		removed = m_clausesAtomTable.get(key).removeElement(clause.getTerm());
+        		removed = m_clausesAtomTable.get(key).removeElement(clause);
 
-        	removed = m_clausesListVector.removeElement(clause.getTerm());
+        	removed = m_clausesListVector.removeElement(clause);
         }
         else if(key instanceof Functor)
         {
         	Atom atom = ((Functor)key).getAtom();
 
         	if(m_clausesFunctorTable.containsKey(atom))
-        		removed = m_clausesFunctorTable.get(atom).removeElement((Clause)clause.getTerm());
+        		removed = m_clausesFunctorTable.get(atom).removeElement(clause);
         }
         else if(key instanceof ConsCell)
         {
-        	removed = m_clausesConsVector.removeElement(clause.getTerm());
+        	removed = m_clausesConsVector.removeElement(clause);
         }
         else if(key instanceof Expression)
         {
         	if(m_clausesExpressionTable.containsKey(key))
-        		removed = m_clausesExpressionTable.get(key).removeElement((Clause)clause.getTerm());
+        		removed = m_clausesExpressionTable.get(key).removeElement(clause);
         }
         else if(key instanceof Atom)
         {
         	if(m_clausesAtomTable.containsKey(key))
-        		removed = m_clausesAtomTable.get(key).removeElement((Clause)clause.getTerm());
+        		removed = m_clausesAtomTable.get(key).removeElement(clause);
         }
         else
         {
@@ -385,11 +390,11 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         return removed;
     }
 
-    public final synchronized Enumeration clauses(JIPFunctor functor)
+    public final synchronized Enumeration clauses(Functor funct)
     {
     	Vector<Clause> clausesVector = null;
 
-        Functor funct = (Functor)(functor.getTerm());
+//        Functor funct = (Functor)(functor.getTerm());
         PrologObject key = funct.getParams().getTerm(getIndex()).getRealTerm();
 
         if(key == null)

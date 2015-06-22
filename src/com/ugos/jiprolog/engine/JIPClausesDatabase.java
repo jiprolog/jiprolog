@@ -135,7 +135,7 @@ public abstract class JIPClausesDatabase extends Object
      */
     public abstract Enumeration<JIPClause> clauses();
 
-    final Enumeration<JIPClause> clauses(Functor functor)
+    Enumeration<JIPClause> clauses(Functor functor)
     {
     	return clauses(new JIPFunctor(functor));
     }
