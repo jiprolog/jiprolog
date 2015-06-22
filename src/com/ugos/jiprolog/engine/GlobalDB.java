@@ -46,6 +46,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
     static final String USER_MODULE   = "$user";
     static final String KERNEL_MODULE = "$kernel";
 
+    public static final StringBuilderEx sbUSER_MODULE_AUX = new StringBuilderEx(USER_MODULE).append(":").setInitial();
     public static final StringBuilderEx sbUSER_MODULE = new StringBuilderEx(USER_MODULE).append(":").setInitial();
     public static final StringBuilderEx sbSYSTEM_MODULE = new StringBuilderEx(SYSTEM_MODULE).append(":").setInitial();
     public static final StringBuilderEx sbKERNEL_MODULE = new StringBuilderEx(KERNEL_MODULE).append(":").setInitial();
@@ -420,7 +421,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         if(!(pred instanceof List))
             pred = new ConsCell(pred, null);
 
-        StringBuilderEx strModuleName = sbUSER_MODULE.resetToInitialValue();
+        StringBuilderEx strModuleName = sbUSER_MODULE_AUX.resetToInitialValue();
         PrologObject head = pred;
         try
         {
@@ -495,7 +496,9 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
                 if(isSystem(strPredDef) || isUser(strPredDef) && !isDynamic(strPredDef))
                 	throw new JIPPermissionException("modify", "static_procedure", head);
 
-                m_clauseTable.remove(strModuleName.append(strPredDef).toString());
+                String key = strModuleName.append(strPredDef).toString();
+
+               	m_clauseTable.remove(key);
 
                 pred = ((ConsCell)pred).getTail();
             }
