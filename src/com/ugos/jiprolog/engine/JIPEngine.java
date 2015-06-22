@@ -57,7 +57,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 1;
     public static final int build = 2;
-    public static final int revision = 2;
+    public static final int revision = 3;
 
     public static final int USER_INPUT_HANDLE = -1;
     public static final int USER_OUTPUT_HANDLE = -2;
