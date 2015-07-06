@@ -98,7 +98,7 @@ public final class GetChar2 extends JIPXCall
             return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
 		}
 		else
-		{ // end_of_stream(no)
+		{ // end_of_stream(not)
 			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
                 getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
