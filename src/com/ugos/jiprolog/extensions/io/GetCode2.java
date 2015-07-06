@@ -100,7 +100,7 @@ public final class GetCode2 extends JIPXCall
             return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 		}
 		else
-		{ // end_of_stream(no)
+		{ // end_of_stream(not)
 			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
                 getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
 
