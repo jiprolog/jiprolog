@@ -98,7 +98,7 @@ public final class PeekByte2 extends JIPXCall
 				return unify(params, varsTbl);
 		} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
             return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
-		} else { // end_of_stream(no)
+		} else { // end_of_stream(not)
 			JIPTerm term = JIPNumber.create(peekByte(ins));
             return params.getNth(2).unify(term, varsTbl);
 		}

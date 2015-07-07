@@ -109,7 +109,7 @@ public final class GetChar2 extends JIPXCall
 		}
 		else
 		{
-			// end_of_stream(no)
+			// end_of_stream(not)
             c = readNextChar(ins);
 		}
 

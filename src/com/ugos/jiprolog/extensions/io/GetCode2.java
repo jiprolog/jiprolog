@@ -30,9 +30,6 @@ public final class GetCode2 extends JIPXCall
 
     protected final int readNextChar(InputStream ins)
     {
-    	if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-            getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
-
         try
         {
             return ins.read();
@@ -111,7 +108,7 @@ public final class GetCode2 extends JIPXCall
 		}
 		else
 		{
-			// end_of_stream(no)
+			// end_of_stream(not)
             c = readNextChar(ins);
 		}
 

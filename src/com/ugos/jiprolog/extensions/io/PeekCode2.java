@@ -98,7 +98,7 @@ public final class PeekCode2 extends JIPXCall
 				return unify(params, varsTbl);
 		} else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)")) {
             return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
-		} else { // end_of_stream(no)
+		} else { // end_of_stream(not)
 			int c = peekCode(ins);
 //	        if(c == 0 || c < -1 || c > 255)
 	        if(c < -1 || c > 255)

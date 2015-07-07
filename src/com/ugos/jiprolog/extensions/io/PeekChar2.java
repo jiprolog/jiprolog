@@ -103,7 +103,7 @@ public final class PeekChar2 extends JIPXCall
 			}
 			else
 			{
-				// end_of_stream(no)
+				// end_of_stream(not)
 				int c = peekChar(ins);
 	            if(c == -1)
 	            {
