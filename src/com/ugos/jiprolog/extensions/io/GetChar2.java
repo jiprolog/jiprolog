@@ -30,6 +30,9 @@ public final class GetChar2 extends JIPXCall
 
     protected final int readNextChar(InputStream ins)
     {
+		if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+            getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
+
         try
         {
             return ins.read();
@@ -37,6 +40,11 @@ public final class GetChar2 extends JIPXCall
         catch(IOException ex)
         {
             throw new JIPJVMException(ex);
+        }
+        finally
+        {
+			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
         }
     }
 
@@ -72,6 +80,8 @@ public final class GetChar2 extends JIPXCall
 
         final InputStream ins = JIPio.getInputStream(streamHandle = sinfo.getHandle(), getJIPEngine());
 
+        int c = -1;
+
         if (ch instanceof JIPVariable && ((JIPVariable)ch).isBounded())
         {
             ch = ((JIPVariable)ch).getValue();
@@ -90,7 +100,7 @@ public final class GetChar2 extends JIPXCall
 			else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 	            return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
 			else // eof_action(reset)
-				return unify(params, varsTbl);
+				c = readNextChar(ins);
 		}
 		else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)"))
 		{
@@ -98,26 +108,24 @@ public final class GetChar2 extends JIPXCall
             return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
 		}
 		else
-		{ // end_of_stream(no)
-			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
+		{
+			// end_of_stream(no)
+            c = readNextChar(ins);
+		}
 
-            int c = readNextChar(ins);
-            if(c == -1)
-            {
-            	sinfo.setEndOfStream("past");
-            	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
-            }
-//            else if(c == 0)
-//            	 throw new JIPRepresentationException("character");
-
-            JIPTerm term = JIPAtom.create(String.valueOf((char)c));
-
-        	if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
-
-            return params.getNth(2).unify(term, varsTbl);
+        if(c == -1)
+        {
+        	sinfo.setEndOfStream("past");
+        	return params.getNth(2).unify(JIPAtom.create("end_of_file"), varsTbl);
         }
+        else if(c == 0)
+        {
+        	throw new JIPRepresentationException("character");
+        }
+
+        JIPTerm term = JIPAtom.create(String.valueOf((char)c));
+
+        return params.getNth(2).unify(term, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()

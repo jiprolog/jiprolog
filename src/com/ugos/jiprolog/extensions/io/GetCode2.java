@@ -30,6 +30,9 @@ public final class GetCode2 extends JIPXCall
 
     protected final int readNextChar(InputStream ins)
     {
+    	if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+            getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
+
         try
         {
             return ins.read();
@@ -37,6 +40,11 @@ public final class GetCode2 extends JIPXCall
         catch(IOException ex)
         {
             throw new JIPJVMException(ex);
+        }
+        finally
+        {
+			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
+                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
         }
     }
 
@@ -74,6 +82,8 @@ public final class GetCode2 extends JIPXCall
 
         final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
 
+        int c = -1;
+
         if (code instanceof JIPVariable && ((JIPVariable)code).isBounded())
         {
             code = ((JIPVariable)code).getValue();
@@ -92,7 +102,7 @@ public final class GetCode2 extends JIPXCall
 			else if(properties.getProperty("eof_action").equals("eof_action(eof_code)"))
 	            return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 			else // eof_action(reset)
-				return unify(params, varsTbl);
+				c = readNextChar(ins);//unify(params, varsTbl);
 		}
 		else if(properties.getProperty("end_of_stream").equals("end_of_stream(at)"))
 		{
@@ -100,23 +110,23 @@ public final class GetCode2 extends JIPXCall
             return params.getNth(2).unify(JIPNumber.create(-1), varsTbl);
 		}
 		else
-		{ // end_of_stream(no)
-			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-                getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
-
-            int c = readNextChar(ins);
-            if(c == -1)
-            {
-            	sinfo.setEndOfStream("past");
-            }
-
-			JIPTerm term = JIPNumber.create(c);
-
-			if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
-                getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
-
-			return params.getNth(2).unify(term, varsTbl);
+		{
+			// end_of_stream(no)
+            c = readNextChar(ins);
 		}
+
+        if(c == -1)
+        {
+        	sinfo.setEndOfStream("past");
+        }
+        else if(c == 0)
+        {
+        	throw new JIPRepresentationException("character");
+        }
+
+		JIPTerm term = JIPNumber.create(c);
+
+		return params.getNth(2).unify(term, varsTbl);
     }
 
     public boolean hasMoreChoicePoints()
