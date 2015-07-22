@@ -57,7 +57,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 1;
     public static final int build = 2;
-    public static final int revision = 4;
+    public static final int revision = 5;
 
     public static final int USER_INPUT_HANDLE = -1;
     public static final int USER_OUTPUT_HANDLE = -2;
@@ -1013,7 +1013,7 @@ public class JIPEngine implements Serializable
     public synchronized boolean hasMoreChoicePoints(final int nQueryHandle)
     {
         if (!m_prologTable.containsKey(new Integer(nQueryHandle)))
-            throw new JIPInvalidHandleException();
+            return false;//throw new JIPInvalidHandleException();
 
         final AsyncWAMManager container =
             (AsyncWAMManager)m_prologTable.get(new Integer(nQueryHandle));
