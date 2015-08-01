@@ -69,7 +69,7 @@ final class Retract1 extends BuiltIn
 		        if(!globalDB.isDynamic(functor.getName()))
 		        	throw new JIPPermissionException("modify", "static_procedure", functor.getPredicateIndicator());
 
-		        en = ((DefaultClausesDatabase)db).clauses(functor);
+		        en = ((JIPClausesDatabase)db).clauses(functor);
 	        }
 
 	        if(!en.hasMoreElements())
