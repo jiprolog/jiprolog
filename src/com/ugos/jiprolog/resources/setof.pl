@@ -211,8 +211,8 @@ concordant_subset([Key-Val|Rest], Clavis, Answer) :-
 concordant_subset([Key-Val|Rest], Clavis, List, More) :-
 %	write(key), nl, write(Key), nl,
 %	write(clavis), nl, write(Clavis), nl,
-	\+ \+ subsumes_term(Key, Clavis),
-	\+ \+ subsumes_term(Clavis, Key),
+	subsumes_term(Key, Clavis),
+	subsumes_term(Clavis, Key),
 	!,
 	Key = Clavis,
 	List = [Val|Rest2],
