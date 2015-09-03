@@ -59,10 +59,9 @@ Simple script to jar, obfuscate and run a project 3.0.
 	</target>
 
 	<target name="JIPConsole" depends="init" description="Executes Full JIPConsole.">
-		<java classname="${project.jipgui.mainclass}" fork="true" dir="${project.deploy.dir}/JIPConsole/bin/">
+		<java classname="${project.jipgui.mainclass}" fork="true" dir="${project.deploy.dir}/JIProlog/">
 			<classpath>
-				<pathelement location="${project.deploy.dir}/JIPConsole/bin/${project.jipgui.jar}" />
-				<pathelement location="${project.deploy.dir}/JIPConsole/bin/${project.jiprolog.deploy.jar}" />
+				<pathelement location="${project.deploy.dir}/JIProlog/jipconsole.jar" />
 				<pathelement path="${java.class.path}"/>
 			</classpath>
 		</java>
