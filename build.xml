@@ -36,6 +36,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<property name="project.main.class" value="com.ugos.jiprolog.JIProlog" />
 
 		<!-- ProGuard -->
+		<!-- N.B. SET HERE YOUR PATH TO PROGUARD -->
 		<property name="proguard.jar" value="C:\Program Files\proguard5.0\lib\proguard.jar" />
 		<property name="proguard.gui.jar" value="C:\Program Files\proguard5.0\lib\proguardgui.jar" />
 
@@ -68,7 +69,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 	</target>
 
 	<target name="CompileLibraries" depends="init" description="Compile Prolog Libraries." >
-		<java classname="com.ugos.jiprolog.JIProlog" fork="true" dir="${project.jiprolog}">
+		<java classname="com.ugos.jiprolog.JIProlog" fork="true" dir="${project.jiprolog.root}">
 			<classpath>
 				<pathelement path="${project.jiprolog.lib}" />
 				<pathelement path="${java.class.path}"/>
