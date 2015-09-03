@@ -22,6 +22,7 @@ package com.ugos.jiprolog.engine;
 //#ifndef _MIDP
 import java.io.Serializable;
 //#endif
+import java.util.Hashtable;
 
 /**
  * JIPQuery wraps a single synchronous query.<br>
@@ -64,6 +65,8 @@ public class JIPQuery extends Object implements Serializable
     public final JIPTerm nextSolution() throws JIPQueryClosedException
     {
         boolean bSolution;
+        PrologObject solution = m_query.copy(true);
+
         try
         {
 	        if(m_bNoMore)
@@ -97,7 +100,8 @@ public class JIPQuery extends Object implements Serializable
         {
             if(bSolution)
             {
-                return JIPTerm.getJIPTerm(m_query.copy(false));
+            	solution.unify(m_query, new Hashtable(10));
+                return JIPTerm.getJIPTerm(solution);
             }
             else
             {
