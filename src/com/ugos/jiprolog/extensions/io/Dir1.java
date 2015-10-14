@@ -26,16 +26,13 @@ import java.util.*;
 
 public class Dir1 extends JIPXCall
 {
-    public final boolean unify(final JIPCons params, Hashtable varsTbl)
+    public final boolean unify(final JIPCons params, Hashtable<JIPVariable, JIPVariable> varsTbl)
     {
-        // get first parameter
-       //JIPTerm input = params.getNth(1);
-                
         File file = new File(getJIPEngine().getSearchPath());
         String files[] = file.list();
         JIPList fileList = JIPList.create(JIPAtom.create("."), null);
         fileList = JIPList.create(JIPAtom.create(".."), fileList);
-        
+
         if(files != null)
         {
             for(int i = 0; i < files.length; i++)
@@ -46,17 +43,17 @@ public class Dir1 extends JIPXCall
                     strFileName = "[" + files[i] + "]";
                 else
                     strFileName = files[i];
-                
+
                 fileList = JIPList.create(JIPAtom.create(strFileName), fileList);
             }
         }
-        
-        
+
+
         fileList = fileList.reverse();
-        
+
         return params.getNth(1).unify(fileList, varsTbl);
     }
-       
+
     public boolean hasMoreChoicePoints()
     {
         return false;

@@ -29,7 +29,7 @@
 	is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
 	file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
 	current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2,
-	stream_position_data/3
+	stream_position_data/3,directory_files/2
 ]).
 
 :- '$custom_built_in'([
@@ -43,7 +43,7 @@
 	is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
 	file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
 	current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2,
-	stream_position_data/3
+	stream_position_data/3,directory_files/2
 ]).
 
 :- assert(ver(jipxio, '4.0.3')).
@@ -732,6 +732,9 @@ write_dir([X|Xs]):-
 
 dir(X):-
     xcall('com.ugos.jiprolog.extensions.io.Dir1', [X]).
+
+directory_files(Pathname, FileList):-
+    xcall('com.ugos.jiprolog.extensions.io.Dir2', [Pathname, FileList]).
 
 cd(Dir):-
     chdir(Dir).
