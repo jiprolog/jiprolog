@@ -74,9 +74,15 @@ public class AtomCodes2 extends JIPXCall
             {
                 codes = JIPAtom.create("");
             }
-            else if (codes instanceof JIPList)
+            else
             {
-                String strVal = (JIPString.create((JIPList)codes, false)).getStringValue();
+            	String strVal;
+            	if (codes instanceof JIPList)
+            		strVal = (JIPString.create((JIPList)codes, false)).getStringValue();
+            	else if (codes instanceof JIPString)
+            		strVal = ((JIPString)codes).getStringValue();
+            	else
+                    throw new JIPTypeException(JIPTypeException.LIST, codes);
 
                 if(strVal.startsWith(" ") || strVal.endsWith(" "))
                 {
@@ -86,10 +92,6 @@ public class AtomCodes2 extends JIPXCall
                 {
                 	codes = JIPAtom.create(strVal);
                 }
-            }
-            else
-            {
-                throw new JIPTypeException(JIPTypeException.LIST, codes);
             }
         }
         else if(atom.unifiable(JIPList.NIL))// ||

@@ -19,7 +19,8 @@
       permutation/2,
       flatten/2,
       sumlist/2,
-      numlist/3]).
+      numlist/3,
+      sublist/2]).
 
 
 %   memberchk(?Elem, ?List)
@@ -115,3 +116,6 @@ numlist_(L, U, [L|Ns]) :-
         numlist_(M, U, Ns)
     ).
 
+sublist( [], _ ).
+sublist( [X|XS], [X|XSS] ) :- sublist( XS, XSS ).
+sublist( [X|XS], [_|XSS] ) :- sublist( [X|XS], XSS ).
