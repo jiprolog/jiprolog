@@ -1,154 +1,154 @@
 ------------------------------------------------------------------------------------------------------------
 PLEASE READ THIS LICENSE AGREEMENT BEFORE USING THIS SOFTWARE.
 ------------------------------------------------------------------------------------------------------------
- 
-Please read carefully this legal license agreement (called the "Agreement"). 
-Your use of the specified Software (called the "Software") indicates your 
-acceptance of the following terms and conditions. If you do not agree to these 
+
+Please read carefully this legal license agreement (called the "Agreement").
+Your use of the specified Software (called the "Software") indicates your
+acceptance of the following terms and conditions. If you do not agree to these
 terms and conditions, you must not install or use the Software.
-The term "Software" means the software or any related documentation, any 
-updated or revised versions subsequently obtained via download, and all whole 
-or partial copies of each, including portions merged into other programs. 
+The term "Software" means the software or any related documentation, any
+updated or revised versions subsequently obtained via download, and all whole
+or partial copies of each, including portions merged into other programs.
 The Software consists of Java bytecode instructions for Java virtual machines,
-audio/visual content, related documentation and licensed materials. 
- 
- 
+audio/visual content, related documentation and licensed materials.
+
+
 1. License Grant
 ------------------------------
- 
+
 The granting of a license is equivalent to a right to use the Software under
 all terms of this agreement. The ownership and copyright of the product remain
 with the Author and the Author's rights are protected by the copyright laws of
 individual countries as well as by international copyright laws.
- 
+
 a. GNU AGPL v3.0 License
 The Author grants you a non-exclusive, non-transferable license to download
-the Software and to use it without any fee under AGPL v3.0 license. 
- 
+the Software and to use it without any fee under AGPL v3.0 license.
+
 c. Professional License
 The Author grants you a non-exclusive license to download the Software and
-to use it for professional and lawful end use with a license fee as described 
+to use it for professional and lawful end use with a license fee as described
 in the file: http://www.ugosweb.com/jiprolog/Presentation.html.
-Granting a "professional" license means granting the right to use the Software 
-only to develop personal or commercial applications and the right to distribute 
-without any additional fee) an unlimited number of copies of the runtime JIProlog.jar 
+Granting a "professional" license means granting the right to use the Software
+only to develop personal or commercial applications and the right to distribute
+without any additional fee) an unlimited number of copies of the runtime JIProlog.jar
 (see §4).
- 
-d. Licenses for different use of the software are negated. 
- 
+
+d. Licenses for different use of the software are negated.
+
 e. Implied licenses are negated.
- 
- 
+
+
 2. Ownership and Copyright
 -------------------------------
- 
-The Software is protected by the copyright laws of the State of Italy and 
+
+The Software is protected by the copyright laws of the State of Italy and
 international treaty provisions.
- 
+
 The Software is owned by the Author Ugo Chirico and is copyrighted.
-Your possession, installation or use of the Software does not transfer to you 
+Your possession, installation or use of the Software does not transfer to you
 any title to the intellectual property right in the Software and you will not
 acquire any rights to the Software except as expressly provided in this
 agreement.
- 
- 
+
+
 3. Restrictions
 -------------------------------
- 
+
 a. You cannot use, copy, rent, sublicense, sell, lease, merge, modify, reverse
-assemble, reverse compile, or otherwise translate or transfer the Software 
-except as expressly provided in this agreement. 
- 
-b. The use of the Software is not admitted to develop Prolog Development 
+assemble, reverse compile, or otherwise translate or transfer the Software
+except as expressly provided in this agreement.
+
+b. The use of the Software is not admitted to develop Prolog Development
 Environments.
-Any such unauthorized use shall result in immediate and automatic termination 
+Any such unauthorized use shall result in immediate and automatic termination
 of this license.
- 
- 
+
+
 4. Distribution
 ------------------------
- 
-a. You may distribute copies of the shareware version of the Software including 
-always this license agreement. 
+
+a. You may distribute copies of the shareware version of the Software including
+always this license agreement.
 You may assume you have the Author's authority to distribute the unlicensed
-shareware version, unless the Author explicitly tell you otherwise. The Software must, 
+shareware version, unless the Author explicitly tell you otherwise. The Software must,
 however remain in its original, unmodified state, and all its constituent files
 and this license agreement must be included.
 No-one may charge for the unregistered version itself, although a reasonable
-fee for the media used and copying costs is allowable. 
- 
-b. Distribution of Runtimes: you may distribute Runtimes solely to end-users as 
-part of an application developed using the Software. 
-Any Runtimes distributed as part of the Application will continue to be subject 
-to the terms and conditions of this Agreement. You agree to license the Application 
-to your customers under a written license agreement containing terms and conditions 
-with regard to the Software and Runtimes that are at least as restrictive as those 
+fee for the media used and copying costs is allowable.
+
+b. Distribution of Runtimes: you may distribute Runtimes solely to end-users as
+part of an application developed using the Software.
+Any Runtimes distributed as part of the Application will continue to be subject
+to the terms and conditions of this Agreement. You agree to license the Application
+to your customers under a written license agreement containing terms and conditions
+with regard to the Software and Runtimes that are at least as restrictive as those
 contained herein.
- 
-d. Professional Licensee can distribute, without any additional fee, any number of the 
-runtimes JIProlog.jar (and all other java packages contained in the file JIProlog.zip) 
+ dir
+d. Professional Licensee can distribute, without any additional fee, any number of the
+runtimes JIProlog.jar (and all other java packages contained in the file JIProlog.zip)
 together with the applications developed using the Software.
- 
- 
+
+
 5. Termination
 ---------------------------
 You may terminate your license at any time. If you do so, all your license
 rights to the Software are terminated. The Author may terminate your license if
-you fail to comply with the terms of this Agreement. 
+you fail to comply with the terms of this Agreement.
 If the Author does so, all your license rights to the Software are terminated
 and you must destroy all copies of it.
- 
- 
-6. Warranty Disclaimer and Limitation of Liability 
+
+
+6. Warranty Disclaimer and Limitation of Liability
 -------------------------------------------------------
- 
-THE AUTHOR LICENSES THE SOFTWARE "AS IS" WITHOUT WARRANTIES (OR CONDITIONS) 
-OF ANY KIND, EXPRESS OR IMPLIED WITH RESPECT TO THE PROGRAM, INCLUDING THE 
-IMPLIED WARRANTIES (OR CONDITIONS) OF MERCHANTABILITY AND FITNESS FOR A 
-PARTICULAR PURPOSE. THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF 
+
+THE AUTHOR LICENSES THE SOFTWARE "AS IS" WITHOUT WARRANTIES (OR CONDITIONS)
+OF ANY KIND, EXPRESS OR IMPLIED WITH RESPECT TO THE PROGRAM, INCLUDING THE
+IMPLIED WARRANTIES (OR CONDITIONS) OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE. THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF
 THE PROGRAM AND DOCUMENTATION REMAINS WITH YOU.
-THE AUTHOR WILL NOT BE LIABLE FOR ANY SPECIAL, INCIDENTAL, OR INDIRECT 
-DAMAGES THAT RESULT FROM USING THE PRODUCT OR FOR ANY ECONOMIC CONSEQUENTIAL 
-DAMAGES (INCLUDING LOST PROFITS OR SAVINGS), EVEN IF THE AUTHOR HAS BEEN 
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. FURTHERMORE THE AUTHOR WILL NOT 
-BE LIABLE FOR THE LOSS OF, OR DAMAGE TO, YOUR RECORDS OR DATA AND WILL NOT 
+THE AUTHOR WILL NOT BE LIABLE FOR ANY SPECIAL, INCIDENTAL, OR INDIRECT
+DAMAGES THAT RESULT FROM USING THE PRODUCT OR FOR ANY ECONOMIC CONSEQUENTIAL
+DAMAGES (INCLUDING LOST PROFITS OR SAVINGS), EVEN IF THE AUTHOR HAS BEEN
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. FURTHERMORE THE AUTHOR WILL NOT
+BE LIABLE FOR THE LOSS OF, OR DAMAGE TO, YOUR RECORDS OR DATA AND WILL NOT
 BE LIABLE FOR ANY DAMAGES CLAIMED BY YOU BASED ON ANY THIRD PARTY CLAIM.
-Some jurisdictions do not allow for the exclusion or limitation of implied 
+Some jurisdictions do not allow for the exclusion or limitation of implied
 warranties, so the above  limitations or exclusions may not apply to you.
-The Software is not designed or intended for use in on-line control of 
-aircraft, air traffic, aircraft navigation or aircraft communications; or 
-in the design, construction, operation or maintenance of any nuclear facility. 
-The licensee represents and warrants that they will not use or redistribute 
+The Software is not designed or intended for use in on-line control of
+aircraft, air traffic, aircraft navigation or aircraft communications; or
+in the design, construction, operation or maintenance of any nuclear facility.
+The licensee represents and warrants that they will not use or redistribute
 the product for such purposes.
- 
- 
+
+
 7. License Rights
 -----------------------------------
- 
+
 You hereby grant to The Author an irrevocable license under all intellectual
-property rights (including copyright) to use, copy, distribute, sublicense, 
+property rights (including copyright) to use, copy, distribute, sublicense,
 display, perform and prepare derivative works based upon any feedback,
 including materials, fixes, error corrections, enhancements, suggestions and
 the like that you provide to the Author.
- 
- 
+
+
 8. General
 ------------------------------------
- 
+
 This Agreement is governed by the laws of the State of Italy.
- 
+
 This Agreement is the only understanding and agreement we have regarding your
 use of the Software. It supersedes all other communications, understandings or
 agreements we may have had prior to this Agreement.
- 
-Java and all Java related trademarks and logos are trademarks of 
-Sun Microsystems, Inc. 
- 
-Other company products and service names may be the trademark 
-or service marks of others. 
- 
+
+Java and all Java related trademarks and logos are trademarks of
+Sun Microsystems, Inc.
+
+Other company products and service names may be the trademark
+or service marks of others.
+
 ----------------------------------------------------------------------------
- 
-The Author: 
- 
+
+The Author:
+
     Ugo Chirico
