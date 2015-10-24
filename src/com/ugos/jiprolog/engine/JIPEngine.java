@@ -42,7 +42,7 @@ import com.ugos.util.JARClassProvider;
 /**
  * JIPEngine implements the JIProlog interpeter.<br>
  * See the section <i>"How to call JIProlog interpreter from Java"</i> in the Reference Manual.
- * @version 4.0.16.x
+ * @version 4.1.2.x
  * @author Ugo Chirico<br>
  * Home Page: http://www.ugochirico.com
  * @see com.ugos.jiprolog.engine.JIPQuery
@@ -57,7 +57,7 @@ public class JIPEngine implements Serializable
     public static final int major = 4;
     public static final int minor = 1;
     public static final int build = 2;
-    public static final int revision = 7;
+    public static final int revision = 8;
 
     public static final int USER_INPUT_HANDLE = -1;
     public static final int USER_OUTPUT_HANDLE = -2;
