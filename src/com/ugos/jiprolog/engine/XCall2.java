@@ -39,9 +39,10 @@ final class XCall2 extends BuiltIn
 
             // extract the Atom related to the class name
             String strXClassName;
-            if(exClass instanceof PString)
-                strXClassName = ((PString)exClass).getString();
-            else if(exClass instanceof Atom)
+//            if(exClass instanceof PString)
+//                strXClassName = ((PString)exClass).getString();
+//            else
+            if(exClass instanceof Atom)
                 strXClassName = ((Atom)exClass).getName();
             else
                 throw new JIPTypeException(JIPTypeException.ATOM_OR_STRING, exClass);
@@ -54,8 +55,8 @@ final class XCall2 extends BuiltIn
         }
 
         final PrologObject params = getRealTerm(getParam(2));
-            if(!(params instanceof List))
-                throw new JIPTypeException(JIPTypeException.LIST, params);
+        if(!(params instanceof List))
+        	throw new JIPTypeException(JIPTypeException.LIST, params);
 
         JIPCons exParams = new JIPCons(((List)params).getConsCell());
 
@@ -91,18 +92,18 @@ final class XCall2 extends BuiltIn
         {
         	//System.out.println(strXClassName);
             // Get the correct class name
-            if(strXClassName.charAt(0) == 39 || strXClassName.charAt(0) == 34)
-            {
-                strXClassName = strXClassName.substring(1, strXClassName.length() - 1);
-            }
+//            if(strXClassName.charAt(0) == 39 || strXClassName.charAt(0) == 34)
+//            {
+//                strXClassName = strXClassName.substring(1, strXClassName.length() - 1);
+//            }
 
             JIPXCall exObj;
             Class xclass;
-            if(classTable.contains(strXClassName))
+            if(classTable.containsKey(strXClassName))
             {
             	xclass = classTable.get(strXClassName);
             }
-            else if(JIPEngine.getClassLoader() != null)
+            else if((JIPEngine.getClassLoader()) != null)
             {
             	xclass = JIPEngine.getClassLoader().loadClass(strXClassName);
             	classTable.put(strXClassName, xclass);
@@ -124,17 +125,14 @@ final class XCall2 extends BuiltIn
         catch(IllegalAccessException ex)
         {
         	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
-//            throw JIPRuntimeException.create(38, strXClassName);
         }
         catch(InstantiationException ex)
         {
         	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
-//            throw JIPRuntimeException.create(39, strXClassName);
         }
         catch(ClassCastException ex)
         {
         	throw JIPExistenceException.createProcedureException(Atom.createAtom(strXClassName));
-//            throw JIPRuntimeException.create(40, strXClassName);
         }
         catch(NoClassDefFoundError ex)
         {
