@@ -44,6 +44,7 @@ public class JIPQuery extends Object implements Serializable
 
     private WAM          m_wam;
     private PrologObject m_query;
+    private PrologObject m_solution;
     private boolean      m_bOpen;
     private boolean      m_bNoMore;
     private boolean      m_bSoftAbort = false;
@@ -52,6 +53,7 @@ public class JIPQuery extends Object implements Serializable
     {
         m_wam   = wam;
         m_query = query.copy(true);
+        m_solution = query.copy(true);
     }
 
     /** Searches for another solution.
@@ -65,7 +67,6 @@ public class JIPQuery extends Object implements Serializable
     public final JIPTerm nextSolution() throws JIPQueryClosedException
     {
         boolean bSolution;
-        PrologObject solution = m_query.copy(true);
 
         try
         {
@@ -100,7 +101,8 @@ public class JIPQuery extends Object implements Serializable
         {
             if(bSolution)
             {
-            	solution.unify(m_query, new Hashtable(10));
+            	PrologObject solution = m_solution.copy(true);
+            	solution.unify(m_query, new Hashtable<Variable, Variable>(10));
                 return JIPTerm.getJIPTerm(solution);
             }
             else
