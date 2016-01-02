@@ -1,7 +1,7 @@
 JIProlog Release Notes
 ------------------------------
 4.1.4.1
-	Fix to synchronouse query when collecting variables
+	Fix to synchronous query when collecting variables
 
 4.1.3.1
 	Fix to XCall2 to speed up the JIPXCall instantiation

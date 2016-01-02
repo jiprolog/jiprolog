@@ -2,3 +2,5 @@
 *.jip
 
 /deploy/
+/todo/
+/*.jar
