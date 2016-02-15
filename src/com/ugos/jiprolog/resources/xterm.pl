@@ -172,8 +172,14 @@ check_number_chars_2_chars(Chars, _) :-
 
 
 atom_number(Atom, Number) :-
+	atom(Atom),
+	!,
     atom_codes(Atom, Codes),
     catch(number_codes(Number, Codes), _, fail).
+atom_number(Atom, Number) :-
+	number(Number),
+    number_codes(Number, Codes),
+    atom_codes(Atom, Codes).
 
 
 atom_concat(Atom1, Atom2, Concat):-
