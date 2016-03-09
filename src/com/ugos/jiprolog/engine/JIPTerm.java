@@ -283,7 +283,7 @@ public class JIPTerm extends Object implements Clearable, Serializable, Cloneabl
         if(obj instanceof Clause)
             return new JIPClause((Clause)obj);
 
-        throw JIPRuntimeException.createRuntimeException(25, obj.toString());
+        throw JIPRuntimeException.createRuntimeException(25, obj != null ? obj.toString() : "null");
     }
 
 	@Override
