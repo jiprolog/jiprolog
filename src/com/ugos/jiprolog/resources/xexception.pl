@@ -30,10 +30,14 @@
 
 :-assert(ver(jipxexception, '3.0.2')).
 
-catch(Goal, Catcher, RecoverGoal):-
-   xcall('com.ugos.jiprolog.extensions.exception.JIPCatch3', [Goal, Catcher, RecoverGoal]).
+:- extern(catch/3, 'com.ugos.jiprolog.extensions.io.exception.JIPCatch3').
+:- extern(throw/1, 'com.ugos.jiprolog.extensions.io.exception.JIPThrow1').
 
-throw(Exception):-
-   xcall('com.ugos.jiprolog.extensions.exception.JIPThrow1', [Exception]).
+
+%catch(Goal, Catcher, RecoverGoal):-
+%   xcall('com.ugos.jiprolog.extensions.exception.JIPCatch3', [Goal, Catcher, RecoverGoal]).
+
+%throw(Exception):-
+%   xcall('com.ugos.jiprolog.extensions.exception.JIPThrow1', [Exception]).
 
 

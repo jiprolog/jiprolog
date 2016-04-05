@@ -23,7 +23,7 @@ package com.ugos.jiprolog.engine;
 import java.util.Hashtable;
 
 
-abstract class BuiltIn extends Object
+abstract class BuiltIn extends Object implements Cloneable
 {
     private ConsCell           m_params            = null;
     private WAM                m_WAM;
@@ -49,7 +49,7 @@ abstract class BuiltIn extends Object
     }
 
     // chiamato solo da BuiltInFactory
-    final void init(final JIPEngine jipEngine, final BuiltInPredicate pred, final WAM wam)
+    void init(final JIPEngine jipEngine, final BuiltInPredicate pred, final WAM wam)
     {
         m_jipEngine = jipEngine;
         m_predicate = pred;
@@ -87,5 +87,10 @@ abstract class BuiltIn extends Object
             return ((Variable)term).getObject();
 
         return term;
+    }
+
+    public Object clone() throws CloneNotSupportedException
+    {
+    	return super.clone();
     }
 }

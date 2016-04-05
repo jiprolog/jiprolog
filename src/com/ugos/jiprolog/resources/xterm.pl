@@ -37,37 +37,30 @@
 
 :-assert(ver(jipxterms, '4.0.1')).
 
-vars(Term, Vars):-
-    xcall('com.ugos.jiprolog.extensions.terms.Vars2', [Term, Vars]).
+:- extern(vars/2, 'com.ugos.jiprolog.extensions.terms.Vars2').
+:- extern(numbervars/3, 'com.ugos.jiprolog.extensions.terms.Numbervars3').
+:- extern(free_variables/2, 'com.ugos.jiprolog.extensions.terms.FreeVariables2').
+:- extern(term_variables/2, 'com.ugos.jiprolog.extensions.terms.FreeVariables2').
+:- extern(copy_term/2, 'com.ugos.jiprolog.extensions.terms.CopyTerm2').
+:- extern(name/2, 'com.ugos.jiprolog.extensions.terms.Name2').
 
-numbervars(Term, Start, End):-
-    xcall('com.ugos.jiprolog.extensions.terms.Numbervars3', [Term, Start, End]).
-
-free_variables(Term, VarList):-
-    xcall('com.ugos.jiprolog.extensions.terms.FreeVariables2', [Term, VarList]).
-
-term_variables(Term, VarList):-
-    xcall('com.ugos.jiprolog.extensions.terms.FreeVariables2', [Term, VarList]).
-
-copy_term(Term, Copy):-
-    xcall('com.ugos.jiprolog.extensions.terms.CopyTerm2', [Term, Copy]).
-
-name(Atom, CharList):-
-    xcall('com.ugos.jiprolog.extensions.terms.Name2', [Atom, CharList]).
-
+:- extern('$atom_codes'/2, 'com.ugos.jiprolog.extensions.terms.AtomCodes2').
+:- extern('$atom_chars'/2, 'com.ugos.jiprolog.extensions.terms.AtomChars2').
+:- extern('$number_codes'/2, 'com.ugos.jiprolog.extensions.terms.NumberCodes2').
+:- extern('$number_chars'/2, 'com.ugos.jiprolog.extensions.terms.NumberChars2').
 
 char_code(Char, Code) :-
 	(	atom(Char), \+ length(Char, 1) ->
 		error(type_error(character,Char))
 	;	nonvar(Code), \+ integer(Code) ->
 		error(type_error(integer,Code))
-	;	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Char, [Code]])
+	;	'$atom_codes'(Char, [Code])
 	).
 
 
 atom_codes(Atom, Codes) :-
 	check_atom_codes_2_codes(Codes, Atom),
-	xcall('com.ugos.jiprolog.extensions.terms.AtomCodes2', [Atom, Codes]).
+	'$atom_codes'(Atom, Codes).
 
 check_atom_codes_2_codes(Codes, _) :-
 	var(Codes),
@@ -94,7 +87,7 @@ check_atom_codes_2_codes(Codes, _) :-
 
 atom_chars(Atom, Chars) :-
 	check_atom_chars_2_chars(Chars, Atom),
-	xcall('com.ugos.jiprolog.extensions.terms.AtomChars2', [Atom, Chars]).
+	'$atom_chars'(Atom, Chars).
 
 check_atom_chars_2_chars(Chars, _) :-
 	var(Chars),
@@ -123,7 +116,7 @@ check_atom_chars_2_chars(Chars, _) :-
 
 number_codes(Number, Codes) :-
 	check_number_codes_2_codes(Codes, Number),
-	xcall('com.ugos.jiprolog.extensions.terms.NumberCodes2', [Number, Codes]).
+	'$number_codes'(Number, Codes).
 
 check_number_codes_2_codes([Code| _], Number) :-
 	var(Code),
@@ -147,7 +140,7 @@ check_number_codes_2_codes(Codes, _) :-
 
 number_chars(Number, Chars) :-
 	check_number_chars_2_chars(Chars, Number),
-	xcall('com.ugos.jiprolog.extensions.terms.NumberChars2', [Number, Chars]).
+	'$number_chars'(Number, Chars).
 
 check_number_chars_2_chars([Char| _], Number) :-
 	var(Char),

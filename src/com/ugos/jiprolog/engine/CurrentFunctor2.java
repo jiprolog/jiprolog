@@ -63,7 +63,7 @@ final class CurrentFunctor2 extends BuiltIn
                 {
                     if(!m_enum.hasMoreElements())
                     {
-                        m_enum = BuiltInFactory.m_BuiltInTable.keys();
+                        m_enum = BuiltInFactory.m_builtInTable.keys();
                         m_bSystem = false;
                     }
 
@@ -75,7 +75,7 @@ final class CurrentFunctor2 extends BuiltIn
             }
 
             m_bSystem = false;
-            m_enum = BuiltInFactory.m_BuiltInTable.keys();
+            m_enum = BuiltInFactory.m_builtInTable.keys();
 
             return unify(varsTbl);
         }

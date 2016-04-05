@@ -28,7 +28,7 @@ import java.util.*;
  * @author Ugo Chirico 2002<br>
  * Home Page: http://www.ugochirico.com
  */
-public abstract class JIPXCall
+public abstract class JIPXCall implements Cloneable
 {
     private BuiltIn   m_builtIn;
 
@@ -91,5 +91,11 @@ public abstract class JIPXCall
      * @return true if the custom predicate has more choice points, false otherwise.
      */
     public abstract boolean hasMoreChoicePoints();
+
+    public Object clone() throws CloneNotSupportedException
+    {
+    	return super.clone();
+    }
+
 }
 

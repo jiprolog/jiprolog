@@ -483,7 +483,7 @@ class WAM
                 }
                 else
                 {
-//                	System.out.println("fail " + curNode.getGoal());
+                	//System.out.println("fail " + curNode.getGoal());
                     // FAIL
                     // non ci sono clausole unificanti
                     // BACKTRACK
