@@ -65,4 +65,12 @@ class XCall extends BuiltIn
     	super.init(jipEngine, pred, wam);
         xcall.init(this);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+    	XCall clone = (XCall)super.clone();
+    	clone.xcall = (JIPXCall)xcall.clone();
+    	return clone;
+    }
 }

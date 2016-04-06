@@ -43,7 +43,6 @@
 :- extern(term_variables/2, 'com.ugos.jiprolog.extensions.terms.FreeVariables2').
 :- extern(copy_term/2, 'com.ugos.jiprolog.extensions.terms.CopyTerm2').
 :- extern(name/2, 'com.ugos.jiprolog.extensions.terms.Name2').
-
 :- extern('$atom_codes'/2, 'com.ugos.jiprolog.extensions.terms.AtomCodes2').
 :- extern('$atom_chars'/2, 'com.ugos.jiprolog.extensions.terms.AtomChars2').
 :- extern('$number_codes'/2, 'com.ugos.jiprolog.extensions.terms.NumberCodes2').

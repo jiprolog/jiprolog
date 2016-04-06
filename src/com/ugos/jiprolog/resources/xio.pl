@@ -50,6 +50,41 @@
 
 :- op(400, fx, cd).
 
+:- extern(see/2, 'com.ugos.jiprolog.extensions.io.See2').
+:- extern('$read'/2, 'com.ugos.jiprolog.extensions.io.Read2').
+:- extern('$read_term'/3, 'com.ugos.jiprolog.extensions.io.ReadTerm3').
+:- extern('$get0'/2, 'com.ugos.jiprolog.extensions.io.Get02').
+:- extern('$get_byte'/2, 'com.ugos.jiprolog.extensions.io.GetByte2').
+:- extern('$get_code'/2, 'com.ugos.jiprolog.extensions.io.GetCode2').
+:- extern('$get_char'/2, 'com.ugos.jiprolog.extensions.io.GetChar2').
+:- extern('$peek_byte'/2, 'com.ugos.jiprolog.extensions.io.PeekByte2').
+:- extern('$peek_code'/2, 'com.ugos.jiprolog.extensions.io.PeekCode2').
+:- extern('$peek_char'/2, 'com.ugos.jiprolog.extensions.io.PeekChar2').
+:- extern('$seen'/1, 'com.ugos.jiprolog.extensions.io.Seen1').
+:- extern(tell/2, 'com.ugos.jiprolog.extensions.io.Tell2').
+:- extern('$append'/2, 'com.ugos.jiprolog.extensions.io.Append2').
+:- extern('$write'/2, 'com.ugos.jiprolog.extensions.io.Write2').
+:- extern('$writeq'/2, 'com.ugos.jiprolog.extensions.io.Writeq2').
+:- extern('$write_canonical'/2, 'com.ugos.jiprolog.extensions.io.WriteCanonical2').
+:- extern('$put'/2, 'com.ugos.jiprolog.extensions.io.Put2').
+:- extern('$put_byte'/2, 'com.ugos.jiprolog.extensions.io.PutByte2').
+:- extern('$put_code'/2, 'com.ugos.jiprolog.extensions.io.PutCode2').
+:- extern('$put_char'/2, 'com.ugos.jiprolog.extensions.io.PutChar2').
+:- extern('$nl'/1, 'com.ugos.jiprolog.extensions.io.Nl1').
+:- extern('$flush_output'/1, 'com.ugos.jiprolog.extensions.io.FlushOutput1').
+:- extern('$told'/1, 'com.ugos.jiprolog.extensions.io.Told1').
+:- extern('$current_output'/1, 'com.ugos.jiprolog.extensions.io.CurrentOutput1').
+:- extern('$current_input'/1, 'com.ugos.jiprolog.extensions.io.CurrentInput1').
+:- extern(current_stream/1, 'com.ugos.jiprolog.extensions.io.CurrentStream1').
+:- extern('$set_output'/1, 'com.ugos.jiprolog.extensions.io.SetOutput1').
+:- extern('$set_input'/1, 'com.ugos.jiprolog.extensions.io.SetInput1').
+:- extern('$access_file'/2, 'com.ugos.jiprolog.extensions.io.AccessFile2').
+:- extern(absolute_file_name/2, 'com.ugos.jiprolog.extensions.io.AbsoluteFileName2').
+:- extern(file_attributes/7, 'com.ugos.jiprolog.extensions.io.FileAttributes7').
+:- extern('$stream_position'/4, 'com.ugos.jiprolog.extensions.io.StreamPosition4').
+:- extern('$stream_property'/3, 'com.ugos.jiprolog.extensions.io.StreamProperty3').
+:- extern('$char_atom'/2, 'com.ugos.jiprolog.extensions.io.CharAtom2').
+
 
 open(File, Mode, _, Options):-
 	(	var(File)
@@ -92,7 +127,7 @@ open(_, _, _, Options):-
 	error(permission_error(open,source_sink,alias(Alias))).
 
 open(File, Mode, Handle, Options):-
-    open_(File, Mode, Handle),
+    jipxio:'$open'(File, Mode, Handle),
     set_stream_properties(Handle, Options).
 
 
@@ -129,13 +164,13 @@ valid_open_option(encoding(Encoding)) :-
 	;	Encoding == 'US-ASCII'
 	).
 
-open_(File, write, Handle):-
+'$open'(File, write, Handle):-
     tell(File, Handle).
 
-open_(File, read, Handle):-
+'$open'(File, read, Handle):-
     see(File, Handle).
 
-open_(File, append, Handle):-
+'$open'(File, append, Handle):-
     append(File, Handle).
 
 
@@ -163,7 +198,7 @@ see(File):-
     see(File, Handle),
     set_input(Handle).
 
-:- extern(see/2, 'com.ugos.jiprolog.extensions.io.See2').
+
 
 %see(File, Handle):-
 %   xcall('com.ugos.jiprolog.extensions.io.See2', [File, Handle]).
@@ -185,7 +220,7 @@ read(Term):-
     current_input(Handle),
     read(Handle, Term).
 
-:- extern('$read'/2, 'com.ugos.jiprolog.extensions.io.Read2').
+
 
 read(Handle, Term):-
 	(	var(Handle) ->
@@ -207,7 +242,7 @@ read_term(Term, Options):-
     read_term(Handle, Term, Options),
     read_term_options(Handle, Term, Options).
 
-:- extern('$read_term'/3, 'com.ugos.jiprolog.extensions.io.ReadTerm3').
+
 
 read_term(Handle, Term, Options):-
 	check_read_term_options(Options, Options),
@@ -232,8 +267,6 @@ get0(Code):-
     current_input(Handle),
     get0(Handle, Code).
 
-:- extern('$get0'/2, 'com.ugos.jiprolog.extensions.io.Get02').
-
 get0(Handle, Code):-
     check_handle(Handle, Handle1),
     '$get0'(Handle, Code).
@@ -246,8 +279,6 @@ get(Handle, Code):-
     get0(Handle, Code),
     Code >= 32.
 
-:- extern('$get_byte'/2, 'com.ugos.jiprolog.extensions.io.GetByte2').
-
 get_byte(Byte):-
     current_input(Handle),
     '$get_byte'(Handle, Byte).
@@ -256,8 +287,6 @@ get_byte(Handle, Byte):-
 	check_handle(Handle, Handle1),
 	'$get_byte'(Handle, Byte).
 
-:- extern('$get_code'/2, 'com.ugos.jiprolog.extensions.io.GetCode2').
-
 get_code(Code) :-
     current_input(Handle),
 	'$get_code'(Handle, Code).
@@ -265,8 +294,6 @@ get_code(Code) :-
 get_code(Handle, Code) :-
 	check_handle(Handle, Handle1),
 	'$get_code'(Handle, Code).
-
-:- extern('$get_char'/2, 'com.ugos.jiprolog.extensions.io.GetChar2').
 
 get_char(Char):-
     current_input(Handle),
@@ -289,15 +316,10 @@ get_char(Handle, Char):-
 '$char'(C, A) :-
 	C > 31,
 	!,
-	char_atom(C, A).
+	'$char_atom'(C, A).
 
 '$char'(_, _) :-
 	error(representation_error(character)).
-
-
-:- extern('$peek_byte'/2, 'com.ugos.jiprolog.extensions.io.PeekByte2').
-:- extern('$peek_code'/2, 'com.ugos.jiprolog.extensions.io.PeekCode2').
-:- extern('$peek_char'/2, 'com.ugos.jiprolog.extensions.io.PeekChar2').
 
 peek_byte(Byte) :-
     current_input(Handle),
@@ -350,8 +372,6 @@ seen:-
     seen(Handle),
     set_input(user_input).
 
-:- extern('$seen'/1, 'com.ugos.jiprolog.extensions.io.Seen1').
-
 seen(Handle):-
     check_handle(Handle, Handle1),
     '$seen'(Handle).
@@ -368,8 +388,6 @@ tell(File):-
     tell(File, Handle),
     set_output(Handle).
 
-:- extern(tell/2, 'com.ugos.jiprolog.extensions.io.Tell2').
-
 %tell(File, Handle):-
 %   xcall('com.ugos.jiprolog.extensions.io.Tell2', [File, Handle]).
 
@@ -381,8 +399,6 @@ append(Handle):-
 append(File):-
     append(File, Handle),
     set_output(Handle).
-
-:- extern('$append'/2, 'com.ugos.jiprolog.extensions.io.Append2').
 
 append(File, Handle):-
 	'$append'(File, Handle).
@@ -400,9 +416,6 @@ telling(Handle, File):-
     check_handle(Handle, Handle1),
     stream_property(Handle, file_name(File)).
 
-:- extern('$write'/2, 'com.ugos.jiprolog.extensions.io.Write2').
-:- extern('$writeq'/2, 'com.ugos.jiprolog.extensions.io.Writeq2').
-:- extern('$write_canonical'/2, 'com.ugos.jiprolog.extensions.io.WriteCanonical2').
 
 write(Handle, Term):-
 	check_handle(Handle, Handle1),
@@ -453,11 +466,6 @@ write_term(Handle, Term, Options):-
 	check_write_term_options(Options, Options),
     write(Handle, Term),
     write_term_options(Handle, Term, Options).
-
-:- extern('$put'/2, 'com.ugos.jiprolog.extensions.io.Put2').
-:- extern('$put_byte'/2, 'com.ugos.jiprolog.extensions.io.PutByte2').
-:- extern('$put_code'/2, 'com.ugos.jiprolog.extensions.io.PutCode2').
-:- extern('$put_char'/2, 'com.ugos.jiprolog.extensions.io.PutChar2').
 
 
 put(C):-
@@ -513,10 +521,6 @@ tab_(Handle, N):-
 	'$put_code'(Handle, 32),
     tab_(Handle, N1).
 
-
-:- extern('$nl'/1, 'com.ugos.jiprolog.extensions.io.Nl1').
-:- extern('$flush_output'/1, 'com.ugos.jiprolog.extensions.io.FlushOutput1').
-
 nl(Handle) :-
     check_handle(Handle, Handle1),
     '$nl'(Handle).
@@ -529,7 +533,6 @@ flush_output(Handle) :-
     check_handle(Handle, Handle1),
     '$flush_output'(Handle).
 
-:- extern('$told'/1, 'com.ugos.jiprolog.extensions.io.Told1').
 
 told :-
     current_output(Handle),
@@ -615,9 +618,6 @@ at_end_of_stream(Handle) :-
 	).
 
 
-:- extern('$current_output'/1, 'com.ugos.jiprolog.extensions.io.CurrentOutput1').
-:- extern('$current_input'/1, 'com.ugos.jiprolog.extensions.io.CurrentInput1').
-
 current_output(Handle):-
 	nonvar(Handle),
 	(	\+ integer(Handle)
@@ -638,8 +638,6 @@ current_input(Handle):-
 current_input(Handle):-
 	'$current_input'(Handle).
 
-:- extern(current_stream/1, 'com.ugos.jiprolog.extensions.io.CurrentStream1').
-
 set_output(Handle):-
 	var(Handle),
 	error(instantiation_error).
@@ -649,7 +647,6 @@ set_output(Handle):-
 	\+ atom(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
-:- extern('$set_output'/1, 'com.ugos.jiprolog.extensions.io.SetOutput1').
 
 set_output(Handle):-
 	check_handle(Handle, Handle1),
@@ -671,8 +668,6 @@ set_input(Handle):-
 	\+ atom(Handle),
 	error(domain_error(stream_or_alias,Handle)).
 
-:- extern('$set_input'/1, 'com.ugos.jiprolog.extensions.io.SetInput1').
-
 set_input(Handle):-
 	check_handle(Handle, Handle1),
 	(	\+ current_stream(Handle) ->
@@ -686,15 +681,15 @@ set_input(Handle):-
 
 access_file(File, none):-!.
 
-:- extern(access_file/2, 'com.ugos.jiprolog.extensions.io.AccessFile2').
-%access_file(File, Mode):-
-%   xcall('com.ugos.jiprolog.extensions.io.AccessFile2', [File, Mode]).
+access_file(File, Mode):-
+	'$access_file'(File, Mode).
 
 exists_file(File):-
-    access_file(File, exist).
+	'$access_file'(File, exist).
+
 
 exists_directory(File):-
-    access_file(File, directory).
+    '$access_file'(File, directory).
 
 same_file(File1, File2):-
     absolute_file_name(File1, AFile1),
@@ -708,8 +703,6 @@ working_directory(X, Y):-
 searchpath(X):-
     chdir(X).
 
-:- extern(absolute_file_name/2, 'com.ugos.jiprolog.extensions.io.AbsoluteFileName2').
-
 %absolute_file_name(File, Abs):-
 %    xcall('com.ugos.jiprolog.extensions.io.AbsoluteFileName2', [File, Abs]).
 
@@ -719,7 +712,7 @@ absolute_file_name(File, Abs, _Opts):-
 is_absolute_file_name(File):-
     absolute_file_name(File, File).
 
-:- extern(file_attributes/7, 'com.ugos.jiprolog.extensions.io.FileAttributes7').
+
 
 %file_attributes(File, Name, Ext, Dir, Abs, Size, Time):-
 %    xcall('com.ugos.jiprolog.extensions.io.FileAttributes7', [File, Name, Ext, Dir, Abs, Size, Time]).
@@ -791,8 +784,6 @@ stream_property(Handle, Prop) :-
 	\+ current_stream(Handle),
 	error(domain_error(stream,Handle)).
 
-:- extern('$stream_position'/4, 'com.ugos.jiprolog.extensions.io.StreamPosition4').
-:- extern('$stream_property'/3, 'com.ugos.jiprolog.extensions.io.StreamProperty3').
 
 stream_property(Handle, position(position(CharCount,Line,Column))) :-
 	current_stream(Handle),
@@ -900,10 +891,6 @@ set_stream_position(Handle, _) :-
 set_stream(Handle, Prop):-
 	check_handle(Handle, Handle1),
 	set_stream_property(Handle, Prop).
-
-%:- extern(char_atom/2, 'com.ugos.jiprolog.extensions.io.CharAtom2').
-char_atom(B, C):-
-    xcall('com.ugos.jiprolog.extensions.io.CharAtom2', [B, C]).
 
 
 check_read_term_options(Options, _):-
