@@ -26,6 +26,10 @@ class XCall extends BuiltIn
 {
 	private JIPXCall xcall;
 
+	private XCall()
+	{
+	}
+
 	public XCall(String className)
 	{
         // Create an instance of JIPXCall class
@@ -67,10 +71,10 @@ class XCall extends BuiltIn
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException
+    public BuiltIn newInstance() throws InstantiationException, IllegalAccessException
     {
-    	XCall clone = (XCall)super.clone();
-    	clone.xcall = (JIPXCall)xcall.clone();
+    	XCall clone = new XCall();
+    	clone.xcall = (JIPXCall)xcall.newInstance();
     	return clone;
     }
 }

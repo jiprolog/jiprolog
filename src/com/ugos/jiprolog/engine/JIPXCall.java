@@ -28,7 +28,7 @@ import java.util.*;
  * @author Ugo Chirico 2002<br>
  * Home Page: http://www.ugochirico.com
  */
-public abstract class JIPXCall implements Cloneable
+public abstract class JIPXCall
 {
     private BuiltIn   m_builtIn;
 
@@ -92,9 +92,9 @@ public abstract class JIPXCall implements Cloneable
      */
     public abstract boolean hasMoreChoicePoints();
 
-    public Object clone() throws CloneNotSupportedException
+    public JIPXCall newInstance() throws InstantiationException, IllegalAccessException
     {
-    	return super.clone();
+    	return getClass().newInstance();
     }
 
 }

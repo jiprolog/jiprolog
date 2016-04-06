@@ -197,25 +197,25 @@ final class BuiltInFactory extends Object
 //                (BuiltIn)(m_builtInTable.get(strName).getClass().newInstance());
 
         	BuiltIn builtIn =
-                    (BuiltIn)((BuiltIn)(m_builtInTable.get(strName)).clone());
+                    (BuiltIn)((BuiltIn)(m_builtInTable.get(strName)).newInstance());
 
             builtIn.init(m_jipEngine, pred, wam);
 
             return builtIn;
         }
-//        catch(IllegalAccessException ex)
-//        {
-//            throw new JIPJVMException(ex);
-//        }
-//        catch(InstantiationException ex)
-//        {
-//            throw new JIPJVMException(ex);
-//        }
-        catch (CloneNotSupportedException ex)
+        catch(IllegalAccessException ex)
         {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-			throw new JIPJVMException(ex);
-		}
+            throw new JIPJVMException(ex);
+        }
+        catch(InstantiationException ex)
+        {
+            throw new JIPJVMException(ex);
+        }
+//        catch (CloneNotSupportedException ex)
+//        {
+//			// TODO Auto-generated catch block
+//			ex.printStackTrace();
+//			throw new JIPJVMException(ex);
+//		}
     }
 }
