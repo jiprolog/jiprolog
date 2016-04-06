@@ -20,7 +20,10 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 
 final class BuiltInPredicate extends Functor
 {
@@ -93,4 +96,11 @@ final class BuiltInPredicate extends Functor
             return false;
         }
     }
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam)
+	{
+		wam.moduleStack.push(curNode.m_strModule);
+        return new RulesEnumerationBuiltIn(this, curNode.m_strModule, wam);
+	}
 }

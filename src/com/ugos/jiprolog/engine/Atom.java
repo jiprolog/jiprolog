@@ -20,8 +20,11 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Enumeration;
 //import java.io.Serializable;
 import java.util.Hashtable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 
 final class Atom extends PrologObject //implements Serializable
 {
@@ -178,4 +181,11 @@ final class Atom extends PrologObject //implements Serializable
     {
     	return this.m_nHashValue == atom.m_nHashValue;//m_strAtom.equals(((Atom)obj).m_strAtom);
     }
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam) {
+		Functor term = Functor.getFunctor(this);
+        curNode.setGoal(term);
+        return term.getRulesEnumeration(curNode, wam);
+	}
 }

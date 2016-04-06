@@ -44,7 +44,7 @@ class WAM
 
     Stack<String> moduleStack = new Stack<String>();
 
-    static final Enumeration s_emptyEnum = new Vector(1).elements();
+    static final Enumeration<PrologRule> s_emptyEnum = new Vector<PrologRule>(1).elements();
 
     Stack<ExceptionListener> exceptionListenerStack = new Stack<ExceptionListener>();
 
@@ -58,7 +58,7 @@ class WAM
         protected String       m_strModule;
         protected int          m_nLevel;
         protected Node         m_backtrack;
-        protected Enumeration  m_ruleEnum;
+        protected Enumeration<PrologRule>  m_ruleEnum;
         protected Hashtable    m_varTbl;
 
         Node(final ConsCell callList, final Node parent, final Node previous, final String strModule)
@@ -390,7 +390,7 @@ class WAM
 
 	                while(curNode.m_ruleEnum.hasMoreElements())
 	                {
-	                    rule   = (PrologRule)curNode.m_ruleEnum.nextElement();
+	                    rule   = curNode.m_ruleEnum.nextElement();
 	                    clause = rule.m_cons;
 	                    // UNIFY
 	                    // unifica la testa della clausola con il predicato corrente
@@ -607,94 +607,93 @@ class WAM
         return false;
     }
 
-    final Enumeration getRules(final Node curNode)
+    final Enumeration<PrologRule> getRules(final Node curNode)
     {
         PrologObject term = curNode.getGoal();
 
-        // check if variable (used in metacall variable
-        if (term instanceof Variable)
-        {
-            term = ((Variable)term).getObject();
-
-            if(term != null)
-            {
-//            	term = new BuiltInPredicate("$call/1", new ConsCell(term, null));
-//              curNode.setGoal(new BuiltInPredicate("$call/1", new ConsCell(term, null)));
-
-                curNode.setGoal(term);
-            }
-            else
-            {
-            	throw new JIPInstantiationException();
-//                throw JIPRuntimeException.create(23, curNode.getGoal());
-            }
-        }
-
-        // check type
-        if (term instanceof Atom)
-        {
-            term = Functor.getFunctor(term);
-            curNode.setGoal(term);
-        }
-
-        if (term instanceof BuiltInPredicate)
-        {
-            moduleStack.push(curNode.m_strModule);
-
-            return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
-        }
-        else if (term instanceof Functor)
-        {
-            // controlla se si tratta di :
-            if(((Functor)term).getAtom().equals(Atom.COLON))
-            {
-            	curNode.m_strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
-                term = ((ConsCell)((Functor)term).getParams().getTail()).getHead();
-                term = Functor.getFunctor(term);
-
-                curNode.m_callList.setHead(term);
-            }
-
-            moduleStack.push(curNode.m_strModule);
-
-            if (term instanceof BuiltInPredicate)
-                return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
-            else
-                return new RulesEnumeration((Functor)term, moduleStack, m_globalDB);
-        }
-        else if (term instanceof List)
-        {
-            moduleStack.push(curNode.m_strModule);
-
-            // consult/1
-            term = new BuiltInPredicate("consult/1", new ConsCell(term, null));
-            curNode.setGoal(term);
-            return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
-        }
-        else if(term instanceof ConsCell)
-        {
-            PrologObject head = ((ConsCell)term).getHead();
-            PrologObject tail = ((ConsCell)term).getTail();
-
-            ConsCell callList = new ConsCell(head, null);
-
-            while(tail != null)
-            {
-              head = ((ConsCell)tail).getHead();
-
-              if(head != null)
-                  callList = ConsCell.append(callList, new ConsCell(head, null));
-
-              tail = ((ConsCell)tail).getTail();
-            }
-
-            curNode.m_callList = ConsCell.append(callList, (ConsCell)curNode.m_callList.getTail());
-
-            return getRules(curNode);
-        }
-
-        throw new JIPTypeException(JIPTypeException.CALLABLE, term);
+        return term.getRulesEnumeration(curNode, this);
     }
+
+//        // check if variable (used in metacall variable
+//        if (term instanceof Variable)
+//        {
+//            term = ((Variable)term).getObject();
+//
+//            if(term != null)
+//            {
+//                curNode.setGoal(term);
+//            }
+//            else
+//            {
+//            	throw new JIPInstantiationException();
+//            }
+//        }
+
+//        // check type
+//        if (term instanceof Atom)
+//        {
+//            term = Functor.getFunctor(term);
+//            curNode.setGoal(term);
+//        }
+
+//        if (term instanceof BuiltInPredicate)
+//        {
+//            moduleStack.push(curNode.m_strModule);
+//
+//            return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
+//        }
+//        else if (term instanceof Functor)
+//        {
+//            // controlla se si tratta di :
+//            if(((Functor)term).getAtom().equals(Atom.COLON))
+//            {
+//            	curNode.m_strModule = ((Atom)((Functor)term).getParams().getHead()).getName();
+//                term = ((ConsCell)((Functor)term).getParams().getTail()).getHead();
+//                term = Functor.getFunctor(term);
+//
+//                curNode.m_callList.setHead(term);
+//            }
+//
+//            moduleStack.push(curNode.m_strModule);
+//
+//            if (term instanceof BuiltInPredicate)
+//                return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
+//            else
+//                return new RulesEnumeration((Functor)term, moduleStack, m_globalDB);
+//        }
+//        else if (term instanceof List)
+//        {
+//            moduleStack.push(curNode.m_strModule);
+//
+//            // consult/1
+//            term = new BuiltInPredicate("consult/1", new ConsCell(term, null));
+//            curNode.setGoal(term);
+//            return new RulesEnumerationBuiltIn((BuiltInPredicate)term, curNode.m_strModule, this);
+//        }
+//        else if(term instanceof ConsCell)
+//        {
+//            PrologObject head = ((ConsCell)term).getHead();
+//            PrologObject tail = ((ConsCell)term).getTail();
+//
+//            ConsCell callList = new ConsCell(head, null);
+//
+//            while(tail != null)
+//            {
+//              head = ((ConsCell)tail).getHead();
+//
+//              if(head != null)
+//                  callList = ConsCell.append(callList, new ConsCell(head, null));
+//
+//              tail = ((ConsCell)tail).getTail();
+//            }
+//
+//            curNode.m_callList = ConsCell.append(callList, (ConsCell)curNode.m_callList.getTail());
+//
+//            return getRules(curNode);
+//        }
+
+//        throw new JIPTypeException(JIPTypeException.CALLABLE, term);
+//    }
 }
 
 

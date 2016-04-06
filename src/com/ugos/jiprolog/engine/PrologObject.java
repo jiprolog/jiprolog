@@ -25,6 +25,8 @@ import java.util.Hashtable;
 
 //#ifndef _MIDP
 import java.io.Serializable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 //#endif
 
 abstract class PrologObject implements Clearable, Serializable
@@ -141,6 +143,8 @@ abstract class PrologObject implements Clearable, Serializable
     protected abstract boolean lessThen(PrologObject obj);
     protected abstract boolean _unify(PrologObject obj, Hashtable<Variable, Variable> varTbl);
     public abstract boolean termEquals(PrologObject obj);
+
+    public abstract Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam);
 }
 
 

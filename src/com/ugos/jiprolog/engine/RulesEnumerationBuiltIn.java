@@ -22,34 +22,34 @@ package com.ugos.jiprolog.engine;
 
 import java.util.Enumeration;
 
-final class RulesEnumerationBuiltIn extends Object implements Enumeration
+final class RulesEnumerationBuiltIn extends Object implements Enumeration<PrologRule>
 {
 //    private boolean  m_bHasMoreChoicePoints;
     private Clause   m_currentClause;
     private final String           m_strModule;
     private final BuiltInPredicate m_query;
     private PrologRule             m_rule;
-            
+
     public RulesEnumerationBuiltIn(final BuiltInPredicate query, final String strModule, final WAM wam)
     {
         m_query = query;
-               
+
         // all'interno della stessa enumeration vive una unica instanza
         // del builtin che muore quando l'enumeration viene rilasciata
         m_query.init(wam);
         m_currentClause = new Clause(GlobalDB.SYSTEM_MODULE, m_query, null);
         m_strModule = strModule;
-        
+
         // la prima volta non e' deterministico
 //        m_bHasMoreChoicePoints = true;
         m_rule = new PrologRule();
     }
-    
+
     public final boolean hasMoreElements()
     {
         if(m_rule.m_cons == null)  // mai chiamata
             return true;
-        
+
         return m_query.hasMoreChoicePoints();
 //        if(!m_bHasMoreChoicePoints)
 //            return false;
@@ -59,14 +59,14 @@ final class RulesEnumerationBuiltIn extends Object implements Enumeration
 //        return m_bHasMoreChoicePoints;
     }
 
-    public final Object nextElement()
+    public final PrologRule nextElement()
     {
         // il riuso dello stesso oggetto Rule evita la creazione di nuovi
         // oggetti che pesano sul garbage collector
         m_rule.m_cons = m_currentClause;
         m_rule.m_strModule = m_strModule;
         m_rule.m_dbCons = m_currentClause;
-                
+
         return m_rule;
     }
 }

@@ -20,8 +20,11 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Enumeration;
 //import java.io.Serializable;
 import java.util.Hashtable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 
 final class Expression extends PrologObject //implements Serializable
 {
@@ -67,7 +70,8 @@ final class Expression extends PrologObject //implements Serializable
         return this;
     }
 
-    public final boolean _unify(PrologObject obj, final Hashtable table)
+    @Override
+    public final boolean _unify(PrologObject obj, final Hashtable<Variable, Variable> table)
     {
         //System.out.println("Match Expression");
     	if(obj instanceof Variable)
@@ -891,6 +895,13 @@ final class Expression extends PrologObject //implements Serializable
     {
     	return obj instanceof Expression && this.m_dValue == ((Expression)obj).m_dValue && this.floating == ((Expression)obj).floating;//m_strAtom.equals(((Atom)obj).m_strAtom);
     }
+
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam)
+	{
+		throw new JIPTypeException(JIPTypeException.CALLABLE, this);
+	}
 
 
 }

@@ -20,7 +20,10 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 
 class Functor extends ConsCell
 {
@@ -177,6 +180,26 @@ class Functor extends ConsCell
         return new Functor(Atom.SLASHSLASH, new ConsCell(Atom.createAtom(friendlyName), new ConsCell(Expression.createNumber(nArity), null)));
 
     }
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam)
+	{
+		// controlla se si tratta di :
+        if(m_head.equals(Atom.COLON))
+        {
+        	curNode.m_strModule = ((Atom)getParams().getHead()).getName();
+            PrologObject term = ((ConsCell)getParams().getTail()).getHead();
+            term = Functor.getFunctor(term);
+
+            curNode.m_callList.setHead(term);
+
+            return term.getRulesEnumeration(curNode, wam);
+        }
+
+        wam.moduleStack.push(curNode.m_strModule);
+
+        return new RulesEnumeration(this, wam.moduleStack, wam.m_globalDB);
+	}
 
 //	@Override
 //	public int hashCode() {

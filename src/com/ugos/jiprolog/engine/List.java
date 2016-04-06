@@ -20,7 +20,10 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 
 class List extends ConsCell
 {
@@ -152,6 +155,17 @@ class List extends ConsCell
 
     	return 0;
     }
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam)
+	{
+		 wam.moduleStack.push(curNode.m_strModule);
+
+         // consult/1
+		 BuiltInPredicate term = new BuiltInPredicate("consult/1", new ConsCell(this, null));
+         curNode.setGoal(term);
+         return new RulesEnumerationBuiltIn(term, curNode.m_strModule, wam);
+	}
 }
 
 

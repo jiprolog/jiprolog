@@ -21,8 +21,10 @@
 package com.ugos.jiprolog.engine;
 
 //import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.ugos.jiprolog.engine.WAM.Node;
 import com.ugos.util.StringBuilderEx;
 
 final class Variable extends PrologObject//Serializable
@@ -297,6 +299,24 @@ final class Variable extends PrologObject//Serializable
 
         return false;
     }
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam)
+	{
+		PrologObject term = getObject();
+
+        if(term != null)
+        {
+            curNode.setGoal(term);
+            return term.getRulesEnumeration(curNode, wam);
+        }
+        else
+        {
+        	throw new JIPInstantiationException();
+        }
+	}
+
+
 
 //	@Override
 //	public int hashCode() {

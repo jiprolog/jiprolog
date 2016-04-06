@@ -20,8 +20,11 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Enumeration;
 //import java.io.Serializable;
 import java.util.Hashtable;
+
+import com.ugos.jiprolog.engine.WAM.Node;
 
 class ConsCell extends PrologObject //implements Serializable
 {
@@ -484,6 +487,29 @@ class ConsCell extends PrologObject //implements Serializable
         else
             throw new IndexOutOfBoundsException(Integer.toString(n));
     }
+
+	@Override
+	public Enumeration<PrologRule> getRulesEnumeration(Node curNode, WAM wam)
+	{
+		 PrologObject head = getHead();
+         PrologObject tail = getTail();
+
+         ConsCell callList = new ConsCell(head, null);
+
+         while(tail != null)
+         {
+           head = ((ConsCell)tail).getHead();
+
+           if(head != null)
+               callList = ConsCell.append(callList, new ConsCell(head, null));
+
+           tail = ((ConsCell)tail).getTail();
+         }
+
+         curNode.m_callList = ConsCell.append(callList, (ConsCell)curNode.m_callList.getTail());
+
+         return wam.getRules(curNode);
+	}
 
 //	@Override
 //	public int hashCode() {
