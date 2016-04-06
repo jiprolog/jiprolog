@@ -1,7 +1,7 @@
 Q.
 Do you actually have a COMPILER for JIP or is it just an interpreter?
 
-Also, do you compile / condenze / compact the ".PRO" files or are they 
+Also, do you compile / condense / compact the ".PRO" files or are they
 left as plain text even if you have a compilation?
 
 Also, can I produce a SINGLE executable JAR file which has the compiled ".PRO" file in there?
