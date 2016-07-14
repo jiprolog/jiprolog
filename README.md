@@ -6,7 +6,7 @@ JIProlog offers a high degree of compliance with official and de facto Prolog st
 
 JIProlog enhances the Java platform by adding the power of Prolog language and extends Prolog by adding the Java framework.
 
-JIProlog integrates Prolog and Java languages in a very fashinating way. It allows calling Prolog predicates from Java without dealing with native code (JNI) and allows invoking Java methods from Prolog as they were predicates.
+JIProlog integrates Prolog and Java languages in a very fascinating way. It allows calling Prolog predicates from Java without dealing with native code (JNI) and allows invoking Java methods from Prolog as they were predicates.
 
 JIProlog supplies a complete API to link Prolog and Java languages from both sides. The API is composed by three parts:
 * Java calls Prolog;
