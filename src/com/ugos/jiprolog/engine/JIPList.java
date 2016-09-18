@@ -20,6 +20,9 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 /**
  * JIPList wraps a prolog list
  * @version 2.0
@@ -64,6 +67,40 @@ public class JIPList extends JIPTerm
         }
     }
 
+    /** Creates a new List
+     * @param termList vector of JIPTerm to transform in a prolog list
+     * @return new JIPList object
+     * @see com.ugos.jiprolog.engine.JIPTerm
+     */
+    public static final JIPList create(final Vector<JIPTerm> termList)
+    {
+    	JIPList list = null;
+    	
+    	for(JIPTerm term : termList)
+    	{
+    		list = JIPList.create(term, list);
+    	}
+    	
+    	return list.reverse();
+    }
+    
+    /** Creates a new List
+     * @param termList list of JIPTerm to transform in a prolog list
+     * @return new JIPList object
+     * @see com.ugos.jiprolog.engine.JIPTerm
+     */
+    public static final JIPList create(final ArrayList<JIPTerm> termList)
+    {
+    	JIPList list = null;
+    	
+    	for(JIPTerm term : termList)
+    	{
+    		list = JIPList.create(term, list);
+    	}
+    	
+    	return list.reverse();
+    }
+    
     /** Returns a new JIPList object by appending list2 to list1
      * @param head the list1 of the first list
      * @param tail the list2 the second list

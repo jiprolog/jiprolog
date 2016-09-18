@@ -71,22 +71,24 @@ public class JIPTermParser
      */
     public final JIPTerm parseTerm(String strTerm) throws JIPSyntaxErrorException
     {
-        try
-        {
-        	final byte[] btTerm = strTerm.getBytes(getEncoding());
-            final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
-            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(is)), m_opManager, m_engine, "user");
+//        try
+//        {
+        	//final byte[] btTerm = strTerm.getBytes(getEncoding());
+            //final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
+            
+        	final StringBufferInputStream sbins = new StringBufferInputStream(strTerm);
+            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(sbins)), m_opManager, m_engine, "user");
 
             m_singletonVars = parser.getSingletonVariables();
 
             final PrologObject term = parser.parseNext();
 
             return JIPTerm.getJIPTerm(term);
-        }
-        catch(UnsupportedEncodingException ex)
-        {
-            throw new JIPRuntimeException(ex.getMessage());
-        }
+//        }
+//        catch(UnsupportedEncodingException ex)
+//        {
+//            throw new JIPRuntimeException(ex.getMessage());
+//        }
     }
 
     public class TermEnumerator implements Enumeration<JIPTerm>, StreamPosition
