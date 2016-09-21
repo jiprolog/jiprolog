@@ -167,6 +167,10 @@ public class JIPxReflect
             {
                 return new Boolean(strAtom);
             }
+            else if(strAtom.equals("void"))
+            {
+                return Void.TYPE;
+            }
             else
             {
                 return strAtom;
@@ -176,6 +180,10 @@ public class JIPxReflect
         else if(term instanceof JIPString)
         {
             return ((JIPString)term).getStringValue();
+        }
+        else if(term.equals(JIPList.NIL))
+        {
+            return null;
         }
         else
         {
