@@ -90,7 +90,14 @@ public class JIPxReflect
     {
         if(term instanceof Number)
         {
-            return JIPNumber.create(((Number)term).doubleValue());
+        	if(((Number)term).intValue() == ((Number)term).doubleValue())
+        	{
+        		return JIPNumber.create(((Number)term).longValue());
+        	}
+        	else
+        	{
+        		return JIPNumber.create(((Number)term).doubleValue());
+        	}
         }
         else if(term instanceof String)
         {
@@ -108,9 +115,13 @@ public class JIPxReflect
             else
                 return JIPAtom.create("false");
         }
-        else if(term instanceof Void || term == null)
+        else if(term == null)
         {
             return JIPList.NIL;
+        }
+        else if(term instanceof Void)
+        {
+            return JIPAtom.create("void");
         }
         else
         {
