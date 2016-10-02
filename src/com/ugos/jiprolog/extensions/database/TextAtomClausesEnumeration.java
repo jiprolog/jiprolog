@@ -119,7 +119,8 @@ public class TextAtomClausesEnumeration extends JIPClausesEnumeration
 
             // extract next term
             strTerm = stk.nextToken();
-            stk.nextToken(); // delimiter
+            if(stk.hasMoreElements())
+            	stk.nextToken(); // delimiter
             try
             {
                 //parse the term extracted
