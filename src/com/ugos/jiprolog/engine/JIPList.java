@@ -81,7 +81,7 @@ public class JIPList extends JIPTerm
     		list = JIPList.create(term, list);
     	}
     	
-    	return list.reverse();
+    	return list != null ? list.reverse() : NIL;
     }
     
     /** Creates a new List
@@ -206,5 +206,32 @@ public class JIPList extends JIPTerm
     	return ((List)getTerm()).member(term.getTerm());
     }
 
+    /** Returns the terms in the list as Java List<br>
+     * @return the terms in the list as Java List<br>
+     */
+    public java.util.List<JIPTerm> getTerms()
+    {
+    	ArrayList<JIPTerm> termList = new ArrayList<JIPTerm>();
+    	
+    	JIPTerm head = getHead();
+    	JIPTerm tail = getTail();
+    	
+    	while(head != null && head != NIL)
+    	{
+    		termList.add(head);
+    		head = tail;
+    		if(tail instanceof JIPList)
+    		{
+    			tail = ((JIPList)tail).getTail();
+    		}
+    		else
+    		{
+    			tail = NIL;
+    		}
+    	}
+    	
+    	return termList;
+    }
+    
 
 }
