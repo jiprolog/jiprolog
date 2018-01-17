@@ -46,26 +46,28 @@ final class Arg3 extends BuiltIn
         if(((Expression)place).getValue() < 0)
             throw new JIPDomainException("not_less_than_zero", place);
 
-    	int index = (int)((Expression)place).getValue();
+        int index = (int)((Expression)place).getValue();
 
         PrologObject val   = getParam(3);
         PrologObject param = null;
 
         try
         {
-        	 if(term instanceof Functor)
+             if(term instanceof Functor)
              {
-             	if(index > ((Functor)term).getParams().getHeight())
-             		return false;
+                 if(index > ((Functor)term).getParams().getHeight())
+                     return false;
 
                  param = ((Functor)term).getParams().getTerm(index);
              }
-        	 else if(term instanceof ConsCell) // [Arg1|Arg2] = '.'(Arg1, Arg2)
-        	 {
-            	if(index > ((ConsCell)term).getHeight())
-            		return false;
-
-            	param = ((ConsCell)term).getTerm(index);
+             else if(term instanceof ConsCell) // [Arg1|Arg2] = '.'(Arg1, Arg2)
+             {
+                 if(index == 1)
+                     param = ((ConsCell)term).getHead();
+                 else if(index == 2)
+                     param = ((ConsCell)term).getTail();
+                 else
+                     return false;
             }
 
             if(param == null)
