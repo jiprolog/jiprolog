@@ -1,5 +1,20 @@
 JIProlog Release Notes
 ------------------------------
+
+4.1.6.1
+	Fix arg/3 built-in predicate when the second argument is a list
+	Added JIPList helper to get a Java List of terms
+	Fix to manage text files without last separator
+	Fix to marhallIn: now [] is marshalled as Java null and the atom 'void' is marhalled as Java Void class
+	Fix to marshallOut function: Java int is now marshalled as integer and Java Void is now marshalled as the atom 'void'
+	Fixed a bug in the encoding. Atoms with UTF-8 chars are now treated in the right way.
+
+4.1.5.1
+	Fixes and optimizations to the new xcall mechanism
+	Using newInstance instead of clone for better perfomance
+	Fix to getJIPTerm when the given object is null
+	Fix atom_number/2 built-in predicate for mode atom_number(-, +)
+
 4.1.4.1
 	Fix to synchronous query when collecting variables
 
