@@ -1,6 +1,6 @@
-# JIProlog
+![JIProlog Logo](/logo.png) 
 
-![JIProlog Logo](/logo.png)
+# JIProlog
 
 JIProlog is a Prolog interpreter, pure Java 100%, cross-platform and Open Source.
 
