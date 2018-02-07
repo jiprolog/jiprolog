@@ -9,6 +9,7 @@ JIProlog Release Notes
     Fix to marshallOut function: Java int is now marshalled as integer and Java Void is now marshalled as the atom 'void'
     Fixed a bug in the encoding. Atoms with UTF-8 chars are now treated in the right way.
     Add support for \d and \e escape sequences
+    Fix the integer power function, ^/2, for the latest ISO corrigenda
 
 4.1.5.1
     Fixes and optimizations to the new xcall mechanism

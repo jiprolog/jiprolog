@@ -534,12 +534,21 @@ final class Expression extends PrologObject //implements Serializable
 
                             dblVal =  Math.pow(dVal1, dVal2);
 
-							if(dVal2 == -1 && dVal1 != 1)
-								throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
-                            else if(exp2.isInteger())
-                            	return Expression.createNumber(dblVal);
-							else
-								return Expression.createDouble(dblVal);
+                            if(!exp2.isInteger() || !exp1.isInteger())
+                                return Expression.createDouble(dblVal);
+                            else if(dVal2 == -1)
+                            {
+                                if(dVal1 == 1)
+                                    return Expression.createNumber(1);
+                                else
+                                    throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
+                            }
+                            else if(dVal2 == 0 && dVal1 == 0)
+                                return Expression.createNumber(0);
+                            else if(dVal2 > 0)
+                                return Expression.createNumber(dblVal);
+                            else
+                                throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
                         }
                         else if (strFunName.equals("min"))
                         {
