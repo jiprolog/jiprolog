@@ -16,8 +16,12 @@
 '$system': not G :- call(G), !, fail.
 '$system': not G.
 
-'$system': ->(X,Y) :- call(X), !, Y.
-'$system': *->(X,Y) :- call(X), Y.
+'$system': ->(X,Y) :- call(X), !, '$!!'(Y).
+'$system': *->(X,Y) :- call(X), '$!!'(Y).
+
+%'$system': ->(X,Y) :- '$inject'((call(X), !, Y)).
+%'$system': *->(X,Y) :- '$inject'((call(X), Y)).
+
 
 %'$system': ;(X, _) :- X.
 %'$system': ;(_, Y) :- Y.

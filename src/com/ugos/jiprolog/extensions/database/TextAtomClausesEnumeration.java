@@ -45,6 +45,9 @@ public class TextAtomClausesEnumeration extends JIPClausesEnumeration
         	 String strFileName[] = new String[1];
              String strCurDir[] = new String[1];
 
+             System.out.println(db.getFileName());
+             System.out.println(getDatabase().getJIPEngine().getSearchPath());
+             
         	InputStream ins = StreamManager.getStreamManager().getInputStream(db.getFileName(), getDatabase().getJIPEngine().getSearchPath(), strFileName, strCurDir);
 
             m_reader = new LineNumberReader(new InputStreamReader(ins));

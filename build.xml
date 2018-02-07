@@ -37,7 +37,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 
 		<!-- ProGuard -->
 		<!-- N.B. SET HERE YOUR PATH TO PROGUARD -->
-		<property name="proguard.jar" value="C:\Program Files\proguard5.0\lib\proguard.jar" />
+		<property name="proguard.jar" value="C:\Program Files\proguard5.3.3\lib\proguard.jar" />
 		<property name="proguard.gui.jar" value="C:\Program Files\proguard5.0\lib\proguardgui.jar" />
 
 		<echo message="JIProlog root folder is ${project.root}" />

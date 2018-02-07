@@ -48,7 +48,6 @@ class WAM
 
     Stack<ExceptionListener> exceptionListenerStack = new Stack<ExceptionListener>();
 
-
 	static class Node
     {
         protected ConsCell     m_injectedBody;
@@ -60,7 +59,8 @@ class WAM
         protected Node         m_backtrack;
         protected Enumeration<PrologRule>  m_ruleEnum;
         protected Hashtable    m_varTbl;
-
+        protected boolean 	   m_bStrongCut;
+        
         Node(final ConsCell callList, final Node parent, final Node previous, final String strModule)
         {
             m_callList  = callList;
@@ -218,12 +218,17 @@ class WAM
     {
         return !isNeverRun() && !isRunning() && !isClosed();
     }
-
+    
     final void cut()
     {
+    	    	
         if(m_curNode.m_parent != null)
         {
-        	if(m_curNode.m_parent.m_previous != null)  // cutparent
+        	if(m_curNode.m_parent.m_bStrongCut)
+        	{
+        		strongCut();
+        	}
+        	else if(m_curNode.m_parent.m_previous != null)  // cutparent
             {
                 m_curNode.m_backtrack = m_curNode.m_parent.m_previous;
             }
@@ -239,6 +244,19 @@ class WAM
         }
     }
 
+    final void strongCut()
+    {
+        if(m_curNode.m_parent != null && m_curNode.m_parent.m_previous != null && m_curNode.m_parent.m_previous.m_parent != null && m_curNode.m_parent.m_previous.m_parent.m_previous != null && m_curNode.m_parent.m_previous.m_parent.m_previous.m_parent != null)
+        {
+        	m_curNode.m_backtrack = m_curNode.m_parent.m_previous.m_parent.m_previous.m_parent;
+        }
+        else
+        {
+            // qui si entra solo se il m_curnode è startNode ed è proprio il cut (?)
+            m_curNode.m_backtrack = m_rootNode;
+        }
+    }
+    
     final void softCut()
     {
         if(m_curNode.m_parent != null)

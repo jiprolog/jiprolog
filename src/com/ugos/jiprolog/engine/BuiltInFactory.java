@@ -129,7 +129,7 @@ final class BuiltInFactory extends Object
         m_builtInTable.put("$free/1",     new Free1());
         m_builtInTable.put("$custom_built_in/1", new Custom1());
         m_builtInTable.put("$!/0",        new SoftCut0());
-
+        m_builtInTable.put("$!!/1",       new StrongCut1());
         m_builtInTable.put("pid/1",       new Pid1());
         m_builtInTable.put("error/1",     new Error1());
         m_builtInTable.put("error/2",     new Error2());
@@ -140,7 +140,8 @@ final class BuiltInFactory extends Object
         m_builtInTable.put("savecp/1",    new SaveCP1());
 
         m_builtInTable.put("extern/2",    new Extern2());
-
+        m_builtInTable.put("$inject/1",   new Inject1());
+        
 //        catch((X = 1, throw(gulp)), E, (write(ok-X), nl)).
         //m_BuiltInTable.put("wait/1",            new Wait1());
     }
