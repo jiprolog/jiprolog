@@ -53,7 +53,7 @@ class PrologTokenizer
     private static final int STATE_NUMBER       =  3;
     private static final int STATE_EXPONENT     =  4;
     private static final int STATE_INTEGER      =  5;
-    private static final int STATE_SIGN       	=  6;
+    private static final int STATE_SIGN         =  6;
     private static final int STATE_LINECOMMENT  =  7;
     private static final int STATE_COMMENT      =  8;
     private static final int STATE_QUOTE        =  9;
@@ -198,7 +198,7 @@ class PrologTokenizer
                             }
                             else
                             {
-                            	if(c == '>' && sbTerm.charAt(sbTerm.length() - 1) == '!')
+                                if(c == '>' && sbTerm.charAt(sbTerm.length() - 1) == '!')
 //                                if((strTerm + (char)c).equals("!>"))
                                     sbTerm.append((char)c);//String.valueOf((char)c);
                                 else
@@ -251,14 +251,14 @@ class PrologTokenizer
                         break;
 
                     case STATE_SPECIAL_ATOM:
-                    	char lastChar = sbTerm.charAt(sbTerm.length() - 1);
-                    	if((curChar == '!' && lastChar == '<') || (curChar == '>' && lastChar == '!'))
+                        char lastChar = sbTerm.charAt(sbTerm.length() - 1);
+                        if((curChar == '!' && lastChar == '<') || (curChar == '>' && lastChar == '!'))
 //                        if((strTerm + (char)curChar).equals("<!") || (strTerm + (char)curChar).equals("!>"))
-                    	{
-                        	sbTerm.append((char)curChar);//String.valueOf((char)c);
-                        	nTokenType = TOKEN_SPECIAL_ATOM;
+                        {
+                            sbTerm.append((char)curChar);//String.valueOf((char)c);
+                            nTokenType = TOKEN_SPECIAL_ATOM;
                             nState = STATE_END;
-                    	}
+                        }
                         else if((SPECIAL_CHARS.indexOf(curChar) > -1))
                         {
                             sbTerm.append((char)curChar);//String.valueOf((char)curChar);
@@ -279,9 +279,9 @@ class PrologTokenizer
                         break;
 
 //                    case STATE_SIGN:
-//                    	if((SPECIAL_CHARS.indexOf(curChar) > -1))
+//                        if((SPECIAL_CHARS.indexOf(curChar) > -1))
 //                        {
-//                    		nState = STATE_SPECIAL_ATOM;
+//                            nState = STATE_SPECIAL_ATOM;
 //                            sbTerm.append( (char)curChar;//String.valueOf((char)curChar);
 //                            nTokenType = TOKEN_SPECIAL_ATOM;
 //                        }
@@ -326,36 +326,36 @@ class PrologTokenizer
                         }
                         else if(curChar == '\'')
                         {
-                        	if(sbTerm.charAt(0) == '0')
+                            if(sbTerm.charAt(0) == '0')
 //                            if(strTerm.equals("0"))
                                 nState = STATE_ASCII;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
                         }
                         else if(curChar == 'b')
-						{
-                        	if(sbTerm.charAt(0) == '0')
+                        {
+                            if(sbTerm.charAt(0) == '0')
 //                            if(strTerm.equals("0"))
                                 nState = STATE_BINARY;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
-						}
+                        }
                         else if(curChar == 'o')
-						{
-                        	if(sbTerm.charAt(0) == '0')
+                        {
+                            if(sbTerm.charAt(0) == '0')
 //                            if(strTerm.equals("0"))
                                 nState = STATE_OCTAL;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
-						}
+                        }
                         else if(curChar == 'x')
-						{
-                        	if(sbTerm.charAt(0) == '0')
+                        {
+                            if(sbTerm.charAt(0) == '0')
 //                            if(strTerm.equals("0"))
                                 nState = STATE_HEXADECIMAL;
                             else
                                 throw syntaxError("invalid_character('''')");// + (char)curChar + "')");
-						}
+                        }
                         else
                         {
                             nTokenType = TOKEN_NUMBER;
@@ -373,7 +373,7 @@ class PrologTokenizer
                         }
                         else if(NUMBER_CHARS.indexOf(curChar) > -1)
                         {
-                        	sbTerm.append((char)curChar);//String.valueOf((char)curChar);
+                            sbTerm.append((char)curChar);//String.valueOf((char)curChar);
                             nState = STATE_INTEGER;
                         }
                         else
@@ -418,7 +418,7 @@ class PrologTokenizer
                     case STATE_ASCII:
                         if(curChar == '\\')
                         {
-                        	sbTerm = new StringBuilder();
+                            sbTerm = new StringBuilder();
 //                            strTerm = "";
                             curChar = m_lnReader.read();
                             switch(curChar)
@@ -475,7 +475,7 @@ class PrologTokenizer
                                     // legge il prossimo byte
                                     d2 = m_lnReader.read();
                                     if(d2 != '\\')  // ISO def
-                                    	m_lnReader.unread(d2);
+                                        m_lnReader.unread(d2);
 //                                        m_lnReader.pushback();
                                     break;
 
@@ -486,7 +486,7 @@ class PrologTokenizer
                         }
                         else
                         {
-                        	sbTerm = new StringBuilder(Integer.toString(curChar));
+                            sbTerm = new StringBuilder(Integer.toString(curChar));
 //                            strTerm = Integer.toString(curChar);
                         }
 
@@ -501,7 +501,7 @@ class PrologTokenizer
                         }
                         else
                         {
-                        	sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 2));
+                            sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 2));
 //                            strTerm = "" + Integer.parseInt(strTerm, 2);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
@@ -517,7 +517,7 @@ class PrologTokenizer
                         }
                         else
                         {
-                        	sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 8));
+                            sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 8));
 //                            strTerm = "" + Integer.parseInt(strTerm, 8);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
@@ -533,7 +533,7 @@ class PrologTokenizer
                         }
                         else
                         {
-                        	sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 16));
+                            sbTerm = new StringBuilder().append(Integer.parseInt(sbTerm.toString(), 16));
 //                            strTerm = "" + Integer.parseInt(strTerm, 16);
                             nTokenType = TOKEN_NUMBER;
                             nState = STATE_END;
@@ -579,50 +579,50 @@ class PrologTokenizer
 //                        System.out.println(curChar);
                         if(curChar == DOUBLEQUOTE_CHAR)
                         {
-                        	if(nState == STATE_DOUBLEQUOTE)
-                        	{
-	                            c = m_lnReader.read();
-	                            if(c == DOUBLEQUOTE_CHAR)
-	                            {
-	                                sbTerm.append('"');
-	                            }
-	                            else
-	                            {
-	                                // fine quoted atom
-	                            	m_lnReader.unread(c);
-//	                                m_lnReader.pushback();
-	                                sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
-	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
-	                                nState = STATE_END;
-	                            }
-                        	}
+                            if(nState == STATE_DOUBLEQUOTE)
+                            {
+                                c = m_lnReader.read();
+                                if(c == DOUBLEQUOTE_CHAR)
+                                {
+                                    sbTerm.append('"');
+                                }
+                                else
+                                {
+                                    // fine quoted atom
+                                    m_lnReader.unread(c);
+//                                    m_lnReader.pushback();
+                                    sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
+                                    nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
+                                    nState = STATE_END;
+                                }
+                            }
                             else
                             {
-                            	sbTerm.append( (char)curChar);
+                                sbTerm.append( (char)curChar);
                             }
                         }
                         else if(curChar == QUOTE_CHAR)
                         {
-                        	if(nState == STATE_QUOTE)
-                        	{
-	                            c = m_lnReader.read();
-	                            if(c == QUOTE_CHAR)
-	                            {
-	                                sbTerm.append('\'');
-	                            }
-	                            else
-	                            {
-	                                // fine quoted atom
-	                            	m_lnReader.unread(c);
-//	                                m_lnReader.pushback();
-	                                sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
-	                                nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
-	                                nState = STATE_END;
-	                            }
-                        	}
+                            if(nState == STATE_QUOTE)
+                            {
+                                c = m_lnReader.read();
+                                if(c == QUOTE_CHAR)
+                                {
+                                    sbTerm.append('\'');
+                                }
+                                else
+                                {
+                                    // fine quoted atom
+                                    m_lnReader.unread(c);
+//                                    m_lnReader.pushback();
+                                    sbTerm.append( (char)curChar);//String.valueOf((char)curChar);
+                                    nTokenType = (nState == STATE_QUOTE) ? TOKEN_QUOTE : TOKEN_DBLQUOTE;
+                                    nState = STATE_END;
+                                }
+                            }
                             else
                             {
-                            	sbTerm.append( (char)curChar);
+                                sbTerm.append( (char)curChar);
                             }
                         }
                         else if(nState == STATE_QUOTE && (curChar == '\r' || curChar == '\n'))
@@ -659,23 +659,23 @@ class PrologTokenizer
                             }
                             else if(NUMBER_CHARS.indexOf(c) > -1)
                             {
-                            	String strNum = "" + (char)c;
-                            	// legge i prossimi numeri
+                                String strNum = "" + (char)c;
+                                // legge i prossimi numeri
                                 int d1 = m_lnReader.read();
                                 while(NUMBER_CHARS.indexOf(d1) > -1)
                                 {
-                                	strNum += "" + (char)d1;
-                                	d1 = m_lnReader.read();
+                                    strNum += "" + (char)d1;
+                                    d1 = m_lnReader.read();
                                 }
 
                                 // legge il prossimo byte
                                 if(d1 != '\\')  // ISO def
-                                	m_lnReader.unread(d1);
+                                    m_lnReader.unread(d1);
 //                                    m_lnReader.pushback();
 
                                 try
                                 {
-                                	BigInteger bival = new BigInteger(strNum, 8);
+                                    BigInteger bival = new BigInteger(strNum, 8);
 
                                     byte val = bival.byteValue();// Byte.parseByte(strNum);
                                     sbTerm.append((char)val);
@@ -746,7 +746,7 @@ class PrologTokenizer
                                         // legge il prossimo byte
                                         d2 = m_lnReader.read();
                                         if(d2 != '\\')  // ISO def
-                                        	m_lnReader.unread(d2);
+                                            m_lnReader.unread(d2);
 //                                            m_lnReader.pushback();
                                         break;
 
