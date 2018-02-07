@@ -140,7 +140,6 @@ final class BuiltInFactory extends Object
         m_builtInTable.put("savecp/1",    new SaveCP1());
 
         m_builtInTable.put("extern/2",    new Extern2());
-        m_builtInTable.put("$inject/1",   new Inject1());
         
 //        catch((X = 1, throw(gulp)), E, (write(ok-X), nl)).
         //m_BuiltInTable.put("wait/1",            new Wait1());
