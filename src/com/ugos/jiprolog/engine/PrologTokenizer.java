@@ -431,6 +431,14 @@ class PrologTokenizer
                                     sbTerm.append( Integer.toString(8));
                                     break;
 
+                                case 'd':  // \d delete
+                                    sbTerm.append( Integer.toString(127));
+                                    break;
+
+                                case 'e':  // \e escape
+                                    sbTerm.append( Integer.toString(27));
+                                    break;
+
                                 case 'f':  // \f form feed
                                     sbTerm.append( Integer.toString(12));
                                     break;
@@ -702,6 +710,14 @@ class PrologTokenizer
                                         //sbTerm.append( (char)(8);
                                         break;
 
+                                    case 'd':  // \d delete
+                                        sbTerm.append( (char)(127));
+                                        break;
+    
+                                    case 'e':  // \e escape
+                                        sbTerm.append( (char)(27));
+                                        break;
+
                                     case 'f':  // \f form feed
                                         sbTerm.append( (char)(12));
                                         break;
@@ -814,6 +830,14 @@ class PrologTokenizer
 //
 //                                    case 'b':  // \b backspace
 //                                        sbTerm.append( (char)(8);
+//                                        break;
+//
+//                                    case 'd':  // \d delete
+//                                        sbTerm.append( (char)(127));
+//                                        break;
+//
+//                                    case 'e':  // \e escape
+//                                        sbTerm.append( (char)(27));
 //                                        break;
 //
 //                                    case 'f':  // \f form feed
