@@ -20,25 +20,27 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
 final class AcyclicTerm1 extends BuiltIn
 {
     public final boolean unify(final Hashtable<Variable, Variable> varsTbl)
     {
-//        final PrologObject term = getRealTerm(getParam(1));
-
         return acyclic(getParam(1));
     }
 
     public static boolean acyclic(PrologObject term)
     {
     	Hashtable<PrologObject, PrologObject> termTbl = new Hashtable<PrologObject, PrologObject>();
+    	
     	return acyclic(term, termTbl);
     }
 
     private static boolean acyclic(PrologObject term, Hashtable<PrologObject, PrologObject> termTbl)
     {
+    	
     	if(term == null)
     	{
     		return true;
@@ -57,12 +59,10 @@ final class AcyclicTerm1 extends BuiltIn
 		}
     	else if(term instanceof ConsCell)
         {
-    		termTbl.put(term, term);
     		return acyclic(((ConsCell)term).getHead(), termTbl) && acyclic(((ConsCell)term).getTail(), termTbl);
     	}
         else if(term instanceof Variable)
         {
-//        	termTbl.put(term, term);
         	return acyclic(((Variable)term).getObject(), termTbl);
         }
 

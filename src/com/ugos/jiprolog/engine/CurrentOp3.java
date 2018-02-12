@@ -78,19 +78,16 @@ final class CurrentOp3 extends BuiltIn
 
         if(m_supOp != null)
         {
-            if(m_supOp != null)
-            {
-                final ConsCell first =
-                    new ConsCell(Expression.createNumber(m_supOp.getPrecedence()),
-                                 new ConsCell(Atom.createAtom(m_supOp.getAssoc()),
-                                              new ConsCell(Atom.createAtom(m_supOp.getName()), null)));
+        	ConsCell first =
+                new ConsCell(Expression.createNumber(m_supOp.getPrecedence()),
+                             new ConsCell(Atom.createAtom(m_supOp.getAssoc()),
+                                          new ConsCell(Atom.createAtom(m_supOp.getName()), null)));
 
-                if(first.unify(m_second, varsTbl))
-                {
-                    m_curOp = m_supOp;
-                    m_supOp = null;
-                    return true;
-                }
+            if(first.unify(m_second, varsTbl))
+            {
+                m_curOp = m_supOp;
+                m_supOp = null;
+                return true;
             }
         }
 
@@ -100,7 +97,7 @@ final class CurrentOp3 extends BuiltIn
 
 //          System.out.println(m_curOp);
 //            System.out.println(m_curOp.getName());
-            final ConsCell first =
+            ConsCell first =
                 new ConsCell(Expression.createNumber(m_curOp.getPrecedence()),
                              new ConsCell(Atom.createAtom(m_curOp.getAssoc()),
                                           new ConsCell(Atom.createAtom(m_curOp.getName()), null)));
@@ -110,8 +107,28 @@ final class CurrentOp3 extends BuiltIn
                 m_supOp = m_curOp.getSupplementaryOp();
                 return true;
             }
+            else
+            {
+            	m_supOp = m_curOp.getSupplementaryOp();
+            
+                if(m_supOp != null)
+                {
+                    first =
+                        new ConsCell(Expression.createNumber(m_supOp.getPrecedence()),
+                                     new ConsCell(Atom.createAtom(m_supOp.getAssoc()),
+                                                  new ConsCell(Atom.createAtom(m_supOp.getName()), null)));
+
+                    if(first.unify(m_second, varsTbl))
+                    {
+                        m_curOp = m_supOp;
+                        m_supOp = null;
+                        return true;
+                    }
+                }
+            }
         }
 
+                
         return false;
     }
 

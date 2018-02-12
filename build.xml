@@ -49,7 +49,7 @@ Simple script to jar, obfuscate and run a project 3.0.
 		<jar jarfile="${project.jipgui.root}/${project.jipgui.jar}" basedir="${project.jipgui.lib}" />
 	</target>
 
-	<target name="deploy" depends="create_run_jar, javadoc" description="Deploy">
+	<target name="deploy" depends="CompileLibraries, create_run_jar, javadoc" description="Deploy">
 
 		<!-- jiprolog package -->
 		<copy todir="${project.deploy.dir}/JIProlog/sdk/lib/" file="${project.jiprolog.deploy.jar}"/>

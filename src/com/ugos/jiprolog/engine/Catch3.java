@@ -14,6 +14,8 @@ import com.ugos.jiprolog.engine.WAM.Node;
  */
 public class Catch3 extends Call1
 {
+	boolean isExceptionAdded = false;
+	
 	@Override
 	public boolean unify(final Hashtable<Variable, Variable> varsTbl)
 	{
@@ -43,7 +45,7 @@ public class Catch3 extends Call1
 		}
 
 
-		wam.addExceptionListener(new ExceptionListener()
+		wam.pushExceptionListener(new ExceptionListener()
 		{
 			public boolean notifyException(JIPRuntimeException ex)
 			{
@@ -76,6 +78,12 @@ public class Catch3 extends Call1
 				else
 					return false;
 			}
+			
+			public Catch3 getCallingTerm()
+			{
+				return Catch3.this;
+			}
+			
 //			public WAM.Node notifyException(JIPRuntimeException ex)
 //			{
 //				if(catcher.unify(ex.exceptionTerm, varsTbl))
@@ -103,6 +111,8 @@ public class Catch3 extends Call1
 //			}
 		});
 
+		isExceptionAdded = true;
+		
 		thisNode.m_injectedBody = new ConsCell(goal, new ConsCell(new BuiltInPredicate("$reh/0", null), null));
 
 		return true;
@@ -112,6 +122,7 @@ public class Catch3 extends Call1
 	@Override
 	public boolean hasMoreChoicePoints()
 	{
+		getWAM().popExceptionListener(this);
 		return false;
 	}
 }

@@ -115,10 +115,15 @@ class WAM
         moduleStack = wam.moduleStack;
     }
 
-	void addExceptionListener(ExceptionListener exceptionListener) {
+	void pushExceptionListener(ExceptionListener exceptionListener) {
 		this.exceptionListenerStack.push(exceptionListener);
 	}
-
+	 
+	void popExceptionListener(Catch3 catch3) {
+		if(!exceptionListenerStack.isEmpty() && catch3 == exceptionListenerStack.peek().getCallingTerm())
+			this.exceptionListenerStack.pop();
+	}
+ 
     final Node getCurNode()
     {
         return m_curNode;
@@ -246,9 +251,9 @@ class WAM
 
     final void strongCut()
     {
-        if(m_curNode.m_parent != null && m_curNode.m_parent.m_previous != null && m_curNode.m_parent.m_previous.m_parent != null && m_curNode.m_parent.m_previous.m_parent.m_previous != null && m_curNode.m_parent.m_previous.m_parent.m_previous.m_parent != null)
+        if(m_curNode.m_parent != null && m_curNode.m_parent.m_parent != null && m_curNode.m_parent.m_parent.m_parent != null && m_curNode.m_parent.m_parent.m_parent.m_previous != null)
         {
-        	m_curNode.m_backtrack = m_curNode.m_parent.m_previous.m_parent.m_previous.m_parent;
+        	m_curNode.m_backtrack = m_curNode.m_parent.m_parent.m_parent.m_previous;
         }
         else
         {
@@ -325,10 +330,10 @@ class WAM
                 if(((BuiltInPredicate)curNode.getGoal()).hasMoreChoicePoints())
                     return curNode;
             }
-//            else if(curNode.m_ruleEnum == null)
-//            {
-////            	System.out.println(curNode.getGoal());
-//            }
+            else if(curNode.m_ruleEnum == null)
+            {
+            	System.out.println(curNode.getGoal());
+            }
             else if(curNode.m_ruleEnum.hasMoreElements())
             {
                 // se la prossima regola unificante fallisce nel corpo qui non
@@ -712,6 +717,17 @@ class WAM
 
 //        throw new JIPTypeException(JIPTypeException.CALLABLE, term);
 //    }
+    
+    public void printStackTrace()
+    {
+    	Node node = m_curNode;
+    	while(node != null)
+    	{
+    		System.out.println(node.m_callList.getHead());
+    		
+    		node = node.m_previous;
+    	}
+    }
 }
 
 

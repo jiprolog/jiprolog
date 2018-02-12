@@ -49,14 +49,7 @@ public class Dir2 extends JIPXCall
        {
            for(int i = 0; i < files.length; i++)
            {
-               String strFileName;
-               File cFile = new File(files[i]);
-               if(cFile.isDirectory())
-                   strFileName = "[" + files[i] + "]";
-               else
-                   strFileName = files[i];
-
-               fileList = JIPList.create(JIPAtom.create(strFileName), fileList);
+               fileList = JIPList.create(JIPAtom.create(files[i]), fileList);
            }
        }
 
