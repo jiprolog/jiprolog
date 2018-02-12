@@ -64,7 +64,9 @@ final class AcyclicTerm1 extends BuiltIn
         else if(term instanceof Variable)
         {
         	termTbl.put(term, term);
-        	return acyclic(((Variable)term).getObject(), termTbl);
+        	boolean acyclic = acyclic(((Variable)term).getObject(), termTbl);
+        	termTbl.remove(term);
+        	return acyclic;
         }
 
     	return true;
