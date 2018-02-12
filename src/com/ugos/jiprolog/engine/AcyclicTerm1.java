@@ -40,7 +40,7 @@ final class AcyclicTerm1 extends BuiltIn
 
     private static boolean acyclic(PrologObject term, Hashtable<PrologObject, PrologObject> termTbl)
     {
-    	
+	
     	if(term == null)
     	{
     		return true;
@@ -63,6 +63,7 @@ final class AcyclicTerm1 extends BuiltIn
     	}
         else if(term instanceof Variable)
         {
+        	termTbl.put(term, term);
         	return acyclic(((Variable)term).getObject(), termTbl);
         }
 
