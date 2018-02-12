@@ -544,7 +544,7 @@ final class Expression extends PrologObject //implements Serializable
                                     throw new JIPTypeException(JIPTypeException.FLOAT, exp1);
                             }
                             else if(dVal2 == 0 && dVal1 == 0)
-                                return Expression.createNumber(0);
+                                return Expression.createNumber(1);
                             else if(dVal2 > 0)
                                 return Expression.createNumber(dblVal);
                             else
