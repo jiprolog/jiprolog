@@ -51,6 +51,13 @@ public class Told1 extends JIPXCall
             try
             {
                 JIPio.closeOutputStream(sinfo.getHandle());
+                
+                JIPEngine engine = getJIPEngine();
+                if(engine.getCurrentOutputStreamHandle() == sinfo.getHandle())
+        		{
+                	engine.setCurrentOutputStream(engine.getUserOutputStream(), JIPEngine.USER_OUTPUT_HANDLE);
+        		}
+                
             }
             catch(IOException ex)
             {

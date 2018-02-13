@@ -52,6 +52,13 @@ public final class Seen1 extends JIPXCall
         try
         {
             JIPio.closeInputStream(sinfo.getHandle());
+            
+            JIPEngine engine = getJIPEngine();
+            if(engine.getCurrentInputStreamHandle() == sinfo.getHandle())
+    		{
+            	engine.setCurrentInputStream(engine.getUserInputStream(), JIPEngine.USER_INPUT_HANDLE);
+    		}
+
         }
         catch(IOException ex)
         {
