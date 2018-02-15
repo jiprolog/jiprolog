@@ -31,7 +31,7 @@ final class Variable extends PrologObject//Serializable
 {
     final static long serialVersionUID = 300000008L;
 
-//    private static long counter = 1;
+    private static long counter = 1;
 
     private static final char ANONYMOUS = '^';
     private static final char SHADOW = '+';
@@ -41,28 +41,25 @@ final class Variable extends PrologObject//Serializable
 
     private String       m_strName;
     private PrologObject m_object;
-//    private long m_address;
-
-//    Variable parent;
-
+    private long m_nTimestamp;
+//    private Variable parent;
+    
     private int cyclic = -1;
 
     public Variable(final String strName)
     {
         m_strName = strName;
-//        m_address = hashCode();//counter++;
+        m_nTimestamp = counter++;
     }
 
     public Variable(final boolean bAnonymous)
     {
-//    	m_address = hashCode();//counter++;
-
+    	m_nTimestamp = counter++;
+    	
         if (bAnonymous)
-            m_strName = sbANONYMOUS.resetToInitialValue().append(hashCode()).toString();
+            m_strName = sbANONYMOUS.resetToInitialValue().append(m_nTimestamp).toString();
         else
-        	m_strName = sbSHADOW.resetToInitialValue().append(hashCode()).toString();
-
-//        m_address = hashCode();//counter++;
+        	m_strName = sbSHADOW.resetToInitialValue().append(m_nTimestamp).toString();
     }
 
     public final PrologObject getObject()
@@ -70,7 +67,6 @@ final class Variable extends PrologObject//Serializable
         PrologObject object = m_object;
         while(object instanceof Variable)
         {
-//          System.out.println(object);
             object = ((Variable)object).m_object;
         }
 
@@ -86,12 +82,47 @@ final class Variable extends PrologObject//Serializable
         {
 //        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
             var = (Variable)obj;
-            obj = ((Variable)obj).m_object;
+            obj = var.m_object;
         }
 
         return var;
     }
+    
+//    public final Variable rootVariable()
+//    {
+//        Variable var = this;
+//        PrologObject obj = parent;
+//        while(obj instanceof Variable)
+//        {
+////        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
+//            var = (Variable)obj;
+//            obj = var.parent;
+//        }
+//
+//        return var;
+//    }
 
+    public long timestamp()
+    {
+//    	return rootVariable().m_nTimestamp;
+    	return lastVariable().m_nTimestamp;
+    	
+//    	long timestamp = m_nTimestamp;
+//    	
+//    	Variable var = this;
+//        PrologObject obj = m_object;
+//        while(obj instanceof Variable)
+//        {
+////        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
+//            var = (Variable)obj;
+//            if(var.m_nTimestamp < timestamp)
+//            	timestamp = var.m_nTimestamp; 
+//            obj = var.m_object;
+//        }
+//        
+//        return timestamp;
+    }
+    
 //    public final Variable root()
 //    {
 //        Variable parent = this;
@@ -112,7 +143,8 @@ final class Variable extends PrologObject//Serializable
 
     public final long getAddress()
     {
-        return lastVariable().hashCode();//m_address;//m_nAddress;
+//    	return m_nTimestamp;//lastVariable().hashCode();//m_address;//m_nAddress;
+        return timestamp();//m_nTimestamp;//lastVariable().hashCode();//m_address;//m_nAddress;
     }
 
     public final PrologObject copy(final boolean flat, final Hashtable<Variable, PrologObject> varTable)
@@ -221,7 +253,7 @@ final class Variable extends PrologObject//Serializable
                         if(objVar != var)
                         {
                             var.m_object = obj;
-//                            ((Variable)obj).parent = this;
+//                            ((Variable)obj).parent = var;
                         }
                     }
                 }
@@ -258,7 +290,13 @@ final class Variable extends PrologObject//Serializable
 //                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
 //                	return root().m_address < ((Variable)obj).root().m_address;
 //                	return root().toString().compareTo(((Variable)obj).root().toString()) < 0;
-                	return lastVariable().hashCode() < ((Variable)obj).lastVariable().hashCode();
+//                	return lastVariable().hashCode() < ((Variable)obj).lastVariable().hashCode();
+//                	
+                	return timestamp() < ((Variable)obj).timestamp();
+                	
+//                	return lastVariable().m_nTimestamp < ((Variable)obj).lastVariable().m_nTimestamp;
+                	
+                	
 //                	return lastVariable().m_address < ((Variable)obj).lastVariable().m_address;
 
                 	//                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;

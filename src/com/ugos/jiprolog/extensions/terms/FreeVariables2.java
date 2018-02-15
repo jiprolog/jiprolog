@@ -27,7 +27,7 @@ import java.util.*;
 
 public class FreeVariables2 extends JIPXCall
 {
-	 Hashtable<String, JIPVariable> vartbl = new Hashtable<String, JIPVariable>();
+	 Hashtable<Long, JIPVariable> vartbl = new Hashtable<Long, JIPVariable>();
 
     public final boolean unify(final JIPCons input, Hashtable varsTbl)
     {
@@ -88,10 +88,10 @@ public class FreeVariables2 extends JIPXCall
         	}
         	else
         	{
-        		if(!vartbl.containsKey(var.toString()))
+        		if(!vartbl.containsKey(new Long(var.getAddress())))
             	{
         			varsVect.addElement(var);
-            		vartbl.put(var.toString(), var);
+            		vartbl.put(new Long(var.getAddress()), var);
             	}
         	}
         }
