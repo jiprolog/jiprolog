@@ -65,7 +65,11 @@ final class Arg3 extends BuiltIn
                  if(index == 1)
                      param = ((ConsCell)term).getHead();
                  else if(index == 2)
+                 {
                      param = ((ConsCell)term).getTail();
+                     if(param == null)
+                    	 param = List.NIL;
+                 }
                  else
                      return false;
             }
@@ -73,7 +77,7 @@ final class Arg3 extends BuiltIn
             if(param == null)
                 return false;
 
-            return param.unify(val, varsTbl);
+            return param.unify(val, varsTbl); 
         }
         catch (ClassCastException ex)
         {
