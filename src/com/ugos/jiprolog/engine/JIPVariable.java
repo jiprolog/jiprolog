@@ -93,4 +93,9 @@ public class JIPVariable extends JIPTerm
     {
         return ((Variable)getTerm()).isAnonymous() || ((Variable)getTerm()).isShadow();
     }
+    
+    public long getAddress()
+    {
+    	return ((Variable)getTerm()).getAddress();
+    }
 }
