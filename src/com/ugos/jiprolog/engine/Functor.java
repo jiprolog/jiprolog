@@ -160,6 +160,50 @@ class Functor extends ConsCell
 
     }
 
+    protected boolean lessThen(PrologObject obj)
+    {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
+        if(obj instanceof Functor)
+        {
+        	int h1 = getArity();
+        	int h2 = ((Functor)obj).getArity();
+        	if(h1 < h2)
+        	{
+        		return true;
+        	}
+        	else if(h1 == h2)
+        	{        		
+	            if(m_head == null)
+	                return false;
+
+	            if(m_head.lessThen(((ConsCell)obj).m_head))
+	            {
+	            	return true;
+	            }
+	            else if (m_head.termEquals(((ConsCell)obj).m_head))
+	            {
+		            if(m_tail != null)
+		            {
+		            	return ((ConsCell)obj).m_tail != null && m_tail.lessThen(((ConsCell)obj).m_tail);
+		            }
+		            else
+		            {
+		            	return (((ConsCell)obj).m_tail != null);
+		            }
+	            }
+        	}
+        }
+        
+        return false;
+    }
+    
     public Functor getPredicateIndicator()
     {
     	return getPredicateIndicator(getName());
