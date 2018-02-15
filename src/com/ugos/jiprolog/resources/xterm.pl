@@ -37,12 +37,13 @@
 
 :-assert(ver(jipxterms, '4.0.1')).
 
-:- extern(vars/2, 'com.ugos.jiprolog.extensions.terms.Vars2').
-:- extern(numbervars/3, 'com.ugos.jiprolog.extensions.terms.Numbervars3').
-:- extern(free_variables/2, 'com.ugos.jiprolog.extensions.terms.FreeVariables2').
-:- extern(term_variables/2, 'com.ugos.jiprolog.extensions.terms.FreeVariables2').
-:- extern(copy_term/2, 'com.ugos.jiprolog.extensions.terms.CopyTerm2').
-:- extern(name/2, 'com.ugos.jiprolog.extensions.terms.Name2').
+vars(X,Y) :- xcall('com.ugos.jiprolog.extensions.terms.Vars2', [X, Y]).
+numbervars(X,Y,Z) :- xcall('com.ugos.jiprolog.extensions.terms.Numbervars3', [X,Y,Z]).
+free_variables(X,Y) :- xcall('com.ugos.jiprolog.extensions.terms.FreeVariables2', [X,Y]).
+term_variables(X,Y) :- xcall('com.ugos.jiprolog.extensions.terms.FreeVariables2', [X,Y]).
+copy_term(X,Y) :- xcall('com.ugos.jiprolog.extensions.terms.CopyTerm2', [X,Y]).
+name(X,Y) :- xcall('com.ugos.jiprolog.extensions.terms.Name2', [X,Y]).
+
 :- extern('$atom_codes'/2, 'com.ugos.jiprolog.extensions.terms.AtomCodes2').
 :- extern('$atom_chars'/2, 'com.ugos.jiprolog.extensions.terms.AtomChars2').
 :- extern('$number_codes'/2, 'com.ugos.jiprolog.extensions.terms.NumberCodes2').
