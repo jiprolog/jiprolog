@@ -452,17 +452,17 @@ class WAM
 
                     // FOUND
                     //System.out.println("curNode call list  " + curNode.m_callList);  // dbg
-                    if(clause.getTail() != null) // la clausola ha un body
-                    {
-                        // create a new node
-                        newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
-                    }
-                    else if(curNode.m_injectedBody != null)
+                    if(curNode.m_injectedBody != null)
                     {
                         // create a new node
                         newNode = new Node(curNode.m_injectedBody, curNode, curNode, rule.m_strModule);
                         curNode.m_injectedBody = null;
                     }
+                    else if(clause.getTail() != null) // la clausola ha un body
+                    {
+                        // create a new node
+                        newNode = new Node((ConsCell)clause.getTail(), curNode, curNode, rule.m_strModule);
+                    }                    
                     else if(curNode.m_callList.getTail() != null) // la clausola non ha un body continuo con il resto
                     {
                     	if(!moduleStack.isEmpty())
