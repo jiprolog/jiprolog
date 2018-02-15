@@ -428,14 +428,14 @@ class ConsCell extends PrologObject //implements Serializable
 
         if(obj instanceof ConsCell)
         {
-        	int h1 = getHeight();
-        	int h2 = ((ConsCell)obj).getHeight();
-        	if(h1 < h2)
-        	{
-        		return true;
-        	}
-        	else if(h1 == h2)
-        	{
+//        	int h1 = getHeight();
+//        	int h2 = ((ConsCell)obj).getHeight();
+//        	if(h1 < h2)
+//        	{
+//        		return true;
+//        	}
+//        	else if(h1 == h2)
+//        	{
 	            if(m_head == null)
 	                return false;
 
@@ -454,7 +454,7 @@ class ConsCell extends PrologObject //implements Serializable
 		            	return (((ConsCell)obj).m_tail != null);
 		            }
 	            }
-        	}
+//        	}
         }
         else if(obj instanceof Atom && this == List.NIL)
 		{
