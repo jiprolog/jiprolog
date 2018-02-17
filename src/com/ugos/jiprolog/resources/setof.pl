@@ -303,11 +303,12 @@ recorda(X) :-
 
 recorded(Item):-
 	retract('$bag'( Item )).
+	
 /*
 recorded( SoFar, List ) :-
     retract('$bag'( Item )),
     !,
-    /*  to stop retract looking for more Items.  */
+    %  to stop retract looking for more Items.
     recorded( Item, SoFar, List ).
 
 
