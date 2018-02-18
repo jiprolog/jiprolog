@@ -42,7 +42,7 @@ final class Variable extends PrologObject//Serializable
     private String       m_strName;
     private PrologObject m_object;
     private long m_nTimestamp;
-//    private Variable parent;
+    private Variable parent;
     
     private int cyclic = -1;
 
@@ -88,24 +88,26 @@ final class Variable extends PrologObject//Serializable
         return var;
     }
     
-//    public final Variable rootVariable()
-//    {
-//        Variable var = this;
-//        PrologObject obj = parent;
-//        while(obj instanceof Variable)
-//        {
-////        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
-//            var = (Variable)obj;
-//            obj = var.parent;
-//        }
-//
-//        return var;
-//    }
+    public final Variable rootVariable()
+    {
+        Variable var = this;
+        PrologObject obj = parent;
+        while(obj instanceof Variable && obj != this)
+        {
+//        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
+            var = (Variable)obj;
+            obj = var.parent;
+        }
+
+        return var;
+    }
 
     public long timestamp()
     {
-//    	return rootVariable().m_nTimestamp;
-    	return lastVariable().m_nTimestamp;
+//    	return m_nTimestamp;
+    	
+    	return rootVariable().m_nTimestamp;
+//    	return lastVariable().m_nTimestamp;
     	
 //    	long timestamp = m_nTimestamp;
 //    	
@@ -253,7 +255,9 @@ final class Variable extends PrologObject//Serializable
                         if(objVar != var)
                         {
                             var.m_object = obj;
-//                            ((Variable)obj).parent = var;
+                            ((Variable)obj).parent = var;
+//                            ((Variable)obj).rootVariable().parent = var;
+                            
                         }
                     }
                 }

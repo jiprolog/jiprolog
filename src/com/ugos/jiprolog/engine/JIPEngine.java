@@ -95,14 +95,14 @@ public class JIPEngine implements Serializable
      */
     public static final String getInfo()
     {
-        return new StringBuilder("JIProlog v").append(VERSION).append(" Copyright (c) 1999-2015 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved").toString();
+        return new StringBuilder("JIProlog v").append(VERSION).append(" Copyright (c) 1999-2018 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved").toString();
     }
 
     /** Returns Copyright
      */
     public static final String getCopyrightInfo()
     {
-        return "Copyright (c) 1999-2015 By Ugo Chirico - http://www.jiprolog.com. All Rights Reserved";
+        return "Copyright (c) 1999-2018 By Ugo Chirico - http://www.jiprolog.com. All Rights Reserved";
     }
 
     /** Returns JIProlog license info

@@ -193,11 +193,11 @@ final class BuiltInFactory extends Object
     {
         try
         {
-//            BuiltIn builtIn =
-//                (BuiltIn)(m_builtInTable.get(strName).getClass().newInstance());
 
+//        	System.out.println("b:" + strName);
+        	
         	BuiltIn builtIn =
-                    (BuiltIn)((BuiltIn)(m_builtInTable.get(strName)).newInstance());
+                    (BuiltIn)(m_builtInTable.get(strName)).newInstance();
 
             builtIn.init(m_jipEngine, pred, wam);
 

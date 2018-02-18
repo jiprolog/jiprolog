@@ -81,14 +81,14 @@ public class FreeVariables2 extends JIPXCall
 
         for(int i = 0; i < vars.length; i++)
         {
-        	JIPVariable var = vars[i];//.getLastVariable();
+        	JIPVariable var = vars[i];
         	if(var.isBounded())
         	{
         		addVariables(var.getValue(), varsVect);
         	}
         	else
         	{
-        		if(!vartbl.containsKey(new Long(var.getAddress())))
+        		if(!vartbl.containsKey(new Long(var.getAddress())) && !vartbl.contains(var))
             	{
         			varsVect.addElement(var);
             		vartbl.put(new Long(var.getAddress()), var);
