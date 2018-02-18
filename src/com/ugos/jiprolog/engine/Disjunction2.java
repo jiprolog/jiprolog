@@ -11,8 +11,6 @@ import java.util.Hashtable;
  */
 public class Disjunction2 extends Call1 {
 
-//	WAM wam;
-
 	private PrologObject m_goal1;
 	private PrologObject m_goal2;
 	private boolean end = false;
@@ -101,8 +99,7 @@ public class Disjunction2 extends Call1 {
 
 					// *->(X,Y) :- call(X), '$!!'(Y).
 //					curNode.m_injectedBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("$!!/1"), new ConsCell(funparams.getTerm(2), null)), null));
-					
-					
+							
 //					*->(X,Y) :- call(X), Y.
 					curNode.m_injectedBody = new ConsCell(new BuiltInPredicate(Atom.createAtom("call/1"), new ConsCell(funparams.m_head, null)), new ConsCell(new BuiltInPredicate(Atom.createAtom("$!/0"), null), new ConsCell(funparams.getTerm(2), null)));
 					
@@ -122,38 +119,12 @@ public class Disjunction2 extends Call1 {
 
 		return true;
 
-		/*
-		if(wam == null)
-		{
-			wam = getNewWAM();
-			if(wam.query(param))
-				return true;
-			else
-			{
-				wam.closeQuery();
-				wam = null;
-			}
-		}
-		else
-		{
-			if(wam.nextSolution())
-				return true;
-			else
-			{
-				wam.closeQuery();
-				wam = null;
-			}
-
-		}
-
-		return false;
-*/
 
 	}
 
 	@Override
 	public boolean hasMoreChoicePoints()
 	{
-		return !end;//true;//m_goal1 == null || m_goal2 == null;
+		return !end;
 	}
 }
