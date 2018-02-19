@@ -98,4 +98,9 @@ public class JIPVariable extends JIPTerm
     {
     	return ((Variable)getTerm()).getAddress();
     }
+    
+    public long getLastVariableAddress()
+    {
+    	return ((Variable)getTerm()).lastVariable().timestamp();
+    }
 }

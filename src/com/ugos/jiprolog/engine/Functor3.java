@@ -131,17 +131,17 @@ final class Functor3 extends BuiltIn
             }
             else if(func instanceof Functor)
             {
-                if(((Functor)func).getAtom().equals(Atom.COLON))
-                {
-                    try
-                    {
-                        func =  (Functor)((ConsCell)((Functor)func).getParams().getTail()).getHead();
-                    }
-                    catch(ClassCastException ex)
-                    {
-                        throw new JIPTypeException(JIPTypeException.FUNCTOR, func);
-                    }
-                }
+//                if(((Functor)func).getAtom().equals(Atom.COLON))
+//                {
+//                    try
+//                    {
+//                        func =  (Functor)((ConsCell)((Functor)func).getParams().getTail()).getHead();
+//                    }
+//                    catch(ClassCastException ex)
+//                    {
+//                        throw new JIPTypeException(JIPTypeException.FUNCTOR, func);
+//                    }
+//                }
 
                 funcName  = Atom.createAtom(((Functor)func).getFriendlyName());
                 funcArity = Expression.createNumber(((Functor)func).getArity());

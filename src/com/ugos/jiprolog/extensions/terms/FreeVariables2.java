@@ -88,10 +88,14 @@ public class FreeVariables2 extends JIPXCall
         	}
         	else
         	{
-        		if(!vartbl.containsKey(new Long(var.getAddress())) && !vartbl.contains(var))
+        		if(!vartbl.containsKey(new Long(var.getAddress())) && !vartbl.containsKey(new Long(var.getLastVariableAddress())))
             	{
+        		
         			varsVect.addElement(var);
-            		vartbl.put(new Long(var.getAddress()), var);
+        			
+        			vartbl.put(new Long(var.getAddress()), var);
+            		vartbl.put(new Long(var.getLastVariableAddress()), var);
+            		
             	}
         	}
         }
