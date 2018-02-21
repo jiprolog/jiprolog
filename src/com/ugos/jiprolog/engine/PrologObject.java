@@ -22,7 +22,7 @@ package com.ugos.jiprolog.engine;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-
+import java.util.Vector;
 //#ifndef _MIDP
 import java.io.Serializable;
 
@@ -138,6 +138,62 @@ abstract class PrologObject implements Clearable, Serializable
         return this;
     }
 
+    private Vector       m_varsVect;
+
+    public final Variable[] getVariables()
+    {
+        Variable[] vars;
+
+        if(this instanceof Atom || this instanceof Expression || this instanceof PString)
+        {
+            vars = new Variable[0] ;
+        }
+        else if(this instanceof Variable)
+        {
+            vars = new Variable[1];
+            vars[0] = (Variable)this;
+        }
+        else
+        {
+        	m_varsVect = new Vector(5,2);
+            final ConsCell cell = (ConsCell)this;
+            extractVariable(cell);
+
+            vars = new Variable[m_varsVect.size()];
+
+            final Enumeration en = m_varsVect.elements();
+
+            //int i = m_varsVect.size();
+            int i = 0;
+            while (en.hasMoreElements())
+            {
+                final Variable var = (Variable)en.nextElement();
+                vars[i] = (Variable)var;
+                i++;
+            }
+        }
+
+        return vars;
+    }
+
+    private final void extractVariable(final PrologObject term)
+    {
+        if(term instanceof ConsCell)
+        {
+            extractVariable(((ConsCell)term).getHead());
+            extractVariable(((ConsCell)term).getTail());
+        }
+        else if(term instanceof Variable)
+        {
+            //final String strVar = ((Variable)term).getName();
+//            if (!((Variable)term).isShadow())
+//            {
+                if(!m_varsVect.contains(term))
+                    m_varsVect.addElement(term);
+//            }
+        }
+    }
+    
     public abstract void clear();
     public abstract PrologObject copy(boolean flat, Hashtable<Variable, PrologObject> varTable);
     protected abstract boolean lessThen(PrologObject obj);

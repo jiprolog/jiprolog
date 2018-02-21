@@ -141,6 +141,9 @@ final class BuiltInFactory extends Object
 
         m_builtInTable.put("extern/2",    new Extern2());
         
+        m_builtInTable.put("term_variables/2",    new TermVariables2());
+        m_builtInTable.put("free_variables/2",    new TermVariables2());
+        
 //        catch((X = 1, throw(gulp)), E, (write(ok-X), nl)).
         //m_BuiltInTable.put("wait/1",            new Wait1());
     }
