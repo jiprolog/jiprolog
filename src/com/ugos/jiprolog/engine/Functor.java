@@ -180,14 +180,11 @@ class Functor extends ConsCell
         	}
         	else if(h1 == h2)
         	{        		
-	            if(m_head == null)
-	                return false;
-
-	            if(m_head.lessThen(((ConsCell)obj).m_head))
+        		if(m_strFriendlyName.compareTo(((Functor) obj).m_strFriendlyName) < 0)
 	            {
 	            	return true;
 	            }
-	            else if (m_head.termEquals(((ConsCell)obj).m_head))
+	            else if (m_strFriendlyName.equals(((Functor) obj).m_strFriendlyName))
 	            {
 		            if(m_tail != null)
 		            {
