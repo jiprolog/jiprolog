@@ -185,8 +185,8 @@ remove_duplicates([X, Y| Xs], Ys) :-
 remove_duplicates([Y], [Y]).
 
 
-sort(_, _, [], []).
-sort(_, _, [X], [X]).
+sort(_, _, [], []) :- !.
+sort(_, _, [X], [X]) :- !.
 sort(Key, Order, [X,Y|L], Sorted) :-
 	halve(L, [Y|L], Front, Back),
 	sort(Key, Order, [X|Front], F),
