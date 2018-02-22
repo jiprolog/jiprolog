@@ -236,27 +236,55 @@ atom_concat(_, _, Concat):-
 
 
 sub_atom(Atom, Before, Length, After, SubAtom):-
- 	atom(Atom), (var(SubAtom); atom(SubAtom)),
- 	% the other error conditions are checked by the calls to atom_length/2
- 	!,
- 	atom_concat(Prefix, Suffix, Atom),
- 	atom_concat(SubAtom, AfterAtom, Suffix),
- 	atom_length(SubAtom, Length),
- 	atom_length(Prefix, Before),
- 	atom_length(AfterAtom, After).
+	atom(Atom), atom(SubAtom),
+	(	nonvar(Before), nonvar(Length)
+	;	nonvar(Before), nonvar(After)
+	;	nonvar(Length), nonvar(After)
+	),
+	% the other error conditions are checked by the calls to atom_length/2
+	!,
+	atom_length(SubAtom, Length),
+	atom_concat(Prefix, Suffix, Atom),
+	atom_concat(SubAtom, AfterAtom, Suffix),
+	atom_length(Prefix, Before),
+	atom_length(AfterAtom, After),
+	!.
+
+sub_atom(Atom, Before, Length, After, SubAtom):-
+	atom(Atom), var(SubAtom),
+	(	nonvar(Before), nonvar(Length)
+	;	nonvar(Before), nonvar(After)
+	;	nonvar(Length), nonvar(After)
+	),
+	% the other error conditions are checked by the calls to atom_length/2
+	!,
+	atom_concat(Prefix, Suffix, Atom),
+	atom_concat(SubAtom, AfterAtom, Suffix),
+	atom_length(SubAtom, Length),
+	atom_length(Prefix, Before),
+	atom_length(AfterAtom, After),
+	!.
+
+sub_atom(Atom, Before, Length, After, SubAtom):-
+	atom(Atom), (var(SubAtom); atom(SubAtom)),
+	% the other error conditions are checked by the calls to atom_length/2
+	!,
+	atom_concat(Prefix, Suffix, Atom),
+	atom_concat(SubAtom, AfterAtom, Suffix),
+	atom_length(SubAtom, Length),
+	atom_length(Prefix, Before),
+	atom_length(AfterAtom, After).
 
 sub_atom(Atom, _, _, _, _):-
- 	var(Atom),
- 	error(instantiation_error).
+	var(Atom),
+	error(instantiation_error).
 
 sub_atom(Atom, _, _, _, _):-
- 	\+ atom(Atom),
- 	error(type_error(atom, Atom)).
+	\+ atom(Atom),
+	error(type_error(atom, Atom)).
 
 sub_atom(_, _, _, _, SubAtom):-
- 	% nonvar(SubAtom),
- 	% \+ atom(SubAtom),
- 	error(type_error(atom, SubAtom)).
+	error(type_error(atom, SubAtom)).
 
 %sub_atom(Atom, Before, Length, After, SubAtom):-
 %	atom_concat(Prefix, Suffix, Atom),
