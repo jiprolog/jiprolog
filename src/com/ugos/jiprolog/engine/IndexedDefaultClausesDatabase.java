@@ -83,8 +83,10 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //	        }
         else if(key instanceof List)
         {
-        	if(key == List.NIL)
+        	if(((List)key).isNil())
         	{
+        		key = List.NIL;
+
         		if(m_clausesAtomTable.containsKey(key))
         		{
         			m_clausesAtomTable.get(key).add(0, clause);
@@ -186,17 +188,24 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //	        }
         else if(key instanceof List)
         {
-    		if(m_clausesAtomTable.containsKey(key))
-    		{
-    			m_clausesAtomTable.get(key).add(0, clause);
+//        	System.out.println("add LIST " + key);
+        	if(((List)key).isNil())
+        	{
+        		key = List.NIL;
+//        		System.out.println("add key == NIL");
+        		
+	    		if(m_clausesAtomTable.containsKey(key))
+	    		{
+	    			m_clausesAtomTable.get(key).add(0, clause);
+	        	}
+	        	else
+		        {
+		        	Vector<Clause> clauseVector = new Vector<Clause>();
+		        	m_clausesAtomTable.put(key, clauseVector);
+		        	addVariablesToVector(clauseVector);
+		        	clauseVector.add(clause);
+		        }
         	}
-        	else
-	        {
-	        	Vector<Clause> clauseVector = new Vector<Clause>();
-	        	m_clausesAtomTable.put(key, clauseVector);
-	        	addVariablesToVector(clauseVector);
-	        	clauseVector.add(clause);
-	        }
 
         	m_clausesListVector.add(clause);
         }
@@ -356,7 +365,7 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //	    }
         else if(key instanceof List)
         {
-        	if(key == List.NIL && m_clausesAtomTable.containsKey(key))
+        	if((((List)key).isNil()) && m_clausesAtomTable.containsKey(key))
         		removed = m_clausesAtomTable.get(key).removeElement(clause);
 
         	removed = m_clausesListVector.removeElement(clause);
@@ -414,7 +423,19 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
 //	        }
         else if(key instanceof List)
         {
-        	clausesVector = m_clausesListVector;
+        	if(((List)key).isNil())
+        	{
+        		key = List.NIL;
+//        		System.out.println("key == NIL");
+        		clausesVector = m_clausesAtomTable.get(key);
+        		
+        		if(clausesVector == null)
+        			clausesVector = m_clausesListVector;
+        	}
+        	else
+        	{
+        		clausesVector = m_clausesListVector;
+        	}
         }
         else if(key instanceof Functor)
         {

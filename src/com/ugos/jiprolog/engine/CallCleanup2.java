@@ -97,6 +97,6 @@ public class CallCleanup2 extends Call1 {
 	@Override
 	public boolean hasMoreChoicePoints()
 	{
-		return wam != null && !wam.isClosed();//true;//m_goal1 == null || m_goal2 == null;
+		return wam != null && !wam.isClosed() && wam.hasMoreChoicePoints();//true;//m_goal1 == null || m_goal2 == null;
 	}
 }

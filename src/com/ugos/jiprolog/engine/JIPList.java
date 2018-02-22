@@ -178,7 +178,7 @@ public class JIPList extends JIPTerm
      */
     public final boolean isNIL()
     {
-        return getTerm() == List.NIL;
+        return ((List)getTerm()).isNil();
     }
 
     /** Returns true if this cons object is a partial cons list.<br>

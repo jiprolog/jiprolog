@@ -129,7 +129,7 @@ class List extends ConsCell
 
     public final ConsCell getConsCell()
     {
-        if(this == List.NIL)
+        if(this.isNil())
             return ConsCell.NIL;
 
         if(m_tail == null)

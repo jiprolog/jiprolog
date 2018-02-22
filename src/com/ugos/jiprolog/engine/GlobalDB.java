@@ -821,7 +821,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         {
             //System.out.println("ConsCell");
 
-            if(term == List.NIL)
+            if(((List)term).isNil())
                 return term;
             else
                 return new List(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail()));
@@ -842,7 +842,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
         }
         else if (term instanceof ConsCell)
         {
-            if(term == ConsCell.NIL)
+            if(((ConsCell)term).isNil())
                 return term;
             else
                 return new ConsCell(fixTerm(((ConsCell)term).getHead()), fixTerm(((ConsCell)term).getTail()));

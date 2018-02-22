@@ -206,7 +206,7 @@ class ConsCell extends PrologObject //implements Serializable
 
     public final boolean isNil()
     {
-        return this == List.NIL;
+        return this == List.NIL || m_head == null && m_tail == null;
     }
 
     public final void clear()
@@ -409,7 +409,7 @@ class ConsCell extends PrologObject //implements Serializable
 	            }
         	}
         }
-        else if(obj == null && this == ConsCell.NIL)
+        else if(obj == null && this.isNil())
         	return true;
 
 
@@ -456,7 +456,7 @@ class ConsCell extends PrologObject //implements Serializable
 	            }
 //        	}
         }
-        else if(obj instanceof Atom && this == List.NIL)
+        else if(obj instanceof Atom && this.isNil())
 		{
         	return true;
 		}

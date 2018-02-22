@@ -129,7 +129,8 @@ class Load1 extends Consult1
         {
             try
             {
-                ins.close();
+            	if(ins != null)
+            		ins.close();
             }
             catch(IOException ex1){}
 
@@ -140,7 +141,8 @@ class Load1 extends Consult1
         {
         	try
             {
-                ins.close();
+        		if(ins != null)
+        			ins.close();
             }
             catch(IOException ex1){}
 

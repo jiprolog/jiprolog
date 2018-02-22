@@ -39,7 +39,7 @@ class NotIndexedDefaultClausesDatabase extends DefaultClausesDatabase
     public synchronized boolean addClauseAtFirst(final JIPClause clause)
     {
         m_clausesVector.add(0, (Clause)clause.getTerm());
-        if(getArity() > 0 && m_clausesVector.size() > 2)
+        if(getArity() > 0 && m_clausesVector.size() > 1)
         	m_gdb.makeIndexed(this);
 
         return true;
@@ -48,7 +48,7 @@ class NotIndexedDefaultClausesDatabase extends DefaultClausesDatabase
     public synchronized boolean addClause(final JIPClause clause)
     {
         m_clausesVector.add((Clause)clause.getTerm());
-        if(getArity() > 0 && m_clausesVector.size() > 2)
+        if(getArity() > 0 && m_clausesVector.size() > 1)
         	m_gdb.makeIndexed(this);
 
         return true;

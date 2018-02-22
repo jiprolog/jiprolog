@@ -76,6 +76,10 @@ final class PrettyPrinter extends Object
         {
             printVariable(obj, opManager, bQ, varTable, sb);
         }
+        else if(obj == null)
+        {
+        	sb.append("");
+        }
         else
         {
             throw new JIPRuntimeException("Invalid type cannot be printed");//return "";
