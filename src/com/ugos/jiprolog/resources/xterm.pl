@@ -169,7 +169,7 @@ atom_number(Atom, Number) :-
 	catch(number_codes(Number, Codes), _, fail).
 atom_number(Atom, Number) :-
 	number(Number),
-	number_codes(Number, Codes),
+	'$number_codes'(Number, Codes),
 	'$atom_codes'(Atom, Codes).
 
 
