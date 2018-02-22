@@ -241,13 +241,13 @@ sub_atom(Atom, Before, Length, After, SubAtom):-
 	;	nonvar(Before), nonvar(After)
 	;	nonvar(Length), nonvar(After)
 	),
-	% the other error conditions are checked by the calls to atom_length/2
+	% the other error conditions are checked by the calls to length/2
 	!,
-	atom_length(SubAtom, Length),
+	length(SubAtom, Length),
 	atom_concat(Prefix, Suffix, Atom),
 	atom_concat(SubAtom, AfterAtom, Suffix),
-	atom_length(Prefix, Before),
-	atom_length(AfterAtom, After),
+	length(Prefix, Before),
+	length(AfterAtom, After),
 	!.
 
 sub_atom(Atom, Before, Length, After, SubAtom):-
@@ -256,24 +256,24 @@ sub_atom(Atom, Before, Length, After, SubAtom):-
 	;	nonvar(Before), nonvar(After)
 	;	nonvar(Length), nonvar(After)
 	),
-	% the other error conditions are checked by the calls to atom_length/2
+	% the other error conditions are checked by the calls to length/2
 	!,
 	atom_concat(Prefix, Suffix, Atom),
 	atom_concat(SubAtom, AfterAtom, Suffix),
-	atom_length(SubAtom, Length),
-	atom_length(Prefix, Before),
-	atom_length(AfterAtom, After),
+	length(SubAtom, Length),
+	length(Prefix, Before),
+	length(AfterAtom, After),
 	!.
 
 sub_atom(Atom, Before, Length, After, SubAtom):-
 	atom(Atom), (var(SubAtom); atom(SubAtom)),
-	% the other error conditions are checked by the calls to atom_length/2
+	% the other error conditions are checked by the calls to length/2
 	!,
 	atom_concat(Prefix, Suffix, Atom),
 	atom_concat(SubAtom, AfterAtom, Suffix),
-	atom_length(SubAtom, Length),
-	atom_length(Prefix, Before),
-	atom_length(AfterAtom, After).
+	length(SubAtom, Length),
+	length(Prefix, Before),
+	length(AfterAtom, After).
 
 sub_atom(Atom, _, _, _, _):-
 	var(Atom),
