@@ -184,6 +184,26 @@ atom_concat(Atom1, Atom2, Concat):-
     !.
 
 atom_concat(Atom1, Atom2, Concat):-
+    (atom(Atom1) ; number(Atom1)),
+    (atom(Concat) ; number(Concat)),
+    !,
+    atom_chars(Concat, CConcat),
+    append(CAtom1, CAtom2, CConcat),
+    atom_chars(Atom1, CAtom1),
+    atom_chars(Atom2, CAtom2),
+	!.
+
+atom_concat(Atom1, Atom2, Concat):-
+    (atom(Atom2) ; number(Atom2)),
+    (atom(Concat) ; number(Concat)),
+    !,
+    atom_chars(Concat, CConcat),
+    append(CAtom1, CAtom2, CConcat),
+    atom_chars(Atom1, CAtom1),
+    atom_chars(Atom2, CAtom2),
+	!.
+
+atom_concat(Atom1, Atom2, Concat):-
     (atom(Concat) ; number(Concat)),
     !,
     atom_chars(Concat, CConcat),
