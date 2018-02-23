@@ -89,13 +89,8 @@
 open(File, Mode, _, Options):-
 	(	var(File)
 	;	var(Mode)
-	;	var(Options)
+	;	\+ ground(Options)
 	),
-	error(instantiation_error).
-
-open(_, _, _, Options):-
-	member(Option, Options),
-	\+ ground(Option),
 	error(instantiation_error).
 
 open(_, Mode, _, _):-
@@ -127,7 +122,7 @@ open(_, _, _, Options):-
 	error(permission_error(open,source_sink,alias(Alias))).
 
 open(File, Mode, Handle, Options):-
-    jipxio:'$open'(File, Mode, Handle),
+    jipxio:'$open'(Mode, File, Handle),
     set_stream_properties(Handle, Options).
 
 
@@ -164,13 +159,13 @@ valid_open_option(encoding(Encoding)) :-
 	;	Encoding == 'US-ASCII'
 	).
 
-'$open'(File, write, Handle):-
+'$open'(write, File, Handle):-
     tell(File, Handle).
 
-'$open'(File, read, Handle):-
+'$open'(read, File, Handle):-
     see(File, Handle).
 
-'$open'(File, append, Handle):-
+'$open'(append, File, Handle):-
     append(File, Handle).
 
 
@@ -825,7 +820,7 @@ set_stream_property(Handle, Prop):-
 
 set_stream_properties(Handle, []):-!.
 set_stream_properties(Handle, [Prop|Rest]):-
-	set_stream_property(Handle, Prop),
+	'$stream_property'(set, Handle, Prop),
     set_stream_properties(Handle, Rest).
 
 
