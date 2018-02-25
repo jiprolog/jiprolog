@@ -58,7 +58,7 @@ public class Catch3 extends Call1
             		{
             			if(curNode.m_varTbl != null)
             			{
-	                        Enumeration en = curNode.m_varTbl.keys();
+	                        Enumeration<?> en = curNode.m_varTbl.keys();
 	                        while(en.hasMoreElements())
 	                            ((Clearable)en.nextElement()).clear();
             			}
@@ -83,32 +83,6 @@ public class Catch3 extends Call1
 			{
 				return Catch3.this;
 			}
-			
-//			public WAM.Node notifyException(JIPRuntimeException ex)
-//			{
-//				if(catcher.unify(ex.exceptionTerm, varsTbl))
-//				{
-//					WAM.Node curNode = wam.m_curNode;
-//					while(curNode != thisNode)
-//            		{
-//            			if(curNode.m_varTbl != null)
-//            			{
-//	                        Enumeration en = curNode.m_varTbl.keys();
-//	                        while(en.hasMoreElements())
-//	                            ((Clearable)en.nextElement()).clear();
-//            			}
-//
-//	            		// call precedente
-//	                    curNode = curNode.m_previous;
-//            		}
-//
-//					WAM.Node node = new Node(new ConsCell(handler, null), null, thisNode, thisNode.m_strModule);
-//foo(X) :-	Y is X * 2, throw(test(Y)).
-//					return node;
-//				}
-//				else
-//					return null;
-//			}
 		});
 
 		isExceptionAdded = true;
