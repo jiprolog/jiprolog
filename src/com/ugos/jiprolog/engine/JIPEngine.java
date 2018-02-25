@@ -49,7 +49,7 @@ import com.ugos.util.JARClassProvider;
  */
 public class JIPEngine implements Serializable
 {
-    private final static long serialVersionUID = 300000001L;
+    private final static long serialVersionUID = 310000001L;
 
     // resource path
     static final String RESOURCEPATH = "/com/ugos/jiprolog/resources/";
@@ -95,21 +95,21 @@ public class JIPEngine implements Serializable
      */
     public static final String getInfo()
     {
-        return new StringBuilder("JIProlog v").append(VERSION).append(" Copyright (c) 1999-2018 By Ugo Chirico - http://www.jiprolog.com. All Right Reserved").toString();
+        return new StringBuilder("JIProlog v").append(VERSION).append(getCopyrightInfo()+ " - http://www.jiprolog.com").toString();
     }
 
     /** Returns Copyright
      */
     public static final String getCopyrightInfo()
     {
-        return "Copyright (c) 1999-2018 By Ugo Chirico - http://www.jiprolog.com. All Rights Reserved";
+        return "Copyright (c) 1999-2018 By Ugo Chirico. All Rights Reserved";
     }
 
     /** Returns JIProlog license info
      */
     public static final String getLicenseInfo()
     {
-        return "JIProlog is released under AGPL v3 or under Commercial License. Visit www.jiprolog.com for more info";
+        return "JIProlog is released under AGPL v3 or under Commercial License. Visit http://www.jiprolog.com for more info";
     }
 
     static JIPEngine getDefaultEngine()
@@ -417,7 +417,7 @@ public class JIPEngine implements Serializable
      */
     public synchronized final void setSearchPath(final String strSearchPath) throws IOException
     {
-        m_strSearchPath = SearchPath1.getValidSearchPath(strSearchPath, "");
+        m_strSearchPath = SearchPath1.getValidSearchPath(strSearchPath, "");  
     }
 
     /** returns the search path of this instance of JIPEngine.
