@@ -90,11 +90,14 @@ final class Variable extends PrologObject//Serializable
     
     public final Variable rootVariable()
     {
+//    	System.out.println("----------");
+//    	System.out.println("" + m_nTimestamp);
+    	
         Variable var = this;
         PrologObject obj = parent;
-        while(obj instanceof Variable && obj != this)
+        while(obj instanceof Variable && obj != this)// && ((Variable)obj).parent != var)// && ((Variable)obj).parent != parent)
         {
-//        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
+//        	System.out.println(((Variable)obj).m_nTimestamp);
             var = (Variable)obj;
             obj = var.parent;
         }
@@ -255,8 +258,7 @@ final class Variable extends PrologObject//Serializable
                         if(objVar != var)
                         {
                             var.m_object = obj;
-                            ((Variable)obj).parent = var;
-//                            ((Variable)obj).rootVariable().parent = var;
+                            ((Variable)obj).setParent(var);                           
                             
                         }
                     }
@@ -273,6 +275,19 @@ final class Variable extends PrologObject//Serializable
          }
     }
 
+    private void setParent(Variable parent)
+    {    	
+        PrologObject obj = parent;
+        while(obj instanceof Variable && obj != this)
+        {
+//        	System.out.println(((Variable)obj).m_nTimestamp);            
+            obj = ((Variable)obj).parent;
+        }
+        
+        if(obj == null)
+        	this.parent = parent;
+    }
+    
     public final void clear()
     {
         m_object = null;
