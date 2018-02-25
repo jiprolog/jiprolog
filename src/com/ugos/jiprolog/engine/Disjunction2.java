@@ -41,10 +41,11 @@ public class Disjunction2 extends Call1 {
 			}
 
 			m_goal2 = goal = getGoal(goal2);
+			
+			end = true;
 		}
 		else
-		{
-			end = true;
+		{			
 			return false;
 		}
 
