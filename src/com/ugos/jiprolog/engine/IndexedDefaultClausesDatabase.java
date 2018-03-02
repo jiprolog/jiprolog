@@ -49,9 +49,8 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
     @Override
     public void setIndex(int index)
     {
-    	// TODO
+    	// TODO for indexing by other args
     	//reindex all
-//    	if(m_clausesVector.size()>0)
     }
 
     public final synchronized boolean addClauseAtFirst(final JIPClause jipclause)
@@ -67,20 +66,6 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         	// variable
         	addClauseWithVariable(clause, true);
         }
-//	        else if(key instanceof PString)
-//	        {
-//	        	if(m_clausesTable.containsKey(key))
-//		        {
-//		        	m_clausesTable.get(key).add(0, clause);
-//		        }
-//	        	else
-//	        	{
-//		        	Vector<Clause> clauseVector = new Vector<Clause>();
-//		        	m_clausesTable.put(key, clauseVector);
-//		        	clauseVector.add(clause);
-//		        	addVariablesToVector(clauseVector);
-//	        	}
-//	        }
         else if(key instanceof List)
         {
         	if(((List)key).isNil())
@@ -172,20 +157,6 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         	// variable
         	addClauseWithVariable(clause, false);
         }
-//	        else if(key instanceof PString)
-//	        {
-//	        	if(m_clausesTable.containsKey(key))
-//		        {
-//		        	m_clausesTable.get(key).add(clause);
-//		        }
-//	        	else
-//	        	{
-//		        	Vector<Clause> clauseVector = new Vector<Clause>();
-//		        	m_clausesTable.put(key, clauseVector);
-//		        	addVariablesToVector(clauseVector);
-//		        	clauseVector.add(clause);
-//	        	}
-//	        }
         else if(key instanceof List)
         {
 //        	System.out.println("add LIST " + key);
@@ -410,17 +381,6 @@ final class IndexedDefaultClausesDatabase extends DefaultClausesDatabase
         {
         	clausesVector = m_clausesVector;
         }
-//	        else if(key instanceof PString)
-//	        {
-//		        if(m_clausesTable.containsKey(key))
-//		        {
-//		        	clausesVector = m_clausesTable.get(key);
-//		        }
-//		        else
-//		        {
-//		        	clausesVector = m_clausesVarVector;
-//		        }
-//	        }
         else if(key instanceof List)
         {
         	if(((List)key).isNil())
