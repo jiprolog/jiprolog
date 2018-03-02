@@ -95,7 +95,7 @@ final class Variable extends PrologObject//Serializable
     	
         Variable var = this;
         PrologObject obj = parent;
-        while(obj instanceof Variable && obj != this)// && ((Variable)obj).parent != var)// && ((Variable)obj).parent != parent)
+        while(obj instanceof Variable && obj != this)
         {
 //        	System.out.println(((Variable)obj).m_nTimestamp);
             var = (Variable)obj;
@@ -107,25 +107,22 @@ final class Variable extends PrologObject//Serializable
 
     public long timestamp()
     {
-//    	return m_nTimestamp;
+//    	return rootVariable().m_nTimestamp;
     	
-    	return rootVariable().m_nTimestamp;
-//    	return lastVariable().m_nTimestamp;
+    	long timestamp = m_nTimestamp;
     	
-//    	long timestamp = m_nTimestamp;
-//    	
-//    	Variable var = this;
-//        PrologObject obj = m_object;
-//        while(obj instanceof Variable)
-//        {
-////        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
-//            var = (Variable)obj;
-//            if(var.m_nTimestamp < timestamp)
-//            	timestamp = var.m_nTimestamp; 
-//            obj = var.m_object;
-//        }
-//        
-//        return timestamp;
+    	Variable var = this;
+        PrologObject obj = parent;
+        while(obj instanceof Variable && obj != this)
+        {
+//        	System.out.println(((Variable)obj).getName() + " " + ((Variable)obj).hashCode());
+            var = (Variable)obj;
+            if(var.m_nTimestamp < timestamp)
+            	timestamp = var.m_nTimestamp; 
+            obj = var.parent;
+        }
+        
+        return timestamp;
     }
     
 //    public final Variable root()
