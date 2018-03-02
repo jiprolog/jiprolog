@@ -232,8 +232,6 @@ check_operator_name(Term, Priority, Specifier) :-
 
 '$system':halt :- halt(0).
 
-'$system':assertz(X) :-assert(X).
-
 '$system': <!.
 
 '$system':'C'([Terminal|Rest], Terminal, Rest).
