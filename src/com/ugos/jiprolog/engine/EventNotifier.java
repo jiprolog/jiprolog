@@ -77,7 +77,7 @@ class EventNotifier extends Object implements Runnable
 
     public final synchronized void removeTraceListener(final JIPTraceListener listener)
     {
-        if(!m_TraceListenerVect.contains(listener))
+        if(m_TraceListenerVect.contains(listener))
             m_TraceListenerVect.removeElement(listener);
     }
 
