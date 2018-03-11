@@ -30,7 +30,7 @@ public class CallCleanup2 extends Call1 {
 				goal1 = ((Variable)goal1).getObject();
 			}
 
-			m_cleanupGoal = getGoal(goal1);
+			m_cleanupGoal = getGoal(goal1).copy(true);
 		}
 
 		boolean solution = false;
@@ -44,7 +44,7 @@ public class CallCleanup2 extends Call1 {
 				solution = wam.query(m_goal);
 				if(solution)
 				{
-					getParam(1).unify(m_goal, varsTbl);
+					getParam(1).unify(m_goal.copy(true), varsTbl);
 
 					if(wam.hasMoreChoicePoints())
 						return true;
@@ -62,7 +62,7 @@ public class CallCleanup2 extends Call1 {
 				solution = wam.nextSolution();
 				if(solution)
 				{
-					getParam(1).unify(m_goal, varsTbl);
+					getParam(1).unify(m_goal.copy(true), varsTbl);
 					if(wam.hasMoreChoicePoints())
 						return true;
 				}
@@ -74,7 +74,7 @@ public class CallCleanup2 extends Call1 {
 			}
 		}
 
-		callCleanup();
+		callCleanup(varsTbl);
 
 		if(exception != null)
 			throw exception;
@@ -82,11 +82,16 @@ public class CallCleanup2 extends Call1 {
 			return solution;
 	}
 
-	private void callCleanup()
+	private void callCleanup(Hashtable<Variable, Variable> varsTbl)
 	{
 		wam.closeQuery();
 
-		wam.query(new Functor("once/1", new ConsCell(m_cleanupGoal, null)));
+		boolean solution = wam.query(new Functor("once/1", new ConsCell(m_cleanupGoal, null)));
+
+		if(solution)
+		{
+			getParam(2).unify(m_cleanupGoal.copy(true), varsTbl);
+		}
 
 		wam.closeQuery();
 
