@@ -201,6 +201,44 @@ class Functor extends ConsCell
         return false;
     }
     
+    @Override
+    public boolean termEquals(PrologObject obj)
+    {
+    	if(obj instanceof Variable)
+        {
+            if(((Variable)obj).isBounded())
+                obj = ((Variable)obj).getObject();
+            else
+            	return false;
+        }
+
+        if(obj instanceof Functor)
+        {
+        	int h1 = getArity();
+        	int h2 = ((Functor)obj).getArity();
+        	if(h1 != h2)
+        	{
+        		return false;
+        	}
+        	else 
+        	{        		
+        		if (m_strFriendlyName.equals(((Functor) obj).m_strFriendlyName))
+	            {
+		            if(m_tail != null)
+		            {
+		            	return ((ConsCell)obj).m_tail != null && m_tail.termEquals(((ConsCell)obj).m_tail);
+		            }
+		            else
+		            {
+		            	return (((ConsCell)obj).m_tail == null || (((ConsCell)obj).m_tail.termEquals(List.NIL)));
+		            }
+	            }        		
+        	}
+        }
+        
+        return false;
+    }
+    
     public Functor getPredicateIndicator()
     {
     	return getPredicateIndicator(getName());
@@ -241,10 +279,4 @@ class Functor extends ConsCell
 
         return new RulesEnumeration(this, wam.moduleStack, wam.m_globalDB);
 	}
-
-//	@Override
-//	public int hashCode() {
-//		return m_head.hashCode();
-//	}
-
 }
