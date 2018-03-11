@@ -380,6 +380,7 @@ class ConsCell extends PrologObject //implements Serializable
     	return isClosedOrPartial(this);
     }
 
+   
     @Override
     public boolean termEquals(PrologObject obj)
     {
@@ -415,7 +416,7 @@ class ConsCell extends PrologObject //implements Serializable
 
         return false;
     }
-
+    
     protected boolean lessThen(PrologObject obj)
     {
     	if(obj instanceof Variable)
@@ -428,41 +429,44 @@ class ConsCell extends PrologObject //implements Serializable
 
         if(obj instanceof ConsCell)
         {
-//        	int h1 = getHeight();
-//        	int h2 = ((ConsCell)obj).getHeight();
-//        	if(h1 < h2)
-//        	{
-//        		return true;
-//        	}
-//        	else if(h1 == h2)
-//        	{
-	            if(m_head == null)
-	                return false;
+            if(m_head == null)
+                return false;
 
-	            if(m_head.lessThen(((ConsCell)obj).m_head))
+            if(m_head.lessThen(((ConsCell)obj).m_head))
+            {
+//            	System.out.println(this + " is lessthen " + obj);
+            	return true;
+            }
+            else if (m_head.termEquals(((ConsCell)obj).m_head))
+            {
+	            if(m_tail != null)
 	            {
-	            	return true;
+	            	return ((ConsCell)obj).m_tail != null && m_tail.lessThen(((ConsCell)obj).m_tail);
+	            	
+//	            	boolean b = ((ConsCell)obj).m_tail != null && m_tail.lessThen(((ConsCell)obj).m_tail);
+//	            	
+//	            	if(b)
+//	            		System.out.println(this + " is lessthen " + obj);
+//	            	else
+//	            		System.out.println(this + " is not lessthen " + obj);
 	            }
-	            else if (m_head.termEquals(((ConsCell)obj).m_head))
+	            else
 	            {
-		            if(m_tail != null)
-		            {
-		            	return ((ConsCell)obj).m_tail != null && m_tail.lessThen(((ConsCell)obj).m_tail);
-		            }
-		            else
-		            {
-		            	return (((ConsCell)obj).m_tail != null);
-		            }
+	            	return (((ConsCell)obj).m_tail != null);
+	            	
+//	            	boolean b = (((ConsCell)obj).m_tail != null);
+//	            	
+//	            	if(b)
+//	            		System.out.println(this + " is lessthen " + obj);
+//	            	else
+//	            		System.out.println(this + " is not lessthen " + obj);
 	            }
-//        	}
+            }
         }
         else if(obj instanceof Atom && this.isNil())
 		{
         	return true;
 		}
-//        else if(obj instanceof Variable)
-//            if(((Variable)obj).isBounded())
-//                return lessThen(((Variable)obj).getObject());
 
         return false;
     }
