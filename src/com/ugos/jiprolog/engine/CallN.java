@@ -11,7 +11,7 @@ import java.util.Hashtable;
  */
 public class CallN extends BuiltIn {
 
-	WAM wam;
+//	WAM wam;
 
 	@Override
 	public boolean unify(Hashtable<Variable, Variable> varsTbl)
@@ -131,16 +131,7 @@ public class CallN extends BuiltIn {
 
 	@Override
 	public boolean hasMoreChoicePoints() {
-		return wam != null;
+		return false;//wam != null;
 	}
-
-	private final WAM getNewWAM()
-    {
-		WAM wam = getWAM();
-        if(wam instanceof WAMTrace)
-            return new WAMTrace((WAMTrace)wam);
-        else
-            return new WAM(wam);
-    }
 
 }
