@@ -11,8 +11,6 @@ import java.util.Hashtable;
  */
 public class CallN extends BuiltIn {
 
-//	WAM wam;
-
 	@Override
 	public boolean unify(Hashtable<Variable, Variable> varsTbl)
 	{
@@ -95,32 +93,6 @@ public class CallN extends BuiltIn {
 			throw new JIPTypeException(JIPTypeException.CALLABLE, closure);
 		}
 
-//		if(wam == null)
-//		{
-//			wam = getNewWAM();
-//			if(wam.query(goal))
-//				return true;
-//			else
-//			{
-//				wam.closeQuery();
-//				wam = null;
-//			}
-//		}
-//		else
-//		{
-//			if(wam.nextSolution())
-//				return true;
-//			else
-//			{
-//				wam.closeQuery();
-//				wam = null;
-//			}
-//
-//		}
-//
-//		return false;
-
-
         // estrae il nodo corrente
         final WAM.Node curNode = getWAM().getCurNode();
 
@@ -131,7 +103,7 @@ public class CallN extends BuiltIn {
 
 	@Override
 	public boolean hasMoreChoicePoints() {
-		return false;//wam != null;
+		return false;
 	}
 
 }
