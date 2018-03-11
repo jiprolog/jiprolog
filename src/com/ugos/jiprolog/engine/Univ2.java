@@ -70,8 +70,8 @@ final class Univ2 extends BuiltIn
                     else
                     {
                         params = getRealTerm(params);
-
-                        if(((ConsCell)params).isPartial())
+                      	
+                        if(params == null || ((ConsCell)params).isPartial())
                         {
                             // caso X =.. [a|Y].
 							throw new JIPInstantiationException(2);

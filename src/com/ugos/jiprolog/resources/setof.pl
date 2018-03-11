@@ -95,9 +95,9 @@ bagof(Template, Generator, Bag) :-
 	functor(Key, ., N),
 	save_instances(Key-Template, Generator),
 	list_instances(Key, N, [], OmniumGatherum),
-%	write(OmniumGatherum), nl,
+%	write('OmniumGatherum'-OmniumGatherum), nl,
 	keysort(OmniumGatherum, Gamut), !,
-%	write(Gamut), nl,
+%	write('Gamut'-Gamut), nl,
 	concordant_subset(Gamut, Key, Answer),
 %	write(Answer), nl,
 	Bag = Answer.

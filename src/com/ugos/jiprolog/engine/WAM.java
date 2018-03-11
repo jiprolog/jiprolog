@@ -163,15 +163,6 @@ class WAM
         // backtrack
         m_lastNode = backtrack(m_lastNode);
         return m_lastNode != null;// && m_lastNode != m_rootNode;
-
-//        if(m_lastNode != null)
-//        {
-//            System.out.println("hasMoreChoicePoints " + m_lastNode.getGoal());
-//
-//            return m_lastNode.m_ruleen.isNextUnifiable(m_lastNode.getGoal());
-//        }
-//
-//        return false;
     }
 
     boolean nextSolution()
@@ -359,7 +350,7 @@ class WAM
         Hashtable   varTbl = null;
         Node        newNode = null;
         Node        parentNode;
-        int         nCallCount = m_nBaseCounter;
+//        int         nCallCount = m_nBaseCounter;
 
         try
         {
@@ -406,8 +397,8 @@ class WAM
 	                    }
 	                }
 
-	                nCallCount++;
-	                curNode.m_nLevel = nCallCount;
+	                m_nBaseCounter++;
+	                curNode.m_nLevel = m_nBaseCounter;
 
 	                varTbl = new Hashtable(13); // imposta l'hashtable per le variabili
 
