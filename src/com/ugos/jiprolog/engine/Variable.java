@@ -300,27 +300,9 @@ final class Variable extends PrologObject//Serializable
                 if(((Variable)obj).isBounded())
                     return true;
                 else
-                {
-//                	System.out.println("lessThen");
-//                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
-//                	return root().getName().compareTo(((Variable)obj).root().getName()) < 0;
-//                	return root().m_address < ((Variable)obj).root().m_address;
-//                	return root().toString().compareTo(((Variable)obj).root().toString()) < 0;
-//                	return lastVariable().hashCode() < ((Variable)obj).lastVariable().hashCode();
-//                	
-                	return timestamp() < ((Variable)obj).timestamp();
-                	
-//                	return lastVariable().m_nTimestamp < ((Variable)obj).lastVariable().m_nTimestamp;
-                	
-                	
-//                	return lastVariable().m_address < ((Variable)obj).lastVariable().m_address;
+                	return lastVariable().timestamp() < ((Variable)obj).lastVariable().timestamp();
+//                	return timestamp() < ((Variable)obj).timestamp();
 
-                	//                	return lastVariable().getName().compareTo(((Variable)obj).lastVariable().getName()) < 0;
-                    //return m_nAddress < ((Variable)obj).m_nAddress;
-//                    return getAddress() < ((Variable)obj).getAddress();
-//                	return hashCode() < ((Variable)obj).hashCode();
-//                	return getName().compareTo(((Variable)obj).getName()) < 0;
-                }
         return true;
     }
 
@@ -348,7 +330,7 @@ final class Variable extends PrologObject//Serializable
     			return false;
     		else
     		{
-    			return timestamp() == ((Variable)obj).timestamp();
+    			return lastVariable().timestamp() == ((Variable)obj).lastVariable().timestamp();
     			
     		}
         }

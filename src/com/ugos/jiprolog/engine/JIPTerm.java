@@ -174,6 +174,52 @@ public class JIPTerm extends Object implements Clearable, Serializable, Cloneabl
         return vars;
     }
 
+    public final JIPVariable[] getUnboundedVariables()
+    {
+        JIPVariable[] vars;
+
+        if(m_obj instanceof Atom || m_obj instanceof Expression || m_obj instanceof PString)
+        {
+            vars = new JIPVariable[0] ;
+        }
+        else if(m_obj instanceof Variable)
+        {
+        	if(!((Variable)m_obj).isBounded())
+        	{
+	            vars = new JIPVariable[1];
+	            vars[0] = new JIPVariable((Variable)m_obj);
+        	}
+        	else
+        	{
+        		vars = new JIPVariable[0] ;
+        	}
+        		
+        }
+        else
+        {
+            m_varsVect = new Vector(5,2);
+            final ConsCell cell = (ConsCell)m_obj;
+            extractUnboundedVariable(cell);
+
+            vars = new JIPVariable[m_varsVect.size()];
+
+            final Enumeration en = m_varsVect.elements();
+
+            //int i = m_varsVect.size();
+            int i = 0;
+            while (en.hasMoreElements())
+            {
+                final Variable var = (Variable)en.nextElement();
+                vars[i] = new JIPVariable(var);
+                i++;
+            }
+        }
+
+        return vars;
+    }
+    
+    
+    
     /**
      * Gets an hashtable of JIPVariable objects containing the variables in this JIPTerm object.<br>
      * Variable names are the keys to access to the hashtable.
@@ -205,13 +251,30 @@ public class JIPTerm extends Object implements Clearable, Serializable, Cloneabl
             extractVariable(((ConsCell)term).getTail());
         }
         else if(term instanceof Variable)
+        {   
+            if(!m_varsVect.contains(term))
+                m_varsVect.addElement(term);
+        }
+    }
+    
+    private final void extractUnboundedVariable(final PrologObject term)
+    {
+        if(term instanceof ConsCell)
         {
-            //final String strVar = ((Variable)term).getName();
-//            if (!((Variable)term).isShadow())
-//            {
-                if(!m_varsVect.contains(term))
-                    m_varsVect.addElement(term);
-//            }
+        	extractUnboundedVariable(((ConsCell)term).getHead());
+        	extractUnboundedVariable(((ConsCell)term).getTail());
+        }
+        else if(term instanceof Variable)
+        {   
+        	if(((Variable)term).isBounded())
+        	{
+        		extractUnboundedVariable(((Variable)term).getObject());
+        	}
+        	else
+        	{
+        		if(!m_varsVect.contains(term))
+        			m_varsVect.addElement(term);
+        	}
         }
     }
 

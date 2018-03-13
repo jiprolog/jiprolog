@@ -61,16 +61,13 @@ public class Numbervars3 extends JIPXCall
         }
 
         int nCount = 0;
-        JIPVariable vars[] = term.getVariables();
+        JIPVariable vars[] = term.getUnboundedVariables();
 
         for(int i = 0; i < vars.length; i++)
         {
-            if(!vars[i].isBounded())
-            {
-                vars[i].unify(JIPFunctor.create("$VAR", JIPCons.create(JIPNumber.create(nCount + nStart), null)), varsTbl);
-                nCount++;
-            }
-        }
+            vars[i].unify(JIPFunctor.create("$VAR", JIPCons.create(JIPNumber.create(nCount + nStart), null)), varsTbl);
+            nCount++;            
+        } 
 
         return end.unify(JIPNumber.create(nStart + nCount), varsTbl);
     }
