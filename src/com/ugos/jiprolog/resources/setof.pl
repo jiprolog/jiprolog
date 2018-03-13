@@ -1,8 +1,13 @@
+%   Based on:
+%
 %   File   : setof.PL
 %   Author : R.A.O'Keefe
 %   Updated: 17 November 1983
 %   Purpose: define setof/3, bagof/3, findall/3, and findall/4
 %   Needs  : Not.Pl
+%
+%   Modified by Paulo Moura in March 12, 2018 to use findall/3
+%   for the general case
 
 /*  This file defines two predicates which act like setof/3 and bagof/3.
     I have seen the code for these routines in Dec-10 and in C-Prolog,
@@ -32,11 +37,6 @@
     you got a very strange answer!  Now fixed, at a price.
 */
 
-:- module(jipxsetof,
-    [ findall/3,		%   Same effect as C&M p152
-	  findall/4,		%   A variant I have found very useful
-	  bagof/3,			%   Like bagof (Dec-10 manual p52)
-	  setof/3]).		%   Like setof (Dec-10 manual p51)
 
 %   findall(Template, Generator, List)
 %   is a special case of bagof, where all free variables in the
@@ -92,111 +92,15 @@ bagof(Template, Generator, Bag) :-
 	Vars \== [],
 	!,
 	Key =.. [.|Vars],
-	functor(Key, ., N),
-	save_instances(Key-Template, Generator),
-	list_instances(Key, N, [], OmniumGatherum),
-%	write('OmniumGatherum'-OmniumGatherum), nl,
+	findall(Key-Template, Generator, OmniumGatherum),
 	keysort(OmniumGatherum, Gamut), !,
-%	write('Gamut'-Gamut), nl,
 	concordant_subset(Gamut, Key, Answer),
-%	write(Answer), nl,
 	Bag = Answer.
 
 bagof(Template, Generator, Bag) :-
 	findall(Template, Generator, Bag0),
 	Bag0 \== [],
 	Bag = Bag0.
-
-%bagof(Template, Generator, Bag) :-
-%	save_instances(Template, Generator),
-%	list_instances([], Bag),
-%	Bag \== [].
-
-
-
-%   save_instances(Template, Generator)
-%   enumerates all provable instances of the Generator and records the
-%   associated Template instances.  Neither argument ends up changed.
-
-save_instances(Template, Generator) :-
-	recorda(-),
-	call(Generator),
-	recorda(Template),
-	fail.
-
-save_instances(_, _).
-
-
-%   list_instances(SoFar, Total)
-%   pulls all the -Template instances out of the data base until it
-%   hits the - marker, and puts them on the front of the accumulator
-%   SoFar.  This routine is used by findall/3-4 and by bagof when
-%   the Generator has no free variables.
-
-list_instances(SoFar, Total) :-
-	recorded(Term),
-	!,		%   must not backtrack
-	list_instances(Term, SoFar, Total).
-
-
-list_instances(Term, SoFar, Total) :-
-	Term == (-),
-	!,
-	Total = SoFar.		%   = delayed in case Total was bound
-
-list_instances(Template, SoFar, Total) :-
-	list_instances([Template|SoFar], Total).
-
-
-
-%   list_instances(Key, NVars, BagIn, BagOut)
-%   pulls all the Key-Template instances out of the data base until
-%   it hits the - marker.  The Generator should not touch recordx(.,_,_).
-%   Note that asserting something into the data base and pulling it out
-%   again renames all the variables; to counteract this we use replace_
-%   key_variables to put the old variables back.  Fortunately if we
-%   bind X=Y, the newer variable will be bound to the older, and the
-%   original key variables are guaranteed to be older than the new ones.
-%   This replacement must be done @i<before> the keysort.
-
-list_instances(Key, NVars, OldBag, NewBag) :-
-	recorded(Term),
-	!,		%  must not backtrack!
-	list_instances(Term, Key, NVars, OldBag, NewBag).
-
-
-list_instances(Term, _, _, AnsBag, AnsBag) :-
-	Term == (-),
-	!.
-list_instances(NewKey-Term, Key, NVars, OldBag, NewBag) :-
-	replace_key_variables(NVars, Key, NewKey), !,
-	list_instances(Key, NVars, [NewKey-Term|OldBag], NewBag).
-
-
-
-%   There is a bug in the compiled version of arg in Dec-10 Prolog,
-%   hence the rather strange code.  Only two calls on arg are needed
-%   in Dec-10 interpreted Prolog or C-Prolog.
-
-replace_key_variables(0, _, _) :- !.
-replace_key_variables(N, OldKey, NewKey) :-
-	arg(N, NewKey, Arg),
-	nonvar(Arg), !,
-	M is N-1,
-	replace_key_variables(M, OldKey, NewKey).
-
-replace_key_variables(N, OldKey, NewKey) :-
-	arg(N, OldKey, OldVar),
-	arg(N, NewKey, OldVar),
-	M is N-1,
-	replace_key_variables(M, OldKey, NewKey).
-
-
-
-%   concordant_subset([Key-Val list], Key, [Val list]).
-%   takes a list of Key-Val pairs which has been keysorted to bring
-%   all the identical keys together, and enumerates each different
-%   Key and the corresponding lists of values.
 
 concordant_subset([Key-Val|Rest], Clavis, Answer) :-
 	concordant_subset(Rest, Key, List, More),
@@ -209,18 +113,14 @@ concordant_subset([Key-Val|Rest], Clavis, Answer) :-
 %   left-over pairs, if any, as More.
 
 concordant_subset([Key-Val|Rest], Clavis, List, More) :-
-%	write(key), nl, write(Key), nl,
-%	write(clavis), nl, write(Clavis), nl,
 	subsumes_term(Key, Clavis),
 	subsumes_term(Clavis, Key),
 	!,
 	Key = Clavis,
 	List = [Val|Rest2],
-%	write(ok),
 	concordant_subset(Rest, Clavis, Rest2, More).
 
 concordant_subset(More, _, [], More).
-%	write(nok).
 
 %   concordant_subset/5 tries the current subset, and if that
 %   doesn't work if backs up and tries the next subset.  The
@@ -294,27 +194,3 @@ list_is_free_of([Head|Tail], Var) :-
 	!,
 	list_is_free_of(Tail, Var).
 list_is_free_of([], _).
-
-
-:- dynamic('$bag'/1).
-
-recorda(X) :-
-	asserta('$bag'(X)).
-
-recorded(Item):-
-	retract('$bag'( Item )).
-	
-/*
-recorded( SoFar, List ) :-
-    retract('$bag'( Item )),
-    !,
-    %  to stop retract looking for more Items.
-    recorded( Item, SoFar, List ).
-
-
-recorded(-, List, List ).
-
-recorded(Template, SoFar, List ) :-
-    recorded( [Template|SoFar], List ).
-
-*/
