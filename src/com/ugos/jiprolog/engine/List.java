@@ -20,8 +20,10 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import com.ugos.jiprolog.engine.WAM.Node;
 
@@ -122,7 +124,7 @@ class List extends ConsCell
         }
     }
 
-    public final ConsCell reverse()
+    public final List reverse()
     {
         return new List(super.reverse());
     }
@@ -166,6 +168,23 @@ class List extends ConsCell
          curNode.setGoal(term);
          return new RulesEnumerationBuiltIn(term, curNode.m_strModule, wam);
 	}
+	
+	/** Creates a new List
+     * @param termList vector of JIPTerm to transform in a prolog list
+     * @return new JIPList object
+     * @see com.ugos.jiprolog.engine.JIPTerm
+     */
+    public static final List create(final Collection<PrologObject> terms)
+    {
+    	List list = null;
+    	
+    	for(PrologObject term : terms)
+    	{
+    		list = new List(term, list);
+    	}
+    	
+    	return list != null ? list.reverse() : NIL;
+    }
 }
 
 

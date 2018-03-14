@@ -20,6 +20,7 @@
 
 package com.ugos.jiprolog.engine;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 //import java.io.Serializable;
 import java.util.Hashtable;
@@ -515,6 +516,38 @@ class ConsCell extends PrologObject //implements Serializable
          return wam.getRules(curNode);
 	}
 
+	/** Returns the terms in the ConsCell as Java List<br>
+     * @return the terms in the ConsCell as Java List<br>
+     */
+    public java.util.List<PrologObject> getTerms()
+    {
+    	ArrayList<PrologObject> termList = new ArrayList<PrologObject>();
+    	
+    	PrologObject head = m_head;
+    	PrologObject tail = m_tail;
+    	
+    	while(head != null && head != NIL)
+    	{
+    		termList.add(head);
+    		
+    		if(tail instanceof Variable)
+    			tail = ((Variable)tail).getObject();
+    		
+    		if(tail instanceof ConsCell)
+    		{
+    			head = ((ConsCell)tail).m_head;
+    			tail = ((ConsCell)tail).m_tail;
+    		}
+    		else
+    		{
+    			head = null;
+    			tail = NIL;
+    		}
+    	}
+    	 
+    	return termList;
+    }
+    
 //	@Override
 //	public int hashCode() {
 //		if(this == NIL)

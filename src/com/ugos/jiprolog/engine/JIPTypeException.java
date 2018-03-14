@@ -55,9 +55,9 @@ public class JIPTypeException extends JIPRuntimeException {
     public static final int BYTE = 18;
     public static final int IN_BYTE = 19;
     public static final int IN_CHARACTER = 20;
+    public static final int PAIR = 21;
 
-
-    private static final String s_stringMap[] = new String[21];
+    private static final String s_stringMap[] = new String[22];
 
     static
     {
@@ -82,7 +82,7 @@ public class JIPTypeException extends JIPRuntimeException {
         s_stringMap[BYTE] = "byte";
         s_stringMap[IN_BYTE] = "in_byte";
         s_stringMap[IN_CHARACTER] = "in_character";
-
+        s_stringMap[PAIR] = "pair";
     }
 
 	private String typeError;

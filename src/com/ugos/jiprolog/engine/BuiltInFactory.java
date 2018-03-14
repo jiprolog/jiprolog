@@ -123,6 +123,9 @@ final class BuiltInFactory extends Object
         m_builtInTable.put("findall/3",   new Findall3());
         m_builtInTable.put("findall/4",   new Findall4());
 
+        m_builtInTable.put("sort/4",     new Sort4());
+        m_builtInTable.put("msort/2",    new MSort2());
+        m_builtInTable.put("keysort/2",  new KeySort2());
         // system
         m_builtInTable.put("$op/3",       new Op3());
         m_builtInTable.put("$current_query_handle/1",      new CurrentQueryHandle1());
