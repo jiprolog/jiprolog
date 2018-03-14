@@ -2,8 +2,9 @@ JIProlog Release Notes
 ------------------------------
 
 4.1.6.1
+    Add a first version of the de facto standard format/2-3 predicates
     Fix arg/3 built-in predicate when the second argument is a list
-    Added JIPList helper to get a Java List of terms
+    Add JIPList helper to get a Java List of terms
     Fix to manage text files without last separator
     Fix to marhallIn: now [] is marshalled as Java null and the atom 'void' is marshalled as Java Void class
     Fix to marshallOut function: Java int is now marshalled as integer and Java Void is now marshalled as the atom 'void'

@@ -29,7 +29,8 @@
 	is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
 	file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
 	current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2,
-	stream_position_data/3,directory_files/2
+	stream_position_data/3,directory_files/2,
+	format/2, format/3
 ]).
 
 :- '$custom_built_in'([
@@ -43,10 +44,11 @@
 	is_absolute_file_name/1, file_attributes/7, file_name_extension/2, size_file/2, time_file/2, file_directory_name/2,
 	file_base_name/2, delete_file/1, delete_directory/1, rename_file/2, dir/0, dir/1, make_directory/1, current_stream/3, cd/1,
 	current_output/1, current_input/1, current_stream/1, set_output/1, set_input/1, seek/4, set_stream_position/2, set_stream/2,
-	stream_position_data/3,directory_files/2
+	stream_position_data/3,directory_files/2,
+	format/2, format/3
 ]).
 
-:- assert(ver(jipxio, '4.0.3')).
+:- assert(ver(jipxio, '4.0.4')).
 
 :- op(400, fx, cd).
 
@@ -1014,5 +1016,52 @@ write_term_option(_, _, _).
 %:- jipxio:set_stream_properties(user_error, [mode(write), output, alias(user_error), file_name(user_error), eof_action(eof_code), type(text), reposition(false)]).
 %:- jipxio:set_stream_properties(user_input, [mode(read), input, alias(user_input), file_name(user_input), eof_action(eof_code), type(text), reposition(false)]).
 
+format(Stream, Format, Arguments) :-
+	atom_codes(Format, Codes),
+	format_(Codes, Stream, Arguments).
+
+format_([], _, _).
+format_([0'~, Spec| Codes], Stream, Arguments) :-
+	!,
+	format_spec_(Spec, Stream, Arguments, RemainingArguments),
+	format_(Codes, Stream, RemainingArguments).
+format_([Code| Codes], Stream, Arguments) :-
+	'$put_code'(Stream, Code),
+	format_(Codes, Stream, Arguments).
+
+format_spec_(0'a, Stream, [Argument| Arguments], Arguments) :-
+%	atom(Argument),
+	'$write'(Stream, Argument).
+format_spec_(0'c, Stream, [Argument| Arguments], Arguments) :-
+	'$put_code'(Stream, Argument).
+format_spec_(0's, Stream, [Argument| Arguments], Arguments) :-
+	atom_codes(Atom, Argument),
+	'$write'(Stream, Atom).
+format_spec_(0'w, Stream, [Argument| Arguments], Arguments) :-
+	'$write'(Stream, Argument).
+format_spec_(0'q, Stream, [Argument| Arguments], Arguments) :-
+	'$writeq'(Stream, Argument).
+format_spec_(0'k, Stream, [Argument| Arguments], Arguments) :-
+	'$write_canonical'(Stream, Argument).
+format_spec_(0'd, Stream, [Argument| Arguments], Arguments) :-
+	'$write'(Stream, Argument).
+format_spec_(0'D, Stream, [Argument| Arguments], Arguments) :-
+	'$write'(Stream, Argument).
+format_spec_(0'f, Stream, [Argument| Arguments], Arguments) :-
+	'$write'(Stream, Argument).
+format_spec_(0'g, Stream, [Argument| Arguments], Arguments) :-
+	'$write'(Stream, Argument).
+format_spec_(0'G, Stream, [Argument| Arguments], Arguments) :-
+	'$write'(Stream, Argument).
+format_spec_(0'i, _, [_| Arguments], Arguments).
+format_spec_(0'n, Stream, Arguments, Arguments) :-
+	'$nl'(Stream).
+format_spec_(0'~, Stream, Arguments, Arguments) :-
+	'$put_code'(Stream, 0'~).
 
 
+% format(+character_code_list_or_atom, +list) -- built-in
+
+format(Format, Arguments) :-
+	'$current_output'(Stream),
+	format(Stream, Format, Arguments).
