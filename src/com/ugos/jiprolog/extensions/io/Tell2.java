@@ -69,6 +69,8 @@ public final class Tell2 extends JIPXCall
             strFilePath = strFilePath.substring(1, strFilePath.length() - 1);
         }
 
+        strFilePath = JIPio.resolvePath(strFilePath);
+        
         //strFilePath = strFilePath.replace((char)92, File.separatorChar);
         //strFilePath = strFilePath.replace('/', File.separatorChar);
 

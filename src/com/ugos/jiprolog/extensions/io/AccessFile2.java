@@ -70,7 +70,10 @@ public final class AccessFile2 extends JIPXCall
 
         String strFileName = ((JIPAtom)file).getName();
 
+        strFileName = JIPio.resolvePath(strFileName);
+        
         File ffile = new File(strFileName);
+        
         //System.out.println("strFileName " + strFileName);
         if(!ffile.isAbsolute())
         {

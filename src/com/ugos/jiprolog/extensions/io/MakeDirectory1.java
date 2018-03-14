@@ -49,6 +49,9 @@ public class MakeDirectory1 extends JIPXCall
         if(input instanceof JIPAtom)
         {
             String strDirName = ((JIPAtom)input).getName();
+            
+            strDirName = JIPio.resolvePath(strDirName);
+            
             File ffile = new File(strDirName);
 
             if(!ffile.isAbsolute())

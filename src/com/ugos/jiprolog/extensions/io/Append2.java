@@ -69,6 +69,8 @@ public final class Append2 extends JIPXCall
 
         strFilePath = strFilePath.replace((char)92, '/');
 
+        strFilePath = JIPio.resolvePath(strFilePath);
+        
         JIPTerm handle = params.getNth(2);
         // check if handle is a variable
         if (handle instanceof JIPVariable)

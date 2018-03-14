@@ -40,7 +40,7 @@ public class Dir2 extends JIPXCall
     	   throw new JIPTypeException(JIPTypeException.ATOM, path);
        }
 
-       File file = new File(((JIPAtom)path).getName());
+       File file = new File(JIPio.resolvePath(((JIPAtom)path).getName()));
        String files[] = file.list();
        JIPList fileList = JIPList.create(JIPAtom.create("."), null);
        fileList = JIPList.create(JIPAtom.create(".."), fileList);

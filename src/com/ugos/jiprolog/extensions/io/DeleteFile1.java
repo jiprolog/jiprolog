@@ -49,6 +49,9 @@ public class DeleteFile1 extends JIPXCall
         if(input instanceof JIPAtom)
         {
             String strPath = ((JIPAtom)input).getName();
+            
+            strPath = JIPio.resolvePath(strPath);
+            
             File ffile = new File(strPath);
             if(!ffile.isAbsolute())
             {

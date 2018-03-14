@@ -48,6 +48,9 @@ public final class FileAttributes7 extends JIPXCall
             throw new JIPTypeException(JIPTypeException.ATOM, file);
 
         String strFileName = ((JIPAtom)file).getName();
+        
+        strFileName = JIPio.resolvePath(strFileName);
+        
         File ffile = new File(strFileName);
         if(!ffile.isAbsolute())
         {

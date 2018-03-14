@@ -66,6 +66,8 @@ public class RenameFile2 extends JIPXCall
         {
             String strFileName = ((JIPAtom)input).getName();
 
+            strFileName = JIPio.resolvePath(strFileName);
+            
             File ffile = new File(strFileName);
             //System.out.println("strFileName " + strFileName);
             if(!ffile.isAbsolute())
@@ -84,6 +86,9 @@ public class RenameFile2 extends JIPXCall
             else
                 throw new JIPTypeException(JIPTypeException.ATOM, newName);
 
+            
+            strNewName = JIPio.resolvePath(strNewName);
+            
             if(!ffile.renameTo(new File(strNewName)))
                 return false;//throw new JIPRuntimeException(JIPio.ERR_FILE_NOT_RENAMED, JIPio.STR_FILE_NOT_RENAMED);
         }

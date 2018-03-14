@@ -28,6 +28,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.zip.ZipFile;
+
+import com.ugos.jiprolog.extensions.io.JIPio;
+
 import java.util.*;
 
 final class SearchPath1 extends BuiltIn
@@ -68,6 +71,8 @@ final class SearchPath1 extends BuiltIn
         {
             String strBasePath = getJIPEngine().getSearchPath();
 
+            strSearchDir = JIPio.resolvePath(strSearchDir);
+            
 			strSearchDir = getValidSearchPath(strSearchDir, strBasePath);
 		}
         catch (FileNotFoundException e)

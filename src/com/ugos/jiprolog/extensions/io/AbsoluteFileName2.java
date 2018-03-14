@@ -22,6 +22,9 @@ import com.ugos.jiprolog.engine.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class AbsoluteFileName2 extends JIPXCall
 {
@@ -49,11 +52,12 @@ public final class AbsoluteFileName2 extends JIPXCall
             throw new JIPTypeException(JIPTypeException.ATOM, file);
 
         String strFileName = ((JIPAtom)file).getName();
-
+        strFileName = JIPio.resolvePath(strFileName);
         File ffile = new File(strFileName);
 
         try
         {
+        	
             return abs.unify(JIPAtom.create(ffile.getCanonicalPath()), varsTbl);
         }
         catch(IOException ex)
@@ -62,6 +66,8 @@ public final class AbsoluteFileName2 extends JIPXCall
         }
     }
 
+    
+ 
     public boolean hasMoreChoicePoints()
     {
         return false;

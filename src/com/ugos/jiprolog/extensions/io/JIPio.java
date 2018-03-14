@@ -22,6 +22,8 @@ package com.ugos.jiprolog.extensions.io;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.ugos.io.*;
 import com.ugos.jiprolog.engine.*;
@@ -443,6 +445,29 @@ public final class JIPio
             ((OutputStream)sinfo.m_stream).close();
             remove(handle);
         }
+    }
+    
+    public static String resolvePath(String path)
+    {
+    	Map<String, String> envMap = System.getenv();
+    	
+    	String pattern = "(\\%|\\$)([A-Za-z0-9|_]+)(\\%)?"; 
+    	
+    	Pattern expr = Pattern.compile(pattern);
+    	Matcher matcher = expr.matcher(path);
+    	while (matcher.find()) {
+    	    String envValue = envMap.get(matcher.group(2).toUpperCase());
+    	    if (envValue == null) {
+    	        envValue = "";
+    	    } else {
+    	        envValue = envValue.replace("\\", "\\\\");
+    	    }
+    	    Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)));
+    	    path = subexpr.matcher(path).replaceAll(envValue);
+    	}
+    	
+    	return path;
+    	
     }
 
 
