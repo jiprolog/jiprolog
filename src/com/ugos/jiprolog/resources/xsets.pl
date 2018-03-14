@@ -34,8 +34,7 @@
       remove_duplicates/2]).
 
 :-'$custom_built_in'([
-      sort/2,
-      keysort/2
+      sort/2
 ]).
 
 :-assert(ver(jipxsets, '4.0.2')).
