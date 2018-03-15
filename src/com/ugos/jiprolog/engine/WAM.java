@@ -406,6 +406,8 @@ class WAM
 	                {
 	                    rule   = curNode.m_ruleEnum.nextElement();
 	                    clause = rule.m_cons;
+	                    
+//	                    System.out.println("call " + curNode.getGoal());  // dbg
 	                    // UNIFY
 	                    // unifica la testa della clausola con il predicato corrente
 	                    if(bUnify = curNode.getGoal().unify(clause.getHead(), varTbl))
@@ -436,7 +438,7 @@ class WAM
                 // verifica la presenza di almeno una clausola
                 if(bUnify)
                 {
-//                    System.out.println("unified " + clause);  // dbg
+//                    System.out.println("unified " + curNode.getGoal());  // dbg
 
                     // imposta l'hashtable delle variabili instanziate nel nodo corrente
                     curNode.m_varTbl = varTbl;
@@ -497,7 +499,7 @@ class WAM
                 }
                 else
                 {
-                	//System.out.println("fail " + curNode.getGoal());
+//                	System.out.println("failed " + curNode.getGoal());
                     // FAIL
                     // non ci sono clausole unificanti
                     // BACKTRACK

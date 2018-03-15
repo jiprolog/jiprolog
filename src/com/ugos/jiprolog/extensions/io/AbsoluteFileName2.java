@@ -55,15 +55,18 @@ public final class AbsoluteFileName2 extends JIPXCall
         strFileName = JIPio.resolvePath(strFileName);
         File ffile = new File(strFileName);
 
-        try
+        String absolutePath;
+        if(ffile.isAbsolute())
         {
-        	
-            return abs.unify(JIPAtom.create(ffile.getCanonicalPath()), varsTbl);
+        	absolutePath = ffile.getAbsolutePath();
+        		        
         }
-        catch(IOException ex)
+        else
         {
-            throw new JIPJVMException(ex);
+        	absolutePath = new File(getJIPEngine().getSearchPath(), strFileName).getAbsolutePath();
         }
+                	
+        return abs.unify(JIPAtom.create(absolutePath), varsTbl);
     }
 
     

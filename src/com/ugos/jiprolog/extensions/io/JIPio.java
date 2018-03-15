@@ -451,6 +451,7 @@ public final class JIPio
     {
     	Map<String, String> envMap = System.getenv();
     	
+//    	System.out.println("path " + path);
     	String pattern = "(\\%|\\$)([A-Za-z0-9|_]+)(\\%)?"; 
     	
     	Pattern expr = Pattern.compile(pattern);
@@ -466,6 +467,7 @@ public final class JIPio
     	    path = subexpr.matcher(path).replaceAll(envValue);
     	}
     	
+//    	System.out.println("expanded path " + path);
     	return path;
     	
     }
