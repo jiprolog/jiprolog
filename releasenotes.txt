@@ -2,15 +2,39 @@ JIProlog Release Notes
 ------------------------------
 
 4.1.6.1
-    Add a first version of the de facto standard format/2-3 predicates
-    Fix arg/3 built-in predicate when the second argument is a list
-    Add JIPList helper to get a Java List of terms
-    Fix to manage text files without last separator
-    Fix to marhallIn: now [] is marshalled as Java null and the atom 'void' is marshalled as Java Void class
-    Fix to marshallOut function: Java int is now marshalled as integer and Java Void is now marshalled as the atom 'void'
-    Fixed a bug in the encoding. Atoms with UTF-8 chars are now treated in the right way.
-    Add support for \d and \e escape sequences
-    Fix the integer power function, ^/2, for the latest ISO corrigenda
+
+Fix to absolute_file_name/2 when a relative path is passed
+Fix to expand environment variables in path
+sort/4, msort/2 and keysort/2 implemented in Java
+Fix to setof/3, bagof/3
+Fix to numbervars/3 when it contains nested unbounded variables
+Fix in termEquals
+Added specific termEquals method to Functor
+Fix a bug in removeTraceListener
+Fix to cleanup_call/2 that made the variables loose their binding in some cases
+assertz/1 moved to BuiltInFactory
+Fix to Variable in indefinite loop while looking for root variable
+Fix spurious choice-point in open/3-4 calls and optimize error checking
+Make sort/4 deterministic
+Improve performance of the atom_number/2 predicate by avoiding duplicates
+Improve performance of the sub_atom/5 predicate by avoiding duplicate…
+Improve performance of the sub_atom/5 predicate 
+Improve performance of the atom_number/2 predicate by avoiding dupliate
+Improve performance of the atom_concat/3 predicate by avoiding duplicates
+Fix performance bug in the atom_concat/3 predicate
+Fix to first argument indexing when the key is []
+term_variables/2 moved to the kernel module
+fix to functor comparision
+Fixes to functor/3 and terms_variable/2
+Add a first version of the de facto standard format/2-3 predicates
+Fix arg/3 built-in predicate when the second argument is a list
+Add JIPList helper to get a Java List of terms
+Fix to manage text files without last separator
+Fix to marhallIn: now [] is marshalled as Java null and the atom 'void' is marshalled as Java Void class
+Fix to marshallOut function: Java int is now marshalled as integer and Java Void is now marshalled as the atom 'void'
+Fixed a bug in the encoding. Atoms with UTF-8 chars are now treated in the right way.
+Add support for \d and \e escape sequences
+Fix the integer power function, ^/2, for the latest ISO corrigenda
 
 4.1.5.1
     Fixes and optimizations to the new xcall mechanism
