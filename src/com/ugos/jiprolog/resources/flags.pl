@@ -102,19 +102,24 @@ valid_flag_value(update_semantics, logical) :- !.
 valid_flag_value(update_semantics, immediate) :- !.
 
 current_prolog_flag(Flag, Value) :-
-	prolog_flag(Flag, Value).
-%current_prolog_flag(Flag, Value) :-
-%	user_defined_flag_value(Flag, Value).
+	var(Flag),
+	!,
+	% enumerating flags and their values
+	(	prolog_flag(Flag, Value)
+	;	env(Flag, Value)
+	).
 current_prolog_flag(Flag, Value) :-
-	env(Flag, Value).
+	prolog_flag(Flag, Current),
+	!,
+	Value = Current.
+current_prolog_flag(Flag, Value) :-
+	env(Flag, Current),
+	!,
+	Value = Current.
 current_prolog_flag(Flag, _) :-
-	nonvar(Flag),
 	\+ atom(Flag),
 	error(type_error(atom,Flag)).
 current_prolog_flag(Flag, _) :-
-	nonvar(Flag),
-	\+ valid_flag(Flag),
-	\+ user_defined_flag(Flag, _, _),
 	error(domain_error(prolog_flag,Flag)).
 
 set_prolog_flag(Flag, _) :-

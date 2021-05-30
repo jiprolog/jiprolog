@@ -22,7 +22,7 @@ Born in later 1998 from an idea by Ugo Chirico, JIProlog has been developed by u
 The home of JIProlog is:
 [http://www.jiprolog.com](http://www.jiprolog.com)
 
-JIProlog is open source and it is release under [AGPLv 3.0](https://www.gnu.org/licenses/agpl-3.0.html) or under [commercial license](License).
+JIProlog is open source and it is release under [AGPLv 3.0](https://www.gnu.org/licenses/agpl-3.0.html) or under [commercial license](https://github.com/jiprolog/jiprolog/wiki/License).
 
 The source code is available on GitHub:
 [https://github.com/jiprolog/](https://github.com/jiprolog/)
