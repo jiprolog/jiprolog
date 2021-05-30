@@ -248,11 +248,20 @@ check_operator_name(Term, Priority, Specifier) :-
 
 '$system':unload(X):- unconsult(X).
 
+'$system':use_module(library(File)):-
+    ensure_loaded(File).
+
 '$system':use_module(File):-
     ensure_loaded(File).
 
+'$system':include(library(File)):-
+    ensure_loaded(File).
+    
 '$system':include(File):-
     ensure_loaded(File).
+
+'$system':compile(library(File)) :-
+	compile(File, []).
 
 '$system':compile(File) :-
 	compile(File, []).
