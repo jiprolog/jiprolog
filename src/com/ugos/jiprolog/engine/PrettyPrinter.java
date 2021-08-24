@@ -100,7 +100,7 @@ final class PrettyPrinter extends Object
             	sb.append("''");
             	return;
             }
-
+            
             if(strAtom.equals("{}"))
             {
             	sb.append("{}");
@@ -110,6 +110,12 @@ final class PrettyPrinter extends Object
             if(strAtom.equals("[]"))
             {
             	sb.append("[]");
+            	return;
+            }
+            
+            if(strAtom.equals("%"))
+            {
+            	sb.append("'%'");
             	return;
             }
 
