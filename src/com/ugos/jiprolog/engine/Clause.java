@@ -179,7 +179,7 @@ class Clause extends ConsCell
 
             if(s_translateQuery == null)
             {
-                final PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new ByteArrayInputStream("translate(X, Y)".getBytes()))), new OperatorManager(),null,"internal");
+                final PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new StringReader("translate(X, Y)"))), new OperatorManager(),null,"internal");
                 try
                 {
                     final Functor funct = ((Functor)parser.parseNext());
@@ -219,7 +219,7 @@ class Clause extends ConsCell
         else if(func.getAtom().equals(Atom.COLON))
         {
             // solo funtore con specifica di modulo
-            // il body è vuoto
+            // il body ï¿½ vuoto
             strModuleName = ((Atom)(func).getParams().getHead()).getName();
             PrologObject lhs = BuiltIn.getRealTerm(((ConsCell)(func).getParams().getTail()).getHead());
 

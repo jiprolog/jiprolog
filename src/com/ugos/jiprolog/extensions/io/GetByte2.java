@@ -28,7 +28,7 @@ public final class GetByte2 extends JIPXCall
 {
     private int streamHandle;
 
-    protected final int readNextChar(InputStream ins)
+    protected final int readNextChar(Reader ins)
     {
         try
         {
@@ -70,7 +70,7 @@ public final class GetByte2 extends JIPXCall
 //        if(!properties.getProperty("type").equals("type(binary)"))
 //        	throw new JIPPermissionException("input", "text_stream", sinfo.getAlias());
 
-        final InputStream ins = JIPio.getInputStream(streamHandle = sinfo.getHandle(), getJIPEngine());
+        final Reader ins = JIPio.getInputStream(streamHandle = sinfo.getHandle(), getJIPEngine());
 
         if (b instanceof JIPVariable && ((JIPVariable)b).isBounded())
         {

@@ -104,7 +104,7 @@ final class Pack2 extends BuiltIn
 	            String file = new File(strPath).getName();
 	            final int nPos = file.lastIndexOf('.');
 	            file = new StringBuilder(file.substring(0, nPos)).append(".jip").toString();
-	            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(ins)), engine.getOperatorManager(), engine, strPath);
+	            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new InputStreamReader(ins))), engine.getOperatorManager(), engine, strPath);
 
 	            try
 	            {

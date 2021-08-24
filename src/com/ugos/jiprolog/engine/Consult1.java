@@ -154,13 +154,17 @@ class Consult1 extends BuiltIn
             throw ex;
         }
     }
-
     static final Vector<PrologObject> consult(InputStream ins, String strStreamName, JIPEngine engine, int nQueryHandle, boolean enableClauseChecks)
+    {
+    	return consult(new InputStreamReader(ins), strStreamName, engine, nQueryHandle, enableClauseChecks);
+    }
+    
+    static final Vector<PrologObject> consult(Reader ins, String strStreamName, JIPEngine engine, int nQueryHandle, boolean enableClauseChecks)
     {
 //        System.out.println("consult");
 
         int strOldInputStreamName = 0;
-        InputStream oldins = null;
+        Reader oldins = null;
         try
         {
         	Vector<PrologObject> initializationVector = new Vector<PrologObject>();

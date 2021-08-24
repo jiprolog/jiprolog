@@ -699,7 +699,7 @@ final class GlobalDB extends Object// implements Cloneable //Serializable
 
         		InputStream ins = gdb.getClass().getResourceAsStream(KERNEL_DEBUG);
 
-	            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(ins)), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
+	            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new InputStreamReader(ins))), new OperatorManager(), gdb.jipEngine, "jipkernel.txt");
 
 	            PrologObject term;
 	            while ((term = parser.parseNext()) != null)

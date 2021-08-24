@@ -48,7 +48,7 @@ public final class SetInput1 extends JIPXCall
         StreamInfo sinfo = JIPio.getStreamInfo(input);
 
         // Get the stream
-        InputStream ins = JIPio.getInputStream(sinfo.getHandle(), getJIPEngine());
+        Reader ins = JIPio.getInputStream(sinfo.getHandle(), getJIPEngine());
         if(ins == null)
         	return false;
 //            throw new JIPRuntimeException(JIPio.ERR_INVALID_HANDLE, JIPio.STR_INVALID_HANDLE);

@@ -26,7 +26,7 @@ import java.util.*;
 
 public final class Get02 extends JIPXCall
 {
-    protected final int readNextChar(InputStream ins)
+    protected final int readNextChar(Reader ins)
     {
         try
         {
@@ -67,7 +67,7 @@ public final class Get02 extends JIPXCall
         int streamHandle = streamInfo.getHandle();
 
         // Get the stream
-        final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
+        final Reader ins = JIPio.getInputStream(streamHandle, getJIPEngine());
 
         if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
             getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());

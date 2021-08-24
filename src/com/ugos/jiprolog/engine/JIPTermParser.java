@@ -76,8 +76,7 @@ public class JIPTermParser
         	//final byte[] btTerm = strTerm.getBytes(getEncoding());
             //final ByteArrayInputStream is = new ByteArrayInputStream(btTerm);
             
-        	final StringBufferInputStream sbins = new StringBufferInputStream(strTerm);
-            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(sbins)), m_opManager, m_engine, "user");
+        	PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new StringReader(strTerm))), m_opManager, m_engine, "user");
 
             m_singletonVars = parser.getSingletonVariables();
 

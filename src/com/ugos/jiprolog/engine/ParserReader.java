@@ -125,7 +125,7 @@ class ParserReader extends Reader
         return c;
     }
 
-    public void unread(int c)
+    public void unread(char c)
     {
     	try {
 			m_ins.unread(c);

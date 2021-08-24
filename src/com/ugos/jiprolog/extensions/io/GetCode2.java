@@ -28,7 +28,7 @@ public final class GetCode2 extends JIPXCall
 {
     private int streamHandle;
 
-    protected final int readNextChar(InputStream ins)
+    protected final int readNextChar(Reader ins)
     {
         try
         {
@@ -77,7 +77,7 @@ public final class GetCode2 extends JIPXCall
 
         streamHandle = sinfo.getHandle();
 
-        final InputStream ins = JIPio.getInputStream(streamHandle, getJIPEngine());
+        final Reader ins = JIPio.getInputStream(streamHandle, getJIPEngine());
 
         int c = -1;
 

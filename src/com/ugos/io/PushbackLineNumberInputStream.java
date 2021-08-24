@@ -1,12 +1,14 @@
 package com.ugos.io;
 
 import java.io.FilterInputStream;
+import java.io.FilterReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
-public class PushbackLineNumberInputStream extends FilterInputStream {
+public class PushbackLineNumberInputStream extends FilterReader {
 
-	protected byte[] buf;
+	protected char[] buf;
 
     protected int pos;
 
@@ -15,13 +17,13 @@ public class PushbackLineNumberInputStream extends FilterInputStream {
     private int read;
     private boolean skipLF;
 
-    public PushbackLineNumberInputStream(InputStream in, int size) {
+    public PushbackLineNumberInputStream(Reader in, int size) {
         super(in);
         if (size <= 0) {
             throw new IllegalArgumentException("size <= 0");
         }
 
-        this.buf = new byte[size];
+        this.buf = new char[size];
         this.pos = size;
 
         this.setColNumber(-1);
@@ -29,7 +31,7 @@ public class PushbackLineNumberInputStream extends FilterInputStream {
         this.setRead(0);
     }
 
-    public PushbackLineNumberInputStream(InputStream in) {
+    public PushbackLineNumberInputStream(Reader in) {
         this(in, 1);
     }
 
@@ -37,7 +39,7 @@ public class PushbackLineNumberInputStream extends FilterInputStream {
     {
         if (pos < buf.length)
         {
-            return buf[pos++] & 0xff;
+            return buf[pos++];
         }
 
         int c = super.read();
@@ -73,14 +75,14 @@ public class PushbackLineNumberInputStream extends FilterInputStream {
         return c;
     }
 
-    public void unread(int b) throws IOException
+    public void unread(char b) throws IOException
     {
         if (pos == 0) {
             throw new IOException("Push back buffer is full");
         }
 
         if (b != -1)
-            buf[--pos] = (byte)b;
+            buf[--pos] = b;
     }
 
     /**

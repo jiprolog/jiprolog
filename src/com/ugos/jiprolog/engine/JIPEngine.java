@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
@@ -55,8 +57,8 @@ public class JIPEngine implements Serializable
     static final String RESOURCEPATH = "/com/ugos/jiprolog/resources/";
 
     public static final int major = 4;
-    public static final int minor = 1;
-    public static final int build = 6;
+    public static final int minor = 2;
+    public static final int build = 1;
     public static final int revision = 1;
 
     public static final int USER_INPUT_HANDLE = -1;
@@ -163,7 +165,7 @@ public class JIPEngine implements Serializable
         // default streams
         setUserOutputStream(System.out);
 
-        setUserInputStream(System.in);
+        setUserInputStream(new InputStreamReader(System.in));
 
         setEncoding(Charset.defaultCharset().name());
 
@@ -280,7 +282,7 @@ public class JIPEngine implements Serializable
      */
     public final void loadLibrary(final String strPath) throws IOException
     {
-        // se il classloader non è stato inizializzato
+        // se il classloader non ï¿½ stato inizializzato
         if(s_classLoader == null)
         {
             try
@@ -324,7 +326,7 @@ public class JIPEngine implements Serializable
 //                    System.out.println("strBasePath " + strBasePath);  //DBG
                     strCurSarchPath = getSearchPath();
                     setSearchPath(strBasePath);
-                    Consult1.consult(ins, strPath, this, 0, getEnvVariable("enable_clause_check").equals("true"));
+                    Consult1.consult(new InputStreamReader(ins), strPath, this, 0, getEnvVariable("enable_clause_check").equals("true"));
                     setSearchPath(strCurSarchPath);
                 }
                 catch(RuntimeException ex)
@@ -482,7 +484,7 @@ public class JIPEngine implements Serializable
      * @param ins the user input stream to set
      * @see com.ugos.jiprolog.engine.JIPEngine#getUserInputStream
      */
-    public final void setUserInputStream(final InputStream ins)
+    public final void setUserInputStream(final Reader ins)
     {
         if(ins == null)
         {
@@ -500,9 +502,9 @@ public class JIPEngine implements Serializable
      * @return The user input stream
      * @see com.ugos.jiprolog.engine.JIPEngine#setUserInputStream
      */
-    public final InputStream getUserInputStream()
+    public final Reader getUserInputStream()
     {
-        return (InputStream)getEnvVariable("___userin___");
+        return (Reader)getEnvVariable("___userin___");
     }
 
     /** Gets current OutputStream
@@ -538,7 +540,7 @@ public class JIPEngine implements Serializable
      * @param streamHandle the handle of the input stream
      * @see com.ugos.jiprolog.engine.JIPEngine#getUserInputStream
      */
-    public final void setCurrentInputStream(final InputStream ins, int streamHandle)
+    public final void setCurrentInputStream(final Reader ins, int streamHandle)
     {
         if(ins == null)
         {
@@ -556,9 +558,9 @@ public class JIPEngine implements Serializable
      * @return The current input stream
      * @see com.ugos.jiprolog.engine.JIPEngine#setCurrentInputStream
      */
-    public final InputStream getCurrentInputStream()
+    public final Reader getCurrentInputStream()
     {
-        return (InputStream)getEnvVariable("___currentin___");
+        return (Reader)getEnvVariable("___currentin___");
     }
 
     /** Gets current InputStream Name
@@ -649,7 +651,7 @@ public class JIPEngine implements Serializable
      * @see com.ugos.jiprolog.engine.JIPEngine#loadStream
      * @see com.ugos.jiprolog.engine.JIPEngine#setSearchPath
      */
-    public final void consultStream(final InputStream ins, final String strStreamName) throws JIPSyntaxErrorException
+    public final void consultStream(final Reader ins, final String strStreamName) throws JIPSyntaxErrorException
     {
         Consult1.consult(ins, strStreamName, this, 0, getEnvVariable("enable_clause_check").equals("true"));
     }
@@ -937,7 +939,7 @@ public class JIPEngine implements Serializable
         // notify open
         notifyOpen(container.getHandle());
 
-        // la sincronizzazione qui non è necessaria
+        // la sincronizzazione qui non ï¿½ necessaria
         // il chiamamante dovrebbe sincronizzare la chiamata e il listener
         container.start();
 
@@ -1018,7 +1020,7 @@ public class JIPEngine implements Serializable
         final AsyncWAMManager container =
             (AsyncWAMManager)m_prologTable.get(new Integer(nQueryHandle));
 
-        // N.B. se la query è stata chiusa il container non compare nella tabella
+        // N.B. se la query ï¿½ stata chiusa il container non compare nella tabella
 
         if (container.isRunning())
             throw new JIPIsRunningException();
@@ -1111,11 +1113,11 @@ public class JIPEngine implements Serializable
     {
         // Serve per consentire alla open query di tornare il valore.
         // problema riscontrato su Mozilla e Linux
-        // può essere eliminato poichè la sincronizzazione dovrebbe essere
+        // puï¿½ essere eliminato poichï¿½ la sincronizzazione dovrebbe essere
         // lasciata al chimante me preferisco lasciarlo per
-        // mantere la compatibiilità con le vecchie versioni
+        // mantere la compatibiilitï¿½ con le vecchie versioni
         Thread.yield();
-        // credo si risolva così
+        // credo si risolva cosï¿½
 
         final Object obj = container.m_result;
 

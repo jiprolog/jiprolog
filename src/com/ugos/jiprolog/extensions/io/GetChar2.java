@@ -28,7 +28,7 @@ public final class GetChar2 extends JIPXCall
 {
     private int streamHandle;
 
-    protected final int readNextChar(InputStream ins)
+    protected final int readNextChar(Reader ins)
     {
 		if(streamHandle == JIPEngine.USER_INPUT_HANDLE)
             getJIPEngine().notifyEvent(JIPEvent.ID_WAITFORUSERINPUT, getPredicate(), getQueryHandle());
@@ -78,7 +78,7 @@ public final class GetChar2 extends JIPXCall
 //        if(!properties.getProperty("type").equals("type(text)"))
 //        	throw new JIPPermissionException("input", "binary_stream", sinfo.getAlias());
 
-        final InputStream ins = JIPio.getInputStream(streamHandle = sinfo.getHandle(), getJIPEngine());
+        final Reader ins = JIPio.getInputStream(streamHandle = sinfo.getHandle(), getJIPEngine());
 
         int c = -1;
 

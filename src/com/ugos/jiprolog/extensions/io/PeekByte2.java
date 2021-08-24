@@ -34,7 +34,7 @@ public final class PeekByte2 extends JIPXCall
         try
         {
             int c = ins.read();
-            ins.unread(c);//pushback();
+            ins.unread((char)c);//pushback();
             return c;
         }
         catch(IOException ex)

@@ -75,7 +75,7 @@ public class InputStreamInfo extends StreamInfo
     	if( i == -1 )
     		return true;
 
-    	m_stream.unread(i);
+    	m_stream.unread((char)i);
 
     	return false;
     }

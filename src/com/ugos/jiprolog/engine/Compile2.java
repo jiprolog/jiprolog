@@ -97,7 +97,7 @@ final class Compile2 extends BuiltIn
             final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outf));
 
 //            ArrayList<PrologObject> program = new ArrayList<PrologObject>();
-            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(ins)), engine.getOperatorManager(), engine, strPath);
+            PrologParser parser = new PrologParser(new ParserReader(new PushbackLineNumberInputStream(new InputStreamReader(ins))), engine.getOperatorManager(), engine, strPath);
 
             try
             {

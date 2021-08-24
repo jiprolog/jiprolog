@@ -124,7 +124,7 @@ public final class JIPio
     @SuppressWarnings("resource")
 	public static final int openInputStream(String strPath, final int handle, final JIPEngine engine) throws IOException
     {
-        InputStream reader;
+        Reader reader;
 
         if(strPath.equals("user_input"))
         {
@@ -143,7 +143,7 @@ public final class JIPio
             try
             {
                 URL url = new URL(strPath);
-                reader = url.openStream();
+                reader = new InputStreamReader(url.openStream());
             }
             catch(IOException ex)
             {
@@ -157,7 +157,7 @@ public final class JIPio
                     strPath = ffile.getAbsolutePath();
                 }
                 // try as normal path
-                reader = new FileInputStream(strPath);
+                reader = new FileReader(strPath);
             }
 
 	        reader = new PushbackLineNumberInputStream(reader);
@@ -427,7 +427,7 @@ public final class JIPio
         InputStreamInfo sinfo = getInput(handle);
         if(sinfo != null)
         {
-            ((InputStream)sinfo.m_stream).close();
+            ((Reader)sinfo.m_stream).close();
             remove(handle);
         }
     }
