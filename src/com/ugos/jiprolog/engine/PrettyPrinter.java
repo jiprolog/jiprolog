@@ -119,6 +119,12 @@ final class PrettyPrinter extends Object
             	return;
             }
 
+            if(strAtom.equals("/*"))
+            {
+            	sb.append("'/*'");
+            	return;
+            }
+
             StringBuilder sbAtom = new StringBuilder();
 
             boolean bQuoted = false;
