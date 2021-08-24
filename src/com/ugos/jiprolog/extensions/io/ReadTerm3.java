@@ -211,7 +211,7 @@ public final class ReadTerm3 extends JIPXCall
 
             }
             else
-            {
+            {          
                 if(bUserStream)
                 {
                     term = JIPCons.NIL;
@@ -221,6 +221,17 @@ public final class ReadTerm3 extends JIPXCall
                     m_bEOF = true;
                     term = JIPAtom.create("end_of_file");
                     streamInfo.setEndOfStream("past");
+                }
+                
+                if(variable_names != null)
+                {
+                	if(!variable_names.getParams().getNth(1).unify(JIPList.NIL, varsTbl))
+                	{
+                        if(bUserStream)
+                            getJIPEngine().notifyEvent(JIPEvent.ID_USERINPUTDONE, getPredicate(), getQueryHandle());
+
+                		return false;
+                	}
                 }
             }
         }
