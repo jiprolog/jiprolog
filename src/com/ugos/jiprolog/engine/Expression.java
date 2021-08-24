@@ -37,6 +37,11 @@ final class Expression extends PrologObject //implements Serializable
     {
         return new Expression(dNum);
     }
+    
+    public static Expression createInteger(final int num)
+    {
+        return new Expression(num);
+    }
 
     static Expression createDouble(final double dNum)
     {
@@ -54,6 +59,17 @@ final class Expression extends PrologObject //implements Serializable
         return expr;
     }
 
+    private Expression(final int num)
+    {
+        if(Double.isNaN(num))
+            throw new JIPEvaluationException("undefined");
+        else if(Double.isInfinite(num))
+            throw new JIPEvaluationException("undefined");
+
+        m_dValue   = num;
+        floating = false;
+    }
+    
     private Expression(final double dNum)
     {
         if(Double.isNaN(dNum))
@@ -775,6 +791,7 @@ final class Expression extends PrologObject //implements Serializable
                             final double dVal2 = exp2.m_dValue;
 
                             dblVal =  (int)(dVal1 - dVal1 % dVal2) / dVal2;
+                            return Expression.createInteger((int)dblVal);
                         }
                         else
                         {
