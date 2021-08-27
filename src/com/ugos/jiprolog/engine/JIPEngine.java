@@ -57,8 +57,8 @@ public class JIPEngine implements Serializable
     static final String RESOURCEPATH = "/com/ugos/jiprolog/resources/";
 
     public static final int major = 4;
-    public static final int minor = 2;
-    public static final int build = 1;
+    public static final int minor = 1;
+    public static final int build = 7;
     public static final int revision = 1;
 
     public static final int USER_INPUT_HANDLE = -1;
